@@ -339,6 +339,9 @@ foreach ($item in $state) {
                 New-Item -ItemType Directory -Force -Path $finalPath | Out-Null
                 Write-Host "Created Directory: $($item.Target)" -ForegroundColor Green
             }
+            else {
+                Write-Host "Skipped Directory: $($item.Target) (Already exists)" -ForegroundColor DarkGray
+            }
         }
         elseif ($item.Method -eq "copy") {
             if ($null -ne $item.Source -and (Test-Path -Path $item.Source)) {
@@ -349,13 +352,45 @@ foreach ($item in $state) {
                 if ($item.Category -eq "Agent Skills") {
                     if (-not (Test-Path -Path $finalPath)) {
                         New-Item -ItemType Directory -Force -Path $finalPath | Out-Null
+                        Copy-Item -Path "$($item.Source)\*" -Destination $finalPath -Recurse -Force
+                        Write-Host "Provisioned Skill: $($item.Label) to $($item.Target)" -ForegroundColor Green
                     }
-                    Copy-Item -Path "$($item.Source)\*" -Destination $finalPath -Recurse -Force
-                    Write-Host "Provisioned Skill: $($item.Label) to $($item.Target)" -ForegroundColor Green
+                    else {
+                        $sourceVer = "0.0.0"
+                        $targetVer = "0.0.0"
+                        $shouldUpdate = $false
+                        try {
+                            $sourceMetaPath = Join-Path -Path $item.Source -ChildPath "meta.json"
+                            $targetMetaPath = Join-Path -Path $finalPath -ChildPath "meta.json"
+                            if (Test-Path -Path $sourceMetaPath) {
+                                $sMeta = Get-Content -Path $sourceMetaPath -Raw | ConvertFrom-Json
+                                if ($null -ne $sMeta.version) { $sourceVer = $sMeta.version }
+                            }
+                            if (Test-Path -Path $targetMetaPath) {
+                                $tMeta = Get-Content -Path $targetMetaPath -Raw | ConvertFrom-Json
+                                if ($null -ne $tMeta.version) { $targetVer = $tMeta.version }
+                            }
+                            $shouldUpdate = [version]$sourceVer -gt [version]$targetVer
+                        }
+                        catch {}
+
+                        if ($shouldUpdate) {
+                            Copy-Item -Path "$($item.Source)\*" -Destination $finalPath -Recurse -Force
+                            Write-Host "Updated Skill: $($item.Label) (v$targetVer -> v$sourceVer)" -ForegroundColor Green
+                        }
+                        else {
+                            Write-Host "Skipped Skill: $($item.Label) (Already exists)" -ForegroundColor DarkGray
+                        }
+                    }
                 }
                 else {
-                    Copy-Item -Path $item.Source -Destination $finalPath -Force
-                    Write-Host "Provisioned Artifact: $($item.Label)" -ForegroundColor Green
+                    if (-not (Test-Path -Path $finalPath)) {
+                        Copy-Item -Path $item.Source -Destination $finalPath -Force
+                        Write-Host "Provisioned Artifact: $($item.Label)" -ForegroundColor Green
+                    }
+                    else {
+                        Write-Host "Skipped Artifact: $($item.Label) (Already exists)" -ForegroundColor DarkGray
+                    }
                 }
             }
         }
@@ -387,7 +422,11 @@ if (-not (Test-Path -Path $gitignorePath)) {
     Write-Host "Created File: .gitignore (Default Security Policy)" -ForegroundColor Green
 }
 
-Write-Host "Scaffolding complete" -ForegroundColor Magenta
+Write-Host ""
+Write-Host "Scaffolding complete" -ForegroundColor Cyan
+Write-Host "Press Enter to exit" -ForegroundColor Yellow
+$null = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+
 if ($PSCommandPath -and -not $isLocalDev) {
     Remove-Item -Path $PSCommandPath -Force
 }
