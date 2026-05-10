@@ -11,6 +11,8 @@
 
 Code Scaffold is a modular, robust, and highly visual PowerShell-based provisioning engine. It is designed to bootstrap new development projects with predefined directory structures, architectural templates, and complex skill payloads, all driven by a high-fidelity Terminal User Interface (TUI).
 
+![Code Scaffold Screenshot 1](project_details/assets/screenshot1.png)
+
 ## Features
 
 * **High-Fidelity TUI**: A deeply interactive, color-coded terminal interface featuring animated ASCII branding, staggered visual loading, and clean category-based module selection.
@@ -19,6 +21,8 @@ Code Scaffold is a modular, robust, and highly visual PowerShell-based provision
 * **Dynamic Payload Library**: Easily extensible. By placing a new folder with a `meta.json` inside the `.skills` directory, the engine will automatically discover it and present it as an option in the UI.
 * **Secure Provisioning**: Automatically generates a stringent `.gitignore` for standard security policies, and in production mode, the `scaffold.ps1` script acts as a self-destructing bootstrapper.
 * **Immutable Version History**: Adheres to a strict versioning protocol, maintaining snapshots of every significant deployment cycle in `project_details\history`.
+
+![Code Scaffold Screenshot 2](project_details/assets/screenshot2.png)
 
 ## Architecture Overview
 
