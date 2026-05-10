@@ -1,0 +1,13 @@
+{
+  "name": "opencli-skill",
+  "version": "1.0.0",
+  "description": "OpenCLI skill for Code Scaffold",
+  "main": "run.js",
+  "scripts": {
+    "setup": "npm install",
+    "test": "node run.js list"
+  },
+  "dependencies": {
+    "@jackwener/opencli": "latest"
+  }
+}

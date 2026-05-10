@@ -12,6 +12,7 @@ This directory contains complex code payloads (skills) that the Code Scaffold en
 | **Marp** | Generates Marp presentation slides from Markdown | v1.1.1 | `.skills/marp` |
 | **Mermaid** | Mermaid diagram creation and rendering | v1.1.1 | `.skills/mermaid` |
 | **Node** | Bootstraps a Node.js runtime environment | v1.1.1 | `.skills/node` |
+| **OpenCLI** | Bridge websites and the CLI for structured data extraction and browser automation | v1.0.0 | `.skills/opencli` |
 | **Playwright** | Browser automation and end-to-end testing with Playwright | v1.0.0 | `.skills/playwright` |
 | **Resend** | Sends emails using the Resend API | v1.1.1 | `.skills/resend` |
 | **Supabase** | Supabase database and authentication integration | v1.1.1 | `.skills/supabase` |
