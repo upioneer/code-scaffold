@@ -1,6 +1,6 @@
 {
   "label": "GitHub",
-  "description": "Provides functions for GitHub Actions workflows and repository management",
-  "version": "1.2.0",
+  "description": "GitHub Actions workflows and repository management",
+  "version": "1.2.1",
   "target": ".skills/github"
 }

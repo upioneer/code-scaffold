@@ -6,15 +6,15 @@ This directory contains complex code payloads (skills) that the Code Scaffold en
 
 | Label | Description | Version | Target Path |
 | :--- | :--- | :--- | :--- |
-| **Excalidraw** | Provides functions for rendering and embedding Excalidraw whiteboards | v1.1.0 | `.skills/excalidraw` |
-| **Firebase** | Provides functions for Firebase authentication and database connectivity | v1.1.0 | `.skills/firebase` |
-| **GitHub** | Provides functions for GitHub Actions workflows and repository management | v1.2.0 | `.skills/github` |
-| **Marp** | Provides functions for generating Marp presentation slides from Markdown | v1.1.0 | `.skills/marp` |
-| **Mermaid** | Provides functions for creating and rendering Mermaid diagrams | v1.1.0 | `.skills/mermaid` |
-| **Node** | Provides functions for bootstrapping a Node.js runtime environment | v1.1.0 | `.skills/node` |
-| **Resend** | Provides functions for sending emails using the Resend API | v1.1.0 | `.skills/resend` |
-| **Supabase** | Provides functions for integrating Supabase database and authentication | v1.1.0 | `.skills/supabase` |
-| **Telegram** | Provides functions for interacting with the Telegram Bot API | v1.1.0 | `.skills/telegram` |
+| **Excalidraw** | Renders and embeds Excalidraw whiteboards | v1.1.1 | `.skills/excalidraw` |
+| **Firebase** | Firebase authentication and database connectivity | v1.1.1 | `.skills/firebase` |
+| **GitHub** | GitHub Actions workflows and repository management | v1.2.1 | `.skills/github` |
+| **Marp** | Generates Marp presentation slides from Markdown | v1.1.1 | `.skills/marp` |
+| **Mermaid** | Mermaid diagram creation and rendering | v1.1.1 | `.skills/mermaid` |
+| **Node** | Bootstraps a Node.js runtime environment | v1.1.1 | `.skills/node` |
+| **Resend** | Sends emails using the Resend API | v1.1.1 | `.skills/resend` |
+| **Supabase** | Supabase database and authentication integration | v1.1.1 | `.skills/supabase` |
+| **Telegram** | Telegram Bot API interactions | v1.1.1 | `.skills/telegram` |
 
 ## Modifying Skills
 

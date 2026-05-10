@@ -1,6 +1,6 @@
 {
   "label": "Node",
-  "description": "Provides functions for bootstrapping a Node.js runtime environment",
-  "version": "1.1.0",
+  "description": "Bootstraps a Node.js runtime environment",
+  "version": "1.1.1",
   "target": ".skills/node"
 }
