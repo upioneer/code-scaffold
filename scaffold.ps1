@@ -39,7 +39,11 @@ $archiveUrl = "https://github.com/$repoUser/$repoName/archive/refs/heads/$branch
 $esc = [char]27
 $fgWhite = "$esc[38;2;255;255;255m"
 $fgGold = "$esc[38;2;255;190;0m"
+$fgCyan = "$esc[38;2;0;255;255m"
 $resetColor = "$esc[0m"
+$hideCursor = "$esc[?25l"
+$showCursor = "$esc[?25h"
+$homeCursor = "$esc[H"
 
 Clear-Host
 Write-Host "`n`n`n"
@@ -240,14 +244,14 @@ $running = $true
 
 function Draw-UI {
     Clear-Host
-    Write-Host "`n`n"
-    Write-Host "${fgWhite}$l1"
-    Write-Host "${fgWhite}$l2"
-    Write-Host "${fgGold}$l3"
-    Write-Host "${fgGold}$l4"
-    Write-Host "${fgGold}$l5${resetColor}"
-    Write-Host "`n Target: $targetRoot" -ForegroundColor Yellow
-    Write-Host "`n  Configure scaffolding...`n"
+    $ui = "`n`n"
+    $ui += "${fgWhite}$l1`n"
+    $ui += "${fgWhite}$l2`n"
+    $ui += "${fgGold}$l3`n"
+    $ui += "${fgGold}$l4`n"
+    $ui += "${fgGold}$l5${resetColor}`n"
+    $ui += "`n ${fgGold}Target: $targetRoot${resetColor}`n"
+    $ui += "`n  Configure scaffolding...`n`n"
 
     $currentCategory = ""
     $i = 0
@@ -256,7 +260,7 @@ function Draw-UI {
         $item = $state[$i]
         
         if ($item.Category -ne $currentCategory) {
-            Write-Host "  $($item.Category)" -ForegroundColor DarkGray
+            $ui += "  ${fgGold}$($item.Category)${resetColor}`n"
             $currentCategory = $item.Category
         }
         
@@ -271,23 +275,26 @@ function Draw-UI {
         }
         
         if ($i -eq $currentIndex) {
-            Write-Host "$prefix$box $($item.Label)" -ForegroundColor Cyan
+            $ui += "${fgCyan}$prefix$box $($item.Label)${resetColor}`n"
         }
         else {
-            Write-Host "$prefix$box $($item.Label)"
+            $ui += "$prefix$box $($item.Label)`n"
         }
         
         $i++
     }
     
-    Write-Host "`n  Scaffold v$version  |  Status: $status" -ForegroundColor DarkGray
-    Write-Host "`n  Controls:" -ForegroundColor DarkGray
-    Write-Host "  [Up/Down] Navigate" -ForegroundColor DarkGray
-    Write-Host "  [Space]   Toggle Selection" -ForegroundColor DarkGray
-    Write-Host "  [T]       Toggle All/None" -ForegroundColor DarkGray
-    Write-Host "  [Enter]   Execute Build`n"
+    $ui += "`n  ${fgGold}Scaffold v$version  |  Status: $status${resetColor}"
+    $ui += "`n`n  ${fgGold}Controls:${resetColor}`n"
+    $ui += "  ${fgGold}[Up/Down] Navigate${resetColor}`n"
+    $ui += "  ${fgGold}[Space]   Toggle Selection${resetColor}`n"
+    $ui += "  ${fgGold}[T]       Toggle All/None${resetColor}`n"
+    $ui += "  ${fgGold}[Enter]   Execute Build${resetColor}`n"
+    
+    Write-Host $ui -NoNewline
 }
 
+Write-Host $hideCursor -NoNewline
 while ($running) {
     Draw-UI
     $key = [Console]::ReadKey($true)
@@ -320,6 +327,7 @@ while ($running) {
         $running = $false
     }
 }
+Write-Host $showCursor -NoNewline
 
 Clear-Host
 Write-Host "Provisioning project artifacts to $targetRoot..." -ForegroundColor Cyan
