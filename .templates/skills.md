@@ -55,3 +55,11 @@
   3. For stopping the server, terminate the associated background process.
   4. Build (`npm run build`), test (`npm test`), or lint (`npm run lint`) when requested and report output.
 
+## SKILL: Playwright Browser Automation
+* Purpose: Complete browser automation with Playwright for testing, UX validation, and automated interactions.
+* Logic:
+  1. Detect running dev servers to eliminate hardcoded URLs.
+  2. Write custom Playwright automation scripts to `/tmp` for automatic cleanup.
+  3. Execute scripts via the `run.js` executor which handles module resolution and Playwright setup.
+  4. Perform actions like page navigation, form submission, screenshots, and responsive design checks.
+
