@@ -196,9 +196,14 @@ $state += [PSCustomObject]@{
 if (Test-Path -Path $templatesDir) {
     $templateItems = Get-ChildItem -Path $templatesDir -File
     foreach ($file in $templateItems) {
+        if ($file.Name -match "(?i)^license\.md$") {
+            continue
+        }
         $targetFile = "project_details\$($file.Name)"
-        if ($file.Name -match "(?i)^(readme|license)\.md$") {
+        $isSelected = $false
+        if ($file.Name -match "(?i)^readme\.md$") {
             $targetFile = $file.Name
+            $isSelected = $true
         }
         $state += [PSCustomObject]@{
             Category = "Artifacts"
@@ -207,7 +212,7 @@ if (Test-Path -Path $templatesDir) {
             Target   = $targetFile
             Method   = "copy"
             Source   = $file.FullName
-            Selected = $false
+            Selected = $isSelected
         }
     }
 }
@@ -329,8 +334,90 @@ while ($running) {
 }
 Write-Host $showCursor -NoNewline
 
+$licenses = @(
+    [PSCustomObject]@{ Id = "none"; Label = "None"; Desc = "Do not create a LICENSE.md file" },
+    [PSCustomObject]@{ Id = "mit"; Label = "MIT License"; Desc = "A short and simple permissive license" },
+    [PSCustomObject]@{ Id = "apache-2.0"; Label = "Apache License 2.0"; Desc = "A permissive license with patent grants" },
+    [PSCustomObject]@{ Id = "gpl-3.0"; Label = "GNU GPLv3"; Desc = "A strong copyleft license" }
+)
+$currentLicenseIndex = 0
+$runningLicense = $true
+
+function Draw-LicenseUI {
+    Clear-Host
+    $ui = "`n`n"
+    $ui += "${fgWhite}$l1`n"
+    $ui += "${fgWhite}$l2`n"
+    $ui += "${fgGold}$l3`n"
+    $ui += "${fgGold}$l4`n"
+    $ui += "${fgGold}$l5${resetColor}`n"
+    $ui += "`n ${fgGold}Target: $targetRoot${resetColor}`n"
+    $ui += "`n  Select a Project License:`n`n"
+
+    $i = 0
+    foreach ($item in $licenses) {
+        $prefix = "    "
+        if ($i -eq $currentLicenseIndex) {
+            $prefix = "  > "
+            $ui += "${fgCyan}$prefix$($item.Label) - $($item.Desc)${resetColor}`n"
+        }
+        else {
+            $ui += "$prefix$($item.Label)`n"
+        }
+        $i++
+    }
+    
+    $ui += "`n`n  ${fgGold}Controls:${resetColor}`n"
+    $ui += "  ${fgGold}[Up/Down] Navigate${resetColor}`n"
+    $ui += "  ${fgGold}[Enter]   Select License${resetColor}`n"
+    
+    Write-Host $ui -NoNewline
+}
+
+Write-Host $hideCursor -NoNewline
+while ($runningLicense) {
+    Draw-LicenseUI
+    $key = [Console]::ReadKey($true)
+    if ($key.Key -eq 'UpArrow') {
+        if ($currentLicenseIndex -gt 0) {
+            $currentLicenseIndex--
+        }
+    }
+    elseif ($key.Key -eq 'DownArrow') {
+        if ($currentLicenseIndex -lt ($licenses.Count - 1)) {
+            $currentLicenseIndex++
+        }
+    }
+    elseif ($key.Key -eq 'Enter') {
+        $runningLicense = $false
+    }
+}
+Write-Host $showCursor -NoNewline
+
+$selectedLicense = $licenses[$currentLicenseIndex]
+
 Clear-Host
 Write-Host "Provisioning project artifacts to $targetRoot..." -ForegroundColor Cyan
+
+if ($selectedLicense.Id -ne "none") {
+    $licensePath = Join-Path -Path $targetRoot -ChildPath "LICENSE.md"
+    if (-not (Test-Path -Path $licensePath)) {
+        try {
+            Write-Host "Fetching $($selectedLicense.Label) text..." -ForegroundColor Cyan
+            $licResp = Invoke-RestMethod -Uri "https://api.github.com/licenses/$($selectedLicense.Id)"
+            $licenseContent = $licResp.body
+            New-Item -ItemType File -Force -Path $licensePath -Value $licenseContent | Out-Null
+            Write-Host "Created File: LICENSE.md ($($selectedLicense.Label))" -ForegroundColor Green
+        }
+        catch {
+            Write-Host "Failed to fetch $($selectedLicense.Label). Please add it manually." -ForegroundColor Red
+        }
+    }
+    else {
+        Write-Host "Skipped File: LICENSE.md (Already exists)" -ForegroundColor DarkGray
+    }
+}
+
 foreach ($item in $state) {
     if ($item.Selected) {
         $finalPath = Join-Path -Path $targetRoot -ChildPath $item.Target
@@ -420,6 +507,14 @@ $gitignorePath = Join-Path -Path $targetRoot -ChildPath ".gitignore"
 if (-not (Test-Path -Path $gitignorePath)) {
     New-Item -ItemType File -Force -Path $gitignorePath -Value $gitignoreContent | Out-Null
     Write-Host "Created File: .gitignore (Default Security Policy)" -ForegroundColor Green
+}
+
+$readmemdPath = Join-Path -Path $targetRoot -ChildPath "README.md"
+if (-not (Test-Path -Path $readmemdPath)) {
+    $projectTitle = (Get-Item -Path $targetRoot).Name
+    $readmemdContent = "# $projectTitle`n`n## Overview`n`nDescription of the project and its purpose.`n`n## Getting Started`n`nInstructions for setting up the project.`n`n## Usage`n`nHow to use the project.`n`n## License`n`nThis project is licensed under the $($licenses[$currentLicenseIndex].Label).`n"
+    New-Item -ItemType File -Force -Path $readmemdPath -Value $readmemdContent | Out-Null
+    Write-Host "Created File: README.md (Baseline)" -ForegroundColor Green
 }
 
 Write-Host ""

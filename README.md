@@ -20,6 +20,7 @@ Code Scaffold is a modular, robust, and highly visual PowerShell-based provision
 * **Intelligent Environment Detection**: Detects if it is running in "Local Dev" mode (within the core repository) to preserve source files, or in "Production" mode where it uses a secure temporary workspace (`$env:TEMP\Scaffold_Workspace`).
 * **Dynamic Payload Library**: Easily extensible. By placing a new folder with a `meta.json` inside the `.skills` directory, the engine will automatically discover it and present it as an option in the UI.
 * **Secure Provisioning**: Automatically generates a stringent `.gitignore` for standard security policies, and in production mode, the `scaffold.ps1` script acts as a self-destructing bootstrapper.
+* **Automated Baseline Documentation**: Automatically generates a structured `README.md` in the target directory, dynamically titled with the project's folder name, to provide a consistent starting point for all scaffolded projects.
 * **Immutable Version History**: Adheres to a strict versioning protocol, maintaining snapshots of every significant deployment cycle in `project_details\history`.
 
 ![Code Scaffold Screenshot 2](project_details/assets/screenshot2.png)
