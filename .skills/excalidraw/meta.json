@@ -1,0 +1,6 @@
+{
+  "label": "Excalidraw",
+  "description": "Provides functions for rendering and embedding Excalidraw whiteboards",
+  "version": "1.1.0",
+  "target": ".skills/excalidraw"
+}

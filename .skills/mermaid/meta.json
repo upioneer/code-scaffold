@@ -1,0 +1,6 @@
+{
+  "label": "Mermaid",
+  "description": "Provides functions for creating and rendering Mermaid diagrams",
+  "version": "1.1.0",
+  "target": ".skills/mermaid"
+}

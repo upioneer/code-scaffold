@@ -1,0 +1,6 @@
+{
+  "label": "Firebase",
+  "description": "Provides functions for Firebase authentication and database connectivity",
+  "version": "1.1.0",
+  "target": ".skills/firebase"
+}
