@@ -36,7 +36,7 @@ When the user asks to push, deploy, or sync with GitHub, follow these instructio
    Upon a successful push or resolution, update `github.md` with any new configuration details, remote details, or successful state information if needed.
 
 8. **Generate Versioned Walkthrough**
-   * You MUST update the `\apps\walkthrough\[VERSION]` directory on each iteration of the app using standard semantic versioning (Major.Minor.Bugfix, e.g., v1.1.0).
+   * You MUST update the `[PROJECT_ROOT]\project_details\history\[VERSION]` directory on each iteration of the app using standard semantic versioning (Major.Minor.Bugfix, e.g., v1.1.0).
    * Ensure that walkthrough documentation includes screenshots where possible, especially to document UI changes.
    * Never modify or overwrite existing version documentation once established
    * Ensure each significant deployment cycle results in a new immutable artifact folder
