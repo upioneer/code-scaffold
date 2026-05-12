@@ -1,6 +1,6 @@
 {
   "label": "GitHub",
   "description": "GitHub Actions workflows and repository management",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "target": ".skills/github"
 }

@@ -7,8 +7,8 @@ This directory contains complex code payloads (skills) that the Code Scaffold en
 | Label | Description | Version | Target Path |
 | :--- | :--- | :--- | :--- |
 | **Excalidraw** | Renders and embeds Excalidraw whiteboards | v1.1.1 | `.skills/excalidraw` |
-| **Firebase** | Firebase authentication and database connectivity | v1.1.1 | `.skills/firebase` |
-| **GitHub** | GitHub Actions workflows and repository management | v1.2.1 | `.skills/github` |
+| **Firebase** | Firebase authentication and database connectivity | v1.1.2 | `.skills/firebase` |
+| **GitHub** | GitHub Actions workflows and repository management | v1.2.2 | `.skills/github` |
 | **Marp** | Generates Marp presentation slides from Markdown | v1.1.1 | `.skills/marp` |
 | **Mermaid** | Mermaid diagram creation and rendering | v1.1.1 | `.skills/mermaid` |
 | **Node** | Bootstraps a Node.js runtime environment | v1.1.1 | `.skills/node` |

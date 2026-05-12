@@ -1,6 +1,6 @@
 {
   "label": "Firebase",
   "description": "Firebase authentication and database connectivity",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "target": ".skills/firebase"
 }
