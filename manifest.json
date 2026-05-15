@@ -1,7 +1,7 @@
 {
     "metadata": {
-        "version": "2.9.1",
-        "lastUpdated": "2026-05-12T07:06:00Z"
+        "version": "3.0.0",
+        "lastUpdated": "2026-05-14T12:00:00Z"
     },
     "apps": [
         {
@@ -100,6 +100,13 @@
             "label": "Supabase Management",
             "source": ".skills/supabase/db",
             "target": "src/db",
+            "method": "copy"
+        },
+        {
+            "id": "braille-animations",
+            "label": "Braille Animations",
+            "source": ".skills/braille-animations",
+            "target": ".skills/braille-animations",
             "method": "copy"
         }
     ]

@@ -6,6 +6,7 @@ This directory contains complex code payloads (skills) that the Code Scaffold en
 
 | Label | Description | Version | Target Path |
 | :--- | :--- | :--- | :--- |
+| **Braille Animations** | Create and manage unicode braille animations and spinners for CLIs and web apps | v1.0.0 | `.skills/braille-animations` |
 | **Excalidraw** | Renders and embeds Excalidraw whiteboards | v1.1.1 | `.skills/excalidraw` |
 | **Firebase** | Firebase authentication and database connectivity | v1.1.2 | `.skills/firebase` |
 | **GitHub** | GitHub Actions workflows and repository management | v1.2.2 | `.skills/github` |
