@@ -59,7 +59,7 @@ Run the script from your terminal:
 
 * **Core Applications**: `/src`, `/tests`, `/docs`
 * **Artifacts**: Boilerplate markdown files (`AGENT.md`, `DESIGN.md`, `PLAN.md`, `README.md`, etc.) automatically routed to `project_details` (except README and LICENSE).
-* **Agent Skills**: Pre-configured integration snippets (Braille Animations, Excalidraw, Firebase, GitHub, Marp, Mermaid, Node, OpenCLI, Playwright, Resend, Supabase, Telegram) deployed to their designated `target` paths.
+* **Agent Skills**: Pre-configured integration snippets (Braille Animations, Excalidraw, Firebase, GitHub, Manim, Marp, Mermaid, Node, OpenCLI, p5.js, Playwright, Resend, Supabase, Telegram) deployed to their designated `target` paths.
 
 ## Project Constraints
 

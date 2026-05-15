@@ -1,7 +1,7 @@
 {
     "metadata": {
-        "version": "3.0.0",
-        "lastUpdated": "2026-05-14T12:00:00Z"
+        "version": "3.1.0",
+        "lastUpdated": "2026-05-14T13:00:00Z"
     },
     "apps": [
         {
@@ -107,6 +107,20 @@
             "label": "Braille Animations",
             "source": ".skills/braille-animations",
             "target": ".skills/braille-animations",
+            "method": "copy"
+        },
+        {
+            "id": "p5js",
+            "label": "p5.js Creative Coding",
+            "source": ".skills/p5js",
+            "target": ".skills/p5js",
+            "method": "copy"
+        },
+        {
+            "id": "manim",
+            "label": "Manim Math Animations",
+            "source": ".skills/manim",
+            "target": ".skills/manim",
             "method": "copy"
         }
     ]

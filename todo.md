@@ -1,12 +1,8 @@
-# add p5js skill
-https://github.com/processing/p5.js/
-https://p5js.org/libraries/
-https://p5js.org/tutorials/setting-up-your-environment/
-https://p5js.org/tutorials/conditionals-and-interactivity/
-https://p5js.org/tutorials/creating-styling-html/
+# Project Tasks
 
-# add manim skill
-https://github.com/3b1b/manim
-https://docs.manim.community/en/stable/reference.html
-https://docs.manim.community/en/stable/
-https://docs.manim.community/en/stable/installation/overview.html
+## Completed
+* [x] **Braille Animations Skill**: Integrated `unicode-animations` library, created `braille_helper.js` utility, and synced to GitHub (v3.0.0).
+* [x] **p5.js Skill**: Added boilerplate and API reference for creative coding (v3.1.0).
+* [x] **Manim Skill**: Added Python template and CLI reference for mathematical animations (v3.1.0).
+
+## Pending Skills
