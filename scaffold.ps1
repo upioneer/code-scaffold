@@ -501,6 +501,14 @@ Thumbs.db
 
 # Logs
 *.log
+
+# misc
+agent.md
+todo.md
+github.md
+firebase.md
+design.md
+scaffold.ps1
 "@
 
 $gitignorePath = Join-Path -Path $targetRoot -ChildPath ".gitignore"

@@ -1,7 +1,7 @@
 {
     "metadata": {
-        "version": "3.1.0",
-        "lastUpdated": "2026-05-14T13:00:00Z"
+        "version": "3.2.0",
+        "lastUpdated": "2026-05-16T00:00:00Z"
     },
     "apps": [
         {
@@ -121,6 +121,13 @@
             "label": "Manim Math Animations",
             "source": ".skills/manim",
             "target": ".skills/manim",
+            "method": "copy"
+        },
+        {
+            "id": "hyperframes",
+            "label": "Hyperframes Video",
+            "source": ".skills/hyperframes",
+            "target": ".skills/hyperframes",
             "method": "copy"
         }
     ]
