@@ -59,7 +59,11 @@ Run the script from your terminal:
 
 * **Core Applications**: `/src`, `/tests`, `/docs`
 * **Artifacts**: Boilerplate markdown files (`AGENT.md`, `DESIGN.md`, `PLAN.md`, `README.md`, etc.) automatically routed to `project_details` (except README and LICENSE).
-* **Agent Skills**: Pre-configured integration snippets (Braille Animations, Excalidraw, Firebase, GitHub, Hyperframes, Manim, Marp, Mermaid, Node, OpenCLI, p5.js, Playwright, Resend, Supabase, Telegram) deployed to their designated `target` paths.
+* **Agent Skills**: Pre-configured integration snippets (Braille Animations, Excalidraw, Firebase, GitHub, Hyperframes, Manim, Marp, Mermaid, Node, OpenCLI, p5.js, PlayCanvas Editor, PlayCanvas Engine, PlayCanvas SuperSplat, Playwright, Resend, Supabase, Telegram) deployed to their designated `target` paths.
+
+## Agent Skills Library
+
+Code Scaffold features a rapidly growing library of specialized AI skills. For a complete list of available payloads, detailed descriptions, and their target deployment paths, please refer to the **[Agent Skills Library](.skills/README.md)**.
 
 ## Project Constraints
 

@@ -17,6 +17,9 @@ This directory contains complex code payloads (skills) that the Code Scaffold en
 | **Node** | Bootstraps a Node.js runtime environment | v1.1.1 | `.skills/node` |
 | **OpenCLI** | Bridge websites and the CLI for structured data extraction and browser automation | v1.0.0 | `.skills/opencli` |
 | **p5.js** | Creative coding and visual animations using the p5.js library | v1.0.0 | `.skills/p5js` |
+| **PlayCanvas Editor** | Visual development environment for real-time 3D collaboration | v1.0.0 | `.skills/playcanvas-editor` |
+| **PlayCanvas Engine** | Modular 3D/2D game engine for the web supporting WebGL and WebGPU | v1.0.0 | `.skills/playcanvas-engine` |
+| **PlayCanvas SuperSplat** | High-performance tool for editing and optimizing 3D Gaussian Splats | v1.0.0 | `.skills/playcanvas-supersplat` |
 | **Playwright** | Browser automation and end-to-end testing with Playwright | v1.0.0 | `.skills/playwright` |
 | **Resend** | Sends emails using the Resend API | v1.1.1 | `.skills/resend` |
 | **Supabase** | Supabase database and authentication integration | v1.1.1 | `.skills/supabase` |

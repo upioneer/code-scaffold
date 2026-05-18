@@ -38,6 +38,7 @@ $archiveUrl = "https://github.com/$repoUser/$repoName/archive/refs/heads/$branch
 
 $esc = [char]27
 $fgWhite = "$esc[38;2;255;255;255m"
+$fgGray = "$esc[38;2;150;150;150m"
 $fgGold = "$esc[38;2;255;190;0m"
 $fgCyan = "$esc[38;2;0;255;255m"
 $resetColor = "$esc[0m"
@@ -46,42 +47,11 @@ $showCursor = "$esc[?25h"
 $homeCursor = "$esc[H"
 
 Clear-Host
-Write-Host "`n`n`n"
-$b = [char]9608
-$l1 = "       ####### #######  #####  ####### #######  ######  ##      ######  ".Replace('#', $b)
-$l2 = "       ##      ##      ##   ## ##      ##      ##    ## ##      ##   ## ".Replace('#', $b)
-$l3 = "       ####### ##      ####### #####   #####   ##    ## ##      ##   ## ".Replace('#', $b)
-$l4 = "            ## ##      ##   ## ##      ##      ##    ## ##      ##   ## ".Replace('#', $b)
-$l5 = "       ####### ####### ##   ## ##      ##       ######  ####### ######  ".Replace('#', $b)
-
-Write-Host "${fgWhite}$l1"
-Start-Sleep -Milliseconds 200
-Write-Host "${fgWhite}$l2"
-Start-Sleep -Milliseconds 200
-Write-Host "${fgGold}$l3"
-Start-Sleep -Milliseconds 200
-Write-Host "${fgGold}$l4"
-Start-Sleep -Milliseconds 200
-Write-Host "${fgGold}$l5${resetColor}"
-Start-Sleep -Milliseconds 200
-Write-Host "`n`n"
-
-Write-Host "Target Directory Selection" -ForegroundColor Cyan
-$targetRoot = Read-Host "Enter target path (Leave blank for current directory: $PSScriptRoot)"
-
-if ([string]::IsNullOrWhiteSpace($targetRoot)) {
-    $targetRoot = $PSScriptRoot
-}
-
-if (-not (Test-Path -Path $targetRoot)) {
-    Write-Host "Path does not exist. Creating directory..." -ForegroundColor Cyan
-    New-Item -ItemType Directory -Force -Path $targetRoot | Out-Null
-}
+Write-Host "`n"
 
 $isLocalDev = $false
 $checkT = Join-Path -Path $PSScriptRoot -ChildPath ".templates"
 $checkS = Join-Path -Path $PSScriptRoot -ChildPath ".skills"
-
 if ((Test-Path -Path $checkT) -and (Test-Path -Path $checkS)) {
     $isLocalDev = $true
 }
@@ -96,9 +66,19 @@ else {
     }
 }
 
+$syncCachePath = Join-Path -Path $workDir -ChildPath ".sync_cache.json"
+$localVersion = "0.0.0"
+if (Test-Path -Path $syncCachePath) {
+    try {
+        $cacheData = Get-Content -Path $syncCachePath -Raw | ConvertFrom-Json
+        if ($null -ne $cacheData.version) {
+            $localVersion = $cacheData.version
+        }
+    } catch {}
+}
+
 $templatesDir = Join-Path -Path $workDir -ChildPath ".templates"
 $skillsDir = Join-Path -Path $workDir -ChildPath ".skills"
-$syncCachePath = Join-Path -Path $workDir -ChildPath ".sync_cache.json"
 
 if (-not $isLocalDev) {
     if (-not (Test-Path -Path $templatesDir)) {
@@ -106,14 +86,6 @@ if (-not $isLocalDev) {
     }
     if (-not (Test-Path -Path $skillsDir)) {
         New-Item -ItemType Directory -Force -Path $skillsDir | Out-Null
-    }
-}
-
-$localVersion = "0.0.0"
-if (Test-Path -Path $syncCachePath) {
-    $cacheData = Get-Content -Path $syncCachePath -Raw | ConvertFrom-Json
-    if ($null -ne $cacheData.version) {
-        $localVersion = $cacheData.version
     }
 }
 
@@ -161,36 +133,80 @@ catch {
     $version = $localVersion
 }
 
+$C_F  = [string][char]0x2588 # █
+$C_H  = [string][char]0x2550 # ═
+$C_V  = [string][char]0x2551 # ║
+$C_DR = [string][char]0x2554 # ╔
+$C_DL = [string][char]0x2557 # ╗
+$C_UR = [string][char]0x255A # ╚
+$C_UL = [string][char]0x255D # ╝
+
+$l1 = "    $($C_F*7)$C_DL $($C_F*6)$C_DL $($C_F*5)$C_DL $($C_F*7)$C_DL$($C_F*7)$C_DL $($C_F*6)$C_DL $($C_F*2)$C_V     $($C_F*6)$C_DL "
+$l2 = "    $C_F$C_F$C_DR$($C_H*4)$C_UL$C_F$C_F$C_DR$($C_H*4)$C_UL$C_F$C_F$C_DR$($C_H*2)$C_F$C_F$C_DL$C_F$C_F$C_DR$($C_H*4)$C_UL$C_F$C_F$C_DR$($C_H*4)$C_UL$C_F$C_F$C_DR$($C_H*3)$C_F$C_F$C_DL$C_F$C_F$C_V     $C_F$C_F$C_DR$($C_H*2)$C_F$C_F$C_DL"
+$l3 = "    $($C_F*7)$C_DL$C_F$C_F$C_V     $($C_F*7)$C_V$($C_F*5)$C_DL  $($C_F*5)$C_DL  $C_F$C_F$C_V   $C_F$C_F$C_V$C_F$C_F$C_V     $C_F$C_F$C_V  $C_F$C_F$C_V"
+$l4 = "    $C_UR$($C_H*4)$C_F$C_F$C_V$C_F$C_F$C_V     $C_F$C_F$C_DR$($C_H*2)$C_F$C_F$C_V$C_F$C_F$C_DR$($C_H*2)$C_UL  $C_F$C_F$C_DR$($C_H*2)$C_UL  $C_F$C_F$C_V   $C_F$C_F$C_V$C_F$C_F$C_V     $C_F$C_F$C_V  $C_F$C_F$C_V"
+$l5 = "    $($C_F*7)$C_V$C_UR$($C_F*6)$C_DL$C_F$C_F$C_V  $C_F$C_F$C_V$C_F$C_F$C_V     $C_F$C_F$C_V     $C_UR$($C_F*6)$C_DR$C_UL$($C_F*7)$C_DL$($C_F*6)$C_DR$C_UL"
+$l6 = "    $C_UR$($C_H*6)$C_UL $C_UR$($C_H*5)$C_UL$C_UR$C_H$C_UL  $C_UR$C_H$C_UL$C_UR$C_H$C_UL     $C_UR$C_H$C_UL      $C_UR$($C_H*5)$C_UL $C_UR$($C_H*6)$C_UL$C_UR$($C_H*5)$C_UL "
+
+Write-Host "  ${fgCyan}$l1${resetColor}"
+Write-Host "  ${fgCyan}$l2${resetColor}"
+Write-Host "  ${fgGold}$l3${resetColor}"
+Write-Host "  ${fgGold}$l4${resetColor}"
+Write-Host "  ${fgGold}$l5${resetColor}"
+Write-Host "  ${fgGold}$l6${resetColor}"
+Write-Host "`n"
+
+Write-Host "  Target Directory Selection" -ForegroundColor Cyan
+$targetRoot = Read-Host "  Enter target path (Leave blank for current directory)"
+
+if ([string]::IsNullOrWhiteSpace($targetRoot)) {
+    $targetRoot = $PSScriptRoot
+}
+
+if (-not (Test-Path -Path $targetRoot)) {
+    Write-Host "Path does not exist. Creating directory..." -ForegroundColor Cyan
+    New-Item -ItemType Directory -Force -Path $targetRoot | Out-Null
+}
+
 $state = @()
 
 $state += [PSCustomObject]@{
-    Category = "Apps"
-    Id       = "src"
-    Label    = "Source Code (/src)"
-    Target   = "src"
-    Method   = "mkdir"
-    Source   = $null
-    Selected = $false
+    Category        = "Apps"
+    Id              = "src"
+    Label           = "Source Code (/src)"
+    Target          = "src"
+    Method          = "mkdir"
+    Source          = $null
+    Selected        = $false
+    Installed       = Test-Path -Path (Join-Path -Path $targetRoot -ChildPath "src")
+    UpdateAvailable = $false
+    VersionStr      = ""
 }
 
 $state += [PSCustomObject]@{
-    Category = "Apps"
-    Id       = "tests"
-    Label    = "Test Suite (/tests)"
-    Target   = "tests"
-    Method   = "mkdir"
-    Source   = $null
-    Selected = $false
+    Category        = "Apps"
+    Id              = "tests"
+    Label           = "Test Suite (/tests)"
+    Target          = "tests"
+    Method          = "mkdir"
+    Source          = $null
+    Selected        = $false
+    Installed       = Test-Path -Path (Join-Path -Path $targetRoot -ChildPath "tests")
+    UpdateAvailable = $false
+    VersionStr      = ""
 }
 
 $state += [PSCustomObject]@{
-    Category = "Apps"
-    Id       = "docs"
-    Label    = "Documentation (/docs)"
-    Target   = "docs"
-    Method   = "mkdir"
-    Source   = $null
-    Selected = $false
+    Category        = "Apps"
+    Id              = "docs"
+    Label           = "Documentation (/docs)"
+    Target          = "docs"
+    Method          = "mkdir"
+    Source          = $null
+    Selected        = $false
+    Exists          = Test-Path -Path (Join-Path -Path $targetRoot -ChildPath "docs")
+    UpdateAvailable = $false
+    VersionStr      = ""
 }
 
 if (Test-Path -Path $templatesDir) {
@@ -205,14 +221,21 @@ if (Test-Path -Path $templatesDir) {
             $targetFile = $file.Name
             $isSelected = $true
         }
+        
+        $finalTargetPath = Join-Path -Path $targetRoot -ChildPath $targetFile
+        $exists = Test-Path -Path $finalTargetPath
+        
         $state += [PSCustomObject]@{
-            Category = "Artifacts"
-            Id       = $file.BaseName
-            Label    = $file.Name
-            Target   = $targetFile
-            Method   = "copy"
-            Source   = $file.FullName
-            Selected = $isSelected
+            Category        = "Artifacts"
+            Id              = $file.BaseName
+            Label           = $file.Name
+            Target          = $targetFile
+            Method          = "copy"
+            Source          = $file.FullName
+            Selected        = $isSelected
+            Installed       = $exists
+            UpdateAvailable = $false
+            VersionStr      = ""
         }
     }
 }
@@ -223,6 +246,7 @@ if (Test-Path -Path $skillsDir) {
         $displayLabel = $folder.Name
         $targetDir = ".skills\$($folder.Name)"
         $metaPath = Join-Path -Path $folder.FullName -ChildPath "meta.json"
+        $remoteVersion = "0.0.0"
         if (Test-Path -Path $metaPath) {
             $metaContent = Get-Content -Path $metaPath -Raw | ConvertFrom-Json
             if ($null -ne $metaContent.label) {
@@ -231,15 +255,52 @@ if (Test-Path -Path $skillsDir) {
             if ($null -ne $metaContent.target) {
                 $targetDir = $metaContent.target
             }
+            if ($null -ne $metaContent.version) {
+                $remoteVersion = $metaContent.version
+            }
         }
+        
+        $finalTargetPath = Join-Path -Path $targetRoot -ChildPath $targetDir
+        $exists = Test-Path -Path $finalTargetPath
+        $localVersion = "0.0.0"
+        $updateAvailable = $false
+        $versionStr = ""
+
+        if ($exists) {
+            $localMetaPath = Join-Path -Path $finalTargetPath -ChildPath "meta.json"
+            if (Test-Path -Path $localMetaPath) {
+                try {
+                    $lMeta = Get-Content -Path $localMetaPath -Raw | ConvertFrom-Json
+                    if ($null -ne $lMeta.version) { $localVersion = $lMeta.version }
+                } catch {}
+                
+                try {
+                    if ([version]$remoteVersion -gt [version]$localVersion) {
+                        $updateAvailable = $true
+                        $versionStr = "(Update to v$remoteVersion)"
+                    } else {
+                        $versionStr = ""
+                    }
+                } catch {
+                    $versionStr = ""
+                }
+            } else {
+                $updateAvailable = $true
+                $versionStr = "(Update to v$remoteVersion)"
+            }
+        }
+
         $state += [PSCustomObject]@{
-            Category = "Agent Skills"
-            Id       = $folder.Name
-            Label    = $displayLabel
-            Target   = $targetDir
-            Method   = "copy"
-            Source   = $folder.FullName
-            Selected = $false
+            Category        = "Agent Skills"
+            Id              = $folder.Name
+            Label           = $displayLabel
+            Target          = $targetDir
+            Method          = "copy"
+            Source          = $folder.FullName
+            Selected        = $false
+            Installed       = $exists
+            UpdateAvailable = $updateAvailable
+            VersionStr      = $versionStr
         }
     }
 }
@@ -250,11 +311,12 @@ $running = $true
 function Draw-UI {
     Clear-Host
     $ui = "`n`n"
-    $ui += "${fgWhite}$l1`n"
-    $ui += "${fgWhite}$l2`n"
-    $ui += "${fgGold}$l3`n"
-    $ui += "${fgGold}$l4`n"
-    $ui += "${fgGold}$l5${resetColor}`n"
+    $ui += "  ${fgCyan}$l1${resetColor}`n"
+    $ui += "  ${fgCyan}$l2${resetColor}`n"
+    $ui += "  ${fgGold}$l3${resetColor}`n"
+    $ui += "  ${fgGold}$l4${resetColor}`n"
+    $ui += "  ${fgGold}$l5${resetColor}`n"
+    $ui += "  ${fgGold}$l6${resetColor}`n"
     $ui += "`n ${fgGold}Target: $targetRoot${resetColor}`n"
     $ui += "`n  Configure scaffolding...`n`n"
 
@@ -278,12 +340,27 @@ function Draw-UI {
         if ($item.Selected) {
             $box = "[x]"
         }
+
+        $statusStr = ""
         
+        if ($item.Installed) {
+            if ($item.UpdateAvailable) {
+                $statusStr = " ${fgGold}$($item.VersionStr)${resetColor}"
+            } else {
+                $statusStr = " ${fgWhite}(Installed)${resetColor}"
+            }
+        }
+
+        $itemColor = $fgWhite
+        if ($item.Installed) {
+            $itemColor = $fgGray
+        }
+
         if ($i -eq $currentIndex) {
-            $ui += "${fgCyan}$prefix$box $($item.Label)${resetColor}`n"
+            $ui += "${fgCyan}$prefix$box $($item.Label)${resetColor}$statusStr`n"
         }
         else {
-            $ui += "$prefix$box $($item.Label)`n"
+            $ui += "$prefix$box ${itemColor}$($item.Label)${resetColor}$statusStr`n"
         }
         
         $i++
@@ -346,11 +423,12 @@ $runningLicense = $true
 function Draw-LicenseUI {
     Clear-Host
     $ui = "`n`n"
-    $ui += "${fgWhite}$l1`n"
-    $ui += "${fgWhite}$l2`n"
-    $ui += "${fgGold}$l3`n"
-    $ui += "${fgGold}$l4`n"
-    $ui += "${fgGold}$l5${resetColor}`n"
+    $ui += "  ${fgCyan}$l1${resetColor}`n"
+    $ui += "  ${fgCyan}$l2${resetColor}`n"
+    $ui += "  ${fgGold}$l3${resetColor}`n"
+    $ui += "  ${fgGold}$l4${resetColor}`n"
+    $ui += "  ${fgGold}$l5${resetColor}`n"
+    $ui += "  ${fgGold}$l6${resetColor}`n"
     $ui += "`n ${fgGold}Target: $targetRoot${resetColor}`n"
     $ui += "`n  Select a Project License:`n`n"
 
@@ -446,6 +524,7 @@ foreach ($item in $state) {
                         $sourceVer = "0.0.0"
                         $targetVer = "0.0.0"
                         $shouldUpdate = $false
+                        $isLegacy = $false
                         try {
                             $sourceMetaPath = Join-Path -Path $item.Source -ChildPath "meta.json"
                             $targetMetaPath = Join-Path -Path $finalPath -ChildPath "meta.json"
@@ -456,14 +535,24 @@ foreach ($item in $state) {
                             if (Test-Path -Path $targetMetaPath) {
                                 $tMeta = Get-Content -Path $targetMetaPath -Raw | ConvertFrom-Json
                                 if ($null -ne $tMeta.version) { $targetVer = $tMeta.version }
+                            } else {
+                                $isLegacy = $true
                             }
-                            $shouldUpdate = [version]$sourceVer -gt [version]$targetVer
+                            if ($isLegacy) {
+                                $shouldUpdate = $true
+                            } else {
+                                $shouldUpdate = [version]$sourceVer -gt [version]$targetVer
+                            }
                         }
                         catch {}
 
                         if ($shouldUpdate) {
                             Copy-Item -Path "$($item.Source)\*" -Destination $finalPath -Recurse -Force
-                            Write-Host "Updated Skill: $($item.Label) (v$targetVer -> v$sourceVer)" -ForegroundColor Green
+                            if ($isLegacy) {
+                                Write-Host "Updated Skill: $($item.Label) (Legacy -> v$sourceVer)" -ForegroundColor Green
+                            } else {
+                                Write-Host "Updated Skill: $($item.Label) (v$targetVer -> v$sourceVer)" -ForegroundColor Green
+                            }
                         }
                         else {
                             Write-Host "Skipped Skill: $($item.Label) (Already exists)" -ForegroundColor DarkGray
@@ -503,6 +592,7 @@ Thumbs.db
 *.log
 
 # misc
+apps/
 agent.md
 todo.md
 github.md
