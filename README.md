@@ -51,8 +51,8 @@ Run the script from your terminal:
 1. **Target Selection**: The script will prompt you for a target directory. Leave it blank to use the current directory.
 2. **Module Selection**: Navigate the menu using the **[Up/Down Arrow]** keys.
 3. **Shortcuts**: 
-    * **[Space]**: Toggle individual selection.
-    * **[T]**: Toggle **All/None** selections.
+    * **[Space]**: Toggle individual selection (prompts to overwrite if the artifact already exists).
+    * **[T]**: Toggle **All/None** selections (prompts to overwrite if any selected artifacts already exist).
 4. **Execution**: Press **[Enter]** to begin the provisioning process.
 
 ## Built-In Scaffolding Options
