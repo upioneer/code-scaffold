@@ -584,6 +584,23 @@ while ($running) {
             if ($item.Selected -and $item.Id -eq "agent") {
                 Show-AgentDomainSubmenu
             }
+            # Auto-pair: checking github.md <-> github skill, firebase.md <-> firebase skill
+            if ($item.Selected -and ($item.Id -eq "github" -or $item.Id -eq "firebase")) {
+                foreach ($partner in $state) {
+                    if ($partner.Id -eq $item.Id -and $partner -ne $item -and -not $partner.Selected) {
+                        if ($partner.Category -eq "Artifacts" -and $partner.Installed) {
+                            Write-Host "`n  ${fgGold}Artifact '$($partner.Label)' already exists. Overwrite? [Y]es / [C]ancel: ${resetColor}" -NoNewline
+                            $pAns = [Console]::ReadKey($true)
+                            if ($pAns.KeyChar -eq 'y' -or $pAns.KeyChar -eq 'Y') {
+                                $partner.Selected = $true
+                                $partner.Overwrite = $true
+                            }
+                        } else {
+                            $partner.Selected = $true
+                        }
+                    }
+                }
+            }
         } else {
             $item.Selected = $false
             $item.Overwrite = $false
