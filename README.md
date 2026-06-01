@@ -59,7 +59,7 @@ Run the script from your terminal:
 
 * **Core Applications**: `/src`, `/tests`, `/docs`
 * **Artifacts**: Boilerplate markdown files (`AGENT.md`, `DESIGN.md`, `PLAN.md`, `README.md`, etc.) automatically routed to `project_details` (except README and LICENSE).
-* **Agent Skills**: Pre-configured integration snippets (Braille Animations, Excalidraw, Firebase, GitHub, Hyperframes, Manim, Marp, Mermaid, Node, OpenCLI, p5.js, PlayCanvas Editor, PlayCanvas Engine, PlayCanvas SuperSplat, Playwright, Resend, Supabase, Telegram) deployed to their designated `target` paths.
+* **Agent Skills**: Pre-configured integration snippets (Braille Animations, Excalidraw, Firebase, Firecrawl, GitHub, Hyperframes, Manim, Marp, Mermaid, Node, Open Design, OpenCLI, p5.js, PlayCanvas Editor, PlayCanvas Engine, PlayCanvas SuperSplat, Playwright, Resend, SEO GEO AEO Auditor, Supabase, Telegram, Website Deploy Linux) deployed to their designated `target` paths.
 
 ## Agent Skills Library
 
