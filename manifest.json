@@ -1,7 +1,7 @@
 {
     "metadata": {
-        "version": "3.4.3",
-        "lastUpdated": "2026-05-26T00:33:00Z"
+        "version": "3.5.0",
+        "lastUpdated": "2026-06-01T21:19:00Z"
     },
     "apps": [
         {
@@ -201,6 +201,13 @@
             "method": "copy"
         },
         {
+            "id": "seo-geo-aeo-auditor",
+            "label": "SEO GEO AEO Auditor",
+            "source": ".skills/seo-geo-aeo-auditor",
+            "target": ".skills/seo-geo-aeo-auditor",
+            "method": "copy"
+        },
+        {
             "id": "supabase",
             "label": "Supabase Management",
             "source": ".skills/supabase/db",
@@ -212,6 +219,13 @@
             "label": "Telegram Notifications",
             "source": ".skills/telegram",
             "target": ".skills/telegram",
+            "method": "copy"
+        },
+        {
+            "id": "website-deploy-linux",
+            "label": "Website Deploy Linux",
+            "source": ".skills/website-deploy-linux",
+            "target": ".skills/website-deploy-linux",
             "method": "copy"
         }
     ]
