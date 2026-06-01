@@ -24,8 +24,10 @@ This directory contains complex code payloads (skills) that the Code Scaffold en
 | **PlayCanvas SuperSplat** | High-performance tool for editing and optimizing 3D Gaussian Splats | v1.0.0 | `.skills/playcanvas-supersplat` |
 | **Playwright** | Browser automation and end-to-end testing with Playwright | v1.0.0 | `.skills/playwright` |
 | **Resend** | Sends emails using the Resend API | v1.1.1 | `.skills/resend` |
+| **SEO GEO AEO Auditor** | Unified model-agnostic Search Engine, Generative Engine, and Answer Engine Optimization auditor to analyze traditional visibility, AI engine discoverability, and snippet answers | v1.0.0 | `.skills/seo-geo-aeo-auditor` |
 | **Supabase** | Supabase database and authentication integration | v1.1.1 | `.skills/supabase` |
 | **Telegram** | Telegram Bot API interactions | v1.1.1 | `.skills/telegram` |
+| **Website Deploy Linux** | Enterprise Linux Deployment Agent for deploying static sites and SPAs to Nginx locally or remotely via PuTTY CLI (plink/pscp) or SSH, featuring upfront architectural prompting, automatic .env setups, reference scripts, and non-destructive folder structures | v1.4.0 | `.skills/website-deploy-linux` |
 
 ## Modifying Skills
 
