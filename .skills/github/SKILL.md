@@ -1,43 +1,89 @@
 ---
 name: github_push
-description: Specialized skill for safely pushing to GitHub, verifying configuration, and handling edge cases like rebasing, diverging, or conflicts.
+description: Specialized skill for safely pushing to GitHub, verifying .env GitHub configuration, and handling edge cases like rebasing, diverging, or conflicts.
 ---
 
 # GitHub Push Skill & Workflow
 
-When the user asks to push, deploy, or sync with GitHub, follow these instructions exactly to ensure a safe push:
+This skill manages all GitHub interactions. GitHub configuration (identity, remote URL, visibility) is stored in the project's root `.env` file rather than a separate `github.md` artifact. This allows multiple contributors to maintain their own local credentials without polluting version-tracked files.
 
-1. **Verify github.md**
-   Read the `github.md` file in the project's codebase to ensure it contains all required GitHub repository configuration and parameters (e.g., repository URL, default branch).
+## Step 1: .env GitHub Configuration — Self-Heal
 
-2. **Prompt the User if Missing Info**
-   If `github.md` does not exist or lacks necessary details (configuration is missing or incomplete), halt and use notify_user or ask the user directly for the missing configuration information. Do not proceed until this information is provided.
+Before any other action, the agent must verify and self-heal the `.env` file in the project root to ensure GitHub credentials are present.
 
-3. **Fetch and Check Status**
-   Before pushing, run `git fetch` and then `git status` to determine the relationship between the local working directory and the remote repository on GitHub (e.g., if the local branch is behind, ahead, or has diverged).
+### Required .env Variables
 
-4. **Handle Edge Cases (Mismatches)**
-   If the local branch does not match the remote branch (e.g., diverged branches, remote has new commits, or other conflicts):
-   - **DO NOT** automatically push, pull, or merge.
-   - Prompt the user *in plain English* explaining the exact mismatch and offering these specific options:
-     - **Merge**: Combine the remote changes with the local changes.
-     - **Rebase**: Reapply local commits on top of the remote branch (often preferred for cleaner history).
-     - **Overwrite Web (Force Push)**: Overwrite the remote version with the local version, pushing the local state to GitHub and destroying any differing changes made remotely (Dangerous).
-     - **Overwrite Local (Hard Reset)**: Discard local unpushed commits and match the remote version exactly (Dangerous).
-   - Wait for the user to explicitly select an option.
+```
+# ── GITHUB CONFIGURATION ────────────────────────────────────────
+GITHUB_USER=
+GITHUB_EMAIL=
+GITHUB_REMOTE_URL=
+GITHUB_VISIBILITY=public
+GITHUB_BRANCH=main
+```
 
-5. **Mandatory README Badges**
-   Before pushing, ensure the root `README.md` includes a visually rich set of badges at the very top (referencing https://naereen.github.io/badges/). These badges must provide immediate metadata about the repository state (e.g., license, stars, language, repository size).
+### Self-Heal Sequence
 
-6. **Execute Option and Push**
-   Perform the Git commands corresponding to the user's choice. Once the state is resolved (or if the branch was simply ahead with no conflicts), execute the appropriate `git push` command.
+1. **Check for `.env`**: If the file does not exist, create it with the full GitHub configuration block above as a template, warn the user to populate it, and halt.
+2. **Check for missing keys**: Read the existing `.env`. If any of the five `GITHUB_` keys are absent, append the missing keys as empty placeholder lines. Warn the user which keys were added and halt until they are filled.
+3. **Check for empty values**: If any required key exists but has an empty value (e.g. `GITHUB_USER=`), prompt the user to provide the missing value before continuing.
+4. **Protect `.env`**: Verify `.env` is listed in `.gitignore`. If `.gitignore` does not exist, create it with `.env` as the first entry. If it exists but is missing the `.env` entry, append it.
 
-7. **Update Documentation (`github.md`)**
-   Upon a successful push or resolution, update `github.md` with any new configuration details, remote details, or successful state information if needed.
+### Reading Variables
 
-8. **Generate Versioned Walkthrough**
-   * You MUST update the `[PROJECT_ROOT]\project_details\history\[VERSION]` directory on each iteration of the app using standard semantic versioning (Major.Minor.Bugfix, e.g., v1.1.0).
-   * Ensure that walkthrough documentation includes screenshots where possible, especially to document UI changes.
-   * Never modify or overwrite existing version documentation once established
-   * Ensure each significant deployment cycle results in a new immutable artifact folder
-   * Always ensure that the listed skills within the project's `readme.md` are alphabetized when generating or updating the documentation
+Once the `.env` is verified, read and apply the values:
+
+* `GITHUB_USER` → used for `git config user.name`
+* `GITHUB_EMAIL` → used for `git config user.email`
+* `GITHUB_REMOTE_URL` → used for `git remote add origin` / `git remote set-url origin`
+* `GITHUB_VISIBILITY` → document only (Public or Private); prompt user if unset
+* `GITHUB_BRANCH` → default push target (typically `main`)
+
+## Step 2: Fetch and Check Status
+
+Run `git fetch` followed by `git status` to determine the relationship between the local branch and the remote (ahead, behind, or diverged).
+
+## Step 3: Handle Edge Cases (Mismatches)
+
+If the local branch does not match the remote (diverged branches, remote has new commits, or other conflicts):
+
+* **DO NOT** automatically push, pull, merge, or force anything.
+* Explain the exact mismatch to the user in plain English and offer these specific options:
+  * **Merge**: Combine remote changes with local changes.
+  * **Rebase**: Reapply local commits on top of the remote branch (cleaner history).
+  * **Overwrite Remote (Force Push)**: Overwrite the remote with the local state — destroys differing remote changes (Dangerous).
+  * **Overwrite Local (Hard Reset)**: Discard local unpushed commits and match the remote exactly (Dangerous).
+* Wait for the user to explicitly select an option before proceeding.
+
+## Step 4: Mandatory README Badges
+
+Before pushing, ensure the root `README.md` includes a visually rich set of badges at the very top (referencing https://naereen.github.io/badges/). These badges must provide immediate metadata about the repository state (e.g., license, stars, language, repository size).
+
+## Step 5: Execute and Push
+
+Perform the Git commands corresponding to the user's choice. Once the state is clean (or if the branch was simply ahead with no conflicts), execute the appropriate push:
+
+```powershell
+git config user.name  "$GITHUB_USER"
+git config user.email "$GITHUB_EMAIL"
+# Set or update remote origin
+git remote get-url origin 2>$null || git remote add origin "$GITHUB_REMOTE_URL"
+git remote set-url origin "$GITHUB_REMOTE_URL"
+git push origin "$GITHUB_BRANCH"
+```
+
+## Step 6: Update Documentation
+
+Upon a successful push, review and update any of the following project artifacts as needed:
+
+* `design.md`, `plan.md`, `testing.md`, `readme.md`, `todo.md`
+
+Do **not** create or update a `github.md` file — all GitHub configuration now lives in `.env`.
+
+## Step 7: Generate Versioned Walkthrough
+
+* Update the `[PROJECT_ROOT]\project_details\history\[VERSION]` directory on each deployment cycle using standard semantic versioning (Major.Minor.Bugfix, e.g., v1.1.0).
+* Include screenshots where possible to document UI changes.
+* Never modify or overwrite existing version documentation once established.
+* Ensure each significant deployment cycle results in a new immutable artifact folder.
+* Always ensure that the listed skills within the project's `readme.md` are alphabetized when generating or updating the documentation.
