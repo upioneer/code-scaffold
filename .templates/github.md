@@ -16,7 +16,7 @@ description: GitHub Project Setup Template
 ## Agent Instructions
 When an agent sees this file:
 1. Review and update project artifacts (`design.md`, `plan.md`, `testing.md`, `readme.md`, `todo.md`) as required.
-2. Create or update `\apps\walkthrough\[AppVersion]\readme.md`.
+2. Create `project_details\history\v[NEW_VERSION]\readme.md`.
 3. Verify Remote URL is valid. Prompt user if not.
 4. Verify Visibility (Public/Private) if the user has not declared.
 5. Initialize git (`git init`) if not already initialized.
@@ -24,4 +24,3 @@ When an agent sees this file:
 7. Stage and commit changes.
 8. Add remote origin (if needed).
 9. Push to main.
-

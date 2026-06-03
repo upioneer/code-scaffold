@@ -67,7 +67,47 @@ To prevent accidental data loss, the agent must adhere to strict folder preserva
 
 ## PuTTY Command Line Orchestration (Windows Hosts)
 
-When executing remote deployments from a Windows workspace, the agent must use the PuTTY Command Line Interface (`plink.exe` and `pscp.exe`) for non-interactive execution:
+When executing remote deployments from a Windows workspace, the agent must use the PuTTY Command Line Interface (`plink.exe` and `pscp.exe`) for non-interactive execution.
+
+### PuTTY Availability Check and Auto-Installation
+
+Before running any `plink.exe` or `pscp.exe` commands, the agent must verify that PuTTY is installed and reachable on the system PATH. The resolution order is:
+
+1. `Get-Command plink.exe` / `Get-Command pscp.exe` (checks PATH)
+2. `C:\Program Files\PuTTY\plink.exe` (standard 64-bit install location)
+3. `C:\Program Files (x86)\PuTTY\plink.exe` (standard 32-bit install location)
+
+If PuTTY is not found after all three checks, the agent must attempt automatic installation:
+
+```powershell
+winget install --id PuTTY.PuTTY --silent --accept-package-agreements --accept-source-agreements
+```
+
+After a successful install, refresh the current session PATH and re-resolve executable paths before continuing.
+
+**If winget is unavailable or the installation fails**, the agent must display the following manual instructions to the user and halt execution:
+
+```
+==========================================================
+  PuTTY could not be installed automatically.
+  Please install it manually using one of the steps below:
+==========================================================
+
+  Option 1 -- winget (Windows Package Manager):
+    winget install --id PuTTY.PuTTY
+
+  Option 2 -- Official installer:
+    1. Visit https://www.putty.org and click 'Download PuTTY'.
+    2. Run the MSI installer (putty-<version>-installer.msi).
+    3. During setup, ensure 'Add PuTTY to PATH' is checked.
+
+  Option 3 -- Chocolatey:
+    choco install putty -y
+
+  After installation, close and reopen your terminal, then
+  run this script again.
+==========================================================
+```
 
 ### 1. Verify Remote Connection
 
