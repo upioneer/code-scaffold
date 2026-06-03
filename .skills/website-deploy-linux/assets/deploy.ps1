@@ -64,14 +64,7 @@ if (-not (Test-Path $gitignoreFile)) {
 $envVars = @{}
 Get-Content $envFile | ForEach-Object {
     if ($_ -match "^([^=]+)=(.+)$") {
-        $val = $matches[2].Trim()
-        if ($val.StartsWith('"') -and $val.EndsWith('"')) {
-            $val = $val.Substring(1, $val.Length - 2)
-        }
-        elseif ($val.StartsWith("'") -and $val.EndsWith("'")) {
-            $val = $val.Substring(1, $val.Length - 2)
-        }
-        $envVars[$matches[1].Trim()] = $val
+        $envVars[$matches[1].Trim()] = $matches[2].Trim()
     }
 }
 
@@ -211,6 +204,6 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 Write-Host ""
-Write-Host "[Success] Deployment completed successfully!"
+Write-Host "$(([char]0x1F389)) Deployment completed successfully!"
 Write-Host "   Access URL: http://${hostName}/${projectName}/"
 Write-Host ""
