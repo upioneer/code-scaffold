@@ -483,6 +483,493 @@ function Get-AgentDomainSystemArchContent {
     return "## System Architecture Overview`n$archOverview`n`n$combinedLines"
 }
 
+function Get-AgentProfileFromDomain {
+    param (
+        [string]$domain
+    )
+    switch ($domain) {
+        "Web Dev"            { return "web-dev" }
+        "Docker / DevOps"    { return "systems-auto" }
+        "Mobile (iOS/And)"   { return "web-dev" }
+        "DBA"                { return "database" }
+        "Systems Scripting"  { return "systems-auto" }
+        Default              { return "systems-auto" }
+    }
+}
+
+function Get-TestingMdContent {
+    param (
+        [string]$domain
+    )
+    
+    $profile = Get-AgentProfileFromDomain -domain $domain
+    $content = ""
+    
+    if ($profile -eq "web-dev") {
+        $content = @"
+# TESTING.md - Web Development Verification Suite
+
+## 1. Automated Baseline Verification
+This workspace includes an automated UI structure validation engine. Run the following command from the project root directory to verify that the scaffolding matches foundational web specifications:
+./project_details/scripts/validate-web-base.ps1
+
+## 2. Quality Gates & Validation Protocols
+All subsequent code additions by the agent or developer must satisfy the following structural requirements:
+* Semantic DOM Elements: Main layout files must contain clear structural land markers (e.g., header, main, footer).
+* Asset Map Ingestion: Core configuration files must map asset pathways deterministically to prevent broken compilation pipelines.
+* Clean Compilation Targets: Client side bootstrap entry points must resolve without dangling dependencies or unresolved relative paths.
+* Code Quality: Source code should be clean, contain no residual debuggers or console statements, and follow SPA best practices.
+"@
+    }
+    elseif ($profile -eq "database") {
+        $content = @"
+# TESTING.md - Database Infrastructure Verification Suite
+
+## 1. Automated Baseline Verification
+This workspace contains local validation frameworks for schema correctness. Run the following validation pipeline before laying down data modifications:
+./project_details/scripts/validate-db-schema.ps1
+
+## 2. Quality Gates & Validation Protocols
+All data layouts, migration files, and table structures must pass these criteria:
+* Deterministic Key Enforcement: Every newly defined structural table model must explicitly configure a primary identification boundary.
+* Migration Sequential Continuity: Migration files must contain sequential timestamp increments or monotonic sequence numbers to ensure forward and backward consistency.
+* Transaction Integrity Check: Script structures handling mutating operations must explicitly encapsulate execution blocks within named transaction boundaries to prevent partial execution drift.
+* Relational Safety: Schema names should not collide with SQL keywords, and foreign key relations should have corresponding indexing configurations.
+"@
+    }
+    else {
+        $content = @"
+# TESTING.md - Systems Automation Verification Suite
+
+## 1. Automated Baseline Verification
+To verify that runtime execution privileges, file system paths, and OS boundaries are correct for this automation suite, run the baseline validation test:
+./project_details/scripts/validate-sys-sandbox.ps1
+
+## 2. Quality Gates & Validation Protocols
+Automation routines, execution blocks, and environment wrappers must verify the following constraints:
+* Idempotent Path Resolution: Scripts target paths must support arbitrary re-run capabilities without generating duplicated mutations or configuration pollution.
+* Explicit Exception Defenses: All system calls interacting with external execution packages or underlying filesystems must map specific try/catch or rescue boundaries.
+* Privilege Level Tracking: Automation scripts requiring administrative capabilities must explicitly check current process execution context flags immediately on boot to handle clean degradation.
+* CLI Robustness: Scripts should define parameter inputs and validate arguments to handle error states gracefully.
+"@
+    }
+    
+    return $content
+}
+
+function Get-ValidateWebBaseContent {
+    return @'
+# validate-web-base.ps1
+# Automated UI structure validation engine for Web Dev profile
+
+$ErrorActionPreference = "Stop"
+$success = $true
+
+Write-Host "Running Web Development Verification Suite..." -ForegroundColor Cyan
+
+# 1. Semantic DOM Elements check
+Write-Host "[1/4] Checking Semantic DOM Elements & SPA roots..." -ForegroundColor Gray
+$htmlFiles = Get-ChildItem -Path . -Filter "*.html" -Recurse -ErrorAction SilentlyContinue
+if ($htmlFiles.Count -gt 0) {
+    foreach ($file in $htmlFiles) {
+        $content = Get-Content -Path $file.FullName -Raw
+        $hasHeader = $content -match "<header\b"
+        $hasMain = $content -match "<main\b"
+        $hasFooter = $content -match "<footer\b"
+        $hasRoot = $content -match 'id=["''](root|app)["'']'
+        
+        if (-not ($hasHeader -and $hasMain -and $hasFooter)) {
+            Write-Host "  FAIL: $($file.FullName) is missing structural landmarks (header, main, or footer)." -ForegroundColor Red
+            $success = $false
+        } else {
+            Write-Host "  PASS: $($file.Name) contains header, main, and footer." -ForegroundColor Green
+        }
+        
+        if ($hasRoot) {
+            Write-Host "  PASS: $($file.Name) contains a modern SPA root mounting node." -ForegroundColor Green
+        }
+    }
+} else {
+    Write-Host "  INFO: No HTML files found yet to validate semantic structure." -ForegroundColor Yellow
+}
+
+# 2. Asset Map Ingestion & Compilation Entry Points check
+Write-Host "[2/4] Checking Asset Ingestion & Script Entry Points..." -ForegroundColor Gray
+$allFiles = Get-ChildItem -Path . -File -Recurse -Exclude "scaffold.ps1", ".gitignore" -ErrorAction SilentlyContinue
+$brokenAssets = 0
+foreach ($file in $allFiles) {
+    $content = Get-Content -Path $file.FullName -Raw
+    if ($content -match 'src\s*=\s*["''](file:/|[A-Za-z]:\\)') {
+        Write-Host "  FAIL: $($file.FullName) contains hardcoded absolute asset path." -ForegroundColor Red
+        $brokenAssets++
+        $success = $false
+    }
+}
+if ($brokenAssets -eq 0) {
+    Write-Host "  PASS: No absolute or broken asset path references found." -ForegroundColor Green
+}
+
+if ($htmlFiles.Count -gt 0) {
+    foreach ($file in $htmlFiles) {
+        $content = Get-Content -Path $file.FullName -Raw
+        $matches = [regex]::Matches($content, 'src\s*=\s*["'']([^"'']+\.js)["'']')
+        foreach ($match in $matches) {
+            $scriptPath = $match.Groups[1].Value
+            if ($scriptPath -like "http:*" -or $scriptPath -like "https:*" -or $scriptPath -like "//*") {
+                continue
+            }
+            $parentDir = Split-Path -Path $file.FullName -Parent
+            $resolvedPath = Join-Path -Path $parentDir -ChildPath $scriptPath
+            if (-not (Test-Path -Path $resolvedPath)) {
+                Write-Host "  FAIL: Script target '$scriptPath' referenced in $($file.Name) does not exist." -ForegroundColor Red
+                $success = $false
+            } else {
+                Write-Host "  PASS: Referenced script '$scriptPath' exists." -ForegroundColor Green
+            }
+        }
+    }
+}
+
+# 3. React/Vite/SPA Best Practices Check
+Write-Host "[3/4] Running React, Vite, & SPA Lint Checks..." -ForegroundColor Gray
+$jsFiles = Get-ChildItem -Path . -Include "*.js", "*.jsx", "*.ts", "*.tsx" -Recurse -Exclude "scaffold.ps1" -ErrorAction SilentlyContinue
+$lockFiles = Get-ChildItem -Path . -Include "*lock*" -Recurse -ErrorAction SilentlyContinue
+
+if ($jsFiles.Count -gt 0) {
+    foreach ($file in $jsFiles) {
+        $content = Get-Content -Path $file.FullName -Raw
+        if ($content -match 'console\.log\(') {
+            Write-Host "  WARN: $($file.Name) contains active console.log() statements." -ForegroundColor Yellow
+        }
+        if ($content -match '\bdebugger\b') {
+            Write-Host "  FAIL: $($file.Name) contains active debugger statement." -ForegroundColor Red
+            $success = $false
+        }
+        if ($content -match 'style=\{\{') {
+            Write-Host "  WARN: $($file.Name) uses inline styles instead of modular/decoupled CSS." -ForegroundColor Yellow
+        }
+        if ($content -match 'process\.env\.') {
+            $viteCheck = Get-ChildItem -Path . -Filter "vite.config.*" -Recurse -ErrorAction SilentlyContinue
+            if ($viteCheck.Count -gt 0) {
+                Write-Host "  WARN: $($file.Name) uses process.env. Use import.meta.env for Vite projects." -ForegroundColor Yellow
+            }
+        }
+    }
+} else {
+    Write-Host "  INFO: No source code files found to analyze." -ForegroundColor Yellow
+}
+
+# 4. Dependency Hardening Check
+Write-Host "[4/4] Verifying Lockfile & Dependency Hardening..." -ForegroundColor Gray
+$packageJson = Get-ChildItem -Path . -Filter "package.json" -Recurse -ErrorAction SilentlyContinue
+if ($packageJson.Count -gt 0) {
+    if ($lockFiles.Count -eq 0) {
+        Write-Host "  WARN: package.json found but no package-lock.json, yarn.lock, or pnpm-lock.yaml exists." -ForegroundColor Yellow
+    } else {
+        Write-Host "  PASS: Found active lockfile: $($lockFiles[0].Name)." -ForegroundColor Green
+    }
+} else {
+    Write-Host "  INFO: No package.json found in the project root." -ForegroundColor Yellow
+}
+
+if ($success) {
+    Write-Host "Web Development Verification Success!" -ForegroundColor Green
+    exit 0
+} else {
+    Write-Host "Web Development Verification Failed!" -ForegroundColor Red
+    exit 1
+}
+'@
+}
+
+function Get-ValidateDbSchemaContent {
+    return @'
+# validate-db-schema.ps1
+# Schema correctness and migration validation engine for Database profile
+
+$ErrorActionPreference = "Stop"
+$success = $true
+
+Write-Host "Running Database Infrastructure Verification Suite..." -ForegroundColor Cyan
+
+$sqlFiles = Get-ChildItem -Path . -Filter "*.sql" -Recurse -ErrorAction SilentlyContinue
+
+# 1. Deterministic Key Enforcement
+Write-Host "[1/4] Checking Deterministic Key Enforcement..." -ForegroundColor Gray
+$checkedTables = 0
+foreach ($file in $sqlFiles) {
+    $content = Get-Content -Path $file.FullName -Raw
+    $matches = [regex]::Matches($content, '(?is)CREATE\s+TABLE\s+(\w+)\s*\(.*?\)')
+    foreach ($match in $matches) {
+        $tableName = $match.Groups[1].Value
+        $tableBlock = $match.Value
+        $checkedTables++
+        if ($tableBlock -notmatch 'PRIMARY\s+KEY') {
+            Write-Host "  FAIL: Table '$tableName' in $($file.Name) is missing a PRIMARY KEY constraint." -ForegroundColor Red
+            $success = $false
+        } else {
+            Write-Host "  PASS: Table '$tableName' contains a PRIMARY KEY constraint." -ForegroundColor Green
+        }
+    }
+}
+if ($checkedTables -eq 0) {
+    Write-Host "  INFO: No SQL table creation schemas found to validate." -ForegroundColor Yellow
+}
+
+# 2. Migration Sequential Continuity
+Write-Host "[2/4] Checking Migration Sequential Continuity..." -ForegroundColor Gray
+$migrationFiles = Get-ChildItem -Path . -Recurse -ErrorAction SilentlyContinue | Where-Object { 
+    $_.Name -match 'migration' -or $_.DirectoryName -match 'migration'
+} | Where-Object { -not $_.PSIsContainer }
+
+if ($migrationFiles.Count -gt 0) {
+    $outOfSequence = $false
+    foreach ($file in $migrationFiles) {
+        if ($file.Name -notmatch '^\d+') {
+            Write-Host "  FAIL: Migration file '$($file.Name)' does not begin with a numeric sequence identifier." -ForegroundColor Red
+            $outOfSequence = $true
+            $success = $false
+        }
+    }
+    if (-not $outOfSequence) {
+        Write-Host "  PASS: All migration files have sequential/numeric prefixes." -ForegroundColor Green
+    }
+} else {
+    Write-Host "  INFO: No migration files found to validate." -ForegroundColor Yellow
+}
+
+# 3. Transaction Integrity Check
+Write-Host "[3/4] Checking Transaction Integrity..." -ForegroundColor Gray
+$checkedMutations = 0
+foreach ($file in $sqlFiles) {
+    $content = Get-Content -Path $file.FullName -Raw
+    if ($content -match '(?i)\b(INSERT\s+INTO|UPDATE\s+\w+|DELETE\s+FROM|ALTER\s+TABLE|DROP\s+TABLE)\b') {
+        $checkedMutations++
+        $hasBegin = $content -match '(?i)\b(BEGIN\s+TRANSACTION|BEGIN\s+TRANS|BEGIN\b)'
+        $hasCommit = $content -match '(?i)\b(COMMIT\s+TRANSACTION|COMMIT\s+TRANS|COMMIT\b)'
+        if (-not ($hasBegin -and $hasCommit)) {
+            Write-Host "  FAIL: Mutation operations in $($file.Name) are not enclosed in a transaction block." -ForegroundColor Red
+            $success = $false
+        } else {
+            Write-Host "  PASS: Mutations in $($file.Name) are enclosed in a transaction." -ForegroundColor Green
+        }
+    }
+}
+if ($checkedMutations -eq 0) {
+    Write-Host "  INFO: No SQL mutation scripts found to validate." -ForegroundColor Yellow
+}
+
+# 4. Relational & Schema Design Check
+Write-Host "[4/4] Verifying Relational Indexing & Keyword Best Practices..." -ForegroundColor Gray
+$reservedKeywords = @('user', 'order', 'group', 'table', 'select', 'where', 'limit', 'join', 'index')
+$designIssues = 0
+foreach ($file in $sqlFiles) {
+    $content = Get-Content -Path $file.FullName -Raw
+    
+    if ($content -match 'SELECT\s+\*\s+FROM') {
+        Write-Host "  WARN: $($file.Name) contains SELECT * queries. Request specific column targets for performance." -ForegroundColor Yellow
+    }
+    
+    $matches = [regex]::Matches($content, '(?i)\b(\w+_(id)|(id)_\w+)\b')
+    foreach ($match in $matches) {
+        $colName = $match.Value
+        if ($colName -ne "id" -and $content -notmatch "INDEX\b.*?\b$colName\b") {
+            Write-Host "  WARN: Column '$colName' in $($file.Name) appears to be a foreign key reference but lacks a backing INDEX." -ForegroundColor Yellow
+        }
+    }
+    
+    foreach ($kw in $reservedKeywords) {
+        if ($content -match "\b$kw\b" -and $content -match "(CREATE\s+TABLE|ALTER\s+TABLE)\s+\b$kw\b") {
+            Write-Host "  FAIL: Table name in $($file.Name) uses reserved SQL keyword '$kw'." -ForegroundColor Red
+            $designIssues++
+            $success = $false
+        }
+    }
+}
+if ($designIssues -eq 0 -and $sqlFiles.Count -gt 0) {
+    Write-Host "  PASS: Schema design rules satisfied." -ForegroundColor Green
+}
+
+if ($success) {
+    Write-Host "Database Verification Success!" -ForegroundColor Green
+    exit 0
+} else {
+    Write-Host "Database Verification Failed!" -ForegroundColor Red
+    exit 1
+}
+'@
+}
+
+function Get-ValidateSysSandboxContent {
+    return @'
+# validate-sys-sandbox.ps1
+# Privilege, idempotent path, and exception defense validation engine for Systems Automation profile
+
+$ErrorActionPreference = "Stop"
+$success = $true
+
+Write-Host "Running Systems Automation Verification Suite..." -ForegroundColor Cyan
+
+$scriptFiles = Get-ChildItem -Path . -Recurse -Include "*.ps1", "*.sh", "*.py" -Exclude "scaffold.ps1" -ErrorAction SilentlyContinue
+if ($scriptFiles.Count -eq 0) {
+    Write-Host "  INFO: No user automation scripts found to validate." -ForegroundColor Yellow
+} else {
+    # 1. Idempotent Path Resolution & Environment Cleanliness
+    Write-Host "[1/4] Checking Idempotency & Temp Path Operations..." -ForegroundColor Gray
+    $idempotencyPass = $true
+    foreach ($file in $scriptFiles) {
+        $content = Get-Content -Path $file.FullName -Raw
+        if ($file.Extension -eq ".ps1") {
+            if ($content -match 'New-Item\s+.*?-ItemType\s+Directory' -and $content -notmatch 'Test-Path' -and $content -notmatch '-Force') {
+                Write-Host "  FAIL: $($file.Name) creates a directory without safety check or -Force." -ForegroundColor Red
+                $idempotencyPass = $false
+                $success = $false
+            }
+        }
+        if ($content -match '(?i)(C:\\temp\b|/tmp\b)') {
+            Write-Host "  WARN: $($file.Name) references a hardcoded system temporary directory. Use env/workspace temp paths." -ForegroundColor Yellow
+        }
+    }
+    if ($idempotencyPass) {
+        Write-Host "  PASS: Script path resolutions appear idempotent." -ForegroundColor Green
+    }
+
+    # 2. Explicit Exception Defenses
+    Write-Host "[2/4] Checking Exception Defenses & Error Hooks..." -ForegroundColor Gray
+    $defensePass = $true
+    foreach ($file in $scriptFiles) {
+        $content = Get-Content -Path $file.FullName -Raw
+        if ($file.Extension -eq ".ps1") {
+            if ($content -match '\b(Copy-Item|Remove-Item|Move-Item|Set-Content|Out-File|Invoke-Expression|Start-Process)\b') {
+                if ($content -notmatch 'try\s*\{' -and $content -notmatch '\$ErrorActionPreference\s*=\s*["'']SilentlyContinue["'']') {
+                    Write-Host "  FAIL: $($file.Name) performs system operations without a try/catch or error action override." -ForegroundColor Red
+                    $defensePass = $false
+                    $success = $false
+                }
+            }
+        }
+    }
+    if ($defensePass) {
+        Write-Host "  PASS: System mutations have try/catch or error overrides defined." -ForegroundColor Green
+    }
+
+    # 3. Privilege Level & Hardcoded Secrets Audits
+    Write-Host "[3/4] Running Security & Privilege Audits..." -ForegroundColor Gray
+    $secPass = $true
+    foreach ($file in $scriptFiles) {
+        $content = Get-Content -Path $file.FullName -Raw
+        if ($content -match '(?i)admin') {
+            if ($content -notmatch 'WindowsPrincipal' -and $content -notmatch 'IsAdmin' -and $content -notmatch 'runas') {
+                Write-Host "  FAIL: $($file.Name) references admin operations but lacks explicit privilege checking." -ForegroundColor Red
+                $secPass = $false
+                $success = $false
+            }
+        }
+        
+        if ($content -match '(?i)(password|secret|token|apikey|privatekey)\s*=\s*["''][^"'']{3,}["'']') {
+            Write-Host "  WARN: $($file.Name) contains potential hardcoded plain-text credentials." -ForegroundColor Yellow
+        }
+    }
+    if ($secPass) {
+        Write-Host "  PASS: Security and privilege gates verified." -ForegroundColor Green
+    }
+
+    # 4. CLI Parameters validation
+    Write-Host "[4/4] Validating CLI Design & Parameter Hooks..." -ForegroundColor Gray
+    $cliPass = $true
+    foreach ($file in $scriptFiles) {
+        $content = Get-Content -Path $file.FullName -Raw
+        if ($file.Extension -eq ".ps1") {
+            if ($content -match '(?s)param\s*\(') {
+                Write-Host "  PASS: $($file.Name) contains structured param() blocks for arguments." -ForegroundColor Green
+            } else {
+                Write-Host "  WARN: $($file.Name) does not utilize a formal param() block for argument validation." -ForegroundColor Yellow
+            }
+        }
+    }
+}
+
+if ($success) {
+    Write-Host "Systems Automation Verification Success!" -ForegroundColor Green
+    exit 0
+} else {
+    Write-Host "Systems Automation Verification Failed!" -ForegroundColor Red
+    exit 1
+}
+'@
+}
+
+function Get-TestHarnessContent {
+    return @'
+# test-harness.ps1
+# Main validation entrypoint for the scaffolded workspace
+
+$ErrorActionPreference = "Stop"
+
+Write-Host "Initializing Test Harness..." -ForegroundColor Cyan
+
+$projectDetailsDir = Split-Path -Path $PSScriptRoot -Parent
+$agentPath = Join-Path -Path $projectDetailsDir -ChildPath "AGENT.md"
+if (-not (Test-Path -Path $agentPath)) {
+    Write-Host "Error: AGENT.md not found in project_details/" -ForegroundColor Red
+    exit 1
+}
+
+$agentContent = Get-Content -Path $agentPath -Raw
+$profileName = "systems-auto"
+
+if ($agentContent -match '(?i)Web Developer|Web Dev') {
+    $profileName = "web-dev"
+} elseif ($agentContent -match '(?i)Database Administrator|DBA|Database') {
+    $profileName = "database"
+} elseif ($agentContent -match '(?i)Systems Scripting|DevOps|Systems Automation') {
+    $profileName = "systems-auto"
+}
+
+Write-Host "Detected Profile: $profileName" -ForegroundColor Cyan
+
+Write-Host "Running Pre-Flight Host Runtime Check..." -ForegroundColor Gray
+$binaries = @()
+if ($profileName -eq "web-dev") {
+    $binaries = @("node", "npm")
+} elseif ($profileName -eq "database") {
+    $binaries = @("sqlite3", "git")
+} else {
+    $binaries = @("python", "git")
+}
+
+$missing = @()
+foreach ($bin in $binaries) {
+    $cmd = Get-Command $bin -ErrorAction SilentlyContinue
+    if ($null -eq $cmd) {
+        $missing += $bin
+    }
+}
+
+if ($missing.Count -gt 0) {
+    Write-Host "Pre-flight Warning: The following binaries are missing from the path: $($missing -join ', ')" -ForegroundColor Yellow
+} else {
+    Write-Host "Pre-flight Check PASS: All required binaries are present." -ForegroundColor Green
+}
+
+$scriptPath = ""
+if ($profileName -eq "web-dev") {
+    $scriptPath = Join-Path -Path $PSScriptRoot -ChildPath "validate-web-base.ps1"
+} elseif ($profileName -eq "database") {
+    $scriptPath = Join-Path -Path $PSScriptRoot -ChildPath "validate-db-schema.ps1"
+} else {
+    $scriptPath = Join-Path -Path $PSScriptRoot -ChildPath "validate-sys-sandbox.ps1"
+}
+
+if (Test-Path -Path $scriptPath) {
+    & $scriptPath
+} else {
+    Write-Host "Error: Validation script not found at $scriptPath" -ForegroundColor Red
+    exit 1
+}
+'@
+}
+
 function Draw-UI {
     Clear-Host
     $ui = "`n`n"
@@ -583,6 +1070,22 @@ while ($running) {
             }
             if ($item.Selected -and $item.Id -eq "agent") {
                 Show-AgentDomainSubmenu
+            }
+            if ($item.Selected -and $item.Id -eq "agent") {
+                foreach ($partner in $state) {
+                    if ($partner.Id -eq "testing" -and -not $partner.Selected) {
+                        if ($partner.Category -eq "Artifacts" -and $partner.Installed) {
+                            Write-Host "`n  ${fgGold}Artifact '$($partner.Label)' already exists. Overwrite? [Y]es / [C]ancel: ${resetColor}" -NoNewline
+                            $pAns = [Console]::ReadKey($true)
+                            if ($pAns.KeyChar -eq 'y' -or $pAns.KeyChar -eq 'Y') {
+                                $partner.Selected = $true
+                                $partner.Overwrite = $true
+                            }
+                        } else {
+                            $partner.Selected = $true
+                        }
+                    }
+                }
             }
             # Auto-pair: checking github.md <-> github skill, firebase.md <-> firebase skill
             if ($item.Selected -and ($item.Id -eq "github" -or $item.Id -eq "firebase")) {
@@ -739,6 +1242,36 @@ $selectedLicense = $licenses[$currentLicenseIndex]
 Clear-Host
 Write-Host "Provisioning project artifacts to $targetRoot..." -ForegroundColor Cyan
 
+$testingSelected = $false
+foreach ($item in $state) {
+    if ($item.Id -eq "testing" -and $item.Selected) {
+        $testingSelected = $true
+        break
+    }
+}
+
+$preFlightJob = $null
+if ($testingSelected) {
+    $profileName = Get-AgentProfileFromDomain -domain $script:selectedAgentDomain
+    $preFlightJob = Start-Job -ScriptBlock {
+        param($profileName)
+        $binaries = @()
+        if ($profileName -eq "web-dev") {
+            $binaries = @("node", "npm")
+        } elseif ($profileName -eq "database") {
+            $binaries = @("sqlite3", "git")
+        } else {
+            $binaries = @("python", "git")
+        }
+        $results = @{}
+        foreach ($bin in $binaries) {
+            $path = Get-Command $bin -ErrorAction SilentlyContinue
+            $results[$bin] = ($null -ne $path)
+        }
+        return $results
+    } -ArgumentList $profileName
+}
+
 if ($selectedLicense.Id -ne "none") {
     $licensePath = Join-Path -Path $targetRoot -ChildPath "LICENSE.md"
     if (-not (Test-Path -Path $licensePath)) {
@@ -865,6 +1398,43 @@ foreach ($item in $state) {
                             Write-Host "Warning: Failed to customize AGENT.md focus guidelines." -ForegroundColor Yellow
                         }
                     }
+                    if ($performedCopy -and $item.Id -eq "testing") {
+                        try {
+                            $testingContent = Get-TestingMdContent -domain $script:selectedAgentDomain
+                            $testingContent | Set-Content -Path $finalPath
+                            
+                            $scaffoldScriptsDir = Join-Path -Path $targetRoot -ChildPath "project_details\scripts"
+                            if (-not (Test-Path -Path $scaffoldScriptsDir)) {
+                                New-Item -ItemType Directory -Force -Path $scaffoldScriptsDir | Out-Null
+                            }
+                            
+                            $profile = Get-AgentProfileFromDomain -domain $script:selectedAgentDomain
+                            if ($profile -eq "web-dev") {
+                                $validationScriptPath = Join-Path -Path $scaffoldScriptsDir -ChildPath "validate-web-base.ps1"
+                                $validationScriptContent = Get-ValidateWebBaseContent
+                                $validationScriptContent | Set-Content -Path $validationScriptPath
+                            }
+                            elseif ($profile -eq "database") {
+                                $validationScriptPath = Join-Path -Path $scaffoldScriptsDir -ChildPath "validate-db-schema.ps1"
+                                $validationScriptContent = Get-ValidateDbSchemaContent
+                                $validationScriptContent | Set-Content -Path $validationScriptPath
+                            }
+                            else {
+                                $validationScriptPath = Join-Path -Path $scaffoldScriptsDir -ChildPath "validate-sys-sandbox.ps1"
+                                $validationScriptContent = Get-ValidateSysSandboxContent
+                                $validationScriptContent | Set-Content -Path $validationScriptPath
+                            }
+                            
+                            $harnessPath = Join-Path -Path $scaffoldScriptsDir -ChildPath "test-harness.ps1"
+                            $harnessContent = Get-TestHarnessContent
+                            $harnessContent | Set-Content -Path $harnessPath
+                            
+                            Write-Host "Provisioned testing harness and validation scripts" -ForegroundColor Green
+                        }
+                        catch {
+                            Write-Host "Warning: Failed to customize TESTING.md focus guidelines." -ForegroundColor Yellow
+                        }
+                    }
                 }
             }
         }
@@ -911,6 +1481,31 @@ if (-not (Test-Path -Path $readmemdPath)) {
     $readmemdContent = "# $projectTitle`n`n## Overview`n`nDescription of the project and its purpose.`n`n## Getting Started`n`nInstructions for setting up the project.`n`n## Usage`n`nHow to use the project.`n`n## License`n`nThis project is licensed under the $($licenses[$currentLicenseIndex].Label).`n"
     New-Item -ItemType File -Force -Path $readmemdPath -Value $readmemdContent | Out-Null
     Write-Host "Created File: README.md (Baseline)" -ForegroundColor Green
+}
+
+if ($null -ne $preFlightJob) {
+    Write-Host "`nWaiting for pre-flight host runtime check..." -ForegroundColor Cyan
+    try {
+        $results = Wait-Job $preFlightJob -Timeout 5 | Receive-Job
+        if ($null -ne $results) {
+            Write-Host "`nPre-flight Host Runtime Check Results:" -ForegroundColor Cyan
+            $allPassed = $true
+            foreach ($bin in $results.Keys) {
+                if ($results[$bin]) {
+                    Write-Host "  PASS: $bin is installed and available in path." -ForegroundColor Green
+                } else {
+                    Write-Host "  WARN: $bin was not found in the path. Please ensure it is installed." -ForegroundColor Yellow
+                    $allPassed = $false
+                }
+            }
+        }
+    }
+    catch {
+        Write-Host "Warning: Pre-flight check timed out or failed to complete." -ForegroundColor Yellow
+    }
+    finally {
+        Remove-Job $preFlightJob -Force -ErrorAction SilentlyContinue
+    }
 }
 
 Write-Host ""
