@@ -7,6 +7,7 @@ This directory contains complex code payloads (skills) that the Code Scaffold en
 | Label | Description | Version | Target Path |
 | :--- | :--- | :--- | :--- |
 | **Braille Animations** | Create and manage unicode braille animations and spinners for CLIs and web apps | v1.0.0 | `.skills/braille-animations` |
+| **Clerk Authentication Perimeter** | Clerk Auth integration utilizing Next.js App Router patterns | v1.0.0 | `.skills/clerk` |
 | **Excalidraw** | Renders and embeds Excalidraw whiteboards | v1.1.1 | `.skills/excalidraw` |
 | **Firebase** | Firebase authentication and database connectivity | v1.1.2 | `.skills/firebase` |
 | **Firecrawl** | Crawl and scrape websites to clean markdown or structured data with Firecrawl API & CLI | v1.0.0 | `.skills/firecrawl` |
@@ -27,6 +28,8 @@ This directory contains complex code payloads (skills) that the Code Scaffold en
 | **SEO GEO AEO Auditor** | Unified model-agnostic Search Engine, Generative Engine, and Answer Engine Optimization auditor to analyze traditional visibility, AI engine discoverability, and snippet answers | v1.0.0 | `.skills/seo-geo-aeo-auditor` |
 | **Supabase** | Supabase database and authentication integration | v1.1.1 | `.skills/supabase` |
 | **Telegram** | Telegram Bot API interactions | v1.1.1 | `.skills/telegram` |
+| **Upstash Redis Management** | Connectionless state operations and sliding window rate limiting | v1.0.0 | `.skills/upstash` |
+| **Vercel Deployment Routine** | Vercel optimization for Edge and Serverless environments | v1.0.0 | `.skills/vercel` |
 | **Website Deploy Linux** | Enterprise Linux Deployment Agent for deploying static sites and SPAs to Nginx locally or remotely via PuTTY CLI (plink/pscp) or SSH, featuring upfront architectural prompting, automatic .env setups, reference scripts, and non-destructive folder structures | v1.5.0 | `.skills/website-deploy-linux` |
 
 ## Modifying Skills

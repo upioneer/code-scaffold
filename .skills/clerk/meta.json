@@ -1,0 +1,5 @@
+{
+  "label": "Clerk Authentication Perimeter",
+  "target": ".skills/clerk",
+  "version": "1.0.0"
+}

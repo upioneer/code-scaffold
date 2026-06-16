@@ -63,3 +63,28 @@
   3. Execute scripts via the `run.js` executor which handles module resolution and Playwright setup.
   4. Perform actions like page navigation, form submission, screenshots, and responsive design checks.
 
+## SKILL: Vercel Deployment Routine
+* Purpose: Coordinate serverless infrastructure and deployment pipelines on Vercel.
+* Logic:
+  1. Verify the presence of `vercel.json` in the root workspace.
+  2. Verify that `VERCEL_ORG_ID` and `VERCEL_PROJECT_ID` are configured in the environment.
+  3. Validate that build configurations conform to the serverless optimization matrix.
+  4. Coordinate Vercel CLI deployment steps for staging and production boundaries.
+
+## SKILL: Clerk Authentication Perimeter
+* Purpose: Enforce edge compatible identity boundaries across layouts and API routes using Clerk.
+* Logic:
+  1. Verify Clerk key parameters in the environment variables.
+  2. Ensure the root layout file wraps content inside `ClerkProvider`.
+  3. Implement global middleware using clerkMiddleware to wrap private application paths.
+  4. Secure Server Actions and Route Handlers utilizing auth to block unauthenticated access.
+
+## SKILL: Upstash Redis Management
+* Purpose: Implement connectionless state operations and sliding window rate limiting.
+* Logic:
+  1. Verify connectionless Redis parameters in environment configurations.
+  2. Instantiate the Redis client using Redis fromEnv.
+  3. Construct an API rate limiting wrapper using a sliding window algorithm.
+  4. Track pending analytical promises using waitUntil on Vercel Edge compute instances.
+
+
