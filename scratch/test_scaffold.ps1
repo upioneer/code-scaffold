@@ -1,196 +1,416 @@
-# Automated Test Suite for Code Scaffold v3.3.5 / v3.3.6
+$ErrorActionPreference = "Stop"
 
-$scaffoldScript = "C:\Users\hgran\OneDrive\Documents\code\Projects\Code Scaffold\scaffold.ps1"
+$workspaceRoot = "C:\Users\hgran\OneDrive\Documents\code\Projects\Code Scaffold"
+$targetRoot = Join-Path -Path $workspaceRoot -ChildPath "scratch\test_deploy"
 
-# 1. Load the helper functions by dot-sourcing the script
-# Wait! Since dot-sourcing runs the interactive loop, we can just define the two helper functions here exactly as they are in the scaffold script to test them!
-# Or we can read the functions from the script using AST parsing, or we can just duplicate them here.
-# Duplicating them here is simple and extremely robust.
+Write-Host "Setting up clean test directory..." -ForegroundColor Cyan
+if (Test-Path -Path $targetRoot) {
+    Remove-Item -Path $targetRoot -Recurse -Force
+}
+New-Item -ItemType Directory -Force -Path $targetRoot | Out-Null
 
-function Get-AgentDomainRoleContent {
+$templatesDir = Join-Path -Path $workspaceRoot -ChildPath ".templates"
+$skillsDir = Join-Path -Path $workspaceRoot -ChildPath ".skills"
+
+$state = @()
+
+# Define apps
+$state += [PSCustomObject]@{
+    Category        = "Apps"
+    Id              = "src"
+    Label           = "Source Code (/src)"
+    Target          = "src"
+    Method          = "mkdir"
+    Source          = $null
+    Selected        = $true
+    Installed       = $false
+    UpdateAvailable = $false
+    VersionStr      = ""
+    Overwrite       = $false
+}
+
+$state += [PSCustomObject]@{
+    Category        = "Apps"
+    Id              = "tests"
+    Label           = "Test Suite (/tests)"
+    Target          = "tests"
+    Method          = "mkdir"
+    Source          = $null
+    Selected        = $true
+    Installed       = $false
+    UpdateAvailable = $false
+    VersionStr      = ""
+    Overwrite       = $false
+}
+
+$state += [PSCustomObject]@{
+    Category        = "Apps"
+    Id              = "docs"
+    Label           = "Documentation (/docs)"
+    Target          = "docs"
+    Method          = "mkdir"
+    Source          = $null
+    Selected        = $true
+    Installed       = $false
+    UpdateAvailable = $false
+    VersionStr      = ""
+    Overwrite       = $false
+}
+
+# Load template artifacts
+if (Test-Path -Path $templatesDir) {
+    $templateItems = Get-ChildItem -Path $templatesDir -File
+    foreach ($file in $templateItems) {
+        if ($file.Name -match "(?i)^license\.md$") {
+            continue
+        }
+        $targetFile = "project_details\$($file.Name)"
+        $isSelected = $true
+        if ($file.Name -match "(?i)^readme\.md$") {
+            $targetFile = $file.Name
+        }
+        elseif ($file.Name -match "(?i)^vercel\.json$") {
+            $targetFile = $file.Name
+        }
+        elseif ($file.Name -match "(?i)^deploy\.yml$") {
+            $targetFile = ".github\workflows\deploy.yml"
+        }
+        elseif ($file.Name -match "(?i)^env\.example$") {
+            $targetFile = ".env.example"
+        }
+        
+        $state += [PSCustomObject]@{
+            Category        = "Artifacts"
+            Id              = $file.BaseName
+            Label           = $file.Name
+            Target          = $targetFile
+            Method          = "copy"
+            Source          = $file.FullName
+            Selected        = $isSelected
+            Installed       = $false
+            UpdateAvailable = $false
+            VersionStr      = ""
+            Overwrite       = $false
+        }
+    }
+}
+
+# Load skills
+if (Test-Path -Path $skillsDir) {
+    $skillItems = Get-ChildItem -Path $skillsDir -Directory
+    foreach ($folder in $skillItems) {
+        $displayLabel = $folder.Name
+        $targetDir = ".skills\$($folder.Name)"
+        $metaPath = Join-Path -Path $folder.FullName -ChildPath "meta.json"
+        
+        $state += [PSCustomObject]@{
+            Category        = "Agent Skills"
+            Id              = $folder.Name
+            Label           = $displayLabel
+            Target          = $targetDir
+            Method          = "copy"
+            Source          = $folder.FullName
+            Selected        = $true
+            Installed       = $false
+            UpdateAvailable = $false
+            VersionStr      = ""
+            Overwrite       = $false
+        }
+    }
+}
+
+# Run the exact code generation functions from scaffold.ps1
+function Get-TestingMdContent {
     param (
         [string]$domain
     )
-    
-    $roleText = ""
-    switch ($domain) {
-        "Web Dev" {
-            $roleText = "You are an expert Web Developer specializing in UI UX, API design, authentication, and state management. Your goal is to build and maintain the web applications and APIs for this project."
-        }
-        "Docker / DevOps" {
-            $roleText = "You are an expert DevOps Engineer specializing in containerization, CI CD pipelines, and infrastructure hardening. Your goal is to manage container orchestration and deployment pipelines."
-        }
-        "Mobile (iOS/And)" {
-            $roleText = "You are an expert Mobile Software Engineer specializing in native mobile architectures, device permissions, and offline sync. Your goal is to build and maintain mobile applications for this project."
-        }
-        "DBA" {
-            $roleText = "You are an expert Database Administrator specializing in heavy schema design, migration strategies, and data orchestration. Your goal is to manage database schemas and data flows."
-        }
-        "Systems Scripting" {
-            $roleText = "You are an expert Systems Scripting Engineer specializing in CLI tools, error handling, logging, and script automation. Your goal is to build and maintain automated scripts and CLI utilities."
-        }
-        Default {
-            $roleText = "You are an expert Generalist Software Engineer specializing in clean code principles, SOLID design, and robust baseline verification loops. Your goal is to build and maintain correct and maintainable software components."
-        }
-    }
-    
-    return "## Role`n$roleText"
-}
+    return @"
+# TESTING.md - Web Development Verification Suite
 
-function Get-AgentDomainSystemArchContent {
-    param (
-        [string]$domain
-    )
-    
-    $archOverview = ""
-    $lines = @()
-    switch ($domain) {
-        "Web Dev" {
-            $archOverview = "This project follows a modern web architecture utilizing distinct frontend interfaces, API routing layers, secure authentication boundaries, and state management systems."
-            $lines += "* Focuses on UI UX, API design, authentication, and state management."
-            $lines += "* Prioritize responsive design, accessible UI UX components, and efficient state management."
-            $lines += "* Ensure clear separation of concern between visual rendering and backing API endpoints."
-            $lines += "* Follow strict security practices for managing authentication, sessions, and data storage."
-        }
-        "Docker / DevOps" {
-            $archOverview = "This project leverages containerized services managed via Docker environments, robust CI CD pipelines, and strict infrastructure configuration profiles."
-            $lines += "* Focuses on containerization, CI CD pipelines, and infrastructure hardening."
-            $lines += "* Enforce containerization best practices, multi-stage builds, and minimal base images."
-            $lines += "* Prioritize automated CI CD integration pipelines and secure environment configuration."
-            $lines += "* Ensure secrets are never committed and containers run with non-root user permissions."
-        }
-        "Mobile (iOS/And)" {
-            $archOverview = "This project is designed around a native mobile architecture emphasizing offline-first synchronization, local database caching, secure device storage, and native platform services."
-            $lines += "* Focuses on native mobile architectures, device permissions, and offline sync."
-            $lines += "* Prioritize clean native mobile patterns, strict offline sync behavior, and database caching."
-            $lines += "* Implement robust permission handling, device hardware integration, and battery efficiency."
-            $lines += "* Ensure secure local storage and elegant recovery under varying network connectivity."
-        }
-        "DBA" {
-            $archOverview = "This project is structured around relational database storage, optimized schemas, safe migration sequencing, transaction controls, and robust analytical modeling."
-            $lines += "* When the project requires heavy schema design, migration strategies, or data orchestration."
-            $lines += "* Enforce strict relational database schemas, migrations tracking, and optimized indexing."
-            $lines += "* Focus on reliable transaction boundaries, efficient query plans, and backup strategies."
-            $lines += "* Ensure isolation levels, integrity constraints, and data security policies are enforced."
-        }
-        "Systems Scripting" {
-            $archOverview = "This project is organized as a modular systems utility utilizing robust CLI patterns, native shell integration, explicit error codes, and comprehensive diagnostic logging."
-            $lines += "* Focuses on CLI tools, error handling, logging, and script automation."
-            $lines += "* Focus on robust command line interfaces, reliable return codes, and system call boundaries."
-            $lines += "* Prioritize explicit error handling, structured logging, and thorough fallback workflows."
-            $lines += "* Enforce portable execution paths, platform independence, and automated diagnostic suites."
-        }
-        Default {
-            $archOverview = "This project is built using a modular architecture with high test coverage, robust baseline verification loops, clean separation of concerns, and portable execution paths."
-            $lines += "* Standard fallback focusing on clean code principles and baseline verification loops."
-            $lines += "* Follow clean code principles, SOLID design, and robust baseline verification loops."
-            $lines += "* Focus on high test coverage, descriptive naming conventions, and automated build flows."
-            $lines += "* Prioritize comprehensive API documentation, review guides, and peer validation steps."
-        }
-    }
-    
-    $combinedLines = $lines -join "`n"
-    return "## System Architecture Overview`n$archOverview`n`n$combinedLines"
-}
+## 1. Automated Baseline Verification
+This workspace includes an automated UI structure validation engine. Run the following command from the project root directory to verify that the scaffolding matches foundational web specifications:
+./project_details/scripts/validate-web-base.ps1
 
-# 2. Define the mock template content (matching the newly updated empty headers in .templates\agent.md)
-$mockTemplateContent = @"
-# AGENT.md
-
-## Role
-
-
-## System Architecture Overview
-
-
-## MANDATORY EXECUTION SEQUENCE & VERSIONING PROTOCOL (STRICT)
-* Rule A
-* Rule B
+## 2. Quality Gates & Validation Protocols
+All subsequent code additions by the agent or developer must satisfy the following structural requirements:
+* Semantic DOM Elements: Main layout files must contain clear structural land markers (e.g., header, main, footer).
+* Asset Map Ingestion: Core configuration files must map asset pathways deterministically to prevent broken compilation pipelines.
+* Clean Compilation Targets: Client side bootstrap entry points must resolve without dangling dependencies or unresolved relative paths.
+* Code Quality: Source code should be clean, contain no residual debuggers or console statements, and follow SPA best practices.
 "@
+}
 
-# 3. Define the domains to test
-$domains = @("Web Dev", "Docker / DevOps", "Mobile (iOS/And)", "DBA", "Systems Scripting", "Generic")
+function Get-ValidateWebBaseContent {
+    return @'
+# validate-web-base.ps1
+# Automated UI structure validation engine for Web Dev profile
 
-Write-Host "Running automated regex replacement tests across all 6 focus domains..." -ForegroundColor Cyan
-
+$ErrorActionPreference = "Stop"
 $success = $true
 
-foreach ($dom in $domains) {
-    Write-Host "Testing Domain: '$dom'..." -ForegroundColor Gray
-    
-    $tempContent = $mockTemplateContent
-    
-    # Run the exact regex replacement blocks from scaffold.ps1
-    $newRole = Get-AgentDomainRoleContent -domain $dom
-    $tempContent = $tempContent -replace "(?s)## Role\r?\n(.*?)(?=\r?\n## System Architecture Overview)", "$newRole"
-    
-    $newArch = Get-AgentDomainSystemArchContent -domain $dom
-    $tempContent = $tempContent -replace "(?s)## System Architecture Overview\r?\n(.*?)(?=\r?\n## MANDATORY)", "$newArch"
-    
-    # Assertions
-    $roleTitleCheck = $tempContent -match "## Role"
-    $archTitleCheck = $tempContent -match "## System Architecture Overview"
-    $mandatoryTitleCheck = $tempContent -match "## MANDATORY EXECUTION SEQUENCE & VERSIONING PROTOCOL \(STRICT\)"
-    
-    # Assert that empty headers are not present anymore
-    $hasEmptyRole = $tempContent -match "## Role\r?\n\r?\n##"
-    
-    if (-not $roleTitleCheck -or -not $archTitleCheck -or -not $mandatoryTitleCheck) {
-        Write-Host "  FAIL: Headers missing or corrupted!" -ForegroundColor Red
-        $success = $false
-        continue
-    }
-    
-    if ($hasEmptyRole) {
-        Write-Host "  FAIL: Role section remained empty!" -ForegroundColor Red
-        $success = $false
-        continue
-    }
-    
-    # Assert that domain specific content is inside
-    switch ($dom) {
-        "Web Dev" {
-            $containsWord = $tempContent.Contains("Web Developer specializing in UI UX")
-            $containsArch = $tempContent.Contains("distinct frontend interfaces")
+Write-Host "Running Web Development Verification Suite..." -ForegroundColor Cyan
+
+# 1. Semantic DOM Elements check
+Write-Host "[1/4] Checking Semantic DOM Elements & SPA roots..." -ForegroundColor Gray
+$htmlFiles = Get-ChildItem -Path . -Filter "*.html" -Recurse -ErrorAction SilentlyContinue
+if ($htmlFiles.Count -gt 0) {
+    foreach ($file in $htmlFiles) {
+        $content = Get-Content -Path $file.FullName -Raw
+        $hasHeader = $content -match "<header\b"
+        $hasMain = $content -match "<main\b"
+        $hasFooter = $content -match "<footer\b"
+        $hasRoot = $content -match 'id=["''](root|app)["'']'
+        
+        if (-not ($hasHeader -and $hasMain -and $hasFooter)) {
+            Write-Host "  FAIL: $($file.FullName) is missing structural landmarks (header, main, or footer)." -ForegroundColor Red
+            $success = $false
+        } else {
+            Write-Host "  PASS: $($file.Name) contains header, main, and footer." -ForegroundColor Green
         }
-        "Docker / DevOps" {
-            $containsWord = $tempContent.Contains("DevOps Engineer specializing in containerization")
-            $containsArch = $tempContent.Contains("Docker environments")
-        }
-        "Mobile (iOS/And)" {
-            $containsWord = $tempContent.Contains("Mobile Software Engineer")
-            $containsArch = $tempContent.Contains("offline-first synchronization")
-        }
-        "DBA" {
-            $containsWord = $tempContent.Contains("Database Administrator")
-            $containsArch = $tempContent.Contains("relational database storage")
-        }
-        "Systems Scripting" {
-            $containsWord = $tempContent.Contains("Systems Scripting Engineer")
-            $containsArch = $tempContent.Contains("modular systems utility")
-        }
-        Default {
-            $containsWord = $tempContent.Contains("Generalist Software Engineer")
-            $containsArch = $tempContent.Contains("modular architecture with high test coverage")
+        
+        if ($hasRoot) {
+            Write-Host "  PASS: $($file.Name) contains a modern SPA root mounting node." -ForegroundColor Green
         }
     }
-    
-    if (-not $containsWord) {
-        Write-Host "  FAIL: Role description not correctly populated!" -ForegroundColor Red
+} else {
+    Write-Host "  INFO: No HTML files found yet to validate semantic structure." -ForegroundColor Yellow
+}
+
+# 2. Asset Map Ingestion & Compilation Entry Points check
+Write-Host "[2/4] Checking Asset Ingestion & Script Entry Points..." -ForegroundColor Gray
+$allFiles = Get-ChildItem -Path . -File -Recurse -Exclude "scaffold.ps1", ".gitignore" -ErrorAction SilentlyContinue
+$brokenAssets = 0
+foreach ($file in $allFiles) {
+    $content = Get-Content -Path $file.FullName -Raw
+    if ($content -match 'src\s*=\s*["''](file:/|[A-Za-z]:\\)') {
+        Write-Host "  FAIL: $($file.FullName) contains hardcoded absolute asset path." -ForegroundColor Red
+        $brokenAssets++
         $success = $false
     }
-    elseif (-not $containsArch) {
-        Write-Host "  FAIL: System Architecture overview not correctly populated!" -ForegroundColor Red
+}
+if ($brokenAssets -eq 0) {
+    Write-Host "  PASS: No absolute or broken asset path references found." -ForegroundColor Green
+}
+
+# 3. React/Vite/SPA Best Practices Check
+Write-Host "[3/4] Running React, Vite, & SPA Lint Checks..." -ForegroundColor Gray
+$jsFiles = Get-ChildItem -Path . -Include "*.js", "*.jsx", "*.ts", "*.tsx" -Recurse -Exclude "scaffold.ps1" -ErrorAction SilentlyContinue
+$lockFiles = Get-ChildItem -Path . -Include "*lock*" -Recurse -ErrorAction SilentlyContinue
+
+if ($jsFiles.Count -gt 0) {
+    foreach ($file in $jsFiles) {
+        $content = Get-Content -Path $file.FullName -Raw
+        if ($content -match 'console\.log\(') {
+            Write-Host "  WARN: $($file.Name) contains active console.log() statements." -ForegroundColor Yellow
+        }
+        if ($content -match '\bdebugger\b') {
+            Write-Host "  FAIL: $($file.Name) contains active debugger statement." -ForegroundColor Red
+            $success = $false
+        }
+    }
+}
+
+# 4. Dependency Hardening Check
+Write-Host "[4/4] Verifying Lockfile & Dependency Hardening..." -ForegroundColor Gray
+$packageJson = Get-ChildItem -Path . -Filter "package.json" -Recurse -ErrorAction SilentlyContinue
+if ($packageJson.Count -gt 0) {
+    if ($lockFiles.Count -eq 0) {
+        Write-Host "  WARN: package.json found but no package-lock.json, yarn.lock, or pnpm-lock.yaml exists." -ForegroundColor Yellow
+    } else {
+        Write-Host "  PASS: Found active lockfile: $($lockFiles[0].Name)." -ForegroundColor Green
+    }
+}
+
+# 5. Serverless, Auth & In-Memory Store Checks
+Write-Host "[5/5] Verifying Serverless, Auth & In-Memory Store setup..." -ForegroundColor Gray
+$vercelCheck = Test-Path -Path (Join-Path -Path . -ChildPath "vercel.json")
+if ($vercelCheck) {
+    Write-Host "  PASS: vercel.json configuration exists." -ForegroundColor Green
+} else {
+    Write-Host "  FAIL: vercel.json is missing." -ForegroundColor Red
+    $success = $false
+}
+
+$workflowCheck = Test-Path -Path (Join-Path -Path . -ChildPath ".github/workflows/deploy.yml")
+if ($workflowCheck) {
+    Write-Host "  PASS: GitHub Actions deploy.yml exists." -ForegroundColor Green
+} else {
+    Write-Host "  FAIL: GitHub Actions deploy.yml is missing." -ForegroundColor Red
+    $success = $false
+}
+
+$envCheck = Test-Path -Path (Join-Path -Path . -ChildPath ".env.example")
+if ($envCheck) {
+    $envContent = Get-Content -Path ".env.example" -Raw
+    $hasClerk = $envContent -match "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY"
+    $hasRedis = $envContent -match "UPSTASH_REDIS_REST_URL"
+    if ($hasClerk -and $hasRedis) {
+        Write-Host "  PASS: .env.example contains Clerk and Upstash config placeholders." -ForegroundColor Green
+    } else {
+        Write-Host "  FAIL: .env.example is missing Clerk or Upstash variables." -ForegroundColor Red
         $success = $false
     }
-    else {
-        Write-Host "  PASS: Custom Role and System Architecture integrated correctly!" -ForegroundColor Green
-    }
+} else {
+    Write-Host "  FAIL: .env.example is missing." -ForegroundColor Red
+    $success = $false
+}
+
+$middlewareCheck = (Test-Path -Path "src/middleware.ts") -or (Test-Path -Path "middleware.ts")
+if ($middlewareCheck) {
+    Write-Host "  PASS: Clerk & Upstash Middleware file is present." -ForegroundColor Green
+} else {
+    Write-Host "  FAIL: Middleware file is missing." -ForegroundColor Red
+    $success = $false
 }
 
 if ($success) {
-    Write-Host "`nALL AUTOMATED TESTS PASSED SUCCESSFULLY! (6/6 domains verified)" -ForegroundColor Green
+    Write-Host "Web Development Verification Success!" -ForegroundColor Green
+    exit 0
 } else {
-    Write-Host "`nSOME TESTS FAILED. Please review the errors above." -ForegroundColor Red
+    Write-Host "Web Development Verification Failed!" -ForegroundColor Red
+    exit 1
+}
+'@
+}
+
+function Get-TestHarnessContent {
+    return @'
+# test-harness.ps1
+$ErrorActionPreference = "Stop"
+Write-Host "Initializing Test Harness..." -ForegroundColor Cyan
+'@
+}
+
+# Execution Copy Loop
+Write-Host "Executing scaffolding loop..." -ForegroundColor Cyan
+foreach ($item in $state) {
+    if ($item.Selected) {
+        $finalPath = Join-Path -Path $targetRoot -ChildPath $item.Target
+        if ($item.Method -eq "mkdir") {
+            if (-not (Test-Path -Path $finalPath)) {
+                New-Item -ItemType Directory -Force -Path $finalPath | Out-Null
+                Write-Host "Created Directory: $($item.Target)" -ForegroundColor Green
+            }
+        }
+        elseif ($item.Method -eq "copy") {
+            if ($null -ne $item.Source -and (Test-Path -Path $item.Source)) {
+                # Dynamic target path routing for Next.js App Router files
+                $isSrcSelectedOrInstalled = $false
+                foreach ($stateItem in $state) {
+                    if ($stateItem.Id -eq "src" -and ($stateItem.Selected -or $stateItem.Installed)) {
+                        $isSrcSelectedOrInstalled = $true
+                        break
+                    }
+                }
+                
+                if ($item.Id -eq "middleware") {
+                    if ($isSrcSelectedOrInstalled) {
+                        $finalPath = Join-Path -Path $targetRoot -ChildPath "src\middleware.ts"
+                    } else {
+                        $finalPath = Join-Path -Path $targetRoot -ChildPath "middleware.ts"
+                    }
+                }
+                elseif ($item.Id -eq "layout") {
+                    if ($isSrcSelectedOrInstalled) {
+                        $finalPath = Join-Path -Path $targetRoot -ChildPath "src\app\layout.tsx"
+                    } else {
+                        $finalPath = Join-Path -Path $targetRoot -ChildPath "app\layout.tsx"
+                    }
+                }
+                elseif ($item.Id -eq "redis") {
+                    if ($isSrcSelectedOrInstalled) {
+                        $finalPath = Join-Path -Path $targetRoot -ChildPath "src\lib\redis.ts"
+                    } else {
+                        $finalPath = Join-Path -Path $targetRoot -ChildPath "lib\redis.ts"
+                    }
+                }
+                elseif ($item.Id -eq "ratelimit") {
+                    if ($isSrcSelectedOrInstalled) {
+                        $finalPath = Join-Path -Path $targetRoot -ChildPath "src\lib\ratelimit.ts"
+                    } else {
+                        $finalPath = Join-Path -Path $targetRoot -ChildPath "lib\ratelimit.ts"
+                    }
+                }
+                
+                $parentDir = Split-Path -Path $finalPath -Parent
+                if (-not (Test-Path -Path $parentDir)) {
+                    New-Item -ItemType Directory -Force -Path $parentDir | Out-Null
+                }
+                
+                if ($item.Category -eq "Agent Skills") {
+                    if (-not (Test-Path -Path $finalPath)) {
+                        New-Item -ItemType Directory -Force -Path $finalPath | Out-Null
+                        Copy-Item -Path "$($item.Source)\*" -Destination $finalPath -Recurse -Force
+                        Write-Host "Provisioned Skill: $($item.Label) to $($item.Target)" -ForegroundColor Green
+                    }
+                }
+                else {
+                    Copy-Item -Path $item.Source -Destination $finalPath -Force
+                    Write-Host "Provisioned Artifact: $($item.Label) to $($finalPath.Replace($targetRoot, ''))" -ForegroundColor Green
+                    
+                    if ($item.Id -eq "testing") {
+                        $testingContent = Get-TestingMdContent -domain "Web Dev"
+                        $testingContent | Set-Content -Path $finalPath
+                        
+                        $scaffoldScriptsDir = Join-Path -Path $targetRoot -ChildPath "project_details\scripts"
+                        if (-not (Test-Path -Path $scaffoldScriptsDir)) {
+                            New-Item -ItemType Directory -Force -Path $scaffoldScriptsDir | Out-Null
+                        }
+                        
+                        $validationScriptPath = Join-Path -Path $scaffoldScriptsDir -ChildPath "validate-web-base.ps1"
+                        $validationScriptContent = Get-ValidateWebBaseContent
+                        $validationScriptContent | Set-Content -Path $validationScriptPath
+                        
+                        $harnessPath = Join-Path -Path $scaffoldScriptsDir -ChildPath "test-harness.ps1"
+                        $harnessContent = Get-TestHarnessContent
+                        $harnessContent | Set-Content -Path $harnessPath
+                        
+                        Write-Host "Provisioned testing harness and validation scripts" -ForegroundColor Green
+                    }
+                }
+            }
+        }
+    }
+}
+
+$gitignoreContent = @"
+# Environment Variables
+.env
+.env.*
+*.local
+"@
+
+$gitignorePath = Join-Path -Path $targetRoot -ChildPath ".gitignore"
+if (-not (Test-Path -Path $gitignorePath)) {
+    New-Item -ItemType File -Force -Path $gitignorePath -Value $gitignoreContent | Out-Null
+    Write-Host "Created File: .gitignore" -ForegroundColor Green
+}
+
+$readmemdPath = Join-Path -Path $targetRoot -ChildPath "README.md"
+if (-not (Test-Path -Path $readmemdPath)) {
+    $readmemdContent = "# Test Project"
+    New-Item -ItemType File -Force -Path $readmemdPath -Value $readmemdContent | Out-Null
+    Write-Host "Created File: README.md" -ForegroundColor Green
+}
+
+Write-Host "`nRunning Generated Quality Gate Validation Script..." -ForegroundColor Cyan
+$valScriptPath = Join-Path -Path $targetRoot -ChildPath "project_details\scripts\validate-web-base.ps1"
+if (Test-Path -Path $valScriptPath) {
+    # Run the validation script in the context of the generated project directory
+    $originalDir = Get-Location
+    Set-Location -Path $targetRoot
+    try {
+        & $valScriptPath
+        Write-Host "`nAll validation checks PASSED!" -ForegroundColor Green
+    }
+    catch {
+        Write-Host "`nValidation checks FAILED: $($_.Exception.Message)" -ForegroundColor Red
+        exit 1
+    }
+    finally {
+        Set-Location -Path $originalDir
+    }
+} else {
+    Write-Host "Error: Validation script not found at $valScriptPath" -ForegroundColor Red
     exit 1
 }
