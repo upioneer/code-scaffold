@@ -1,0 +1,5 @@
+{
+  "label": "Vercel Deployment Routine",
+  "target": ".skills/vercel",
+  "version": "1.0.0"
+}

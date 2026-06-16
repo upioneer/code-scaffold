@@ -230,6 +230,22 @@ if (Test-Path -Path $templatesDir) {
             $targetFile = $file.Name
             $isSelected = $true
         }
+        elseif ($file.Name -match "(?i)^vercel\.json$") {
+            $targetFile = $file.Name
+            $isSelected = $true
+        }
+        elseif ($file.Name -match "(?i)^deploy\.yml$") {
+            $targetFile = ".github\workflows\deploy.yml"
+            $isSelected = $true
+        }
+        elseif ($file.Name -match "(?i)^env\.example$") {
+            $targetFile = ".env.example"
+            $isSelected = $true
+        }
+        elseif ($file.Name -match "(?i)^(middleware\.ts|layout\.tsx|redis\.ts|ratelimit\.ts)$") {
+            $targetFile = $file.Name
+            $isSelected = $false
+        }
         
         $finalTargetPath = Join-Path -Path $targetRoot -ChildPath $targetFile
         $exists = Test-Path -Path $finalTargetPath
@@ -314,6 +330,21 @@ if (Test-Path -Path $skillsDir) {
             Overwrite       = $false
         }
     }
+    
+    # Add Bring Your Own Skill placeholder
+    $state += [PSCustomObject]@{
+        Category        = "Agent Skills"
+        Id              = "byos"
+        Label           = "Bring Your Own Skill (BYOS)..."
+        Target          = ""
+        Method          = "byos"
+        Source          = $null
+        Selected        = $false
+        Installed       = $false
+        UpdateAvailable = $false
+        VersionStr      = ""
+        Overwrite       = $false
+    }
 }
 
 $currentIndex = 0
@@ -385,14 +416,14 @@ function Show-AgentDomainSubmenu {
     
     $script:selectedAgentDomain = $domainKeys[$domainIndex]
     if ($script:selectedAgentDomain -eq "Web Dev") {
+        $selectedWebDevComponents = @("playwright", "middleware", "layout", "redis", "ratelimit")
         foreach ($item in $state) {
-            if ($item.Id -eq "playwright") {
+            if ($selectedWebDevComponents -contains $item.Id) {
                 $item.Selected = $true
-                Write-Host "`n  ${fgCyan}[QoL Option] Automatically selected Playwright skill for Web Dev focus!${resetColor}"
-                Start-Sleep -Seconds 2
-                break
             }
         }
+        Write-Host "`n  ${fgCyan}[QoL Option] Automatically selected Playwright skill and Edge/Auth middleware for Web Dev focus!${resetColor}"
+        Start-Sleep -Seconds 2
     }
     Write-Host $showCursor -NoNewline
 }
@@ -670,6 +701,48 @@ if ($packageJson.Count -gt 0) {
     }
 } else {
     Write-Host "  INFO: No package.json found in the project root." -ForegroundColor Yellow
+}
+
+# 5. Serverless, Auth & In-Memory Store Checks
+Write-Host "[5/5] Verifying Serverless, Auth & In-Memory Store setup..." -ForegroundColor Gray
+$vercelCheck = Test-Path -Path (Join-Path -Path . -ChildPath "vercel.json")
+if ($vercelCheck) {
+    Write-Host "  PASS: vercel.json configuration exists." -ForegroundColor Green
+} else {
+    Write-Host "  FAIL: vercel.json is missing." -ForegroundColor Red
+    $success = $false
+}
+
+$workflowCheck = Test-Path -Path (Join-Path -Path . -ChildPath ".github/workflows/deploy.yml")
+if ($workflowCheck) {
+    Write-Host "  PASS: GitHub Actions deploy.yml exists." -ForegroundColor Green
+} else {
+    Write-Host "  FAIL: GitHub Actions deploy.yml is missing." -ForegroundColor Red
+    $success = $false
+}
+
+$envCheck = Test-Path -Path (Join-Path -Path . -ChildPath ".env.example")
+if ($envCheck) {
+    $envContent = Get-Content -Path ".env.example" -Raw
+    $hasClerk = $envContent -match "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY"
+    $hasRedis = $envContent -match "UPSTASH_REDIS_REST_URL"
+    if ($hasClerk -and $hasRedis) {
+        Write-Host "  PASS: .env.example contains Clerk and Upstash config placeholders." -ForegroundColor Green
+    } else {
+        Write-Host "  FAIL: .env.example is missing Clerk or Upstash variables." -ForegroundColor Red
+        $success = $false
+    }
+} else {
+    Write-Host "  FAIL: .env.example is missing." -ForegroundColor Red
+    $success = $false
+}
+
+$middlewareCheck = (Test-Path -Path "src/middleware.ts") -or (Test-Path -Path "middleware.ts")
+if ($middlewareCheck) {
+    Write-Host "  PASS: Clerk & Upstash Middleware file is present." -ForegroundColor Green
+} else {
+    Write-Host "  FAIL: Middleware file is missing." -ForegroundColor Red
+    $success = $false
 }
 
 if ($success) {
@@ -970,6 +1043,403 @@ if (Test-Path -Path $scriptPath) {
 '@
 }
 
+function Import-BYOS-Skill {
+    Clear-Host
+    Write-Host "`n  ==================================================" -ForegroundColor Cyan
+    Write-Host "  Bring Your Own Skill (BYOS) Loader" -ForegroundColor Cyan
+    Write-Host "  ==================================================" -ForegroundColor Cyan
+    Write-Host "`n  This feature allows you to pull a skill from a remote URL"
+    Write-Host "  (e.g., a GitHub repository or zip archive)."
+    
+    # 1. Ensure internet accessibility
+    Write-Host "`n  Verifying internet connection..." -ForegroundColor Gray
+    $internetActive = $false
+    try {
+        $request = [System.Net.WebRequest]::Create("https://api.github.com")
+        $request.Method = "HEAD"
+        $request.Timeout = 4000
+        $request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+        $response = $request.GetResponse()
+        if ($null -ne $response) {
+            $internetActive = $true
+            $response.Close()
+        }
+    } catch {
+        try {
+            $dns = [System.Net.Dns]::GetHostAddresses("github.com")
+            if ($dns.Length -gt 0) { $internetActive = $true }
+        } catch {}
+    }
+    
+    if (-not $internetActive) {
+        Write-Host "`n  [ERROR] Internet access is not available." -ForegroundColor Red
+        Write-Host "  Please check your internet connection and try again." -ForegroundColor Yellow
+        Write-Host "`n  Press any key to return..."
+        $null = [Console]::ReadKey($true)
+        return
+    }
+    Write-Host "  Connection verified. [OK]" -ForegroundColor Green
+
+    # 2. Prompt for URL
+    Write-Host "`n  Enter the URL of the skill repository or zip file:" -ForegroundColor White
+    $url = Read-Host "  URL"
+    if ($null -eq $url) { $url = "" }
+    $url = $url.Trim()
+    
+    if ([string]::IsNullOrEmpty($url)) {
+        return
+    }
+    
+    # Validate URI format
+    $uriResult = $null
+    if (-not ([System.Uri]::TryCreate($url, [System.UriKind]::Absolute, [ref]$uriResult))) {
+        Write-Host "`n  [WARNING] The value entered does not appear to be a valid absolute URL." -ForegroundColor Red
+        Write-Host "  Please validate the link and try again." -ForegroundColor Yellow
+        Write-Host "`n  Press any key to return..."
+        $null = [Console]::ReadKey($true)
+        return
+    }
+
+    # 3. Perform pre-download checks on the URL structure
+    $seemsValid = $false
+    if ($url -match "\.zip$" -or $url -match "\.md$" -or $url -match "\.skill$" -or $url -match "github\.com" -or $url -match "skill") {
+        $seemsValid = $true
+    }
+    
+    if (-not $seemsValid) {
+        Write-Host "`n  [ADVICE] The provided link does not look like a typical agent skill source" -ForegroundColor Yellow
+        Write-Host "  (does not end with '.zip', contain 'github.com', or mention 'skill')." -ForegroundColor Yellow
+        Write-Host "  Please double check and validate that this link points to a valid agent skill." -ForegroundColor Yellow
+        Write-Host "`n  Do you want to proceed anyway? [Y]es / [N]o: " -NoNewline
+        $ans = [Console]::ReadKey($true)
+        if ($ans.KeyChar -ne 'y' -and $ans.KeyChar -ne 'Y') {
+            return
+        }
+        Write-Host "Proceeding..."
+    }
+
+    # 4. Prepare temporary paths
+    $guidStr = [Guid]::NewGuid().Guid
+    $tempZip = Join-Path -Path $env:TEMP -ChildPath "byos_download_$guidStr.zip"
+    $tempExt = Join-Path -Path $env:TEMP -ChildPath "byos_extracted_$guidStr"
+    
+    # 4a. Check if the URL is an HTML page and scan for downloadable objects
+    $isHtmlPage = $false
+    $isGitHubRepoRoot = $false
+    if ($url -match "github\.com/[^/]+/[^/]+$" -or $url -match "github\.com/[^/]+/[^/]+/$") {
+        $isGitHubRepoRoot = $true
+    }
+    
+    if (-not $isGitHubRepoRoot -and -not ($url -match "\.(zip|md|skill)(?:\?|#|$)")) {
+        try {
+            $originalSecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol
+            [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
+            
+            $request = [System.Net.WebRequest]::Create($url)
+            $request.Method = "HEAD"
+            $request.Timeout = 4000
+            $request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+            $response = $request.GetResponse()
+            if ($response.ContentType -match "text/html") {
+                $isHtmlPage = $true
+            }
+            $response.Close()
+            [System.Net.ServicePointManager]::SecurityProtocol = $originalSecurityProtocol
+        }
+        catch {
+            $isHtmlPage = $true
+        }
+    }
+    
+    if ($isHtmlPage) {
+        Write-Host "  Scanning page for downloadable skill objects..." -ForegroundColor Gray
+        try {
+            $originalSecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol
+            [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
+            
+            $html = Invoke-RestMethod -Uri $url -TimeoutSec 10
+            [System.Net.ServicePointManager]::SecurityProtocol = $originalSecurityProtocol
+            
+            $matches = [regex]::Matches($html, 'href="([^"]+)"')
+            $detectedLinks = @()
+            $uriBase = New-Object System.Uri($url)
+            
+            foreach ($m in $matches) {
+                $link = $m.Groups[1].Value
+                if ($link -match "\.(zip|md|skill)(?:\?|#|$)") {
+                    if ($link.StartsWith("/")) {
+                        $link = $uriBase.Scheme + "://" + $uriBase.Host + $link
+                    }
+                    elseif (-not ($link -match "^https?://")) {
+                        $link = $uriBase.Scheme + "://" + $uriBase.Host + "/" + $link.TrimStart('/')
+                    }
+                    
+                    if ($link -match "/(license|readme|contributing|changelog|code_of_conduct)\.md(?:\?|#|$)" -or $link -match "/(github\.com/[^/]+/[^/]+/blob/|/tree/)") {
+                        continue
+                    }
+                    $detectedLinks += $link
+                }
+            }
+            
+            $detectedLinks = $detectedLinks | Select-Object -Unique
+            
+            if ($detectedLinks.Count -gt 1) {
+                Write-Host "`n  [WARNING] Multiple downloadable objects (.zip, .md, .skill) were detected:" -ForegroundColor Yellow
+                foreach ($dl in $detectedLinks) {
+                    Write-Host "    - $dl" -ForegroundColor Cyan
+                }
+                Write-Host "`n  Please provide a more accurate URL pointing directly to the specific skill." -ForegroundColor Yellow
+                Write-Host "  Press any key to return..."
+                $null = [Console]::ReadKey($true)
+                return
+            }
+            elseif ($detectedLinks.Count -eq 1) {
+                $url = $detectedLinks[0]
+                Write-Host "  Redirecting to detected download object: $url" -ForegroundColor Green
+            }
+        }
+        catch {
+            # Fall back to original URL
+        }
+    }
+
+    $isSingleFile = $false
+    $fileNameWithoutExt = "custom-skill"
+    if ($url -match "/([^/?#]+)\.(md|skill)(?:\?|#|$)" -or $url -match "\.(md|skill)$") {
+        $isSingleFile = $true
+        if ($Matches[1]) {
+            $fileNameWithoutExt = $Matches[1]
+        }
+        if ($fileNameWithoutExt -match "^skill$" -or $fileNameWithoutExt -match "^readme$") {
+            $parts = $url -split '/'
+            if ($parts.Length -gt 2) {
+                $parentSegment = $parts[$parts.Length - 2]
+                if (-not [string]::IsNullOrEmpty($parentSegment) -and $parentSegment -ne "main" -and $parentSegment -ne "master") {
+                    $fileNameWithoutExt = $parentSegment
+                }
+            }
+        }
+    }
+
+    $downloadSuccess = $false
+    $lastError = ""
+    
+    Write-Host "`n  Downloading skill payload..." -ForegroundColor Cyan
+    if ($isSingleFile) {
+        try {
+            New-Item -ItemType Directory -Force -Path $tempExt | Out-Null
+            $destFilePath = Join-Path -Path $tempExt -ChildPath "SKILL.md"
+            Write-Host "  Downloading single skill file to temp directory..." -ForegroundColor Gray
+            
+            $originalSecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol
+            [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
+            
+            Invoke-WebRequest -Uri $url -OutFile $destFilePath -TimeoutSec 15 -ErrorAction Stop
+            [System.Net.ServicePointManager]::SecurityProtocol = $originalSecurityProtocol
+            $downloadSuccess = $true
+        }
+        catch {
+            $lastError = $_.Exception.Message
+        }
+    }
+    else {
+        # Construct possible download URLs
+        $downloadUrls = @($url)
+        if ($url -match "github\.com" -and $url -notmatch "\.zip$") {
+            $cleanUrl = $url.TrimEnd('/')
+            if ($cleanUrl -match "github\.com/([^/]+)/([^/]+)/tree/([^/]+)$") {
+                $owner = $Matches[1]
+                $repo = $Matches[2]
+                $branchName = $Matches[3]
+                $downloadUrls = @(
+                    "https://github.com/$owner/$repo/archive/refs/heads/$branchName.zip",
+                    "https://github.com/$owner/$repo/zipball/$branchName"
+                )
+            }
+            elseif ($cleanUrl -match "github\.com/[^/]+/[^/]+$") {
+                $downloadUrls = @(
+                    "$cleanUrl/archive/refs/heads/main.zip",
+                    "$cleanUrl/archive/refs/heads/master.zip",
+                    "$cleanUrl/zipball/main"
+                )
+            }
+        }
+
+        foreach ($dlUrl in $downloadUrls) {
+            try {
+                Write-Host "  Trying: $dlUrl" -ForegroundColor Gray
+                $originalSecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol
+                [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
+                
+                Invoke-WebRequest -Uri $dlUrl -OutFile $tempZip -TimeoutSec 15 -ErrorAction Stop
+                [System.Net.ServicePointManager]::SecurityProtocol = $originalSecurityProtocol
+                $downloadSuccess = $true
+                break
+            }
+            catch {
+                $lastError = $_.Exception.Message
+            }
+        }
+    }
+    
+    if (-not $downloadSuccess) {
+        Write-Host "`n  [ERROR] Failed to download payload from the provided URL." -ForegroundColor Red
+        if ($lastError) {
+            Write-Host "  Details: $lastError" -ForegroundColor Yellow
+        }
+        Write-Host "  Please verify your link and try again." -ForegroundColor Yellow
+        Write-Host "`n  Press any key to return..."
+        $null = [Console]::ReadKey($true)
+        if (Test-Path -Path $tempZip) { Remove-Item -Path $tempZip -Force }
+        return
+    }
+
+    # 5. Extract Zip Archive
+    if (-not $isSingleFile) {
+        Write-Host "  Extracting archive..." -ForegroundColor Cyan
+        try {
+            New-Item -ItemType Directory -Force -Path $tempExt | Out-Null
+            Expand-Archive -Path $tempZip -DestinationPath $tempExt -Force
+        }
+        catch {
+            Write-Host "`n  [ERROR] Failed to extract the downloaded payload." -ForegroundColor Red
+            Write-Host "  The file might not be a valid zip archive." -ForegroundColor Yellow
+            Write-Host "  Please validate the URL contents." -ForegroundColor Yellow
+            Write-Host "`n  Press any key to return..."
+            $null = [Console]::ReadKey($true)
+            if (Test-Path -Path $tempZip) { Remove-Item -Path $tempZip -Force }
+            if (Test-Path -Path $tempExt) { Remove-Item -Path $tempExt -Recurse -Force }
+            return
+        }
+    }
+
+    # 6. Locate skill folders (containing meta.json or SKILL.md)
+    $skillFolders = @()
+    if (Test-Path -Path $tempExt) {
+        $candidateFolders = Get-ChildItem -Path $tempExt -Recurse -Directory
+        $candidateFolders = @((Get-Item -Path $tempExt)) + $candidateFolders
+        
+        foreach ($dir in $candidateFolders) {
+            $metaJsonFile = Join-Path -Path $dir.FullName -ChildPath "meta.json"
+            $skillMdFile = Join-Path -Path $dir.FullName -ChildPath "SKILL.md"
+            if ((Test-Path -Path $metaJsonFile) -or (Test-Path -Path $skillMdFile)) {
+                $skillFolders += $dir
+            }
+        }
+    }
+
+    if ($skillFolders.Count -eq 0) {
+        Write-Host "`n  [WARNING] The downloaded content did not contain any valid agent skills." -ForegroundColor Red
+        Write-Host "  An agent skill must contain at least a 'meta.json' or 'SKILL.md' file." -ForegroundColor Yellow
+        Write-Host "  Please validate the repository structure and link." -ForegroundColor Yellow
+        Write-Host "`n  Press any key to return..."
+        $null = [Console]::ReadKey($true)
+        if (Test-Path -Path $tempZip) { Remove-Item -Path $tempZip -Force }
+        if (Test-Path -Path $tempExt) { Remove-Item -Path $tempExt -Recurse -Force }
+        return
+    }
+
+    # 7. Import found skills
+    Write-Host "`n  Found $($skillFolders.Count) skill(s) to import:" -ForegroundColor Green
+    $importedCount = 0
+    foreach ($sf in $skillFolders) {
+        $metaJsonFile = Join-Path -Path $sf.FullName -ChildPath "meta.json"
+        $skillMdFile = Join-Path -Path $sf.FullName -ChildPath "SKILL.md"
+        
+        $skillName = $sf.Name
+        if ($skillName -match "^byos_extracted_" -or $isSingleFile) {
+            $skillName = $fileNameWithoutExt
+        }
+        
+        $displayLabel = $skillName
+        $targetDir = ".skills/$skillName"
+        $versionVal = "1.0.0"
+        
+        if (Test-Path -Path $metaJsonFile) {
+            try {
+                $metaContent = Get-Content -Path $metaJsonFile -Raw | ConvertFrom-Json
+                if ($null -ne $metaContent.label) { $displayLabel = $metaContent.label }
+                if ($null -ne $metaContent.target) { $targetDir = $metaContent.target }
+                if ($null -ne $metaContent.version) { $versionVal = $metaContent.version }
+            }
+            catch {}
+        } else {
+            $defaultMeta = @{
+                label = $displayLabel
+                description = "Custom Bring-Your-Own-Skill (BYOS)"
+                version = $versionVal
+                target = $targetDir
+            }
+            $defaultMeta | ConvertTo-Json | Set-Content -Path $metaJsonFile -Force
+        }
+
+        if ($targetDir -match "\.skills/([^/]+)$" -or $targetDir -match "\.skills\\([^\\]+)$") {
+            $skillName = $Matches[1]
+        }
+        
+        $destSkillDir = Join-Path -Path $skillsDir -ChildPath $skillName
+        if (-not (Test-Path -Path $destSkillDir)) {
+            New-Item -ItemType Directory -Force -Path $destSkillDir | Out-Null
+        }
+        Copy-Item -Path "$($sf.FullName)\*" -Destination $destSkillDir -Recurse -Force
+        
+        $existingStateIndex = -1
+        for ($idx = 0; $idx -lt $script:state.Count; $idx++) {
+            if ($script:state[$idx].Id -eq $skillName -and $script:state[$idx].Category -eq "Agent Skills") {
+                $existingStateIndex = $idx
+                break
+            }
+        }
+        
+        $finalTargetPath = Join-Path -Path $targetRoot -ChildPath $targetDir
+        $exists = Test-Path -Path $finalTargetPath
+        
+        $newStateItem = [PSCustomObject]@{
+            Category        = "Agent Skills"
+            Id              = $skillName
+            Label           = $displayLabel
+            Target          = $targetDir
+            Method          = "copy"
+            Source          = $destSkillDir
+            Selected        = $true
+            Installed       = $exists
+            UpdateAvailable = $false
+            VersionStr      = ""
+            Overwrite       = $false
+        }
+        
+        if ($existingStateIndex -ge 0) {
+            $script:state[$existingStateIndex] = $newStateItem
+        } else {
+            $byosIndex = -1
+            for ($idx = 0; $idx -lt $script:state.Count; $idx++) {
+                if ($script:state[$idx].Id -eq "byos") {
+                    $byosIndex = $idx
+                    break
+                }
+            }
+            if ($byosIndex -gt 0) {
+                $script:state = $script:state[0..($byosIndex-1)] + $newStateItem + $script:state[$byosIndex..($script:state.Count-1)]
+            } elseif ($byosIndex -eq 0) {
+                $script:state = @($newStateItem) + $script:state
+            } else {
+                $script:state += $newStateItem
+            }
+            $importedCount++
+        }
+        Write-Host "  [SUCCESS] Loaded and selected: $displayLabel" -ForegroundColor Green
+    }
+    
+    $script:currentIndex += $importedCount
+    
+    # Clean up
+    if (Test-Path -Path $tempZip) { Remove-Item -Path $tempZip -Force }
+    if (Test-Path -Path $tempExt) { Remove-Item -Path $tempExt -Recurse -Force }
+    
+    Write-Host "`n  Press any key to resume..."
+    $null = [Console]::ReadKey($true)
+}
+
 function Draw-UI {
     Clear-Host
     $ui = "`n`n"
@@ -1054,65 +1524,71 @@ while ($running) {
     }
     elseif ($key.Key -eq 'Spacebar') {
         $item = $state[$currentIndex]
-        if (-not $item.Selected) {
-            if ($item.Category -eq "Artifacts" -and $item.Installed) {
-                Write-Host "`n  ${fgGold}Artifact '$($item.Label)' already exists. Overwrite? [Y]es / [C]ancel: ${resetColor}" -NoNewline
-                $ans = [Console]::ReadKey($true)
-                if ($ans.KeyChar -eq 'y' -or $ans.KeyChar -eq 'Y') {
-                    $item.Selected = $true
-                    $item.Overwrite = $true
+        if ($item.Id -eq "byos") {
+            Import-BYOS-Skill
+            $item.Selected = $false
+        }
+        else {
+            if (-not $item.Selected) {
+                if ($item.Category -eq "Artifacts" -and $item.Installed) {
+                    Write-Host "`n  ${fgGold}Artifact '$($item.Label)' already exists. Overwrite? [Y]es / [C]ancel: ${resetColor}" -NoNewline
+                    $ans = [Console]::ReadKey($true)
+                    if ($ans.KeyChar -eq 'y' -or $ans.KeyChar -eq 'Y') {
+                        $item.Selected = $true
+                        $item.Overwrite = $true
+                    } else {
+                        $item.Selected = $false
+                        $item.Overwrite = $false
+                    }
                 } else {
-                    $item.Selected = $false
-                    $item.Overwrite = $false
+                    $item.Selected = $true
+                }
+                if ($item.Selected -and $item.Id -eq "agent") {
+                    Show-AgentDomainSubmenu
+                }
+                if ($item.Selected -and $item.Id -eq "agent") {
+                    foreach ($partner in $state) {
+                        if ($partner.Id -eq "testing" -and -not $partner.Selected) {
+                            if ($partner.Category -eq "Artifacts" -and $partner.Installed) {
+                                Write-Host "`n  ${fgGold}Artifact '$($partner.Label)' already exists. Overwrite? [Y]es / [C]ancel: ${resetColor}" -NoNewline
+                                $pAns = [Console]::ReadKey($true)
+                                if ($pAns.KeyChar -eq 'y' -or $pAns.KeyChar -eq 'Y') {
+                                    $partner.Selected = $true
+                                    $partner.Overwrite = $true
+                                }
+                            } else {
+                                $partner.Selected = $true
+                            }
+                        }
+                    }
+                }
+                # Auto-pair: checking github.md <-> github skill, firebase.md <-> firebase skill
+                if ($item.Selected -and ($item.Id -eq "github" -or $item.Id -eq "firebase")) {
+                    foreach ($partner in $state) {
+                        if ($partner.Id -eq $item.Id -and $partner -ne $item -and -not $partner.Selected) {
+                            if ($partner.Category -eq "Artifacts" -and $partner.Installed) {
+                                Write-Host "`n  ${fgGold}Artifact '$($partner.Label)' already exists. Overwrite? [Y]es / [C]ancel: ${resetColor}" -NoNewline
+                                $pAns = [Console]::ReadKey($true)
+                                if ($pAns.KeyChar -eq 'y' -or $pAns.KeyChar -eq 'Y') {
+                                    $partner.Selected = $true
+                                    $partner.Overwrite = $true
+                                }
+                            } else {
+                                $partner.Selected = $true
+                            }
+                        }
+                    }
                 }
             } else {
-                $item.Selected = $true
+                $item.Selected = $false
+                $item.Overwrite = $false
             }
-            if ($item.Selected -and $item.Id -eq "agent") {
-                Show-AgentDomainSubmenu
-            }
-            if ($item.Selected -and $item.Id -eq "agent") {
-                foreach ($partner in $state) {
-                    if ($partner.Id -eq "testing" -and -not $partner.Selected) {
-                        if ($partner.Category -eq "Artifacts" -and $partner.Installed) {
-                            Write-Host "`n  ${fgGold}Artifact '$($partner.Label)' already exists. Overwrite? [Y]es / [C]ancel: ${resetColor}" -NoNewline
-                            $pAns = [Console]::ReadKey($true)
-                            if ($pAns.KeyChar -eq 'y' -or $pAns.KeyChar -eq 'Y') {
-                                $partner.Selected = $true
-                                $partner.Overwrite = $true
-                            }
-                        } else {
-                            $partner.Selected = $true
-                        }
-                    }
-                }
-            }
-            # Auto-pair: checking github.md <-> github skill, firebase.md <-> firebase skill
-            if ($item.Selected -and ($item.Id -eq "github" -or $item.Id -eq "firebase")) {
-                foreach ($partner in $state) {
-                    if ($partner.Id -eq $item.Id -and $partner -ne $item -and -not $partner.Selected) {
-                        if ($partner.Category -eq "Artifacts" -and $partner.Installed) {
-                            Write-Host "`n  ${fgGold}Artifact '$($partner.Label)' already exists. Overwrite? [Y]es / [C]ancel: ${resetColor}" -NoNewline
-                            $pAns = [Console]::ReadKey($true)
-                            if ($pAns.KeyChar -eq 'y' -or $pAns.KeyChar -eq 'Y') {
-                                $partner.Selected = $true
-                                $partner.Overwrite = $true
-                            }
-                        } else {
-                            $partner.Selected = $true
-                        }
-                    }
-                }
-            }
-        } else {
-            $item.Selected = $false
-            $item.Overwrite = $false
         }
     }
     elseif ($key.Key -eq 'T') {
         $anyUnselected = $false
         foreach ($item in $state) {
-            if (-not $item.Selected) {
+            if ($item.Id -ne "byos" -and -not $item.Selected) {
                 $anyUnselected = $true
                 break
             }
@@ -1126,7 +1602,7 @@ while ($running) {
             }
             $existingCount = 0
             foreach ($item in $state) {
-                if (-not $item.Selected -and $item.Category -eq "Artifacts" -and $item.Installed) {
+                if ($item.Id -ne "byos" -and -not $item.Selected -and $item.Category -eq "Artifacts" -and $item.Installed) {
                     $existingCount++
                 }
             }
@@ -1142,7 +1618,10 @@ while ($running) {
                 }
             }
             foreach ($item in $state) {
-                if ($item.Category -eq "Artifacts" -and $item.Installed) {
+                if ($item.Id -eq "byos") {
+                    $item.Selected = $false
+                }
+                elseif ($item.Category -eq "Artifacts" -and $item.Installed) {
                     if ($promptCancelled) {
                         $item.Selected = $false
                         $item.Overwrite = $false
@@ -1305,6 +1784,44 @@ foreach ($item in $state) {
         }
         elseif ($item.Method -eq "copy") {
             if ($null -ne $item.Source -and (Test-Path -Path $item.Source)) {
+                # Dynamic target path routing for Next.js App Router files
+                $isSrcSelectedOrInstalled = $false
+                foreach ($stateItem in $state) {
+                    if ($stateItem.Id -eq "src" -and ($stateItem.Selected -or $stateItem.Installed)) {
+                        $isSrcSelectedOrInstalled = $true
+                        break
+                    }
+                }
+                
+                if ($item.Id -eq "middleware") {
+                    if ($isSrcSelectedOrInstalled) {
+                        $finalPath = Join-Path -Path $targetRoot -ChildPath "src\middleware.ts"
+                    } else {
+                        $finalPath = Join-Path -Path $targetRoot -ChildPath "middleware.ts"
+                    }
+                }
+                elseif ($item.Id -eq "layout") {
+                    if ($isSrcSelectedOrInstalled) {
+                        $finalPath = Join-Path -Path $targetRoot -ChildPath "src\app\layout.tsx"
+                    } else {
+                        $finalPath = Join-Path -Path $targetRoot -ChildPath "app\layout.tsx"
+                    }
+                }
+                elseif ($item.Id -eq "redis") {
+                    if ($isSrcSelectedOrInstalled) {
+                        $finalPath = Join-Path -Path $targetRoot -ChildPath "src\lib\redis.ts"
+                    } else {
+                        $finalPath = Join-Path -Path $targetRoot -ChildPath "lib\redis.ts"
+                    }
+                }
+                elseif ($item.Id -eq "ratelimit") {
+                    if ($isSrcSelectedOrInstalled) {
+                        $finalPath = Join-Path -Path $targetRoot -ChildPath "src\lib\ratelimit.ts"
+                    } else {
+                        $finalPath = Join-Path -Path $targetRoot -ChildPath "lib\ratelimit.ts"
+                    }
+                }
+                
                 $parentDir = Split-Path -Path $finalPath -Parent
                 if (-not (Test-Path -Path $parentDir)) {
                     New-Item -ItemType Directory -Force -Path $parentDir | Out-Null

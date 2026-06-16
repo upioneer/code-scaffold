@@ -1,7 +1,17 @@
 {
     "metadata": {
-        "version": "3.6.0",
-        "lastUpdated": "2026-06-04T03:55:00Z"
+        "version": "3.7.0",
+        "lastUpdated": "2026-06-16T19:36:00Z"
+    },
+    "env": {
+        "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY": "pk_test_placeholder",
+        "CLERK_SECRET_KEY": "sk_test_placeholder",
+        "NEXT_PUBLIC_CLERK_SIGN_IN_URL": "/sign-in",
+        "NEXT_PUBLIC_CLERK_SIGN_UP_URL": "/sign-up",
+        "UPSTASH_REDIS_REST_URL": "https://placeholder.upstash.io",
+        "UPSTASH_REDIS_REST_TOKEN": "token_placeholder",
+        "VERCEL_ORG_ID": "org_placeholder",
+        "VERCEL_PROJECT_ID": "prj_placeholder"
     },
     "apps": [
         {
@@ -71,6 +81,48 @@
             "label": "TODO.md",
             "target": "TODO.md",
             "method": "touch"
+        },
+        {
+            "id": "vercel",
+            "label": "vercel.json",
+            "target": "vercel.json",
+            "method": "copy"
+        },
+        {
+            "id": "deploy",
+            "label": "deploy.yml",
+            "target": ".github/workflows/deploy.yml",
+            "method": "copy"
+        },
+        {
+            "id": "env",
+            "label": "env.example",
+            "target": ".env.example",
+            "method": "copy"
+        },
+        {
+            "id": "middleware",
+            "label": "middleware.ts",
+            "target": "middleware.ts",
+            "method": "copy"
+        },
+        {
+            "id": "layout",
+            "label": "layout.tsx",
+            "target": "app/layout.tsx",
+            "method": "copy"
+        },
+        {
+            "id": "redis",
+            "label": "redis.ts",
+            "target": "lib/redis.ts",
+            "method": "copy"
+        },
+        {
+            "id": "ratelimit",
+            "label": "ratelimit.ts",
+            "target": "lib/ratelimit.ts",
+            "method": "copy"
         }
     ],
     "skills": [
@@ -226,6 +278,27 @@
             "label": "Website Deploy Linux",
             "source": ".skills/website-deploy-linux",
             "target": ".skills/website-deploy-linux",
+            "method": "copy"
+        },
+        {
+            "id": "vercel-routine",
+            "label": "Vercel Deployment Routine",
+            "source": ".skills/vercel",
+            "target": ".skills/vercel",
+            "method": "copy"
+        },
+        {
+            "id": "clerk-perimeter",
+            "label": "Clerk Authentication Perimeter",
+            "source": ".skills/clerk",
+            "target": ".skills/clerk",
+            "method": "copy"
+        },
+        {
+            "id": "upstash-redis",
+            "label": "Upstash Redis Management",
+            "source": ".skills/upstash",
+            "target": ".skills/upstash",
             "method": "copy"
         }
     ]
