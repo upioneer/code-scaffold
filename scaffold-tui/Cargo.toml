@@ -1,5 +1,5 @@
 [package]
-name = "project-scaffold-tui"
+name = "scaffold-tui"
 version = "0.1.0"
 edition = "2021"
 
