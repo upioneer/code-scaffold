@@ -1,13 +1,9 @@
 use crate::action::Action;
-use crate::tui::{Tui, handle_terminal_events};
 use crate::components::{
-    Component,
-    header::Header,
-    nav_tree::NavTree,
-    workspace::Workspace,
-    logger_pipe::LoggerPipe,
-    footer::Footer,
+    footer::Footer, header::Header, logger_pipe::LoggerPipe, nav_tree::NavTree,
+    workspace::Workspace, Component,
 };
+use crate::tui::{handle_terminal_events, Tui};
 use anyhow::Result;
 use ratatui::prelude::{Constraint, Direction, Layout};
 
@@ -38,17 +34,17 @@ impl App {
         while !self.should_quit {
             tui.terminal.draw(|f| {
                 let size = f.size();
-                
+
                 let main_layout = Layout::default()
                     .direction(Direction::Vertical)
                     .constraints([
-                        Constraint::Length(3),      // Header
-                        Constraint::Min(10),        // Main Body
-                        Constraint::Length(8),      // Logger Pipe
-                        Constraint::Length(3),      // Footer
+                        Constraint::Length(3), // Header
+                        Constraint::Min(10),   // Main Body
+                        Constraint::Length(8), // Logger Pipe
+                        Constraint::Length(3), // Footer
                     ])
                     .split(size);
-                
+
                 let body_layout = Layout::default()
                     .direction(Direction::Horizontal)
                     .constraints([

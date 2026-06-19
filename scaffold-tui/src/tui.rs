@@ -1,4 +1,5 @@
-use ratatui::crossterm::event::{self, Event, KeyEventKind, KeyCode};
+use crate::action::Action;
+use ratatui::crossterm::event::{self, Event, KeyCode, KeyEventKind};
 use ratatui::crossterm::{
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
     ExecutableCommand,
@@ -6,7 +7,6 @@ use ratatui::crossterm::{
 use ratatui::prelude::CrosstermBackend;
 use ratatui::Terminal;
 use std::io::{stdout, Stdout};
-use crate::action::Action;
 
 pub struct Tui {
     pub terminal: Terminal<CrosstermBackend<Stdout>>,
