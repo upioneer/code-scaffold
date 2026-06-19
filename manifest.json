@@ -1,7 +1,7 @@
 {
     "metadata": {
-        "version": "3.8.0",
-        "lastUpdated": "2026-06-19T15:10:00Z"
+        "version": "3.8.1",
+        "lastUpdated": "2026-06-19T15:16:46Z"
     },
     "env": {
         "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY": "pk_test_placeholder",
