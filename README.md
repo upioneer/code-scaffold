@@ -6,7 +6,6 @@
 [![GitHub pull-requests](https://img.shields.io/github/issues-pr/upioneer/code-scaffold.svg)](https://GitHub.com/upioneer/code-scaffold/pulls/)
 [![GitHub contributors](https://img.shields.io/github/contributors/upioneer/code-scaffold.svg)](https://GitHub.com/upioneer/code-scaffold/graphs/contributors/)
 [![GitHub last commit](https://img.shields.io/github/last-commit/upioneer/code-scaffold.svg)](https://github.com/upioneer/code-scaffold/commits/main)
-[![GitHub repo size](https://img.shields.io/github/repo-size/upioneer/code-scaffold.svg)](https://github.com/upioneer/code-scaffold/)
 
 
 Code Scaffold is a modular, robust, and highly visual PowerShell-based provisioning engine. It is designed to bootstrap new development projects with predefined directory structures, architectural templates, and complex skill payloads, all driven by a high-fidelity Terminal User Interface (TUI).
