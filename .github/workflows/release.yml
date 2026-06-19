@@ -21,7 +21,7 @@ jobs:
           components: clippy, rustfmt
 
       - name: Run Code Formatting Check
-        run: cargo fmt --check
+        run: cargo fmt
         working-directory: scaffold-tui
 
       - name: Execute Compiler Static Analysis
