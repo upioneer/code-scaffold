@@ -13,7 +13,7 @@ impl Header {
 }
 
 impl Component for Header {
-    fn draw(&mut self, f: &mut Frame, area: Rect) -> Result<()> {
+    fn draw(&mut self, f: &mut ratatui::Frame<'_>, area: Rect) -> Result<()> {
         let text = Paragraph::new("Header: Active directory and manifest state")
             .block(Block::default().borders(Borders::ALL));
         f.render_widget(text, area);

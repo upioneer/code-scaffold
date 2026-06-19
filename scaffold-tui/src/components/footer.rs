@@ -13,7 +13,7 @@ impl Footer {
 }
 
 impl Component for Footer {
-    fn draw(&mut self, f: &mut Frame, area: Rect) -> Result<()> {
+    fn draw(&mut self, f: &mut ratatui::Frame<'_>, area: Rect) -> Result<()> {
         let text = Paragraph::new("Footer: Contextual interface keybindings toolbar")
             .block(Block::default().borders(Borders::ALL));
         f.render_widget(text, area);
