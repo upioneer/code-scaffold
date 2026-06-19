@@ -9,4 +9,12 @@ pub enum Action {
     Refresh,
     Error(String),
     Help,
+    Up,
+    Down,
+    Left,
+    Right,
+    Enter,
+    Tab,
+    ShiftTab,
+    Execute,
 }

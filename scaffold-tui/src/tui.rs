@@ -1,5 +1,5 @@
 use crate::action::Action;
-use crossterm::event::{self, Event, KeyEventKind, KeyCode};
+use crossterm::event::{self, Event, KeyEventKind, KeyCode, KeyEvent, KeyModifiers};
 use crossterm::{
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
     ExecutableCommand,
@@ -32,9 +32,19 @@ impl Tui {
     }
 }
 
-pub fn map_key_to_action(code: KeyCode) -> Action {
-    match code {
+pub fn map_key_to_action(key: KeyEvent) -> Action {
+    if key.modifiers.contains(KeyModifiers::CONTROL) && key.code == KeyCode::Char('x') {
+        return Action::Execute;
+    }
+    match key.code {
         KeyCode::Char('q') | KeyCode::Esc => Action::Quit,
+        KeyCode::Up => Action::Up,
+        KeyCode::Down => Action::Down,
+        KeyCode::Left => Action::Left,
+        KeyCode::Right => Action::Right,
+        KeyCode::Enter => Action::Enter,
+        KeyCode::BackTab => Action::ShiftTab,
+        KeyCode::Tab => Action::Tab,
         _ => Action::Tick,
     }
 }
@@ -43,7 +53,7 @@ pub fn handle_terminal_events() -> anyhow::Result<Option<Action>> {
     if event::poll(std::time::Duration::from_millis(16))? {
         if let Event::Key(key) = event::read()? {
             if key.kind == KeyEventKind::Press {
-                return Ok(Some(map_key_to_action(key.code)));
+                return Ok(Some(map_key_to_action(key)));
             }
         }
     }
