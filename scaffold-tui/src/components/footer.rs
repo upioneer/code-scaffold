@@ -1,8 +1,8 @@
 use crate::components::Component;
 use anyhow::Result;
-use ratatui::Frame;
 use ratatui::prelude::Rect;
 use ratatui::widgets::{Block, Borders, Paragraph};
+use ratatui::Frame;
 
 pub struct Footer {}
 
