@@ -4,7 +4,6 @@ pub mod workspace;
 pub mod logger_pipe;
 pub mod footer;
 
-use ratatui::Frame;
 use anyhow::Result;
 use crate::action::Action;
 
@@ -13,5 +12,5 @@ pub trait Component {
         let _ = action;
         Ok(None)
     }
-    fn draw(&mut self, f: &mut ratatui::Frame<'_>, area: ratatui::prelude::Rect) -> Result<()>;
+    fn draw(&mut self, f: &mut ratatui::Frame<'_>, area: ratatui::prelude::Rect, active: bool) -> Result<()>;
 }

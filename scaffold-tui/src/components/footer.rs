@@ -2,7 +2,6 @@ use crate::components::Component;
 use anyhow::Result;
 use ratatui::prelude::Rect;
 use ratatui::widgets::{Block, Borders, Paragraph};
-use ratatui::Frame;
 
 pub struct Footer {}
 
@@ -13,7 +12,7 @@ impl Footer {
 }
 
 impl Component for Footer {
-    fn draw(&mut self, f: &mut ratatui::Frame<'_>, area: Rect) -> Result<()> {
+    fn draw(&mut self, f: &mut ratatui::Frame<'_>, area: Rect, _active: bool) -> Result<()> {
         let text = Paragraph::new("Footer: Contextual interface keybindings toolbar")
             .block(Block::default().borders(Borders::ALL));
         f.render_widget(text, area);
