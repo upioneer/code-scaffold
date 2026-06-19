@@ -22,15 +22,15 @@ jobs:
 
       - name: Run Code Formatting Check
         run: cargo fmt --check
-        working-directory: project-scaffold-tui
+        working-directory: scaffold-tui
 
       - name: Execute Compiler Static Analysis
         run: cargo clippy -- -D warnings
-        working-directory: project-scaffold-tui
+        working-directory: scaffold-tui
 
       - name: Run Native Architecture Tests
         run: cargo test --all-features
-        working-directory: project-scaffold-tui
+        working-directory: scaffold-tui
 
   matrix_release:
     name: Compilation Matrix Release Execution
@@ -72,17 +72,17 @@ jobs:
 
       - name: Compile Release Target Binary
         run: cargo build --release --target ${{ matrix.target }}
-        working-directory: project-scaffold-tui
+        working-directory: scaffold-tui
 
       - name: Consolidate Output Files (Unix)
         if: matrix.os != 'windows-latest'
         run: |
-          cp project-scaffold-tui/target/${{ matrix.target }}/release/project-scaffold-tui ./${{ matrix.artifact_name }}
+          cp scaffold-tui/target/${{ matrix.target }}/release/scaffold-tui ./${{ matrix.artifact_name }}
 
       - name: Consolidate Output Files (Windows)
         if: matrix.os == 'windows-latest'
         run: |
-          copy project-scaffold-tui\target\${{ matrix.target }}\release\project-scaffold-tui.exe .\${{ matrix.artifact_name }}
+          copy scaffold-tui\target\${{ matrix.target }}\release\scaffold-tui.exe .\${{ matrix.artifact_name }}
 
       - name: Stage Workspace Production Artifacts
         uses: actions/upload-artifact@v4
