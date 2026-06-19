@@ -13,7 +13,7 @@ impl NavTree {
 }
 
 impl Component for NavTree {
-    fn draw(&mut self, f: &mut Frame, area: Rect) -> Result<()> {
+    fn draw(&mut self, f: &mut ratatui::Frame<'_>, area: Rect) -> Result<()> {
         let text = Paragraph::new("NavTree: Structural project file tree node explorer")
             .block(Block::default().borders(Borders::ALL));
         f.render_widget(text, area);

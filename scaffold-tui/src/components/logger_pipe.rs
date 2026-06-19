@@ -13,7 +13,7 @@ impl LoggerPipe {
 }
 
 impl Component for LoggerPipe {
-    fn draw(&mut self, f: &mut Frame, area: Rect) -> Result<()> {
+    fn draw(&mut self, f: &mut ratatui::Frame<'_>, area: Rect) -> Result<()> {
         let text = Paragraph::new("LoggerPipe: Status reports and diagnostic terminal monitor")
             .block(Block::default().borders(Borders::ALL));
         f.render_widget(text, area);
