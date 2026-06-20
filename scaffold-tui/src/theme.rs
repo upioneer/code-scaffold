@@ -65,7 +65,7 @@ impl Theme {
             bg: Color::Rgb(10, 15, 30),          
             text: Color::Rgb(248, 250, 252),
             primary: Color::Rgb(243, 210, 12),   // #f3d20c (Yellow Active Borders)
-            secondary: Color::Rgb(12, 45, 243),  // #0c2df3 (Blue Inactive Borders)
+            secondary: Color::Rgb(100, 116, 139),// Muted Slate Gray Inactive Borders
             accent: Color::Rgb(12, 45, 243),     // #0c2df3 (Blue Folders/Accents)
         }
     }
