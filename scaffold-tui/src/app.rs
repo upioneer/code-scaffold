@@ -23,6 +23,7 @@ pub struct App {
     workspace: Workspace,
     logger_pipe: LoggerPipe,
     footer: Footer,
+    tx: mpsc::Sender<String>,
 }
 
 impl App {
@@ -36,6 +37,7 @@ impl App {
             workspace: Workspace::new(),
             logger_pipe: LoggerPipe::new(rx),
             footer: Footer::new(),
+            tx: tx.clone(),
         };
         (app, tx)
     }
@@ -52,7 +54,7 @@ impl App {
                     .constraints([
                         Constraint::Length(3), // Header
                         Constraint::Min(10),   // Main Body
-                        Constraint::Length(8), // Logger Pipe
+                        Constraint::Length(10), // Logger Pipe
                         Constraint::Length(3), // Footer
                     ])
                     .split(size);
@@ -84,6 +86,26 @@ impl App {
     pub fn update(&mut self, action: Action) -> Result<()> {
         match action {
             Action::Quit => self.should_quit = true,
+            Action::Execute => {
+                if let Some(manifest) = &self.workspace.manifest {
+                    // Inject real-time workspace keystroke buffers back into the target payload
+                    let mut updated_manifest = manifest.clone();
+                    for (k, v) in &self.workspace.env_fields {
+                        updated_manifest.env.insert(k.clone(), v.clone());
+                    }
+                    
+                    let target_payload = updated_manifest.clone();
+                    let tx_clone = self.tx.clone();
+                    
+                    tokio::spawn(async move {
+                        if let Err(e) = crate::manifest_engine::execute(&target_payload, tx_clone.clone()).await {
+                            let _ = tx_clone.send(format!("CRITICAL ERROR: {}", e));
+                        }
+                    });
+                } else {
+                    let _ = self.tx.send("ERROR: No manifest configuration loaded!".to_string());
+                }
+            }
             Action::Tab => {
                 self.active_block = match self.active_block {
                     ActiveBlock::NavTree => ActiveBlock::Workspace,
