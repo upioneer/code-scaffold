@@ -4,6 +4,7 @@ mod action;
 mod app;
 mod components;
 mod manifest_engine;
+mod models;
 mod tui;
 
 use anyhow::Result;
