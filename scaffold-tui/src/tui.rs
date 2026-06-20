@@ -33,11 +33,15 @@ impl Tui {
 }
 
 pub fn map_key_to_action(key: KeyEvent) -> Action {
-    if key.modifiers.contains(KeyModifiers::CONTROL) && key.code == KeyCode::Char('x') {
-        return Action::Execute;
+    if key.modifiers.contains(KeyModifiers::CONTROL) {
+        match key.code {
+            KeyCode::Char('x') => return Action::Execute,
+            KeyCode::Char('c') | KeyCode::Char('q') => return Action::Quit,
+            _ => {}
+        }
     }
     match key.code {
-        KeyCode::Char('q') | KeyCode::Esc => Action::Quit,
+        KeyCode::Esc => Action::Quit,
         KeyCode::Up => Action::Up,
         KeyCode::Down => Action::Down,
         KeyCode::Left => Action::Left,
@@ -45,6 +49,8 @@ pub fn map_key_to_action(key: KeyEvent) -> Action {
         KeyCode::Enter => Action::Enter,
         KeyCode::BackTab => Action::ShiftTab,
         KeyCode::Tab => Action::Tab,
+        KeyCode::Backspace => Action::Backspace,
+        KeyCode::Char(c) => Action::Char(c),
         _ => Action::Tick,
     }
 }

@@ -17,4 +17,6 @@ pub enum Action {
     Tab,
     ShiftTab,
     Execute,
+    Char(char),
+    Backspace,
 }

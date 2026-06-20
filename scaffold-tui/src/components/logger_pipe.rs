@@ -1,23 +1,77 @@
 use crate::components::Component;
+use crate::action::Action;
 use anyhow::Result;
 use ratatui::prelude::Rect;
-use ratatui::widgets::{Block, Borders, Paragraph};
+use ratatui::widgets::{Block, Borders, List, ListItem, ListState};
 use ratatui::style::{Color, Style};
+use std::sync::mpsc::{Receiver, TryRecvError};
 
-pub struct LoggerPipe {}
+pub struct LoggerPipe {
+    pub logs: Vec<String>,
+    pub rx: Receiver<String>,
+    pub state: ListState,
+}
 
 impl LoggerPipe {
-    pub fn new() -> Self {
-        Self {}
+    pub fn new(rx: Receiver<String>) -> Self {
+        Self { 
+            logs: Vec::new(), 
+            rx,
+            state: ListState::default(),
+        }
+    }
+
+    pub fn poll_logs(&mut self) {
+        loop {
+            match self.rx.try_recv() {
+                Ok(msg) => {
+                    self.logs.push(msg);
+                    let len = self.logs.len();
+                    if len > 0 {
+                        self.state.select(Some(len - 1));
+                    }
+                }
+                Err(TryRecvError::Empty) => break,
+                Err(TryRecvError::Disconnected) => break,
+            }
+        }
     }
 }
 
 impl Component for LoggerPipe {
+    fn update(&mut self, action: Action) -> Result<Option<Action>> {
+        let count = self.logs.len();
+        if count == 0 { return Ok(None); }
+
+        let mut i = self.state.selected().unwrap_or(0);
+        match action {
+            Action::Down => {
+                i = (i + 1).min(count.saturating_sub(1));
+                self.state.select(Some(i));
+            }
+            Action::Up => {
+                i = i.saturating_sub(1);
+                self.state.select(Some(i));
+            }
+            _ => {}
+        }
+        Ok(None)
+    }
+
     fn draw(&mut self, f: &mut ratatui::Frame<'_>, area: Rect, active: bool) -> Result<()> {
+        self.poll_logs(); // Pull new logs safely on every render frame
+        
         let border_style = if active { Style::default().fg(Color::Yellow) } else { Style::default() };
-        let text = Paragraph::new("LoggerPipe: Status reports and diagnostic terminal monitor")
-            .block(Block::default().borders(Borders::ALL).border_style(border_style));
-        f.render_widget(text, area);
+        
+        let items: Vec<ListItem> = self.logs.iter()
+            .map(|msg| ListItem::new(msg.clone()))
+            .collect();
+
+        let list = List::new(items)
+            .block(Block::default().borders(Borders::ALL).title(" Logger Pipe ").border_style(border_style))
+            .highlight_style(Style::default().bg(Color::DarkGray).fg(Color::White));
+
+        f.render_stateful_widget(list, area, &mut self.state);
         Ok(())
     }
 }
