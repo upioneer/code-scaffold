@@ -1,10 +1,11 @@
 use crate::components::Component;
 use crate::models::manifest::Manifest;
 use crate::action::Action;
+use crate::theme::Theme;
 use anyhow::Result;
 use ratatui::prelude::Rect;
 use ratatui::widgets::{Block, Borders, List, ListItem};
-use ratatui::style::{Color, Style};
+use ratatui::style::Style;
 use std::fs;
 
 pub struct Workspace {
@@ -60,8 +61,9 @@ impl Component for Workspace {
         Ok(None)
     }
 
-    fn draw(&mut self, f: &mut ratatui::Frame<'_>, area: Rect, active: bool) -> Result<()> {
-        let border_style = if active { Style::default().fg(Color::Yellow) } else { Style::default() };
+    fn draw(&mut self, f: &mut ratatui::Frame<'_>, area: Rect, active: bool, theme: &Theme) -> Result<()> {
+        let border_color = if active { theme.primary } else { theme.secondary };
+        let border_style = Style::default().fg(border_color).bg(theme.bg);
         
         let mut items = Vec::new();
         for (i, (key, val)) in self.env_fields.iter().enumerate() {
@@ -69,16 +71,16 @@ impl Component for Workspace {
             let display = format!("{} {}: {}", prefix, key, val);
             
             let style = if active && i == self.selected_field {
-                Style::default().bg(Color::DarkGray).fg(Color::White)
+                Style::default().bg(theme.primary).fg(theme.bg)
             } else {
-                Style::default()
+                Style::default().fg(theme.text).bg(theme.bg)
             };
             
             items.push(ListItem::new(display).style(style));
         }
 
         let list = List::new(items)
-            .block(Block::default().borders(Borders::ALL).title(" Workspace Environment Config ").border_style(border_style));
+            .block(Block::default().borders(Borders::ALL).title(" Workspace Environment Config ").border_style(border_style).style(Style::default().bg(theme.bg)));
             
         f.render_widget(list, area);
         Ok(())

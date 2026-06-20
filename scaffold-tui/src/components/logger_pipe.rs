@@ -1,9 +1,10 @@
 use crate::components::Component;
 use crate::action::Action;
+use crate::theme::Theme;
 use anyhow::Result;
 use ratatui::prelude::Rect;
 use ratatui::widgets::{Block, Borders, List, ListItem, ListState};
-use ratatui::style::{Color, Style};
+use ratatui::style::Style;
 use std::sync::mpsc::{Receiver, TryRecvError};
 
 pub struct LoggerPipe {
@@ -58,18 +59,24 @@ impl Component for LoggerPipe {
         Ok(None)
     }
 
-    fn draw(&mut self, f: &mut ratatui::Frame<'_>, area: Rect, active: bool) -> Result<()> {
-        self.poll_logs(); // Pull new logs safely on every render frame
+    fn draw(&mut self, f: &mut ratatui::Frame<'_>, area: Rect, active: bool, theme: &Theme) -> Result<()> {
+        self.poll_logs();
         
-        let border_style = if active { Style::default().fg(Color::Yellow) } else { Style::default() };
+        let border_color = if active { theme.primary } else { theme.secondary };
+        let border_style = Style::default().fg(border_color).bg(theme.bg);
         
         let items: Vec<ListItem> = self.logs.iter()
-            .map(|msg| ListItem::new(msg.clone()))
+            .map(|msg| {
+                let color = if msg.contains("ERROR") { ratatui::style::Color::Red } 
+                            else if msg.contains("Created") || msg.contains("Initialized") || msg.contains("Success") { theme.accent } 
+                            else { theme.text };
+                ListItem::new(msg.clone()).style(Style::default().fg(color).bg(theme.bg))
+            })
             .collect();
 
         let list = List::new(items)
-            .block(Block::default().borders(Borders::ALL).title(" Logger Pipe ").border_style(border_style))
-            .highlight_style(Style::default().bg(Color::DarkGray).fg(Color::White));
+            .block(Block::default().borders(Borders::ALL).title(" Logger Pipe ").border_style(border_style).style(Style::default().bg(theme.bg)))
+            .highlight_style(Style::default().bg(theme.primary).fg(theme.bg));
 
         f.render_stateful_widget(list, area, &mut self.state);
         Ok(())

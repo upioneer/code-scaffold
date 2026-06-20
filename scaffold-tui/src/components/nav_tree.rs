@@ -1,10 +1,11 @@
 use crate::components::Component;
 use crate::action::Action;
 use crate::models::file_tree::FileNode;
+use crate::theme::Theme;
 use anyhow::Result;
 use ratatui::prelude::Rect;
 use ratatui::widgets::{Block, Borders, List, ListItem, ListState};
-use ratatui::style::{Color, Style};
+use ratatui::style::Style;
 use std::env;
 
 pub struct NavTree {
@@ -102,20 +103,21 @@ impl Component for NavTree {
         Ok(None)
     }
 
-    fn draw(&mut self, f: &mut ratatui::Frame<'_>, area: Rect, active: bool) -> Result<()> {
-        let border_style = if active { Style::default().fg(Color::Yellow) } else { Style::default() };
+    fn draw(&mut self, f: &mut ratatui::Frame<'_>, area: Rect, active: bool, theme: &Theme) -> Result<()> {
+        let border_color = if active { theme.primary } else { theme.secondary };
+        let border_style = Style::default().fg(border_color).bg(theme.bg);
         
         let nodes = self.get_visible_nodes();
         let items: Vec<ListItem> = nodes.into_iter()
             .map(|(display, _, is_dir)| {
-                let style = if is_dir { Style::default().fg(Color::Blue) } else { Style::default() };
-                ListItem::new(display).style(style)
+                let text_color = if is_dir { theme.accent } else { theme.text };
+                ListItem::new(display).style(Style::default().fg(text_color).bg(theme.bg))
             })
             .collect();
 
         let list = List::new(items)
-            .block(Block::default().borders(Borders::ALL).title(" Project Explorer ").border_style(border_style))
-            .highlight_style(Style::default().bg(Color::DarkGray).fg(Color::White))
+            .block(Block::default().borders(Borders::ALL).title(" Project Explorer ").border_style(border_style).style(Style::default().bg(theme.bg)))
+            .highlight_style(Style::default().bg(theme.primary).fg(theme.bg))
             .highlight_symbol(">> ");
 
         f.render_stateful_widget(list, area, &mut self.state);
