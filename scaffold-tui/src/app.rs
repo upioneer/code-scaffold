@@ -1,4 +1,5 @@
 use crate::action::Action;
+use crate::theme::Theme;
 use crate::components::{
     footer::Footer, header::Header, logger_pipe::LoggerPipe, nav_tree::NavTree,
     workspace::Workspace, Component,
@@ -18,6 +19,7 @@ pub enum ActiveBlock {
 pub struct App {
     pub should_quit: bool,
     pub active_block: ActiveBlock,
+    pub theme: Theme,
     header: Header,
     nav_tree: NavTree,
     workspace: Workspace,
@@ -32,6 +34,7 @@ impl App {
         let app = Self {
             should_quit: false,
             active_block: ActiveBlock::NavTree,
+            theme: Theme::plum(), // Default theme configuration
             header: Header::new(),
             nav_tree: NavTree::new(),
             workspace: Workspace::new(),
@@ -48,6 +51,12 @@ impl App {
         while !self.should_quit {
             tui.terminal.draw(|f| {
                 let size = f.size();
+                
+                // Paint global background foundation
+                f.render_widget(
+                    ratatui::widgets::Block::default().style(ratatui::style::Style::default().bg(self.theme.bg).fg(self.theme.text)),
+                    size
+                );
 
                 let main_layout = Layout::default()
                     .direction(Direction::Vertical)
@@ -67,11 +76,11 @@ impl App {
                     ])
                     .split(main_layout[1]);
 
-                let _ = self.header.draw(f, main_layout[0], false);
-                let _ = self.nav_tree.draw(f, body_layout[0], self.active_block == ActiveBlock::NavTree);
-                let _ = self.workspace.draw(f, body_layout[1], self.active_block == ActiveBlock::Workspace);
-                let _ = self.logger_pipe.draw(f, main_layout[2], self.active_block == ActiveBlock::LoggerPipe);
-                let _ = self.footer.draw(f, main_layout[3], false);
+                let _ = self.header.draw(f, main_layout[0], false, &self.theme);
+                let _ = self.nav_tree.draw(f, body_layout[0], self.active_block == ActiveBlock::NavTree, &self.theme);
+                let _ = self.workspace.draw(f, body_layout[1], self.active_block == ActiveBlock::Workspace, &self.theme);
+                let _ = self.logger_pipe.draw(f, main_layout[2], self.active_block == ActiveBlock::LoggerPipe, &self.theme);
+                let _ = self.footer.draw(f, main_layout[3], false, &self.theme);
             })?;
 
             if let Some(action) = handle_terminal_events()? {
@@ -88,7 +97,6 @@ impl App {
             Action::Quit => self.should_quit = true,
             Action::Execute => {
                 if let Some(manifest) = &self.workspace.manifest {
-                    // Inject real-time workspace keystroke buffers back into the target payload
                     let mut updated_manifest = manifest.clone();
                     for (k, v) in &self.workspace.env_fields {
                         updated_manifest.env.insert(k.clone(), v.clone());
