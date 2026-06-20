@@ -96,19 +96,18 @@ impl App {
         match action {
             Action::Quit => self.should_quit = true,
             Action::Execute => {
-                if let Some(manifest) = &self.workspace.manifest {
-                    let target_payload = manifest.clone();
-                    let tx_clone = self.tx.clone();
-                    
-                    let _ = tx_clone.send("Initiating Deployment sequence...".to_string());
-                    
+                let tx_clone = self.tx.clone();
+                let _ = tx_clone.send("Initiating Deployment sequence...".to_string());
+                
+                let manifest_content = std::fs::read_to_string("../manifest.json").unwrap_or_default();
+                if let Ok(target_payload) = serde_json::from_str::<crate::models::manifest::Manifest>(&manifest_content) {
                     tokio::spawn(async move {
                         if let Err(e) = crate::manifest_engine::execute(&target_payload, tx_clone.clone()).await {
                             let _ = tx_clone.send(format!("CRITICAL ERROR: {}", e));
                         }
                     });
                 } else {
-                    let _ = self.tx.send("ERROR: No manifest configuration loaded!".to_string());
+                    let _ = tx_clone.send("ERROR: Could not parse manifest.json payload!".to_string());
                 }
             }
             Action::Tab => {
@@ -127,7 +126,10 @@ impl App {
             }
             _ => {
                 match self.active_block {
-                    ActiveBlock::NavTree => { let _ = self.nav_tree.update(action)?; }
+                    ActiveBlock::NavTree => { 
+                        let _ = self.nav_tree.update(action)?; 
+                        self.workspace.set_category(self.nav_tree.selected_category());
+                    }
                     ActiveBlock::Workspace => { let _ = self.workspace.update(action)?; }
                     ActiveBlock::LoggerPipe => { let _ = self.logger_pipe.update(action)?; }
                 }
