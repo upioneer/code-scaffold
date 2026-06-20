@@ -10,8 +10,8 @@ use std::fs;
 
 pub struct Workspace {
     pub manifest: Option<Manifest>,
-    pub env_fields: Vec<(String, String)>,
-    pub selected_field: usize,
+    pub options: Vec<(String, bool)>,
+    pub selected: usize,
 }
 
 impl Workspace {
@@ -19,41 +19,30 @@ impl Workspace {
         let manifest_content = fs::read_to_string("../manifest.json").unwrap_or_default();
         let manifest: Option<Manifest> = serde_json::from_str(&manifest_content).ok();
         
-        let mut env_fields = Vec::new();
-        if let Some(m) = &manifest {
-            for (k, v) in &m.env {
-                env_fields.push((k.clone(), v.clone()));
-            }
-            env_fields.sort_by(|a, b| a.0.cmp(&b.0));
-        }
-
         Self { 
             manifest,
-            env_fields,
-            selected_field: 0,
+            options: vec![
+                ("Deploy Base Artifacts".to_string(), true),
+                ("Deploy Core Agent Skills".to_string(), true),
+                ("Include Open Source License".to_string(), true),
+            ],
+            selected: 0,
         }
     }
 }
 
 impl Component for Workspace {
     fn update(&mut self, action: Action) -> Result<Option<Action>> {
-        if self.env_fields.is_empty() { return Ok(None); }
-
         match action {
             Action::Up => {
-                self.selected_field = self.selected_field.saturating_sub(1);
+                self.selected = self.selected.saturating_sub(1);
             }
             Action::Down => {
-                self.selected_field = (self.selected_field + 1).min(self.env_fields.len().saturating_sub(1));
+                self.selected = (self.selected + 1).min(self.options.len().saturating_sub(1));
             }
-            Action::Char(c) => {
-                if let Some(field) = self.env_fields.get_mut(self.selected_field) {
-                    field.1.push(c);
-                }
-            }
-            Action::Backspace => {
-                if let Some(field) = self.env_fields.get_mut(self.selected_field) {
-                    field.1.pop();
+            Action::Enter | Action::Char(' ') => {
+                if let Some(opt) = self.options.get_mut(self.selected) {
+                    opt.1 = !opt.1;
                 }
             }
             _ => {}
@@ -66,11 +55,12 @@ impl Component for Workspace {
         let border_style = Style::default().fg(border_color).bg(theme.bg);
         
         let mut items = Vec::new();
-        for (i, (key, val)) in self.env_fields.iter().enumerate() {
-            let prefix = if active && i == self.selected_field { ">>" } else { "  " };
-            let display = format!("{} {}: {}", prefix, key, val);
+        for (i, (key, val)) in self.options.iter().enumerate() {
+            let prefix = if active && i == self.selected { ">>" } else { "  " };
+            let checkbox = if *val { "[X]" } else { "[ ]" };
+            let display = format!("{} {} {}", prefix, checkbox, key);
             
-            let style = if active && i == self.selected_field {
+            let style = if active && i == self.selected {
                 Style::default().bg(theme.primary).fg(theme.bg)
             } else {
                 Style::default().fg(theme.text).bg(theme.bg)
@@ -80,7 +70,7 @@ impl Component for Workspace {
         }
 
         let list = List::new(items)
-            .block(Block::default().borders(Borders::ALL).title(" Workspace Environment Config ").border_style(border_style).style(Style::default().bg(theme.bg)));
+            .block(Block::default().borders(Borders::ALL).title(" Deployment Configuration ").border_style(border_style).style(Style::default().bg(theme.bg)));
             
         f.render_widget(list, area);
         Ok(())

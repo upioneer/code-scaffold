@@ -97,13 +97,10 @@ impl App {
             Action::Quit => self.should_quit = true,
             Action::Execute => {
                 if let Some(manifest) = &self.workspace.manifest {
-                    let mut updated_manifest = manifest.clone();
-                    for (k, v) in &self.workspace.env_fields {
-                        updated_manifest.env.insert(k.clone(), v.clone());
-                    }
-                    
-                    let target_payload = updated_manifest.clone();
+                    let target_payload = manifest.clone();
                     let tx_clone = self.tx.clone();
+                    
+                    let _ = tx_clone.send("Initiating Deployment sequence...".to_string());
                     
                     tokio::spawn(async move {
                         if let Err(e) = crate::manifest_engine::execute(&target_payload, tx_clone.clone()).await {
