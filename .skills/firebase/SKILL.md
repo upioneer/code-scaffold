@@ -34,6 +34,12 @@ You must verify the project architecture and anticipated usage against the Fireb
 
 ## Deployment Steps
 
+0. CRITICAL: Installation and Login Validation
+To prevent confusion and delivery delays, **you must ensure the CLI is installed and logged in before attempting to push or deploy**.
+- Check if `firebase` is installed (`firebase --version`). If it fails, install it via NPM (`npm install -g firebase-tools`) or standalone binary.
+- Check login status (`firebase projects:list`). If the command succeeds, the user is authenticated. If it returns an authentication error or prompts to log in, you **MUST** instruct the user to run `firebase login`.
+- Pause execution and wait for the user to confirm they have logged in successfully before proceeding.
+
 1. Verify firebase.md
 Read the firebase.md file in the project root workspace to ensure it contains all necessary Firebase configuration and deployment information.
 
