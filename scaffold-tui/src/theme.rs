@@ -39,4 +39,34 @@ impl Theme {
             accent: Color::Rgb(70, 185, 103),    // #46b967
         }
     }
+
+    pub fn earth() -> Self {
+        Self {
+            bg: Color::Rgb(25, 20, 15),          
+            text: Color::Rgb(248, 250, 252),
+            primary: Color::Rgb(123, 167, 88),   // #7ba758
+            secondary: Color::Rgb(167, 132, 88), // #a78458
+            accent: Color::Rgb(162, 167, 88),    // #a2a758
+        }
+    }
+
+    pub fn starburst() -> Self {
+        Self {
+            bg: Color::Rgb(15, 15, 10),          
+            text: Color::Rgb(248, 250, 252),
+            primary: Color::Rgb(172, 247, 8),    // #acf708
+            secondary: Color::Rgb(52, 247, 8),   // #34f708
+            accent: Color::Rgb(247, 203, 8),     // #f7cb08
+        }
+    }
+
+    pub fn default_theme() -> Self {
+        Self {
+            bg: Color::Rgb(10, 15, 30),          
+            text: Color::Rgb(248, 250, 252),
+            primary: Color::Rgb(243, 210, 12),   // #f3d20c (Yellow Active Borders)
+            secondary: Color::Rgb(12, 45, 243),  // #0c2df3 (Blue Inactive Borders)
+            accent: Color::Rgb(12, 45, 243),     // #0c2df3 (Blue Folders/Accents)
+        }
+    }
 }
