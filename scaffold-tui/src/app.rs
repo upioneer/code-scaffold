@@ -6,6 +6,7 @@ use crate::components::{
 use crate::tui::{handle_terminal_events, Tui};
 use anyhow::Result;
 use ratatui::prelude::{Constraint, Direction, Layout};
+use std::sync::mpsc;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ActiveBlock {
@@ -25,16 +26,18 @@ pub struct App {
 }
 
 impl App {
-    pub fn new() -> Self {
-        Self {
+    pub fn new() -> (Self, mpsc::Sender<String>) {
+        let (tx, rx) = mpsc::channel();
+        let app = Self {
             should_quit: false,
             active_block: ActiveBlock::NavTree,
             header: Header::new(),
             nav_tree: NavTree::new(),
             workspace: Workspace::new(),
-            logger_pipe: LoggerPipe::new(),
+            logger_pipe: LoggerPipe::new(rx),
             footer: Footer::new(),
-        }
+        };
+        (app, tx)
     }
 
     pub async fn run(&mut self, mut tui: Tui) -> Result<()> {
