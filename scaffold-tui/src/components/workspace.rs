@@ -71,7 +71,7 @@ impl Workspace {
 
         let templates_dir = payload_dir.join(".templates");
         if templates_dir.exists() {
-            if let Ok(entries) = std::fs::read_dir(templates_dir) {
+            if let Ok(entries) = std::fs::read_dir(&templates_dir) {
                 let mut tmpl_names: Vec<String> = entries
                     .flatten()
                     .filter(|e| e.file_type().map(|ft| ft.is_file()).unwrap_or(false))
@@ -103,7 +103,7 @@ impl Workspace {
 
         let licenses_dir = payload_dir.join(".licenses");
         if licenses_dir.exists() {
-            if let Ok(entries) = std::fs::read_dir(licenses_dir) {
+            if let Ok(entries) = std::fs::read_dir(&licenses_dir) {
                 let mut lic_names: Vec<String> = entries
                     .flatten()
                     .filter(|e| e.file_type().map(|ft| ft.is_file()).unwrap_or(false))
@@ -127,7 +127,7 @@ impl Workspace {
 
         let skills_dir = payload_dir.join(".skills");
         if skills_dir.exists() {
-            if let Ok(entries) = std::fs::read_dir(skills_dir) {
+            if let Ok(entries) = std::fs::read_dir(&skills_dir) {
                 let mut skill_names: Vec<String> = entries
                     .flatten()
                     .filter(|e| e.file_type().map(|ft| ft.is_dir()).unwrap_or(false))
