@@ -1,5 +1,6 @@
 use crate::action::Action;
 use crate::components::{
+    description_pane::DescriptionPane,
     footer::Footer,
     header::Header,
     nav_tree::{Category, NavTree},
@@ -26,11 +27,11 @@ pub enum ActiveBlock {
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum WizardState {
     Welcome,
+    DeploymentTarget,
     Artifacts,
     AgentPersona,
     Skills,
     License,
-    DeploymentTarget,
     Complete,
 }
 
@@ -46,6 +47,7 @@ pub struct App {
     header: Header,
     nav_tree: NavTree,
     workspace: Workspace,
+    description_pane: DescriptionPane,
     summary_pane: SummaryPane,
     footer: Footer,
     tx: UnboundedSender<String>,
@@ -66,6 +68,7 @@ impl App {
             header: Header::new(),
             nav_tree: NavTree::new(),
             workspace: Workspace::new(payload_dir),
+            description_pane: DescriptionPane::new(),
             summary_pane: SummaryPane::new(),
             footer: Footer::new(),
             tx: tx.clone(),
@@ -105,12 +108,12 @@ impl App {
 
         if self.wizard_state != WizardState::Complete {
             let (title, text) = match self.wizard_state {
-                WizardState::Welcome => (" Welcome to Code Scaffold! ", format!("{} We will guide you through the initial setup.\nPress [Enter] or [Tab] to begin configuring Artifacts.", BRAILLE_FRAMES[self.splash_frame_idx])),
-                WizardState::Artifacts => (" Step 1: Core Artifacts ", "Use [Up/Down] to navigate and [Space] to toggle files.\nPress [Enter] or [Tab] when ready to proceed.\nPress [Shift+Tab] to go back.".to_string()),
-                WizardState::AgentPersona => (" Step 2: Agent Persona ", "Select the primary focus for the Agent. This will tailor testing guidelines and instructions.\nPress [Enter] or [Tab] to proceed to Skills.\nPress [Shift+Tab] to go back.".to_string()),
-                WizardState::Skills => (" Step 3: Agent Skills ", "Select the domain skills you need. Notice how GitHub and Firebase toggle their companion artifacts!\nPress [Enter] or [Tab] to proceed to Licensing.\nPress [Shift+Tab] to go back.".to_string()),
-                WizardState::License => (" Step 4: Licensing ", "Choose an open-source license.\nPress [Enter] or [Tab] to set the Deployment Target.\nPress [Shift+Tab] to go back.".to_string()),
-                WizardState::DeploymentTarget => (" Step 5: Deployment Target ", format!("The default deployment target is ({}).\nPress [F] to open the native OS file explorer and select a different folder.\nPress [Enter] or [Tab] to complete the wizard.\nPress [Shift+Tab] to go back.", self.target_folder)),
+                WizardState::Welcome => (" Welcome to Code Scaffold! ", format!("{} We will guide you through the initial setup.\nPress [Enter] or [Tab] to begin selecting a Target Folder.", BRAILLE_FRAMES[self.splash_frame_idx])),
+                WizardState::DeploymentTarget => (" Step 1: Deployment Target ", format!("The current deployment target is ({}).\nPress [F] to open the native OS file explorer and select a different folder.\nPress [Enter] or [Tab] to proceed.\nPress [Shift+Tab] to go back.", self.target_folder)),
+                WizardState::Artifacts => (" Step 2: Core Artifacts ", "Use [Up/Down] to navigate and [Space] to toggle files.\nPress [Enter] or [Tab] when ready to proceed.\nPress [Shift+Tab] to go back.".to_string()),
+                WizardState::AgentPersona => (" Step 3: Agent Persona ", "Select the primary focus for the Agent. This will tailor testing guidelines and instructions.\nPress [Enter] or [Tab] to proceed to Skills.\nPress [Shift+Tab] to go back.".to_string()),
+                WizardState::Skills => (" Step 4: Agent Skills ", "Select the domain skills you need. Notice how GitHub and Firebase toggle their companion artifacts!\nPress [Enter] or [Tab] to proceed to Licensing.\nPress [Shift+Tab] to go back.".to_string()),
+                WizardState::License => (" Step 5: Licensing ", "Choose an open-source license.\nPress [Enter] or [Tab] to complete the wizard.\nPress [Shift+Tab] to go back.".to_string()),
                 _ => ("", "".to_string()),
             };
             self.summary_pane.title = title.to_string();
@@ -133,6 +136,16 @@ impl App {
         self.update_summary();
 
         while !self.should_quit {
+            let selected_label = match self.active_block {
+                ActiveBlock::Workspace => self
+                    .workspace
+                    .selected_label()
+                    .unwrap_or("")
+                    .to_string(),
+                _ => String::new(),
+            };
+            self.description_pane.set_selected_label(&selected_label);
+
             tui.terminal.draw(|f| {
                 let size = f.size();
 
@@ -158,8 +171,9 @@ impl App {
                 let body_layout = Layout::default()
                     .direction(Direction::Horizontal)
                     .constraints([
-                        Constraint::Percentage(30), // Nav Tree
-                        Constraint::Percentage(70), // Workspace
+                        Constraint::Percentage(25), // Nav Tree
+                        Constraint::Percentage(45), // Workspace
+                        Constraint::Percentage(30), // Description Pane
                     ])
                     .split(main_layout[1]);
 
@@ -174,6 +188,12 @@ impl App {
                     f,
                     body_layout[1],
                     self.active_block == ActiveBlock::Workspace,
+                    &self.theme,
+                );
+                let _ = self.description_pane.draw(
+                    f,
+                    body_layout[2],
+                    false,
                     &self.theme,
                 );
                 let _ = self.summary_pane.draw(
@@ -254,8 +274,11 @@ impl App {
                     };
                 } else {
                     match self.wizard_state {
-                        WizardState::Artifacts => {
+                        WizardState::DeploymentTarget => {
                             self.wizard_state = WizardState::Welcome;
+                        }
+                        WizardState::Artifacts => {
+                            self.wizard_state = WizardState::DeploymentTarget;
                         }
                         WizardState::AgentPersona => {
                             self.wizard_state = WizardState::Artifacts;
@@ -283,11 +306,6 @@ impl App {
                             self.workspace.set_category(Category::AgentSkills);
                             self.nav_tree.set_selected(Category::AgentSkills);
                         }
-                        WizardState::DeploymentTarget => {
-                            self.wizard_state = WizardState::License;
-                            self.workspace.set_category(Category::License);
-                            self.nav_tree.set_selected(Category::License);
-                        }
                         _ => {}
                     }
                     self.update_summary();
@@ -308,6 +326,9 @@ impl App {
             Action::Enter => {
                 match self.wizard_state {
                     WizardState::Welcome => {
+                        self.wizard_state = WizardState::DeploymentTarget;
+                    }
+                    WizardState::DeploymentTarget => {
                         self.wizard_state = WizardState::Artifacts;
                         self.workspace.set_category(Category::Artifacts);
                         self.nav_tree.set_selected(Category::Artifacts);
@@ -340,9 +361,6 @@ impl App {
                         self.nav_tree.set_selected(Category::License);
                     }
                     WizardState::License => {
-                        self.wizard_state = WizardState::DeploymentTarget;
-                    }
-                    WizardState::DeploymentTarget => {
                         self.wizard_state = WizardState::Complete;
                         self.active_block = ActiveBlock::NavTree;
                     }
