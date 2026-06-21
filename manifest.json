@@ -1,7 +1,7 @@
 {
     "metadata": {
-        "version": "3.21.0",
-        "lastUpdated": "2026-06-21T11:15:00Z"
+        "version": "3.21.1",
+        "lastUpdated": "2026-06-21T12:00:00Z"
     },
     "env": {
         "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY": "pk_test_placeholder",
@@ -243,6 +243,13 @@
             "label": "Playwright Automation",
             "source": ".skills/playwright",
             "target": ".skills/playwright",
+            "method": "copy"
+        },
+        {
+            "id": "ratatui",
+            "label": "Ratatui TUI Framework",
+            "source": ".skills/ratatui",
+            "target": ".skills/ratatui",
             "method": "copy"
         },
         {
