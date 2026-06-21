@@ -24,22 +24,22 @@ impl Workspace {
         let mut items = vec![
             WorkspaceItem {
                 label: "readme.md".to_string(),
-                selected: true,
+                selected: false,
                 category: Category::Artifacts,
             },
             WorkspaceItem {
                 label: "vercel.json".to_string(),
-                selected: true,
+                selected: false,
                 category: Category::Artifacts,
             },
             WorkspaceItem {
                 label: "deploy.yml".to_string(),
-                selected: true,
+                selected: false,
                 category: Category::Artifacts,
             },
             WorkspaceItem {
                 label: "env.example".to_string(),
-                selected: true,
+                selected: false,
                 category: Category::Artifacts,
             },
             WorkspaceItem {
@@ -69,7 +69,7 @@ impl Workspace {
             },
             WorkspaceItem {
                 label: "MIT License".to_string(),
-                selected: true,
+                selected: false,
                 category: Category::License,
             },
             WorkspaceItem {
@@ -84,29 +84,44 @@ impl Workspace {
             },
         ];
 
-        let skills_path = if std::path::Path::new(".skills").exists() {
-            ".skills"
-        } else {
-            "../.skills"
-        };
+        let mut current_dir = std::env::current_dir().unwrap_or_default();
+        let mut skills_path = std::path::PathBuf::new();
+        loop {
+            let candidate = current_dir.join(".skills");
+            if candidate.exists() && candidate.is_dir() {
+                skills_path = candidate;
+                break;
+            }
+            if !current_dir.pop() {
+                break;
+            }
+        }
 
-        if let Ok(entries) = std::fs::read_dir(skills_path) {
-            let mut skill_names: Vec<String> = entries
-                .flatten()
-                .filter(|e| e.file_type().map(|ft| ft.is_dir()).unwrap_or(false))
-                .map(|e| e.file_name().to_string_lossy().to_string())
-                .collect();
-            skill_names.sort();
-            for name in skill_names {
+        if skills_path.exists() {
+            if let Ok(entries) = std::fs::read_dir(skills_path) {
+                let mut skill_names: Vec<String> = entries
+                    .flatten()
+                    .filter(|e| e.file_type().map(|ft| ft.is_dir()).unwrap_or(false))
+                    .map(|e| e.file_name().to_string_lossy().to_string())
+                    .collect();
+                skill_names.sort();
+                for name in skill_names {
+                    items.push(WorkspaceItem {
+                        label: name,
+                        selected: false,
+                        category: Category::AgentSkills,
+                    });
+                }
+            } else {
                 items.push(WorkspaceItem {
-                    label: name,
+                    label: "Failed to read skills directory".into(),
                     selected: false,
                     category: Category::AgentSkills,
                 });
             }
         } else {
             items.push(WorkspaceItem {
-                label: "Failed to load skills directory".into(),
+                label: "Could not find .skills directory".into(),
                 selected: false,
                 category: Category::AgentSkills,
             });
