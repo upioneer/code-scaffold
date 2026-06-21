@@ -13,6 +13,8 @@ pub struct DirectoryBrowser {
     pub state: ListState,
     pub is_open: bool,
     pub selected_path: Option<String>,
+    pub is_creating_folder: bool,
+    pub new_folder_name: String,
 }
 
 impl DirectoryBrowser {
@@ -24,6 +26,8 @@ impl DirectoryBrowser {
             state: ListState::default(),
             is_open: false,
             selected_path: None,
+            is_creating_folder: false,
+            new_folder_name: String::new(),
         };
         db.load_directory();
         db
@@ -39,6 +43,7 @@ impl DirectoryBrowser {
             // Root directory, still push ".." just in case, though it won't do much
             self.items.push(("..".to_string(), true));
         }
+        self.items.push(("[ + Create New Folder ]".to_string(), false));
 
         if let Ok(entries) = std::fs::read_dir(&self.current_path) {
             let mut dirs = Vec::new();
@@ -74,6 +79,33 @@ impl Component for DirectoryBrowser {
             return Ok(None);
         }
 
+        if self.is_creating_folder {
+            match action {
+                Action::Char(c) => {
+                    self.new_folder_name.push(c);
+                }
+                Action::Backspace => {
+                    self.new_folder_name.pop();
+                }
+                Action::Enter => {
+                    if !self.new_folder_name.is_empty() {
+                        let new_path = self.current_path.join(&self.new_folder_name);
+                        let _ = std::fs::create_dir(&new_path);
+                        self.current_path = new_path;
+                        self.load_directory();
+                    }
+                    self.is_creating_folder = false;
+                    self.new_folder_name.clear();
+                }
+                Action::Quit => {
+                    self.is_creating_folder = false;
+                    self.new_folder_name.clear();
+                }
+                _ => {}
+            }
+            return Ok(Some(Action::Tick));
+        }
+
         let mut i = self.state.selected().unwrap_or(0);
         match action {
             Action::Up => {
@@ -93,7 +125,10 @@ impl Component for DirectoryBrowser {
             Action::Enter | Action::Right => {
                 if let Some(selected) = self.state.selected() {
                     let (name, is_dir) = &self.items[selected];
-                    if name == ".." {
+                    if name == "[ + Create New Folder ]" {
+                        self.is_creating_folder = true;
+                        self.new_folder_name.clear();
+                    } else if name == ".." {
                         if let Some(parent) = self.current_path.parent() {
                             self.current_path = parent.to_path_buf();
                             self.load_directory();
@@ -144,10 +179,19 @@ impl Component for DirectoryBrowser {
         f.render_widget(Clear, area);
 
         let items: Vec<ListItem> = self.items.iter().map(|(name, _)| {
-            ListItem::new(format!(" 📁 {}", name)).style(Style::default().fg(theme.text).bg(theme.bg))
+            let display_name = if name == "[ + Create New Folder ]" {
+                format!(" ➕ {}", name)
+            } else {
+                format!(" 📁 {}", name)
+            };
+            ListItem::new(display_name).style(Style::default().fg(theme.text).bg(theme.bg))
         }).collect();
 
-        let title = format!(" Select Folder: {} (Space to Confirm, Esc to Cancel) ", self.current_path.to_string_lossy());
+        let title = if self.is_creating_folder {
+            format!(" Create Folder: {}_ ", self.new_folder_name)
+        } else {
+            format!(" Select Folder: {} (Space to Confirm, Esc to Cancel) ", self.current_path.to_string_lossy())
+        };
         
         let list = List::new(items)
             .block(
