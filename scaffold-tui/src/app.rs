@@ -115,7 +115,7 @@ impl App {
         if self.wizard_state != WizardState::Complete {
             let (title, text) = match self.wizard_state {
                 WizardState::Welcome => (" Welcome to Code Scaffold! ", format!("{} We will guide you through the initial setup.\nPress [Enter] or [Tab] to begin selecting a Target Folder.", BRAILLE_FRAMES[self.splash_frame_idx])),
-                WizardState::DeploymentTarget => (" Step 1: Deployment Target ", format!("The current deployment target is ({}).\nPress [F] to open the native OS file explorer and select a different folder.\nPress [Enter] or [Tab] to proceed.\nPress [Shift+Tab] to go back.", self.target_folder)),
+                WizardState::DeploymentTarget => (" Step 1: Deployment Target ", format!("The current deployment target is ({}).\nPress [Enter] or [F] to browse for a folder.\nPress [Tab] to keep current folder and proceed.\nPress [Shift+Tab] to go back.", self.target_folder)),
                 WizardState::Artifacts => (" Step 2: Core Artifacts ", "Use [Up/Down] to navigate and [Space] to toggle files.\nPress [Enter] or [Tab] when ready to proceed.\nPress [Shift+Tab] to go back.".to_string()),
                 WizardState::AgentPersona => (" Step 3: Agent Persona ", "Select the primary focus for the Agent. This will tailor testing guidelines and instructions.\nPress [Enter] or [Tab] to proceed to Skills.\nPress [Shift+Tab] to go back.".to_string()),
                 WizardState::Skills => (" Step 4: Agent Skills ", "Select the domain skills you need. Notice how GitHub and Firebase toggle their companion artifacts!\nPress [Enter] or [Tab] to proceed to Licensing.\nPress [Shift+Tab] to go back.".to_string()),
@@ -255,6 +255,13 @@ impl App {
                 if let Some(path) = self.directory_browser.selected_path.take() {
                     self.target_folder = path.clone();
                     self.workspace.detect_installed(&path);
+                    
+                    // Auto-advance
+                    self.wizard_state = WizardState::Artifacts;
+                    self.workspace.set_category(Category::Artifacts);
+                    self.nav_tree.set_selected(Category::Artifacts);
+                    self.active_block = ActiveBlock::Workspace;
+
                     self.update_summary();
                 }
             }
@@ -352,10 +359,7 @@ impl App {
                         self.wizard_state = WizardState::DeploymentTarget;
                     }
                     WizardState::DeploymentTarget => {
-                        self.wizard_state = WizardState::Artifacts;
-                        self.workspace.set_category(Category::Artifacts);
-                        self.nav_tree.set_selected(Category::Artifacts);
-                        self.active_block = ActiveBlock::Workspace;
+                        self.directory_browser.open(&self.target_folder);
                     }
                     WizardState::Artifacts => {
                         let has_agent = self
