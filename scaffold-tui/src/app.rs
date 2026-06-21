@@ -12,7 +12,7 @@ use crate::tui::{handle_terminal_events, Tui};
 use anyhow::Result;
 use ratatui::prelude::{Constraint, Direction, Layout, Rect};
 use ratatui::widgets::{Block, Borders, Clear, Paragraph};
-use std::sync::mpsc;
+use tokio::sync::mpsc::{self, UnboundedSender};
 
 const BRAILLE_FRAMES: &[&str] = &["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
 
@@ -47,12 +47,12 @@ pub struct App {
     workspace: Workspace,
     summary_pane: SummaryPane,
     footer: Footer,
-    tx: mpsc::Sender<String>,
+    tx: UnboundedSender<String>,
 }
 
 impl App {
-    pub fn new() -> (Self, mpsc::Sender<String>) {
-        let (tx, _rx) = mpsc::channel();
+    pub fn new(payload_dir: std::path::PathBuf) -> (Self, UnboundedSender<String>) {
+        let (tx, _rx) = mpsc::unbounded_channel();
         let app = Self {
             should_quit: false,
             active_block: ActiveBlock::Workspace,
@@ -64,7 +64,7 @@ impl App {
             splash_frame_idx: 0,
             header: Header::new(),
             nav_tree: NavTree::new(),
-            workspace: Workspace::new(),
+            workspace: Workspace::new(payload_dir),
             summary_pane: SummaryPane::new(),
             footer: Footer::new(),
             tx: tx.clone(),
