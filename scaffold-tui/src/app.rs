@@ -1,5 +1,6 @@
 use crate::action::Action;
 use crate::components::{
+    directory_browser::DirectoryBrowser,
     description_pane::DescriptionPane,
     footer::Footer,
     header::Header,
@@ -50,12 +51,16 @@ pub struct App {
     description_pane: DescriptionPane,
     summary_pane: SummaryPane,
     footer: Footer,
+    directory_browser: DirectoryBrowser,
     tx: UnboundedSender<String>,
 }
 
 impl App {
     pub fn new(payload_dir: std::path::PathBuf) -> (Self, UnboundedSender<String>) {
         let (tx, _rx) = mpsc::unbounded_channel();
+        let mut workspace = Workspace::new(payload_dir);
+        workspace.detect_installed("./");
+        
         let app = Self {
             should_quit: false,
             active_block: ActiveBlock::Workspace,
@@ -67,10 +72,11 @@ impl App {
             splash_frame_idx: 0,
             header: Header::new(),
             nav_tree: NavTree::new(),
-            workspace: Workspace::new(payload_dir),
+            workspace,
             description_pane: DescriptionPane::new(),
             summary_pane: SummaryPane::new(),
             footer: Footer::new(),
+            directory_browser: DirectoryBrowser::new(),
             tx: tx.clone(),
         };
         (app, tx)
@@ -141,7 +147,17 @@ impl App {
                 .selected_label()
                 .unwrap_or("")
                 .to_string();
-            self.description_pane.set_selected_label(&selected_label);
+            let selected_desc = self
+                .workspace
+                .selected_description()
+                .unwrap_or("")
+                .to_string();
+            let selected_version = self
+                .workspace
+                .selected_version()
+                .unwrap_or("")
+                .to_string();
+            self.description_pane.set_selected_label(&selected_label, &selected_desc, &selected_version);
 
             tui.terminal.draw(|f| {
                 let size = f.size();
@@ -200,6 +216,7 @@ impl App {
                     &self.theme,
                 );
                 let _ = self.footer.draw(f, main_layout[3], false, &self.theme);
+                let _ = self.directory_browser.draw(f, size, true, &self.theme);
             })?;
 
             if let Some(action) = handle_terminal_events()? {
@@ -232,6 +249,18 @@ impl App {
     }
 
     pub fn update(&mut self, action: Action) -> Result<()> {
+        if self.directory_browser.is_open && action != Action::Tick {
+            let _ = self.directory_browser.update(action);
+            if !self.directory_browser.is_open {
+                if let Some(path) = self.directory_browser.selected_path.take() {
+                    self.target_folder = path.clone();
+                    self.workspace.detect_installed(&path);
+                    self.update_summary();
+                }
+            }
+            return Ok(());
+        }
+
         match action {
             Action::Tick => {
                 self.splash_tick_count = self.splash_tick_count.wrapping_add(1);
@@ -314,21 +343,7 @@ impl App {
             }
             Action::Char('f') | Action::Char('F') => {
                 if self.wizard_state == WizardState::DeploymentTarget {
-                    let mut stdout = std::io::stdout();
-                    use crossterm::ExecutableCommand;
-                    
-                    // Temporarily restore standard terminal state so the OS dialog can claim focus
-                    crossterm::terminal::disable_raw_mode().ok();
-                    stdout.execute(crossterm::terminal::LeaveAlternateScreen).ok();
-                    
-                    if let Some(path) = rfd::FileDialog::new().set_title("Select Target Deployment Folder").pick_folder() {
-                        self.target_folder = path.to_string_lossy().to_string();
-                        self.update_summary();
-                    }
-                    
-                    // Resume TUI
-                    stdout.execute(crossterm::terminal::EnterAlternateScreen).ok();
-                    crossterm::terminal::enable_raw_mode().ok();
+                    self.directory_browser.open(&self.target_folder);
                 }
             }
             Action::Enter => {

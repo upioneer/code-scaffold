@@ -44,6 +44,8 @@ fn render_qr_lines(url: &str) -> Vec<String> {
 
 pub struct DescriptionPane {
     pub current_label: String,
+    pub current_desc: String,
+    pub current_version: String,
     qr_lines: Vec<String>,
 }
 
@@ -52,12 +54,16 @@ impl DescriptionPane {
         let qr_lines = render_qr_lines(SITE_URL);
         Self {
             current_label: String::new(),
+            current_desc: String::new(),
+            current_version: String::new(),
             qr_lines,
         }
     }
 
-    pub fn set_selected_label(&mut self, label: &str) {
+    pub fn set_selected_label(&mut self, label: &str, desc: &str, version: &str) {
         self.current_label = label.to_string();
+        self.current_desc = desc.to_string();
+        self.current_version = version.to_string();
     }
 }
 
@@ -93,19 +99,34 @@ impl Component for DescriptionPane {
             .split(inner);
 
         // ── Description ──────────────────────────────────────────────
-        let desc_text = if self.current_label.is_empty() {
+        let desc_text = if !self.current_desc.is_empty() {
+            self.current_desc.as_str()
+        } else if self.current_label.is_empty() {
             item_description("")
         } else {
             item_description(&self.current_label)
         };
 
         let title_line = if !self.current_label.is_empty() {
-            Line::from(vec![
-                Span::styled(
-                    format!("▸ {}", self.current_label),
-                    Style::default().fg(theme.accent).add_modifier(Modifier::BOLD),
-                ),
-            ])
+            if !self.current_version.is_empty() {
+                Line::from(vec![
+                    Span::styled(
+                        format!("▸ {} ", self.current_label),
+                        Style::default().fg(theme.accent).add_modifier(Modifier::BOLD),
+                    ),
+                    Span::styled(
+                        format!("v{}", self.current_version),
+                        Style::default().fg(theme.secondary),
+                    ),
+                ])
+            } else {
+                Line::from(vec![
+                    Span::styled(
+                        format!("▸ {}", self.current_label),
+                        Style::default().fg(theme.accent).add_modifier(Modifier::BOLD),
+                    ),
+                ])
+            }
         } else {
             Line::from(Span::styled("▸ Deployment Config", Style::default().fg(theme.secondary)))
         };
