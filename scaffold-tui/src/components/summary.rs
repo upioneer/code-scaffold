@@ -7,12 +7,14 @@ use ratatui::style::Style;
 use ratatui::widgets::{Block, Borders, Paragraph};
 
 pub struct SummaryPane {
+    pub title: String,
     pub summary_text: String,
 }
 
 impl SummaryPane {
     pub fn new() -> Self {
         Self {
+            title: " Deployment Summary ".to_string(),
             summary_text: "Initializing...".to_string(),
         }
     }
@@ -42,7 +44,7 @@ impl Component for SummaryPane {
             .block(
                 Block::default()
                     .borders(Borders::ALL)
-                    .title(" Deployment Summary ")
+                    .title(self.title.as_str())
                     .border_style(border_style)
                     .style(Style::default().bg(theme.bg)),
             );

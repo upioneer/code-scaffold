@@ -94,14 +94,27 @@ impl App {
             .collect::<Vec<_>>()
             .join(", ");
 
-        self.summary_pane.summary_text = format!(
-            "Deployment Footprint:\n- Target: {}\n- {} Artifacts Configured\n- {} Skills Bridged\n- License: {}\n\n{}",
-            self.target_folder,
-            selected_artifacts,
-            selected_skills,
-            if selected_license.is_empty() { "None" } else { &selected_license },
-            if self.wizard_state == WizardState::Complete { "System Ready. Press [Ctrl+X] to Deploy." } else { "Wizard setup in progress..." }
-        );
+        if self.wizard_state != WizardState::Complete {
+            let (title, text) = match self.wizard_state {
+                WizardState::Welcome => (" Welcome to Code Scaffold! ", format!("{} We will guide you through the initial setup.\nPress [Enter] to begin configuring Artifacts.", BRAILLE_FRAMES[self.splash_frame_idx])),
+                WizardState::Artifacts => (" Step 1: Core Artifacts ", "Use [Up/Down] to navigate and [Space] to toggle files.\nPress [Enter] when ready to proceed to Skills.".to_string()),
+                WizardState::Skills => (" Step 2: Agent Skills ", "Select the domain skills you need. Notice how GitHub and Firebase toggle their companion artifacts!\nPress [Enter] when ready to proceed to Licensing.".to_string()),
+                WizardState::License => (" Step 3: Licensing ", "Choose an open-source license.\nPress [Enter] to set the Deployment Target.".to_string()),
+                WizardState::DeploymentTarget => (" Step 4: Deployment Target ", format!("The default deployment target is ({}).\nPress [F] to open the native OS file explorer and select a different folder.\nPress [Enter] to complete the wizard.", self.target_folder)),
+                _ => ("", "".to_string()),
+            };
+            self.summary_pane.title = title.to_string();
+            self.summary_pane.summary_text = text;
+        } else {
+            self.summary_pane.title = " Deployment Summary ".to_string();
+            self.summary_pane.summary_text = format!(
+                "Deployment Footprint:\n- Target: {}\n- {} Artifacts Configured\n- {} Skills Bridged\n- License: {}\n\nSystem Ready. Press [Ctrl+X] to Deploy.",
+                self.target_folder,
+                selected_artifacts,
+                selected_skills,
+                if selected_license.is_empty() { "None" } else { &selected_license }
+            );
+        }
     }
 
     pub async fn run(&mut self, mut tui: Tui) -> Result<()> {
@@ -113,8 +126,12 @@ impl App {
                 let size = f.size();
 
                 f.render_widget(
-                    ratatui::widgets::Block::default().style(ratatui::style::Style::default().bg(self.theme.bg).fg(self.theme.text)),
-                    size
+                    ratatui::widgets::Block::default().style(
+                        ratatui::style::Style::default()
+                            .bg(self.theme.bg)
+                            .fg(self.theme.text),
+                    ),
+                    size,
                 );
 
                 let main_layout = Layout::default()
@@ -136,35 +153,25 @@ impl App {
                     .split(main_layout[1]);
 
                 let _ = self.header.draw(f, main_layout[0], false, &self.theme);
-                let _ = self.nav_tree.draw(f, body_layout[0], self.active_block == ActiveBlock::NavTree, &self.theme);
-                let _ = self.workspace.draw(f, body_layout[1], self.active_block == ActiveBlock::Workspace, &self.theme);
-                let _ = self.summary_pane.draw(f, main_layout[2], self.active_block == ActiveBlock::SummaryPane, &self.theme);
+                let _ = self.nav_tree.draw(
+                    f,
+                    body_layout[0],
+                    self.active_block == ActiveBlock::NavTree,
+                    &self.theme,
+                );
+                let _ = self.workspace.draw(
+                    f,
+                    body_layout[1],
+                    self.active_block == ActiveBlock::Workspace,
+                    &self.theme,
+                );
+                let _ = self.summary_pane.draw(
+                    f,
+                    main_layout[2],
+                    self.active_block == ActiveBlock::SummaryPane,
+                    &self.theme,
+                );
                 let _ = self.footer.draw(f, main_layout[3], false, &self.theme);
-
-                // Modal overlay
-                if self.wizard_state != WizardState::Complete {
-                    let text = match self.wizard_state {
-                        WizardState::Welcome => {
-                            let frame = BRAILLE_FRAMES[self.splash_frame_idx];
-                            format!("\n\n {} Welcome to Code Scaffold! {} \n\nWe will guide you through the initial setup.\nPress [Enter] to begin configuring Artifacts.", frame, frame)
-                        },
-                        WizardState::Artifacts => "\n\n Step 1: Core Artifacts \n\nUse [Up/Down] to navigate and [Space] to toggle files.\nPress [Enter] when ready to proceed to Skills.".to_string(),
-                        WizardState::Skills => "\n\n Step 2: Agent Skills \n\nSelect the domain skills you need.\nNotice how GitHub and Firebase toggle their companion artifacts!\nPress [Enter] when ready to proceed to Licensing.".to_string(),
-                        WizardState::License => "\n\n Step 3: Licensing \n\nChoose an open-source license.\nPress [Enter] to set the Deployment Target.".to_string(),
-                        WizardState::DeploymentTarget => "\n\n Step 4: Deployment Target \n\nThe default deployment target is the current folder (./).\n\nPress [F] to open the native OS file explorer and select a different folder.\nPress [Enter] to complete the wizard.".to_string(),
-                        _ => "".to_string(),
-                    };
-
-                    let popup_area = Self::centered_rect(60, 40, size);
-                    f.render_widget(Clear, popup_area);
-
-                    let popup_block = Paragraph::new(text)
-                        .alignment(ratatui::layout::Alignment::Center)
-                        .style(ratatui::style::Style::default().fg(self.theme.text).bg(self.theme.bg))
-                        .block(Block::default().borders(Borders::ALL).title(" Setup Wizard ").border_style(ratatui::style::Style::default().fg(self.theme.accent).bg(self.theme.bg)));
-
-                    f.render_widget(popup_block, popup_area);
-                }
             })?;
 
             if let Some(action) = handle_terminal_events()? {
@@ -202,6 +209,9 @@ impl App {
                 self.splash_tick_count = self.splash_tick_count.wrapping_add(1);
                 if self.splash_tick_count % 5 == 0 {
                     self.splash_frame_idx = (self.splash_frame_idx + 1) % BRAILLE_FRAMES.len();
+                    if self.wizard_state == WizardState::Welcome {
+                        self.update_summary();
+                    }
                 }
             }
             Action::Quit => self.should_quit = true,
