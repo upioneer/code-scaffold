@@ -20,6 +20,7 @@ pub struct App {
     pub should_quit: bool,
     pub active_block: ActiveBlock,
     pub theme: Theme,
+    pub theme_idx: usize,
     header: Header,
     nav_tree: NavTree,
     workspace: Workspace,
@@ -35,6 +36,7 @@ impl App {
             should_quit: false,
             active_block: ActiveBlock::NavTree,
             theme: Theme::plum(), // Default theme configuration
+            theme_idx: 0,
             header: Header::new(),
             nav_tree: NavTree::new(),
             workspace: Workspace::new(),
@@ -123,6 +125,10 @@ impl App {
                     ActiveBlock::Workspace => ActiveBlock::NavTree,
                     ActiveBlock::LoggerPipe => ActiveBlock::Workspace,
                 };
+            }
+            Action::Char('t') | Action::Char('T') => {
+                self.theme_idx = self.theme_idx.wrapping_add(1);
+                self.theme = crate::theme::Theme::get_by_index(self.theme_idx);
             }
             _ => {
                 match self.active_block {
