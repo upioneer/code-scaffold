@@ -1,9 +1,9 @@
 use crate::models::manifest::Manifest;
 use anyhow::Result;
+use directories::ProjectDirs;
 use std::fs;
 use std::path::PathBuf;
 use std::sync::mpsc::Sender;
-use directories::ProjectDirs;
 use std::time::Duration;
 
 pub async fn execute(manifest: &Manifest, tx: Sender<String>) -> Result<()> {
@@ -15,7 +15,10 @@ pub async fn execute(manifest: &Manifest, tx: Sender<String>) -> Result<()> {
         let config_dir = proj_dirs.config_dir();
         if !config_dir.exists() {
             fs::create_dir_all(config_dir)?;
-            let _ = tx.send(format!("Initialized target host cache at: {:?}", config_dir));
+            let _ = tx.send(format!(
+                "Initialized target host cache at: {:?}",
+                config_dir
+            ));
         } else {
             let _ = tx.send(format!("Host cache resolved at: {:?}", config_dir));
         }
@@ -42,7 +45,7 @@ pub async fn execute(manifest: &Manifest, tx: Sender<String>) -> Result<()> {
     let _ = tx.send("[2/3] Generating Project Artifacts...".to_string());
     for artifact in &manifest.artifacts {
         let path = PathBuf::from(&artifact.target);
-        
+
         if artifact.method == "touch" {
             if !path.exists() {
                 if let Some(parent) = path.parent() {
@@ -53,7 +56,10 @@ pub async fn execute(manifest: &Manifest, tx: Sender<String>) -> Result<()> {
             }
         } else if artifact.method == "copy" {
             // Future Remote Fetch Logic
-            let _ = tx.send(format!(" -> (Mocked) Pulled remote source for: {}", artifact.target));
+            let _ = tx.send(format!(
+                " -> (Mocked) Pulled remote source for: {}",
+                artifact.target
+            ));
         }
     }
     tokio::time::sleep(Duration::from_millis(500)).await; // UX execution padding
@@ -63,9 +69,15 @@ pub async fn execute(manifest: &Manifest, tx: Sender<String>) -> Result<()> {
     let _ = tx.send("[3/3] Provisioning Target Skill Modules...".to_string());
     for skill in &manifest.skills {
         if skill.method == "copy" {
-            let _ = tx.send(format!(" -> (Mocked) Bridged plugin container: {}", skill.label));
+            let _ = tx.send(format!(
+                " -> (Mocked) Bridged plugin container: {}",
+                skill.label
+            ));
         } else if skill.method == "append" {
-            let _ = tx.send(format!(" -> (Mocked) Appended instructions for: {}", skill.label));
+            let _ = tx.send(format!(
+                " -> (Mocked) Appended instructions for: {}",
+                skill.label
+            ));
         }
     }
     tokio::time::sleep(Duration::from_millis(500)).await; // UX execution padding

@@ -1,10 +1,10 @@
-use crate::components::Component;
 use crate::action::Action;
+use crate::components::Component;
 use crate::theme::Theme;
 use anyhow::Result;
 use ratatui::prelude::Rect;
-use ratatui::widgets::{Block, Borders, Paragraph};
 use ratatui::style::Style;
+use ratatui::widgets::{Block, Borders, Paragraph};
 use serde_json::Value;
 
 pub struct Header {
@@ -15,7 +15,11 @@ impl Header {
     pub fn new() -> Self {
         let manifest_content = include_str!("../../../manifest.json");
         let version = if let Ok(parsed) = serde_json::from_str::<Value>(manifest_content) {
-            if let Some(v) = parsed.get("metadata").and_then(|m| m.get("version")).and_then(|v| v.as_str()) {
+            if let Some(v) = parsed
+                .get("metadata")
+                .and_then(|m| m.get("version"))
+                .and_then(|v| v.as_str())
+            {
                 format!("v{}", v)
             } else {
                 "vUnknown".to_string()
@@ -32,12 +36,23 @@ impl Component for Header {
         Ok(None)
     }
 
-    fn draw(&mut self, f: &mut ratatui::Frame<'_>, area: Rect, _active: bool, theme: &Theme) -> Result<()> {
+    fn draw(
+        &mut self,
+        f: &mut ratatui::Frame<'_>,
+        area: Rect,
+        _active: bool,
+        theme: &Theme,
+    ) -> Result<()> {
         let title = format!(" Stateless Scaffolding TUI {} ", self.version);
         let text = Paragraph::new(title)
             .style(Style::default().fg(theme.text).bg(theme.bg))
             .alignment(ratatui::layout::Alignment::Center)
-            .block(Block::default().borders(Borders::ALL).border_style(Style::default().fg(theme.secondary).bg(theme.bg)).style(Style::default().bg(theme.bg)));
+            .block(
+                Block::default()
+                    .borders(Borders::ALL)
+                    .border_style(Style::default().fg(theme.secondary).bg(theme.bg))
+                    .style(Style::default().bg(theme.bg)),
+            );
         f.render_widget(text, area);
         Ok(())
     }
