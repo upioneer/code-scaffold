@@ -1,0 +1,106 @@
+# Quickstart Guide
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/gradio-app/trackio/blob/main/examples/notebooks/quickstart.ipynb)
+
+To get started, you can run a simple example that logs some fake training metrics:
+
+```python
+import trackio
+import random
+import time
+
+runs = 3
+epochs = 8
+
+for run in range(runs):
+    trackio.init(
+        project="my-project",
+        config={"epochs": epochs, "learning_rate": 0.001, "batch_size": 64}
+    )
+
+    for epoch in range(epochs):
+        train_loss = random.uniform(0.2, 1.0)
+        train_acc = random.uniform(0.6, 0.95)
+
+        val_loss = train_loss - random.uniform(0.01, 0.1)
+        val_acc = train_acc + random.uniform(0.01, 0.05)
+
+        trackio.log({
+            "epoch": epoch,
+            "train_loss": train_loss,
+            "train_accuracy": train_acc,
+            "val_loss": val_loss,
+            "val_accuracy": val_acc
+        })
+
+        time.sleep(0.2)
+
+trackio.finish()
+```
+
+Running the above will print to the terminal instructions on launching the dashboard.
+
+The usage of `trackio` is designed to be identical to `wandb` in most cases, so you can easily switch between the two libraries.
+
+```py
+import trackio as wandb
+```
+
+## Dashboard
+
+You can launch the dashboard by running:
+
+```sh
+trackio show
+```
+
+```py
+import trackio
+
+trackio.show()
+```
+
+You can also provide an optional `project` name as the argument to load a specific project directly:
+
+```sh
+trackio show --project "my-project"
+```
+
+```py
+import trackio 
+
+trackio.show(project="my-project")
+```
+
+## Deploying to Hugging Face Spaces
+
+When calling `trackio.init()`, by default the service will run locally and store project data on the local machine.
+
+But if you pass a `space_id` to [init()](/docs/trackio/v0.27.0/en/api#trackio.init), like:
+
+```py
+trackio.init(project="my-project", space_id="orgname/space_id")
+```
+
+or
+
+```py
+trackio.init(project="my-project", space_id="username/space_id")
+```
+
+it will use an existing or automatically deploy a new Hugging Face Space as needed. You should be logged in with the `huggingface-cli` locally and your token should have write permissions to create the Space.
+
+Alternatively, you can sync an existing local project to a Hugging Face Space by running:
+
+```sh
+trackio sync --project "my-project" --space-id "username/space_id"
+```
+
+```py
+trackio.sync(project="my-project", space_id="username/space_id")
+```
+
+This will create the Space if it does not already exist, and upload all runs and associated data to the Space. You can also sync to a lightweight static Space with `sdk="static"`, or create a read-only snapshot of a live Space with [`freeze`](deploy_embed#freezing-a-space-snapshot). A frozen Space is a point-in-time snapshot and will not pick up later metrics from the original Gradio Space unless you freeze again. See the [Deploy and Embed Dashboards](deploy_embed) page for more details.
+
+
+

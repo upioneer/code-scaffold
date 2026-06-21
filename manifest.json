@@ -1,7 +1,7 @@
 {
     "metadata": {
-        "version": "3.21.2",
-        "lastUpdated": "2026-06-21T12:05:00Z"
+        "version": "3.22.0",
+        "lastUpdated": "2026-06-21T13:25:00Z"
     },
     "env": {
         "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY": "pk_test_placeholder",
@@ -250,6 +250,13 @@
             "label": "Ratatui TUI Framework",
             "source": ".skills/ratatui",
             "target": ".skills/ratatui",
+            "method": "copy"
+        },
+        {
+            "id": "trackio",
+            "label": "Trackio ML Tracking",
+            "source": ".skills/trackio",
+            "target": ".skills/trackio",
             "method": "copy"
         },
         {
