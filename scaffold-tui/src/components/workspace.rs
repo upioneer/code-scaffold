@@ -157,6 +157,15 @@ impl Workspace {
             .map(|(i, _)| i)
             .collect()
     }
+
+    pub fn selected_label(&self) -> Option<&str> {
+        let visible = self.visible_indices();
+        if visible.is_empty() {
+            return None;
+        }
+        let actual_idx = visible.get(self.selected_idx)?;
+        Some(&self.items[*actual_idx].label)
+    }
 }
 
 impl Component for Workspace {

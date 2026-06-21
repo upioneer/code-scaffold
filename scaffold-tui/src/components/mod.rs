@@ -1,3 +1,4 @@
+pub mod description_pane;
 pub mod footer;
 pub mod header;
 pub mod nav_tree;

@@ -14,3 +14,4 @@ reqwest = { version = "0.12", default-features = false, features = ["json", "rus
 anyhow = "1.0"
 directories = "5.0"
 zip = "0.6.6"
+qrcode = "0.14.1"
