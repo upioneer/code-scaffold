@@ -13,8 +13,8 @@ pub struct Header {
 
 impl Header {
     pub fn new() -> Self {
-        let manifest_content = std::fs::read_to_string("../manifest.json").unwrap_or_default();
-        let version = if let Ok(parsed) = serde_json::from_str::<Value>(&manifest_content) {
+        let manifest_content = include_str!("../../../manifest.json");
+        let version = if let Ok(parsed) = serde_json::from_str::<Value>(manifest_content) {
             if let Some(v) = parsed.get("metadata").and_then(|m| m.get("version")).and_then(|v| v.as_str()) {
                 format!("v{}", v)
             } else {
@@ -40,5 +40,17 @@ impl Component for Header {
             .block(Block::default().borders(Borders::ALL).border_style(Style::default().fg(theme.secondary).bg(theme.bg)).style(Style::default().bg(theme.bg)));
         f.render_widget(text, area);
         Ok(())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn test_header_version() {
+        let h = Header::new();
+        println!("Resolved Version: {}", h.version);
+        assert_ne!(h.version, "vUnknown", "Failed to parse version!");
+        assert_eq!(h.version, "v3.13.1");
     }
 }
