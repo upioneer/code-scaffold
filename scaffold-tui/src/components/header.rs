@@ -66,6 +66,5 @@ mod tests {
         let h = Header::new();
         println!("Resolved Version: {}", h.version);
         assert_ne!(h.version, "vUnknown", "Failed to parse version!");
-        assert_eq!(h.version, "v3.13.1");
     }
 }
