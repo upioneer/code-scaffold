@@ -22,7 +22,7 @@ impl Theme {
 
     pub fn lime() -> Self {
         Self {
-            bg: Color::Rgb(15, 30, 15),          
+            bg: Color::Rgb(15, 30, 15),
             text: Color::Rgb(248, 250, 252),
             primary: Color::Rgb(40, 215, 47),    // #28d72f
             secondary: Color::Rgb(120, 215, 40), // #78d728
@@ -32,7 +32,7 @@ impl Theme {
 
     pub fn ocean() -> Self {
         Self {
-            bg: Color::Rgb(10, 25, 30),          
+            bg: Color::Rgb(10, 25, 30),
             text: Color::Rgb(248, 250, 252),
             primary: Color::Rgb(70, 185, 160),   // #46b9a0
             secondary: Color::Rgb(70, 152, 185), // #4698b9
@@ -42,7 +42,7 @@ impl Theme {
 
     pub fn earth() -> Self {
         Self {
-            bg: Color::Rgb(25, 20, 15),          
+            bg: Color::Rgb(25, 20, 15),
             text: Color::Rgb(248, 250, 252),
             primary: Color::Rgb(123, 167, 88),   // #7ba758
             secondary: Color::Rgb(167, 132, 88), // #a78458
@@ -52,21 +52,21 @@ impl Theme {
 
     pub fn starburst() -> Self {
         Self {
-            bg: Color::Rgb(15, 15, 10),          
+            bg: Color::Rgb(15, 15, 10),
             text: Color::Rgb(248, 250, 252),
-            primary: Color::Rgb(172, 247, 8),    // #acf708
-            secondary: Color::Rgb(52, 247, 8),   // #34f708
-            accent: Color::Rgb(247, 203, 8),     // #f7cb08
+            primary: Color::Rgb(172, 247, 8),  // #acf708
+            secondary: Color::Rgb(52, 247, 8), // #34f708
+            accent: Color::Rgb(247, 203, 8),   // #f7cb08
         }
     }
 
     pub fn default_theme() -> Self {
         Self {
-            bg: Color::Rgb(10, 15, 30),          
+            bg: Color::Rgb(10, 15, 30),
             text: Color::Rgb(248, 250, 252),
-            primary: Color::Rgb(243, 210, 12),   // #f3d20c (Yellow Active Borders)
-            secondary: Color::Rgb(100, 116, 139),// Muted Slate Gray Inactive Borders
-            accent: Color::Rgb(12, 45, 243),     // #0c2df3 (Blue Folders/Accents)
+            primary: Color::Rgb(243, 210, 12), // #f3d20c (Yellow Active Borders)
+            secondary: Color::Rgb(100, 116, 139), // Muted Slate Gray Inactive Borders
+            accent: Color::Rgb(12, 45, 243),   // #0c2df3 (Blue Folders/Accents)
         }
     }
 

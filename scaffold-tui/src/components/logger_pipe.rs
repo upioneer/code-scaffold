@@ -1,10 +1,10 @@
-use crate::components::Component;
 use crate::action::Action;
+use crate::components::Component;
 use crate::theme::Theme;
 use anyhow::Result;
 use ratatui::prelude::Rect;
-use ratatui::widgets::{Block, Borders, List, ListItem, ListState};
 use ratatui::style::Style;
+use ratatui::widgets::{Block, Borders, List, ListItem, ListState};
 use std::sync::mpsc::{Receiver, TryRecvError};
 
 pub struct LoggerPipe {
@@ -15,8 +15,8 @@ pub struct LoggerPipe {
 
 impl LoggerPipe {
     pub fn new(rx: Receiver<String>) -> Self {
-        Self { 
-            logs: Vec::new(), 
+        Self {
+            logs: Vec::new(),
             rx,
             state: ListState::default(),
         }
@@ -42,7 +42,9 @@ impl LoggerPipe {
 impl Component for LoggerPipe {
     fn update(&mut self, action: Action) -> Result<Option<Action>> {
         let count = self.logs.len();
-        if count == 0 { return Ok(None); }
+        if count == 0 {
+            return Ok(None);
+        }
 
         let mut i = self.state.selected().unwrap_or(0);
         match action {
@@ -59,23 +61,48 @@ impl Component for LoggerPipe {
         Ok(None)
     }
 
-    fn draw(&mut self, f: &mut ratatui::Frame<'_>, area: Rect, active: bool, theme: &Theme) -> Result<()> {
+    fn draw(
+        &mut self,
+        f: &mut ratatui::Frame<'_>,
+        area: Rect,
+        active: bool,
+        theme: &Theme,
+    ) -> Result<()> {
         self.poll_logs();
-        
-        let border_color = if active { theme.primary } else { theme.secondary };
+
+        let border_color = if active {
+            theme.primary
+        } else {
+            theme.secondary
+        };
         let border_style = Style::default().fg(border_color).bg(theme.bg);
-        
-        let items: Vec<ListItem> = self.logs.iter()
+
+        let items: Vec<ListItem> = self
+            .logs
+            .iter()
             .map(|msg| {
-                let color = if msg.contains("ERROR") { ratatui::style::Color::Red } 
-                            else if msg.contains("Created") || msg.contains("Initialized") || msg.contains("Success") { theme.accent } 
-                            else { theme.text };
+                let color = if msg.contains("ERROR") {
+                    ratatui::style::Color::Red
+                } else if msg.contains("Created")
+                    || msg.contains("Initialized")
+                    || msg.contains("Success")
+                {
+                    theme.accent
+                } else {
+                    theme.text
+                };
                 ListItem::new(msg.clone()).style(Style::default().fg(color).bg(theme.bg))
             })
             .collect();
 
         let list = List::new(items)
-            .block(Block::default().borders(Borders::ALL).title(" Logger Pipe ").border_style(border_style).style(Style::default().bg(theme.bg)))
+            .block(
+                Block::default()
+                    .borders(Borders::ALL)
+                    .title(" Logger Pipe ")
+                    .border_style(border_style)
+                    .style(Style::default().bg(theme.bg)),
+            )
             .highlight_style(Style::default().bg(theme.primary).fg(theme.bg));
 
         f.render_stateful_widget(list, area, &mut self.state);
