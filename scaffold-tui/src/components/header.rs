@@ -43,7 +43,7 @@ impl Component for Header {
         _active: bool,
         theme: &Theme,
     ) -> Result<()> {
-        let title = format!(" Stateless Scaffolding TUI {} ", self.version);
+        let title = format!(" Code Scaffold TUI {} ", self.version);
         let text = Paragraph::new(title)
             .style(Style::default().fg(theme.text).bg(theme.bg))
             .alignment(ratatui::layout::Alignment::Center)

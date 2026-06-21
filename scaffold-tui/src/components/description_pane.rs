@@ -144,7 +144,7 @@ impl Component for DescriptionPane {
 
         // ── QR label ─────────────────────────────────────────────────
         let qr_label = Paragraph::new(Line::from(vec![
-            Span::styled("⬛ ", Style::default().fg(theme.secondary)),
+            Span::styled("🔗 ", Style::default().fg(theme.secondary)),
             Span::styled("code-scaffold.web.app", Style::default().fg(theme.secondary).add_modifier(Modifier::ITALIC)),
         ]))
         .style(Style::default().bg(theme.bg));
