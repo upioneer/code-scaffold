@@ -1,3 +1,4 @@
+pub mod directory_browser;
 pub mod description_pane;
 pub mod footer;
 pub mod header;
