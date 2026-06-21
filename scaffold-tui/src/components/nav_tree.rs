@@ -16,6 +16,7 @@ pub enum Category {
 pub struct NavTree {
     pub categories: Vec<(Category, String)>,
     pub state: ListState,
+    pub selected_idx: usize,
 }
 
 impl NavTree {
@@ -29,12 +30,19 @@ impl NavTree {
                 (Category::License, "License".to_string()),
             ],
             state,
+            selected_idx: 0,
         }
     }
 
     pub fn selected_category(&self) -> Category {
-        let i = self.state.selected().unwrap_or(0);
-        self.categories[i].0.clone()
+        self.categories[self.selected_idx].0.clone()
+    }
+
+    pub fn set_selected(&mut self, cat: Category) {
+        if let Some(idx) = self.categories.iter().position(|c| c.0 == cat) {
+            self.selected_idx = idx;
+            self.state.select(Some(idx));
+        }
     }
 }
 
