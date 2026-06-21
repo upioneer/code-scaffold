@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+rfd = "0.14"
 ratatui = "0.26"
 crossterm = "0.27"
 tokio = { version = "1.37", features = ["full"] }

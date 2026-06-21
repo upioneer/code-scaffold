@@ -27,6 +27,7 @@ pub enum WizardState {
     Artifacts,
     Skills,
     License,
+    DeploymentTarget,
     Complete,
 }
 
@@ -36,6 +37,7 @@ pub struct App {
     pub theme: Theme,
     pub theme_idx: usize,
     pub wizard_state: WizardState,
+    pub target_folder: String,
     header: Header,
     nav_tree: NavTree,
     workspace: Workspace,
@@ -53,6 +55,7 @@ impl App {
             theme: Theme::plum(),
             theme_idx: 0,
             wizard_state: WizardState::Welcome,
+            target_folder: "./".to_string(),
             header: Header::new(),
             nav_tree: NavTree::new(),
             workspace: Workspace::new(),
@@ -86,7 +89,8 @@ impl App {
             .join(", ");
 
         self.summary_pane.summary_text = format!(
-            "Deployment Footprint:\n- {} Artifacts Configured\n- {} Skills Bridged\n- License: {}\n\n{}",
+            "Deployment Footprint:\n- Target: {}\n- {} Artifacts Configured\n- {} Skills Bridged\n- License: {}\n\n{}",
+            self.target_folder,
             selected_artifacts,
             selected_skills,
             if selected_license.is_empty() { "None" } else { &selected_license },
@@ -137,7 +141,8 @@ impl App {
                         WizardState::Welcome => "\n\n Welcome to Code Scaffold! \n\nWe will guide you through the initial setup.\nPress [Enter] to begin configuring Artifacts.",
                         WizardState::Artifacts => "\n\n Step 1: Core Artifacts \n\nUse [Up/Down] to navigate and [Space] to toggle files.\nPress [Enter] when ready to proceed to Skills.",
                         WizardState::Skills => "\n\n Step 2: Agent Skills \n\nSelect the domain skills you need.\nNotice how GitHub and Firebase toggle their companion artifacts!\nPress [Enter] when ready to proceed to Licensing.",
-                        WizardState::License => "\n\n Step 3: Licensing \n\nChoose an open-source license.\nPress [Enter] to complete the wizard.",
+                        WizardState::License => "\n\n Step 3: Licensing \n\nChoose an open-source license.\nPress [Enter] to set the Deployment Target.",
+                        WizardState::DeploymentTarget => "\n\n Step 4: Deployment Target \n\nThe default deployment target is the current folder (./).\n\nPress [F] to open the native OS file explorer and select a different folder.\nPress [Enter] to complete the wizard.",
                         _ => "",
                     };
 
@@ -214,6 +219,14 @@ impl App {
                 self.theme_idx = self.theme_idx.wrapping_add(1);
                 self.theme = crate::theme::Theme::get_by_index(self.theme_idx);
             }
+            Action::Char('f') | Action::Char('F') => {
+                if self.wizard_state == WizardState::DeploymentTarget {
+                    if let Some(path) = rfd::FileDialog::new().pick_folder() {
+                        self.target_folder = path.to_string_lossy().to_string();
+                        self.update_summary();
+                    }
+                }
+            }
             Action::Enter => {
                 match self.wizard_state {
                     WizardState::Welcome => {
@@ -233,6 +246,9 @@ impl App {
                         self.nav_tree.set_selected(Category::License);
                     }
                     WizardState::License => {
+                        self.wizard_state = WizardState::DeploymentTarget;
+                    }
+                    WizardState::DeploymentTarget => {
                         self.wizard_state = WizardState::Complete;
                         self.active_block = ActiveBlock::NavTree;
                     }
