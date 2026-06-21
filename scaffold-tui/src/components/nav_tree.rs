@@ -8,6 +8,7 @@ use ratatui::widgets::{Block, Borders, List, ListItem, ListState};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Category {
+    DeploymentTarget,
     Artifacts,
     AgentPersona,
     AgentSkills,
@@ -26,6 +27,7 @@ impl NavTree {
         state.select(Some(0));
         Self {
             categories: vec![
+                (Category::DeploymentTarget, "Deployment Target".to_string()),
                 (Category::Artifacts, "Artifacts".to_string()),
                 (Category::AgentPersona, "Agent Persona".to_string()),
                 (Category::AgentSkills, "Agent Skills".to_string()),
