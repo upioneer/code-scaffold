@@ -1,0 +1,6 @@
+{
+  "label": "Trackio ML Tracking",
+  "description": "Integration with Trackio for ML experiment tracking, dashboard deployments, and Hugging Face Spaces sync.",
+  "version": "1.0.0",
+  "target": ".skills/trackio"
+}
