@@ -20,85 +20,62 @@ pub struct Workspace {
 }
 
 impl Workspace {
-    pub fn new() -> Self {
-        let mut items = vec![
-            WorkspaceItem {
-                label: "readme.md".to_string(),
-                selected: false,
-                category: Category::Artifacts,
-            },
-            WorkspaceItem {
-                label: "vercel.json".to_string(),
-                selected: false,
-                category: Category::Artifacts,
-            },
-            WorkspaceItem {
-                label: "deploy.yml".to_string(),
-                selected: false,
-                category: Category::Artifacts,
-            },
-            WorkspaceItem {
-                label: "env.example".to_string(),
-                selected: false,
-                category: Category::Artifacts,
-            },
-            WorkspaceItem {
-                label: "firebase.md".to_string(),
-                selected: false,
-                category: Category::Artifacts,
-            },
-            WorkspaceItem {
-                label: "middleware.ts".to_string(),
-                selected: false,
-                category: Category::Artifacts,
-            },
-            WorkspaceItem {
-                label: "layout.tsx".to_string(),
-                selected: false,
-                category: Category::Artifacts,
-            },
-            WorkspaceItem {
-                label: "redis.ts".to_string(),
-                selected: false,
-                category: Category::Artifacts,
-            },
-            WorkspaceItem {
-                label: "ratelimit.ts".to_string(),
-                selected: false,
-                category: Category::Artifacts,
-            },
-            WorkspaceItem {
-                label: "MIT License".to_string(),
-                selected: false,
-                category: Category::License,
-            },
-            WorkspaceItem {
-                label: "Apache 2.0".to_string(),
-                selected: false,
-                category: Category::License,
-            },
-            WorkspaceItem {
-                label: "GPL v3".to_string(),
-                selected: false,
-                category: Category::License,
-            },
-        ];
+    pub fn new(payload_dir: std::path::PathBuf) -> Self {
+        let mut items = vec![];
 
-        let mut current_dir = std::env::current_dir().unwrap_or_default();
-        let mut skills_path = std::path::PathBuf::new();
-        loop {
-            let candidate = current_dir.join(".skills");
-            if candidate.exists() && candidate.is_dir() {
-                skills_path = candidate;
-                break;
+        let templates_dir = payload_dir.join(".templates");
+        if templates_dir.exists() {
+            if let Ok(entries) = std::fs::read_dir(templates_dir) {
+                let mut tmpl_names: Vec<String> = entries
+                    .flatten()
+                    .filter(|e| e.file_type().map(|ft| ft.is_file()).unwrap_or(false))
+                    .map(|e| e.file_name().to_string_lossy().to_string())
+                    .collect();
+                tmpl_names.sort();
+                for name in tmpl_names {
+                    if name.to_lowercase() == "license.md" {
+                        continue;
+                    }
+                    items.push(WorkspaceItem {
+                        label: name,
+                        selected: false,
+                        category: Category::Artifacts,
+                    });
+                }
             }
-            if !current_dir.pop() {
-                break;
+        } else {
+            items.push(WorkspaceItem {
+                label: "Failed to load .templates directory".into(),
+                selected: false,
+                category: Category::Artifacts,
+            });
+        }
+
+        let licenses_dir = payload_dir.join(".licenses");
+        if licenses_dir.exists() {
+            if let Ok(entries) = std::fs::read_dir(licenses_dir) {
+                let mut lic_names: Vec<String> = entries
+                    .flatten()
+                    .filter(|e| e.file_type().map(|ft| ft.is_file()).unwrap_or(false))
+                    .map(|e| {
+                        let name = e.file_name().to_string_lossy().to_string();
+                        name.strip_suffix(".md").unwrap_or(&name).to_string()
+                    })
+                    .collect();
+                lic_names.sort();
+                for name in lic_names {
+                    items.push(WorkspaceItem {
+                        label: name,
+                        selected: false,
+                        category: Category::License,
+                    });
+                }
             }
         }
 
-        if skills_path.exists() {
-            if let Ok(entries) = std::fs::read_dir(skills_path) {
+        let skills_dir = payload_dir.join(".skills");
+        if skills_dir.exists() {
+            if let Ok(entries) = std::fs::read_dir(skills_dir) {
                 let mut skill_names: Vec<String> = entries
                     .flatten()
                     .filter(|e| e.file_type().map(|ft| ft.is_dir()).unwrap_or(false))

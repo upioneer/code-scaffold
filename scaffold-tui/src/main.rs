@@ -5,6 +5,7 @@ mod app;
 mod components;
 mod manifest_engine;
 mod models;
+mod sync;
 mod theme;
 mod tui;
 
@@ -15,8 +16,10 @@ use tui::Tui;
 #[tokio::main]
 async fn main() -> Result<()> {
     // Process initialization and cache directory resolution
+    let payload_dir = sync::sync_payload().await?;
+
     let tui = Tui::new()?;
-    let (mut app, tx) = App::new();
+    let (mut app, tx) = App::new(payload_dir);
 
     // Mock background worker task simulating long-running compilation
     let tx_clone = tx.clone();
