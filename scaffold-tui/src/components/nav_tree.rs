@@ -1,10 +1,10 @@
-use crate::components::Component;
 use crate::action::Action;
+use crate::components::Component;
 use crate::theme::Theme;
 use anyhow::Result;
 use ratatui::prelude::Rect;
-use ratatui::widgets::{Block, Borders, List, ListItem, ListState};
 use ratatui::style::Style;
+use ratatui::widgets::{Block, Borders, List, ListItem, ListState};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Category {
@@ -22,13 +22,13 @@ impl NavTree {
     pub fn new() -> Self {
         let mut state = ListState::default();
         state.select(Some(0));
-        Self { 
+        Self {
             categories: vec![
                 (Category::Artifacts, "Artifacts".to_string()),
                 (Category::AgentSkills, "Agent Skills".to_string()),
                 (Category::License, "License".to_string()),
             ],
-            state 
+            state,
         }
     }
 
@@ -55,18 +55,37 @@ impl Component for NavTree {
         Ok(None)
     }
 
-    fn draw(&mut self, f: &mut ratatui::Frame<'_>, area: Rect, active: bool, theme: &Theme) -> Result<()> {
-        let border_color = if active { theme.primary } else { theme.secondary };
+    fn draw(
+        &mut self,
+        f: &mut ratatui::Frame<'_>,
+        area: Rect,
+        active: bool,
+        theme: &Theme,
+    ) -> Result<()> {
+        let border_color = if active {
+            theme.primary
+        } else {
+            theme.secondary
+        };
         let border_style = Style::default().fg(border_color).bg(theme.bg);
-        
-        let items: Vec<ListItem> = self.categories.iter()
+
+        let items: Vec<ListItem> = self
+            .categories
+            .iter()
             .map(|(_, name)| {
-                ListItem::new(format!("  {}", name)).style(Style::default().fg(theme.text).bg(theme.bg))
+                ListItem::new(format!("  {}", name))
+                    .style(Style::default().fg(theme.text).bg(theme.bg))
             })
             .collect();
 
         let list = List::new(items)
-            .block(Block::default().borders(Borders::ALL).title(" Categories ").border_style(border_style).style(Style::default().bg(theme.bg)))
+            .block(
+                Block::default()
+                    .borders(Borders::ALL)
+                    .title(" Categories ")
+                    .border_style(border_style)
+                    .style(Style::default().bg(theme.bg)),
+            )
             .highlight_style(Style::default().bg(theme.primary).fg(theme.bg))
             .highlight_symbol(">>");
 

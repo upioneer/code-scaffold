@@ -1,10 +1,10 @@
-use crate::components::Component;
 use crate::action::Action;
+use crate::components::Component;
 use crate::theme::Theme;
 use anyhow::Result;
 use ratatui::prelude::Rect;
-use ratatui::widgets::{Block, Borders, Paragraph};
 use ratatui::style::Style;
+use ratatui::widgets::{Block, Borders, Paragraph};
 
 pub struct Footer {}
 
@@ -19,7 +19,13 @@ impl Component for Footer {
         Ok(None)
     }
 
-    fn draw(&mut self, f: &mut ratatui::Frame<'_>, area: Rect, _active: bool, theme: &Theme) -> Result<()> {
+    fn draw(
+        &mut self,
+        f: &mut ratatui::Frame<'_>,
+        area: Rect,
+        _active: bool,
+        theme: &Theme,
+    ) -> Result<()> {
         let text = Paragraph::new(" [Tab] Focus | [Up/Down] Navigate | [T] Theme | [Ctrl+X] Deploy Selected | [Esc] Quit ")
             .style(Style::default().fg(theme.secondary).bg(theme.bg))
             .alignment(ratatui::layout::Alignment::Center)
