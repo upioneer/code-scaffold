@@ -21,89 +21,99 @@ pub struct Workspace {
 
 impl Workspace {
     pub fn new() -> Self {
+        let mut items = vec![
+            WorkspaceItem {
+                label: "readme.md".to_string(),
+                selected: true,
+                category: Category::Artifacts,
+            },
+            WorkspaceItem {
+                label: "vercel.json".to_string(),
+                selected: true,
+                category: Category::Artifacts,
+            },
+            WorkspaceItem {
+                label: "deploy.yml".to_string(),
+                selected: true,
+                category: Category::Artifacts,
+            },
+            WorkspaceItem {
+                label: "env.example".to_string(),
+                selected: true,
+                category: Category::Artifacts,
+            },
+            WorkspaceItem {
+                label: "firebase.md".to_string(),
+                selected: false,
+                category: Category::Artifacts,
+            },
+            WorkspaceItem {
+                label: "middleware.ts".to_string(),
+                selected: false,
+                category: Category::Artifacts,
+            },
+            WorkspaceItem {
+                label: "layout.tsx".to_string(),
+                selected: false,
+                category: Category::Artifacts,
+            },
+            WorkspaceItem {
+                label: "redis.ts".to_string(),
+                selected: false,
+                category: Category::Artifacts,
+            },
+            WorkspaceItem {
+                label: "ratelimit.ts".to_string(),
+                selected: false,
+                category: Category::Artifacts,
+            },
+            WorkspaceItem {
+                label: "MIT License".to_string(),
+                selected: true,
+                category: Category::License,
+            },
+            WorkspaceItem {
+                label: "Apache 2.0".to_string(),
+                selected: false,
+                category: Category::License,
+            },
+            WorkspaceItem {
+                label: "GPL v3".to_string(),
+                selected: false,
+                category: Category::License,
+            },
+        ];
+
+        let skills_path = if std::path::Path::new(".skills").exists() {
+            ".skills"
+        } else {
+            "../.skills"
+        };
+
+        if let Ok(entries) = std::fs::read_dir(skills_path) {
+            let mut skill_names: Vec<String> = entries
+                .flatten()
+                .filter(|e| e.file_type().map(|ft| ft.is_dir()).unwrap_or(false))
+                .map(|e| e.file_name().to_string_lossy().to_string())
+                .collect();
+            skill_names.sort();
+            for name in skill_names {
+                items.push(WorkspaceItem {
+                    label: name,
+                    selected: false,
+                    category: Category::AgentSkills,
+                });
+            }
+        } else {
+            items.push(WorkspaceItem {
+                label: "Failed to load skills directory".into(),
+                selected: false,
+                category: Category::AgentSkills,
+            });
+        }
+
         Self {
-            items: vec![
-                WorkspaceItem {
-                    label: "readme.md".to_string(),
-                    selected: true,
-                    category: Category::Artifacts,
-                },
-                WorkspaceItem {
-                    label: "vercel.json".to_string(),
-                    selected: true,
-                    category: Category::Artifacts,
-                },
-                WorkspaceItem {
-                    label: "deploy.yml".to_string(),
-                    selected: true,
-                    category: Category::Artifacts,
-                },
-                WorkspaceItem {
-                    label: "env.example".to_string(),
-                    selected: true,
-                    category: Category::Artifacts,
-                },
-                WorkspaceItem {
-                    label: "middleware.ts".to_string(),
-                    selected: false,
-                    category: Category::Artifacts,
-                },
-                WorkspaceItem {
-                    label: "layout.tsx".to_string(),
-                    selected: false,
-                    category: Category::Artifacts,
-                },
-                WorkspaceItem {
-                    label: "redis.ts".to_string(),
-                    selected: false,
-                    category: Category::Artifacts,
-                },
-                WorkspaceItem {
-                    label: "ratelimit.ts".to_string(),
-                    selected: false,
-                    category: Category::Artifacts,
-                },
-                WorkspaceItem {
-                    label: "Web Dev".to_string(),
-                    selected: false,
-                    category: Category::AgentSkills,
-                },
-                WorkspaceItem {
-                    label: "Docker / DevOps".to_string(),
-                    selected: false,
-                    category: Category::AgentSkills,
-                },
-                WorkspaceItem {
-                    label: "Mobile (iOS/And)".to_string(),
-                    selected: false,
-                    category: Category::AgentSkills,
-                },
-                WorkspaceItem {
-                    label: "DBA".to_string(),
-                    selected: false,
-                    category: Category::AgentSkills,
-                },
-                WorkspaceItem {
-                    label: "Systems Scripting".to_string(),
-                    selected: false,
-                    category: Category::AgentSkills,
-                },
-                WorkspaceItem {
-                    label: "MIT License".to_string(),
-                    selected: true,
-                    category: Category::License,
-                },
-                WorkspaceItem {
-                    label: "Apache 2.0".to_string(),
-                    selected: false,
-                    category: Category::License,
-                },
-                WorkspaceItem {
-                    label: "GPL v3".to_string(),
-                    selected: false,
-                    category: Category::License,
-                },
-            ],
+            items,
             selected_idx: 0,
             current_category: Category::Artifacts,
         }
@@ -140,9 +150,54 @@ impl Component for Workspace {
             Action::Down => {
                 self.selected_idx = (self.selected_idx + 1).min(visible.len().saturating_sub(1));
             }
-            Action::Enter | Action::Char(' ') => {
+            Action::Char(' ') => {
                 let actual_idx = visible[self.selected_idx];
-                self.items[actual_idx].selected = !self.items[actual_idx].selected;
+                let new_state = !self.items[actual_idx].selected;
+                self.items[actual_idx].selected = new_state;
+                let label = self.items[actual_idx].label.clone();
+                let category = self.items[actual_idx].category.clone();
+
+                // Enforce companions
+                if category == Category::AgentSkills {
+                    if label == "firebase" {
+                        if let Some(companion) = self
+                            .items
+                            .iter_mut()
+                            .find(|i| i.label == "firebase.md" && i.category == Category::Artifacts)
+                        {
+                            companion.selected = new_state;
+                        }
+                    } else if label == "github" {
+                        if let Some(companion) = self
+                            .items
+                            .iter_mut()
+                            .find(|i| i.label == "deploy.yml" && i.category == Category::Artifacts)
+                        {
+                            companion.selected = new_state;
+                        }
+                    }
+                } else if category == Category::Artifacts {
+                    if label == "firebase.md" {
+                        if let Some(companion) = self
+                            .items
+                            .iter_mut()
+                            .find(|i| i.label == "firebase" && i.category == Category::AgentSkills)
+                        {
+                            companion.selected = new_state;
+                        }
+                    } else if label == "deploy.yml" {
+                        if let Some(companion) = self
+                            .items
+                            .iter_mut()
+                            .find(|i| i.label == "github" && i.category == Category::AgentSkills)
+                        {
+                            companion.selected = new_state;
+                        }
+                    }
+                }
+            }
+            Action::Enter => {
+                return Ok(Some(Action::Enter));
             }
             _ => {}
         }
