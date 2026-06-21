@@ -27,6 +27,14 @@ impl Workspace {
         let mut items = vec![];
 
         items.push(WorkspaceItem {
+            label: "Open Directory Browser (Press Enter or F)".into(),
+            selected: false,
+            category: Category::DeploymentTarget,
+            description: Some("Press Enter to launch the target directory browser. The selected directory will become the root folder where all project assets are initialized.".into()),
+            version: None,
+        });
+
+        items.push(WorkspaceItem {
             label: "Web Dev".into(),
             selected: false,
             category: Category::AgentPersona,
@@ -178,7 +186,7 @@ impl Workspace {
         Self {
             items,
             selected_idx: 0,
-            current_category: Category::Artifacts,
+            current_category: Category::DeploymentTarget,
             state: ListState::default(),
         }
     }
@@ -254,6 +262,7 @@ impl Workspace {
                     }
                 }
                 Category::AgentPersona => {}
+                Category::DeploymentTarget => {}
             }
         }
     }
