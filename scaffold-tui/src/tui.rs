@@ -62,6 +62,8 @@ pub fn handle_terminal_events() -> anyhow::Result<Option<Action>> {
                 return Ok(Some(map_key_to_action(key)));
             }
         }
+        Ok(None)
+    } else {
+        Ok(Some(Action::Tick))
     }
-    Ok(None)
 }
