@@ -69,4 +69,15 @@ impl Theme {
             accent: Color::Rgb(12, 45, 243),     // #0c2df3 (Blue Folders/Accents)
         }
     }
+
+    pub fn get_by_index(idx: usize) -> Self {
+        match idx % 6 {
+            0 => Self::plum(),
+            1 => Self::lime(),
+            2 => Self::ocean(),
+            3 => Self::earth(),
+            4 => Self::starburst(),
+            _ => Self::default_theme(),
+        }
+    }
 }
