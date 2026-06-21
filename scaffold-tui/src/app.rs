@@ -14,6 +14,8 @@ use ratatui::prelude::{Constraint, Direction, Layout, Rect};
 use ratatui::widgets::{Block, Borders, Clear, Paragraph};
 use std::sync::mpsc;
 
+const BRAILLE_FRAMES: &[&str] = &["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ActiveBlock {
     NavTree,
@@ -38,6 +40,8 @@ pub struct App {
     pub theme_idx: usize,
     pub wizard_state: WizardState,
     pub target_folder: String,
+    pub splash_tick_count: usize,
+    pub splash_frame_idx: usize,
     header: Header,
     nav_tree: NavTree,
     workspace: Workspace,
@@ -56,6 +60,8 @@ impl App {
             theme_idx: 0,
             wizard_state: WizardState::Welcome,
             target_folder: "./".to_string(),
+            splash_tick_count: 0,
+            splash_frame_idx: 0,
             header: Header::new(),
             nav_tree: NavTree::new(),
             workspace: Workspace::new(),
@@ -138,12 +144,15 @@ impl App {
                 // Modal overlay
                 if self.wizard_state != WizardState::Complete {
                     let text = match self.wizard_state {
-                        WizardState::Welcome => "\n\n Welcome to Code Scaffold! \n\nWe will guide you through the initial setup.\nPress [Enter] to begin configuring Artifacts.",
-                        WizardState::Artifacts => "\n\n Step 1: Core Artifacts \n\nUse [Up/Down] to navigate and [Space] to toggle files.\nPress [Enter] when ready to proceed to Skills.",
-                        WizardState::Skills => "\n\n Step 2: Agent Skills \n\nSelect the domain skills you need.\nNotice how GitHub and Firebase toggle their companion artifacts!\nPress [Enter] when ready to proceed to Licensing.",
-                        WizardState::License => "\n\n Step 3: Licensing \n\nChoose an open-source license.\nPress [Enter] to set the Deployment Target.",
-                        WizardState::DeploymentTarget => "\n\n Step 4: Deployment Target \n\nThe default deployment target is the current folder (./).\n\nPress [F] to open the native OS file explorer and select a different folder.\nPress [Enter] to complete the wizard.",
-                        _ => "",
+                        WizardState::Welcome => {
+                            let frame = BRAILLE_FRAMES[self.splash_frame_idx];
+                            format!("\n\n {} Welcome to Code Scaffold! {} \n\nWe will guide you through the initial setup.\nPress [Enter] to begin configuring Artifacts.", frame, frame)
+                        },
+                        WizardState::Artifacts => "\n\n Step 1: Core Artifacts \n\nUse [Up/Down] to navigate and [Space] to toggle files.\nPress [Enter] when ready to proceed to Skills.".to_string(),
+                        WizardState::Skills => "\n\n Step 2: Agent Skills \n\nSelect the domain skills you need.\nNotice how GitHub and Firebase toggle their companion artifacts!\nPress [Enter] when ready to proceed to Licensing.".to_string(),
+                        WizardState::License => "\n\n Step 3: Licensing \n\nChoose an open-source license.\nPress [Enter] to set the Deployment Target.".to_string(),
+                        WizardState::DeploymentTarget => "\n\n Step 4: Deployment Target \n\nThe default deployment target is the current folder (./).\n\nPress [F] to open the native OS file explorer and select a different folder.\nPress [Enter] to complete the wizard.".to_string(),
+                        _ => "".to_string(),
                     };
 
                     let popup_area = Self::centered_rect(60, 40, size);
@@ -189,6 +198,12 @@ impl App {
 
     pub fn update(&mut self, action: Action) -> Result<()> {
         match action {
+            Action::Tick => {
+                self.splash_tick_count = self.splash_tick_count.wrapping_add(1);
+                if self.splash_tick_count % 5 == 0 {
+                    self.splash_frame_idx = (self.splash_frame_idx + 1) % BRAILLE_FRAMES.len();
+                }
+            }
             Action::Quit => self.should_quit = true,
             Action::Execute => {
                 if self.wizard_state == WizardState::Complete {
