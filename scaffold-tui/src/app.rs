@@ -136,14 +136,11 @@ impl App {
         self.update_summary();
 
         while !self.should_quit {
-            let selected_label = match self.active_block {
-                ActiveBlock::Workspace => self
-                    .workspace
-                    .selected_label()
-                    .unwrap_or("")
-                    .to_string(),
-                _ => String::new(),
-            };
+            let selected_label = self
+                .workspace
+                .selected_label()
+                .unwrap_or("")
+                .to_string();
             self.description_pane.set_selected_label(&selected_label);
 
             tui.terminal.draw(|f| {
@@ -257,7 +254,7 @@ impl App {
                 if self.wizard_state == WizardState::Complete {
                     self.active_block = match self.active_block {
                         ActiveBlock::NavTree => ActiveBlock::Workspace,
-                        ActiveBlock::Workspace => ActiveBlock::SummaryPane,
+                        ActiveBlock::Workspace => ActiveBlock::NavTree,
                         ActiveBlock::SummaryPane => ActiveBlock::NavTree,
                     };
                 } else {
@@ -268,7 +265,7 @@ impl App {
             Action::ShiftTab => {
                 if self.wizard_state == WizardState::Complete {
                     self.active_block = match self.active_block {
-                        ActiveBlock::NavTree => ActiveBlock::SummaryPane,
+                        ActiveBlock::NavTree => ActiveBlock::Workspace,
                         ActiveBlock::Workspace => ActiveBlock::NavTree,
                         ActiveBlock::SummaryPane => ActiveBlock::Workspace,
                     };
@@ -317,10 +314,21 @@ impl App {
             }
             Action::Char('f') | Action::Char('F') => {
                 if self.wizard_state == WizardState::DeploymentTarget {
-                    if let Some(path) = rfd::FileDialog::new().pick_folder() {
+                    let mut stdout = std::io::stdout();
+                    use crossterm::ExecutableCommand;
+                    
+                    // Temporarily restore standard terminal state so the OS dialog can claim focus
+                    crossterm::terminal::disable_raw_mode().ok();
+                    stdout.execute(crossterm::terminal::LeaveAlternateScreen).ok();
+                    
+                    if let Some(path) = rfd::FileDialog::new().set_title("Select Target Deployment Folder").pick_folder() {
                         self.target_folder = path.to_string_lossy().to_string();
                         self.update_summary();
                     }
+                    
+                    // Resume TUI
+                    stdout.execute(crossterm::terminal::EnterAlternateScreen).ok();
+                    crossterm::terminal::enable_raw_mode().ok();
                 }
             }
             Action::Enter => {
