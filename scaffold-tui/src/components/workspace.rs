@@ -23,6 +23,37 @@ impl Workspace {
     pub fn new(payload_dir: std::path::PathBuf) -> Self {
         let mut items = vec![];
 
+        items.push(WorkspaceItem {
+            label: "Web Dev".into(),
+            selected: false,
+            category: Category::AgentPersona,
+        });
+        items.push(WorkspaceItem {
+            label: "Docker / DevOps".into(),
+            selected: false,
+            category: Category::AgentPersona,
+        });
+        items.push(WorkspaceItem {
+            label: "Mobile (iOS/And)".into(),
+            selected: false,
+            category: Category::AgentPersona,
+        });
+        items.push(WorkspaceItem {
+            label: "DBA".into(),
+            selected: false,
+            category: Category::AgentPersona,
+        });
+        items.push(WorkspaceItem {
+            label: "Systems Scripting".into(),
+            selected: false,
+            category: Category::AgentPersona,
+        });
+        items.push(WorkspaceItem {
+            label: "Generic".into(),
+            selected: false,
+            category: Category::AgentPersona,
+        });
+
         let templates_dir = payload_dir.join(".templates");
         if templates_dir.exists() {
             if let Ok(entries) = std::fs::read_dir(templates_dir) {
@@ -145,9 +176,18 @@ impl Component for Workspace {
             Action::Char(' ') => {
                 let actual_idx = visible[self.selected_idx];
                 let new_state = !self.items[actual_idx].selected;
-                self.items[actual_idx].selected = new_state;
-                let label = self.items[actual_idx].label.clone();
                 let category = self.items[actual_idx].category.clone();
+                let label = self.items[actual_idx].label.clone();
+
+                if category == Category::License || category == Category::AgentPersona {
+                    for item in &mut self.items {
+                        if item.category == category {
+                            item.selected = false;
+                        }
+                    }
+                }
+
+                self.items[actual_idx].selected = new_state;
 
                 // Enforce companions
                 if category == Category::AgentSkills {
