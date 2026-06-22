@@ -1,7 +1,7 @@
 use crate::action::Action;
 use crate::components::{
-    directory_browser::DirectoryBrowser,
     description_pane::DescriptionPane,
+    directory_browser::DirectoryBrowser,
     footer::Footer,
     header::Header,
     nav_tree::{Category, NavTree},
@@ -72,7 +72,7 @@ impl App {
 
         let mut workspace = Workspace::new(payload_dir.clone());
         workspace.detect_installed(&initial_target);
-        
+
         let app = Self {
             should_quit: false,
             active_block: ActiveBlock::Workspace,
@@ -167,28 +167,30 @@ impl App {
                     } else {
                         0
                     };
-                    
-                    let display_logs: Vec<String> = self.execution_logs.iter().skip(start).take(6).cloned().collect();
+
+                    let display_logs: Vec<String> = self
+                        .execution_logs
+                        .iter()
+                        .skip(start)
+                        .take(6)
+                        .cloned()
+                        .collect();
                     self.summary_pane.summary_text = display_logs.join("\n");
                 }
             }
 
-            let selected_label = self
-                .workspace
-                .selected_label()
-                .unwrap_or("")
-                .to_string();
+            let selected_label = self.workspace.selected_label().unwrap_or("").to_string();
             let selected_desc = self
                 .workspace
                 .selected_description()
                 .unwrap_or("")
                 .to_string();
-            let selected_version = self
-                .workspace
-                .selected_version()
-                .unwrap_or("")
-                .to_string();
-            self.description_pane.set_selected_label(&selected_label, &selected_desc, &selected_version);
+            let selected_version = self.workspace.selected_version().unwrap_or("").to_string();
+            self.description_pane.set_selected_label(
+                &selected_label,
+                &selected_desc,
+                &selected_version,
+            );
             self.description_pane.show_qr = self.wizard_state == WizardState::Executing;
 
             tui.terminal.draw(|f| {
@@ -235,12 +237,9 @@ impl App {
                     self.active_block == ActiveBlock::Workspace,
                     &self.theme,
                 );
-                let _ = self.description_pane.draw(
-                    f,
-                    body_layout[2],
-                    false,
-                    &self.theme,
-                );
+                let _ = self
+                    .description_pane
+                    .draw(f, body_layout[2], false, &self.theme);
                 let _ = self.summary_pane.draw(
                     f,
                     main_layout[2],
@@ -287,7 +286,7 @@ impl App {
                 if let Some(path) = self.directory_browser.selected_path.take() {
                     self.target_folder = path.clone();
                     self.workspace.detect_installed(&path);
-                    
+
                     // Auto-advance
                     self.wizard_state = WizardState::Artifacts;
                     self.workspace.set_category(Category::Artifacts);
@@ -318,29 +317,42 @@ impl App {
                     self.summary_pane.summary_text = "Initializing engine...".to_string();
 
                     let tx_clone = self.tx.clone();
-                    
+
                     let mut manifest_path = self.payload_dir.join("manifest.json");
                     if !manifest_path.exists() {
                         manifest_path = std::path::PathBuf::from("manifest.json");
                     }
-                    
-                    let mut manifest = if let Ok(content) = std::fs::read_to_string(&manifest_path) {
-                        serde_json::from_str::<crate::models::manifest::Manifest>(&content).unwrap_or_else(|_| crate::models::manifest::Manifest {
-                            metadata: crate::models::manifest::ManifestMetadata { version: "3.23.4".into(), last_updated: "now".into() },
-                            env: std::collections::HashMap::new(),
-                            apps: Vec::new(), artifacts: Vec::new(), skills: Vec::new(),
-                        })
+
+                    let mut manifest = if let Ok(content) = std::fs::read_to_string(&manifest_path)
+                    {
+                        serde_json::from_str::<crate::models::manifest::Manifest>(&content)
+                            .unwrap_or_else(|_| crate::models::manifest::Manifest {
+                                metadata: crate::models::manifest::ManifestMetadata {
+                                    version: "3.23.5".into(),
+                                    last_updated: "now".into(),
+                                },
+                                env: std::collections::HashMap::new(),
+                                apps: Vec::new(),
+                                artifacts: Vec::new(),
+                                skills: Vec::new(),
+                            })
                     } else {
                         crate::models::manifest::Manifest {
-                            metadata: crate::models::manifest::ManifestMetadata { version: "3.23.4".into(), last_updated: "now".into() },
+                            metadata: crate::models::manifest::ManifestMetadata {
+                                version: "3.23.5".into(),
+                                last_updated: "now".into(),
+                            },
                             env: std::collections::HashMap::new(),
-                            apps: Vec::new(), artifacts: Vec::new(), skills: Vec::new(),
+                            apps: Vec::new(),
+                            artifacts: Vec::new(),
+                            skills: Vec::new(),
                         }
                     };
 
                     // Prefix apps targets with target_folder
                     for app in &mut manifest.apps {
-                        let target_path = std::path::PathBuf::from(&self.target_folder).join(&app.target);
+                        let target_path =
+                            std::path::PathBuf::from(&self.target_folder).join(&app.target);
                         app.target = target_path.to_string_lossy().to_string();
                     }
 
@@ -349,11 +361,14 @@ impl App {
                     let mut selected_skills = Vec::new();
 
                     for item in &self.workspace.items {
-                        if !item.selected { continue; }
+                        if !item.selected {
+                            continue;
+                        }
                         match item.category {
                             Category::Artifacts => {
                                 let source = self.payload_dir.join(".templates").join(&item.label);
-                                let target = std::path::PathBuf::from(&self.target_folder).join(&item.label);
+                                let target =
+                                    std::path::PathBuf::from(&self.target_folder).join(&item.label);
                                 selected_artifacts.push(crate::models::manifest::ArtifactEntry {
                                     id: item.label.clone(),
                                     label: item.label.clone(),
@@ -363,8 +378,13 @@ impl App {
                                 });
                             }
                             Category::AgentSkills => {
-                                let source = self.payload_dir.join(".skills").join(item.label.replace(".md", ""));
-                                let target = std::path::PathBuf::from(&self.target_folder).join(".skills").join(item.label.replace(".md", ""));
+                                let source = self
+                                    .payload_dir
+                                    .join(".skills")
+                                    .join(item.label.replace(".md", ""));
+                                let target = std::path::PathBuf::from(&self.target_folder)
+                                    .join(".skills")
+                                    .join(item.label.replace(".md", ""));
                                 selected_skills.push(crate::models::manifest::SkillEntry {
                                     id: item.label.clone(),
                                     label: item.label.clone(),
@@ -374,7 +394,9 @@ impl App {
                                 });
                             }
                             Category::AgentPersona => {
-                                let target = std::path::PathBuf::from(&self.target_folder).join(".agents").join("AGENTS.md");
+                                let target = std::path::PathBuf::from(&self.target_folder)
+                                    .join(".agents")
+                                    .join("AGENTS.md");
                                 selected_artifacts.push(crate::models::manifest::ArtifactEntry {
                                     id: item.label.clone(),
                                     label: item.label.clone(),
@@ -384,8 +406,12 @@ impl App {
                                 });
                             }
                             Category::License => {
-                                let source = self.payload_dir.join(".licenses").join(format!("{}.md", item.label));
-                                let target = std::path::PathBuf::from(&self.target_folder).join("LICENSE");
+                                let source = self
+                                    .payload_dir
+                                    .join(".licenses")
+                                    .join(format!("{}.md", item.label));
+                                let target =
+                                    std::path::PathBuf::from(&self.target_folder).join("LICENSE");
                                 selected_artifacts.push(crate::models::manifest::ArtifactEntry {
                                     id: item.label.clone(),
                                     label: item.label.clone(),
@@ -404,11 +430,19 @@ impl App {
                     let payload_dir_clone = self.payload_dir.clone();
                     let target_folder_clone = self.target_folder.clone();
                     tokio::spawn(async move {
-                        if let Err(e) = crate::manifest_engine::execute(&manifest, tx_clone.clone(), &payload_dir_clone, &target_folder_clone).await {
+                        if let Err(e) = crate::manifest_engine::execute(
+                            &manifest,
+                            tx_clone.clone(),
+                            &payload_dir_clone,
+                            &target_folder_clone,
+                        )
+                        .await
+                        {
                             let _ = tx_clone.send(format!(" -> (FATAL) Execution failed: {}", e));
                         }
                         let _ = tx_clone.send("".to_string());
-                        let _ = tx_clone.send("[DONE] Deployment finished. Press [Esc] to exit.".into());
+                        let _ = tx_clone
+                            .send("[DONE] Deployment finished. Press [Esc] to exit.".into());
                     });
                 }
             }
@@ -488,13 +522,23 @@ impl App {
                     let max_offset = self.execution_logs.len().saturating_sub(6);
                     if self.execution_scroll_offset < max_offset {
                         self.execution_scroll_offset += 1;
-                        let start = self.execution_logs.len().saturating_sub(6 + self.execution_scroll_offset);
-                        let display_logs: Vec<String> = self.execution_logs.iter().skip(start).take(6).cloned().collect();
+                        let start = self
+                            .execution_logs
+                            .len()
+                            .saturating_sub(6 + self.execution_scroll_offset);
+                        let display_logs: Vec<String> = self
+                            .execution_logs
+                            .iter()
+                            .skip(start)
+                            .take(6)
+                            .cloned()
+                            .collect();
                         self.summary_pane.summary_text = display_logs.join("\n");
                     }
                 } else if self.active_block == ActiveBlock::NavTree {
                     let _ = self.nav_tree.update(action)?;
-                    self.workspace.set_category(self.nav_tree.selected_category());
+                    self.workspace
+                        .set_category(self.nav_tree.selected_category());
                 } else if self.active_block == ActiveBlock::Workspace {
                     let _ = self.workspace.update(action)?;
                 } else {
@@ -505,13 +549,23 @@ impl App {
                 if self.wizard_state == WizardState::Executing {
                     if self.execution_scroll_offset > 0 {
                         self.execution_scroll_offset -= 1;
-                        let start = self.execution_logs.len().saturating_sub(6 + self.execution_scroll_offset);
-                        let display_logs: Vec<String> = self.execution_logs.iter().skip(start).take(6).cloned().collect();
+                        let start = self
+                            .execution_logs
+                            .len()
+                            .saturating_sub(6 + self.execution_scroll_offset);
+                        let display_logs: Vec<String> = self
+                            .execution_logs
+                            .iter()
+                            .skip(start)
+                            .take(6)
+                            .cloned()
+                            .collect();
                         self.summary_pane.summary_text = display_logs.join("\n");
                     }
                 } else if self.active_block == ActiveBlock::NavTree {
                     let _ = self.nav_tree.update(action)?;
-                    self.workspace.set_category(self.nav_tree.selected_category());
+                    self.workspace
+                        .set_category(self.nav_tree.selected_category());
                 } else if self.active_block == ActiveBlock::Workspace {
                     let _ = self.workspace.update(action)?;
                 } else {
