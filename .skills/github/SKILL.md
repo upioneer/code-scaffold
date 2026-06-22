@@ -55,11 +55,15 @@ If the local branch does not match the remote (diverged branches, remote has new
   * **Overwrite Local (Hard Reset)**: Discard local unpushed commits and match the remote exactly (Dangerous).
 * Wait for the user to explicitly select an option before proceeding.
 
-## Step 4: Mandatory README Badges
+## Step 4: Pre-Commit Code Hygiene & Formatting
+
+Before committing and pushing Rust code to the repository, you MUST manually run `cargo fmt` to apply strict formatting standards, followed by `cargo clippy` and `cargo test`. This repository uses a GitHub Action pipeline that enforces strict code hygiene (`cargo fmt --check`); failure to natively format code before pushing will instantly fail the CI/CD pipeline. Resolve any linting or formatting errors before proceeding.
+
+## Step 5: Mandatory README Badges
 
 Before pushing, ensure the root `README.md` includes a visually rich set of badges at the very top (referencing https://naereen.github.io/badges/). These badges must provide immediate metadata about the repository state (e.g., license, stars, language, repository size).
 
-## Step 5: Execute and Push
+## Step 6: Execute and Push
 
 Perform the Git commands corresponding to the user's choice. Once the state is clean (or if the branch was simply ahead with no conflicts), execute the appropriate push:
 
@@ -72,7 +76,7 @@ git remote set-url origin "$GITHUB_REMOTE_URL"
 git push origin "$GITHUB_BRANCH"
 ```
 
-## Step 6: Update Documentation
+## Step 7: Update Documentation
 
 Upon a successful push, review and update any of the following project artifacts as needed:
 
@@ -80,7 +84,7 @@ Upon a successful push, review and update any of the following project artifacts
 
 Do **not** create or update a `github.md` file — all GitHub configuration now lives in `.env`.
 
-## Step 7: Generate Versioned Walkthrough
+## Step 8: Generate Versioned Walkthrough
 
 * Update the `[PROJECT_ROOT]\project_details\history\[VERSION]` directory on each deployment cycle using standard semantic versioning (Major.Minor.Bugfix, e.g., v1.1.0).
 * Include screenshots where possible to document UI changes.
