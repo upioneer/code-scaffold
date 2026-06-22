@@ -10,7 +10,7 @@
 
 Code Scaffold is a modular, robust, and highly visual PowerShell-based provisioning engine. It is designed to bootstrap new development projects with predefined directory structures, architectural templates, and complex skill payloads, all driven by a high-fidelity Terminal User Interface (TUI).
 
-![Code Scaffold Screenshot 1](project_details/assets/screenshot1.png)
+![Code Scaffold Screenshot 1](project_details/assets/screenshot5.png)
 
 ## Features
 
@@ -22,7 +22,7 @@ Code Scaffold is a modular, robust, and highly visual PowerShell-based provision
 * **Automated Baseline Documentation**: Automatically generates a structured `README.md` in the target directory, dynamically titled with the project's folder name, to provide a consistent starting point for all scaffolded projects.
 * **Immutable Version History**: Adheres to a strict versioning protocol, maintaining snapshots of every significant deployment cycle in `project_details\history`.
 
-![Code Scaffold Screenshot 2](project_details/assets/screenshot2.png)
+![Code Scaffold Screenshot 2](project_details/assets/screenshot7.png)
 
 ## Architecture Overview
 
