@@ -95,18 +95,27 @@ pub async fn execute(
                     if let Some(parent) = path.parent() {
                         let _ = fs::create_dir_all(parent);
                     }
-                    let res = if src_path.is_dir() {
-                        copy_dir_all(&src_path, &path)
+                    let res = if path.exists() {
+                        Ok(false)
+                    } else if src_path.is_dir() {
+                        copy_dir_all(&src_path, &path).map(|_| true)
                     } else {
-                        fs::copy(&src_path, &path).map(|_| ())
+                        fs::copy(&src_path, &path).map(|_| true)
                     };
-                    if let Err(e) = res {
-                        let _ = tx.send(format!(
-                            " -> (Error) Failed to generate: {} ({})",
-                            artifact.target, e
-                        ));
-                    } else {
-                        let _ = tx.send(format!(" -> Generated artifact: {}", artifact.target));
+                    match res {
+                        Err(e) => {
+                            let _ = tx.send(format!(
+                                " -> (Error) Failed to generate: {} ({})",
+                                artifact.target, e
+                            ));
+                        }
+                        Ok(false) => {
+                            let _ = tx
+                                .send(format!(" -> Skipped (already exists): {}", artifact.target));
+                        }
+                        Ok(true) => {
+                            let _ = tx.send(format!(" -> Generated artifact: {}", artifact.target));
+                        }
                     }
                 } else {
                     let _ = tx.send(format!(

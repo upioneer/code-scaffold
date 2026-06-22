@@ -72,11 +72,12 @@ impl Theme {
 
     pub fn get_by_index(idx: usize) -> Self {
         match idx % 6 {
-            0 => Self::plum(),
-            1 => Self::lime(),
-            2 => Self::ocean(),
-            3 => Self::earth(),
-            4 => Self::starburst(),
+            0 => Self::default_theme(),
+            1 => Self::plum(),
+            2 => Self::lime(),
+            3 => Self::ocean(),
+            4 => Self::earth(),
+            5 => Self::starburst(),
             _ => Self::default_theme(),
         }
     }
