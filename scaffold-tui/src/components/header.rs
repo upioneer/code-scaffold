@@ -13,21 +13,9 @@ pub struct Header {
 
 impl Header {
     pub fn new() -> Self {
-        let manifest_content = include_str!("../../../manifest.json");
-        let version = if let Ok(parsed) = serde_json::from_str::<Value>(manifest_content) {
-            if let Some(v) = parsed
-                .get("metadata")
-                .and_then(|m| m.get("version"))
-                .and_then(|v| v.as_str())
-            {
-                format!("v{}", v)
-            } else {
-                "vUnknown".to_string()
-            }
-        } else {
-            "vUnknown".to_string()
-        };
-        Self { version }
+        Self {
+            version: format!("v{}", env!("CARGO_PKG_VERSION")),
+        }
     }
 }
 
