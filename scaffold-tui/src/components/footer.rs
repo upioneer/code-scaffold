@@ -26,7 +26,11 @@ impl Component for Footer {
         _active: bool,
         theme: &Theme,
     ) -> Result<()> {
-        let text = Paragraph::new(" [Tab] Focus | [Up/Down] Navigate | [T] Theme | [Esc] Quit ")
+        let text_content = format!(
+            " [Tab] Focus | [Up/Down] Navigate | [T] Theme ({}) | [Esc] Quit ",
+            theme.name
+        );
+        let text = Paragraph::new(text_content)
             .style(Style::default().fg(theme.secondary).bg(theme.bg))
             .alignment(ratatui::layout::Alignment::Center)
             .block(
