@@ -1,6 +1,6 @@
 [package]
 name = "scaffold-tui"
-version = "3.24.2"
+version = "3.25.0"
 edition = "2021"
 
 [dependencies]
@@ -14,3 +14,6 @@ anyhow = "1.0"
 directories = "5.0"
 zip = "0.6.6"
 qrcode = "0.14.1"
+
+[build-dependencies]
+winres = "0.1.12"
