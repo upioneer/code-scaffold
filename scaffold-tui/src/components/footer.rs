@@ -26,10 +26,15 @@ impl Component for Footer {
         _active: bool,
         theme: &Theme,
     ) -> Result<()> {
-        let text = Paragraph::new(" [Tab] Focus | [Up/Down] Navigate | [T] Theme | [Ctrl+X] Deploy Selected | [Esc] Quit ")
+        let text = Paragraph::new(" [Tab] Focus | [Up/Down] Navigate | [T] Theme | [Esc] Quit ")
             .style(Style::default().fg(theme.secondary).bg(theme.bg))
             .alignment(ratatui::layout::Alignment::Center)
-            .block(Block::default().borders(Borders::ALL).border_style(Style::default().fg(theme.secondary).bg(theme.bg)).style(Style::default().bg(theme.bg)));
+            .block(
+                Block::default()
+                    .borders(Borders::ALL)
+                    .border_style(Style::default().fg(theme.secondary).bg(theme.bg))
+                    .style(Style::default().bg(theme.bg)),
+            );
         f.render_widget(text, area);
         Ok(())
     }

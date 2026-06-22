@@ -20,6 +20,7 @@ pub struct AppEntry {
 pub struct ArtifactEntry {
     pub id: String,
     pub label: String,
+    pub source: Option<String>,
     pub target: String,
     pub method: String,
 }

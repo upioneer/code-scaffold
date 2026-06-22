@@ -3,10 +3,13 @@ use anyhow::Result;
 use directories::ProjectDirs;
 use std::fs;
 use std::path::PathBuf;
-use tokio::sync::mpsc::UnboundedSender;
 use std::time::Duration;
+use tokio::sync::mpsc::UnboundedSender;
 
-fn copy_dir_all(src: impl AsRef<std::path::Path>, dst: impl AsRef<std::path::Path>) -> std::io::Result<()> {
+fn copy_dir_all(
+    src: impl AsRef<std::path::Path>,
+    dst: impl AsRef<std::path::Path>,
+) -> std::io::Result<()> {
     fs::create_dir_all(&dst)?;
     for entry in fs::read_dir(src)? {
         let entry = entry?;
@@ -20,7 +23,12 @@ fn copy_dir_all(src: impl AsRef<std::path::Path>, dst: impl AsRef<std::path::Pat
     Ok(())
 }
 
-pub async fn execute(manifest: &Manifest, tx: UnboundedSender<String>, payload_dir: &std::path::PathBuf, target_folder: &str) -> Result<()> {
+pub async fn execute(
+    manifest: &Manifest,
+    tx: UnboundedSender<String>,
+    payload_dir: &std::path::PathBuf,
+    target_folder: &str,
+) -> Result<()> {
     let _ = tx.send("=========================================".to_string());
     let _ = tx.send("Initiating Native Scaffolding Engine...".to_string());
 
@@ -46,7 +54,10 @@ pub async fn execute(manifest: &Manifest, tx: UnboundedSender<String>, payload_d
             let path = PathBuf::from(&app.target);
             if !path.exists() {
                 if let Err(e) = fs::create_dir_all(&path) {
-                    let _ = tx.send(format!(" -> (Error) Failed to create directory {}: {}", app.target, e));
+                    let _ = tx.send(format!(
+                        " -> (Error) Failed to create directory {}: {}",
+                        app.target, e
+                    ));
                 } else {
                     let _ = tx.send(format!(" -> Created target directory: {}", app.target));
                 }
@@ -69,7 +80,10 @@ pub async fn execute(manifest: &Manifest, tx: UnboundedSender<String>, payload_d
                     let _ = fs::create_dir_all(parent);
                 }
                 if let Err(e) = fs::write(&path, "") {
-                    let _ = tx.send(format!(" -> (Error) Failed to initialize artifact {}: {}", artifact.target, e));
+                    let _ = tx.send(format!(
+                        " -> (Error) Failed to initialize artifact {}: {}",
+                        artifact.target, e
+                    ));
                 } else {
                     let _ = tx.send(format!(" -> Initialized artifact: {}", artifact.target));
                 }
@@ -87,15 +101,24 @@ pub async fn execute(manifest: &Manifest, tx: UnboundedSender<String>, payload_d
                         fs::copy(&src_path, &path).map(|_| ())
                     };
                     if let Err(e) = res {
-                        let _ = tx.send(format!(" -> (Error) Failed to generate: {} ({})", artifact.target, e));
+                        let _ = tx.send(format!(
+                            " -> (Error) Failed to generate: {} ({})",
+                            artifact.target, e
+                        ));
                     } else {
                         let _ = tx.send(format!(" -> Generated artifact: {}", artifact.target));
                     }
                 } else {
-                    let _ = tx.send(format!(" -> (Missing Source) Failed to generate: {}", artifact.target));
+                    let _ = tx.send(format!(
+                        " -> (Missing Source) Failed to generate: {}",
+                        artifact.target
+                    ));
                 }
             } else {
-                let _ = tx.send(format!(" -> (No Source) Failed to generate: {}", artifact.target));
+                let _ = tx.send(format!(
+                    " -> (No Source) Failed to generate: {}",
+                    artifact.target
+                ));
             }
         }
     }
@@ -119,15 +142,24 @@ pub async fn execute(manifest: &Manifest, tx: UnboundedSender<String>, payload_d
                         fs::copy(&src_path, &target_path).map(|_| ())
                     };
                     if let Err(e) = res {
-                        let _ = tx.send(format!(" -> (Error) Failed to provision: {} ({})", skill.label, e));
+                        let _ = tx.send(format!(
+                            " -> (Error) Failed to provision: {} ({})",
+                            skill.label, e
+                        ));
                     } else {
                         let _ = tx.send(format!(" -> Provisioned module: {}", skill.label));
                     }
                 } else {
-                    let _ = tx.send(format!(" -> (Missing Source) Failed to provision: {}", skill.label));
+                    let _ = tx.send(format!(
+                        " -> (Missing Source) Failed to provision: {}",
+                        skill.label
+                    ));
                 }
             } else {
-                let _ = tx.send(format!(" -> (No Source) Failed to provision: {}", skill.label));
+                let _ = tx.send(format!(
+                    " -> (No Source) Failed to provision: {}",
+                    skill.label
+                ));
             }
         } else if skill.method == "append" {
             let _ = tx.send(format!(
@@ -147,7 +179,10 @@ pub async fn execute(manifest: &Manifest, tx: UnboundedSender<String>, payload_d
     }
     let env_path = PathBuf::from(target_folder).join(".env");
     if let Err(e) = fs::write(&env_path, env_block) {
-        let _ = tx.send(format!(" -> (Error) Failed to write .env at {:?}: {}", env_path, e));
+        let _ = tx.send(format!(
+            " -> (Error) Failed to write .env at {:?}: {}",
+            env_path, e
+        ));
     } else {
         let _ = tx.send(" -> Written localized .env definitions".to_string());
     }
