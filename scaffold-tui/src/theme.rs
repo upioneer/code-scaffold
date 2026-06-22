@@ -46,7 +46,7 @@ impl Theme {
 
     pub fn knicks_in_5() -> Self {
         Self {
-            name: "KnicksIn5",
+            name: "knicksin5",
             bg: Color::Rgb(0, 107, 182),          // Blue
             text: Color::Rgb(255, 255, 255),      // White
             primary: Color::Rgb(245, 132, 38),    // Orange
@@ -68,7 +68,7 @@ impl Theme {
 
     pub fn los_doyers_1() -> Self {
         Self {
-            name: "LosDoyers1",
+            name: "losdoyers1",
             bg: Color::Rgb(0, 90, 156),           // Dodger Blue
             text: Color::Rgb(255, 255, 255),      // White
             primary: Color::Rgb(239, 62, 66),     // Red
@@ -79,12 +79,23 @@ impl Theme {
 
     pub fn los_doyers_2() -> Self {
         Self {
-            name: "LosDoyers2",
+            name: "losdoyers2",
             bg: Color::Rgb(255, 255, 255),     // White
             text: Color::Rgb(0, 90, 156),      // Dodger Blue
             primary: Color::Rgb(239, 62, 66),  // Red
             secondary: Color::Rgb(0, 90, 156), // Dodger Blue
             accent: Color::Rgb(165, 172, 175), // Silver
+        }
+    }
+
+    pub fn los_doyers_3() -> Self {
+        Self {
+            name: "losdoyers3",
+            bg: Color::Rgb(0, 90, 156),           // Dodger Blue
+            text: Color::Rgb(255, 255, 255),      // White
+            primary: Color::Rgb(165, 172, 175),   // Silver
+            secondary: Color::Rgb(255, 255, 255), // White
+            accent: Color::Rgb(165, 172, 175),    // Silver
         }
     }
 
@@ -145,7 +156,7 @@ impl Theme {
 
     pub fn tifosi() -> Self {
         Self {
-            name: "Tifosi",
+            name: "tifosi",
             bg: Color::Rgb(239, 26, 45),       // Rosso Corsa Red
             text: Color::Rgb(255, 255, 255),   // White
             primary: Color::Rgb(255, 242, 0),  // Scudetto Yellow
@@ -167,7 +178,7 @@ impl Theme {
 
     pub fn usa_1() -> Self {
         Self {
-            name: "USA1",
+            name: "usa1",
             bg: Color::Rgb(179, 25, 66),          // Red
             text: Color::Rgb(255, 255, 255),      // White
             primary: Color::Rgb(10, 49, 97),      // Blue
@@ -178,7 +189,7 @@ impl Theme {
 
     pub fn usa_2() -> Self {
         Self {
-            name: "USA2",
+            name: "usa2",
             bg: Color::Rgb(255, 255, 255),     // White
             text: Color::Rgb(10, 49, 97),      // Blue
             primary: Color::Rgb(179, 25, 66),  // Red
@@ -189,7 +200,7 @@ impl Theme {
 
     pub fn usa_3() -> Self {
         Self {
-            name: "USA3",
+            name: "usa3",
             bg: Color::Rgb(10, 49, 97),           // Blue
             text: Color::Rgb(255, 255, 255),      // White
             primary: Color::Rgb(179, 25, 66),     // Red
@@ -198,10 +209,21 @@ impl Theme {
         }
     }
 
+    pub fn usa_4() -> Self {
+        Self {
+            name: "usa4",
+            bg: Color::Rgb(10, 49, 97),         // Blue
+            text: Color::Rgb(255, 255, 255),    // White
+            primary: Color::Rgb(255, 255, 255), // White
+            secondary: Color::Rgb(179, 25, 66), // Red
+            accent: Color::Rgb(179, 25, 66),    // Red
+        }
+    }
+
     pub fn who_dat() -> Self {
         Self {
-            name: "WhoDat",
-            bg: Color::Rgb(16, 24, 32),           // Black
+            name: "whodat",
+            bg: Color::Rgb(0, 0, 0),              // Pure Black
             text: Color::Rgb(255, 255, 255),      // White
             primary: Color::Rgb(211, 188, 141),   // Gold
             secondary: Color::Rgb(255, 255, 255), // White
@@ -210,7 +232,7 @@ impl Theme {
     }
 
     pub fn get_by_index(idx: usize) -> Self {
-        match idx % 18 {
+        match idx % 20 {
             0 => Self::cmd(),
             1 => Self::default_theme(),
             2 => Self::earth(),
@@ -218,17 +240,19 @@ impl Theme {
             4 => Self::lime(),
             5 => Self::los_doyers_1(),
             6 => Self::los_doyers_2(),
-            7 => Self::ocean(),
-            8 => Self::osx(),
-            9 => Self::plum(),
-            10 => Self::posh(),
-            11 => Self::starburst(),
-            12 => Self::tifosi(),
-            13 => Self::ubu(),
-            14 => Self::usa_1(),
-            15 => Self::usa_2(),
-            16 => Self::usa_3(),
-            17 => Self::who_dat(),
+            7 => Self::los_doyers_3(),
+            8 => Self::ocean(),
+            9 => Self::osx(),
+            10 => Self::plum(),
+            11 => Self::posh(),
+            12 => Self::starburst(),
+            13 => Self::tifosi(),
+            14 => Self::ubu(),
+            15 => Self::usa_1(),
+            16 => Self::usa_2(),
+            17 => Self::usa_3(),
+            18 => Self::usa_4(),
+            19 => Self::who_dat(),
             _ => Self::default_theme(),
         }
     }

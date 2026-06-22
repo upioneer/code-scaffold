@@ -602,12 +602,16 @@ impl App {
             }
             Action::Enter => {
                 if self.active_block == ActiveBlock::Workspace {
-                    if let Some(idx) = self.workspace.state.selected() {
-                        let visible = self.workspace.visible_indices();
-                        if idx < visible.len() {
-                            let actual = visible[idx];
-                            if !self.workspace.items[actual].selected {
-                                let _ = self.workspace.update(Action::Char(' '));
+                    if self.wizard_state == WizardState::DeploymentTarget
+                        || self.wizard_state == WizardState::License
+                    {
+                        if let Some(idx) = self.workspace.state.selected() {
+                            let visible = self.workspace.visible_indices();
+                            if idx < visible.len() {
+                                let actual = visible[idx];
+                                if !self.workspace.items[actual].selected {
+                                    let _ = self.workspace.update(Action::Char(' '));
+                                }
                             }
                         }
                     }
