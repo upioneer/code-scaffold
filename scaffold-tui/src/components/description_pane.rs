@@ -1,13 +1,13 @@
-use crate::components::Component;
 use crate::action::Action;
+use crate::components::Component;
 use crate::theme::Theme;
 use anyhow::Result;
+use qrcode::render::unicode;
+use qrcode::QrCode;
 use ratatui::prelude::{Constraint, Direction, Layout, Rect};
 use ratatui::style::{Modifier, Style};
 use ratatui::text::{Line, Span};
 use ratatui::widgets::{Block, Borders, Paragraph, Wrap};
-use qrcode::QrCode;
-use qrcode::render::unicode;
 
 const SITE_URL: &str = "https://code-scaffold.web.app";
 
@@ -47,6 +47,7 @@ pub struct DescriptionPane {
     pub current_desc: String,
     pub current_version: String,
     qr_lines: Vec<String>,
+    pub show_qr: bool,
 }
 
 impl DescriptionPane {
@@ -57,6 +58,7 @@ impl DescriptionPane {
             current_desc: String::new(),
             current_version: String::new(),
             qr_lines,
+            show_qr: false,
         }
     }
 
@@ -72,7 +74,13 @@ impl Component for DescriptionPane {
         Ok(None)
     }
 
-    fn draw(&mut self, f: &mut ratatui::Frame<'_>, area: Rect, _active: bool, theme: &Theme) -> Result<()> {
+    fn draw(
+        &mut self,
+        f: &mut ratatui::Frame<'_>,
+        area: Rect,
+        _active: bool,
+        theme: &Theme,
+    ) -> Result<()> {
         let border_style = Style::default().fg(theme.secondary).bg(theme.bg);
 
         let outer = Block::default()
@@ -85,14 +93,21 @@ impl Component for DescriptionPane {
         f.render_widget(outer, area);
 
         // Split inner area: description on top, QR label + QR below
-        let qr_height = (self.qr_lines.len() as u16).min(inner.height.saturating_sub(6));
-        let desc_height = inner.height.saturating_sub(qr_height).saturating_sub(2);
+        let qr_height = if self.show_qr {
+            (self.qr_lines.len() as u16).min(inner.height.saturating_sub(6))
+        } else {
+            0
+        };
+        let desc_height = inner
+            .height
+            .saturating_sub(qr_height)
+            .saturating_sub(if self.show_qr { 2 } else { 0 });
 
         let sections = Layout::default()
             .direction(Direction::Vertical)
             .constraints([
                 Constraint::Length(desc_height), // Description text
-                Constraint::Length(1),            // Separator / QR label
+                Constraint::Length(1),           // Separator / QR label
                 Constraint::Length(qr_height),   // QR code
                 Constraint::Min(0),
             ])
@@ -112,7 +127,9 @@ impl Component for DescriptionPane {
                 Line::from(vec![
                     Span::styled(
                         format!("▸ {} ", self.current_label),
-                        Style::default().fg(theme.accent).add_modifier(Modifier::BOLD),
+                        Style::default()
+                            .fg(theme.accent)
+                            .add_modifier(Modifier::BOLD),
                     ),
                     Span::styled(
                         format!("v{}", self.current_version),
@@ -120,15 +137,18 @@ impl Component for DescriptionPane {
                     ),
                 ])
             } else {
-                Line::from(vec![
-                    Span::styled(
-                        format!("▸ {}", self.current_label),
-                        Style::default().fg(theme.accent).add_modifier(Modifier::BOLD),
-                    ),
-                ])
+                Line::from(vec![Span::styled(
+                    format!("▸ {}", self.current_label),
+                    Style::default()
+                        .fg(theme.accent)
+                        .add_modifier(Modifier::BOLD),
+                )])
             }
         } else {
-            Line::from(Span::styled("▸ Deployment Config", Style::default().fg(theme.secondary)))
+            Line::from(Span::styled(
+                "▸ Deployment Config",
+                Style::default().fg(theme.secondary),
+            ))
         };
 
         let mut desc_lines: Vec<Line> = vec![title_line, Line::from("")];
@@ -164,26 +184,33 @@ impl Component for DescriptionPane {
         f.render_widget(desc_para, sections[0]);
 
         // ── QR label ─────────────────────────────────────────────────
-        let qr_label = Paragraph::new(Line::from(vec![
-            Span::styled("🔗 ", Style::default().fg(theme.secondary)),
-            Span::styled("code-scaffold.web.app", Style::default().fg(theme.secondary).add_modifier(Modifier::ITALIC)),
-        ]))
-        .style(Style::default().bg(theme.bg));
-        f.render_widget(qr_label, sections[1]);
+        if self.show_qr {
+            let qr_label = Paragraph::new(Line::from(vec![Span::styled(
+                " View Online Guide ",
+                Style::default()
+                    .fg(theme.bg)
+                    .bg(theme.secondary)
+                    .add_modifier(ratatui::style::Modifier::BOLD),
+            )]))
+            .alignment(ratatui::layout::Alignment::Center);
+            f.render_widget(qr_label, sections[1]);
 
-        // ── QR Code ──────────────────────────────────────────────────
-        let qr_text: Vec<Line> = self
-            .qr_lines
-            .iter()
-            .take(qr_height as usize)
-            .map(|l| Line::from(Span::styled(
-                l.clone(),
-                Style::default().fg(theme.text).bg(theme.bg),
-            )))
-            .collect();
+            // ── QR Code ──────────────────────────────────────────────────
+            let qr_text: Vec<Line> = self
+                .qr_lines
+                .iter()
+                .take(qr_height as usize)
+                .map(|l| {
+                    Line::from(Span::styled(
+                        l,
+                        Style::default().fg(theme.text).bg(theme.bg),
+                    ))
+                })
+                .collect();
 
-        let qr_para = Paragraph::new(qr_text).style(Style::default().bg(theme.bg));
-        f.render_widget(qr_para, sections[2]);
+            let qr_para = Paragraph::new(qr_text).style(Style::default().bg(theme.bg));
+            f.render_widget(qr_para, sections[2]);
+        }
 
         Ok(())
     }

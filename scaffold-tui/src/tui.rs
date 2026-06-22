@@ -63,13 +63,11 @@ pub fn handle_terminal_events() -> anyhow::Result<Option<Action>> {
                     return Ok(Some(map_key_to_action(key)));
                 }
             }
-            Event::Mouse(mouse_event) => {
-                match mouse_event.kind {
-                    event::MouseEventKind::ScrollUp => return Ok(Some(Action::Up)),
-                    event::MouseEventKind::ScrollDown => return Ok(Some(Action::Down)),
-                    _ => {}
-                }
-            }
+            Event::Mouse(mouse_event) => match mouse_event.kind {
+                event::MouseEventKind::ScrollUp => return Ok(Some(Action::Up)),
+                event::MouseEventKind::ScrollDown => return Ok(Some(Action::Down)),
+                _ => {}
+            },
             _ => {}
         }
         Ok(None)

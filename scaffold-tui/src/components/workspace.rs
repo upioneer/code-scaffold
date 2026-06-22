@@ -121,6 +121,14 @@ impl Workspace {
                     })
                     .collect();
                 lic_names.sort();
+
+                items.push(WorkspaceItem {
+                    label: "None".into(),
+                    selected: false,
+                    category: Category::License,
+                    description: Some("Do not include an open-source license template".into()),
+                    version: None,
+                });
                 for name in lic_names {
                     items.push(WorkspaceItem {
                         label: name,
@@ -148,7 +156,8 @@ impl Workspace {
                     let meta_path = skills_dir.join(&name).join("meta.json");
                     if let Ok(content) = std::fs::read_to_string(&meta_path) {
                         if let Ok(json) = serde_json::from_str::<serde_json::Value>(&content) {
-                            if let Some(desc_str) = json.get("description").and_then(|v| v.as_str()) {
+                            if let Some(desc_str) = json.get("description").and_then(|v| v.as_str())
+                            {
                                 desc = Some(desc_str.to_string());
                             }
                             if let Some(vers_str) = json.get("version").and_then(|v| v.as_str()) {
@@ -199,7 +208,7 @@ impl Workspace {
         }
     }
 
-    fn visible_indices(&self) -> Vec<usize> {
+    pub fn visible_indices(&self) -> Vec<usize> {
         self.items
             .iter()
             .enumerate()
@@ -314,7 +323,7 @@ impl Component for Workspace {
                         if let Some(companion) = self
                             .items
                             .iter_mut()
-                            .find(|i| i.label == "deploy.yml" && i.category == Category::Artifacts)
+                            .find(|i| i.label == "github.md" && i.category == Category::Artifacts)
                         {
                             companion.selected = new_state;
                         }
@@ -328,7 +337,7 @@ impl Component for Workspace {
                         {
                             companion.selected = new_state;
                         }
-                    } else if label == "deploy.yml" {
+                    } else if label == "github.md" {
                         if let Some(companion) = self
                             .items
                             .iter_mut()

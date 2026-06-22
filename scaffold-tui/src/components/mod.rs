@@ -1,5 +1,5 @@
-pub mod directory_browser;
 pub mod description_pane;
+pub mod directory_browser;
 pub mod footer;
 pub mod header;
 pub mod nav_tree;

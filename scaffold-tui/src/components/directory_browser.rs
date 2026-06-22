@@ -43,7 +43,8 @@ impl DirectoryBrowser {
             // Root directory, still push ".." just in case, though it won't do much
             self.items.push(("..".to_string(), true));
         }
-        self.items.push(("[ + Create New Folder ]".to_string(), false));
+        self.items
+            .push(("[ + Create New Folder ]".to_string(), false));
 
         if let Ok(entries) = std::fs::read_dir(&self.current_path) {
             let mut dirs = Vec::new();
@@ -148,12 +149,18 @@ impl Component for DirectoryBrowser {
             }
             _ => {}
         }
-        
+
         // We return an action to indicate we consumed it, preventing the main app from acting on it
-        Ok(Some(Action::Tick)) 
+        Ok(Some(Action::Tick))
     }
 
-    fn draw(&mut self, f: &mut ratatui::Frame<'_>, area: Rect, _active: bool, theme: &Theme) -> Result<()> {
+    fn draw(
+        &mut self,
+        f: &mut ratatui::Frame<'_>,
+        area: Rect,
+        _active: bool,
+        theme: &Theme,
+    ) -> Result<()> {
         if !self.is_open {
             return Ok(());
         }
@@ -178,21 +185,28 @@ impl Component for DirectoryBrowser {
 
         f.render_widget(Clear, area);
 
-        let items: Vec<ListItem> = self.items.iter().map(|(name, _)| {
-            let display_name = if name == "[ + Create New Folder ]" {
-                format!(" ➕ {}", name)
-            } else {
-                format!(" 📁 {}", name)
-            };
-            ListItem::new(display_name).style(Style::default().fg(theme.text).bg(theme.bg))
-        }).collect();
+        let items: Vec<ListItem> = self
+            .items
+            .iter()
+            .map(|(name, _)| {
+                let display_name = if name == "[ + Create New Folder ]" {
+                    format!(" ➕ {}", name)
+                } else {
+                    format!(" 📁 {}", name)
+                };
+                ListItem::new(display_name).style(Style::default().fg(theme.text).bg(theme.bg))
+            })
+            .collect();
 
         let title = if self.is_creating_folder {
             format!(" Create Folder: {}_ ", self.new_folder_name)
         } else {
-            format!(" Select Folder: {} (Space to Confirm, Esc to Cancel) ", self.current_path.to_string_lossy())
+            format!(
+                " Select Folder: {} (Space to Confirm, Esc to Cancel) ",
+                self.current_path.to_string_lossy()
+            )
         };
-        
+
         let list = List::new(items)
             .block(
                 Block::default()
