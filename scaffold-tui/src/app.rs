@@ -76,7 +76,7 @@ impl App {
         let app = Self {
             should_quit: false,
             active_block: ActiveBlock::Workspace,
-            theme: Theme::plum(),
+            theme: Theme::default_theme(),
             theme_idx: 0,
             wizard_state: WizardState::DeploymentTarget,
             target_folder: initial_target,
@@ -356,6 +356,22 @@ impl App {
                         app.target = target_path.to_string_lossy().to_string();
                     }
 
+                    // Inject default directories
+                    let required_dirs = [
+                        "project_details",
+                        "project_details/assets",
+                        "project_details/history",
+                    ];
+                    for d in required_dirs {
+                        let target_path = std::path::PathBuf::from(&self.target_folder).join(d);
+                        manifest.apps.push(crate::models::manifest::AppEntry {
+                            id: d.to_string(),
+                            label: d.to_string(),
+                            target: target_path.to_string_lossy().to_string(),
+                            method: "mkdir".into(),
+                        });
+                    }
+
                     // Replace artifacts and skills with strictly user-selected ones
                     let mut selected_artifacts = Vec::new();
                     let mut selected_skills = Vec::new();
@@ -367,8 +383,20 @@ impl App {
                         match item.category {
                             Category::Artifacts => {
                                 let source = self.payload_dir.join(".templates").join(&item.label);
-                                let target =
-                                    std::path::PathBuf::from(&self.target_folder).join(&item.label);
+
+                                let target_dir = if item.label.eq_ignore_ascii_case("readme.md")
+                                    || item.label.eq_ignore_ascii_case(".env")
+                                    || item.label.eq_ignore_ascii_case("license.md")
+                                    || item.label.eq_ignore_ascii_case(".gitignore")
+                                {
+                                    std::path::PathBuf::from(&self.target_folder)
+                                } else {
+                                    std::path::PathBuf::from(&self.target_folder)
+                                        .join("project_details")
+                                };
+
+                                let target = target_dir.join(&item.label);
+
                                 selected_artifacts.push(crate::models::manifest::ArtifactEntry {
                                     id: item.label.clone(),
                                     label: item.label.clone(),
@@ -410,8 +438,8 @@ impl App {
                                     .payload_dir
                                     .join(".licenses")
                                     .join(format!("{}.md", item.label));
-                                let target =
-                                    std::path::PathBuf::from(&self.target_folder).join("LICENSE");
+                                let target = std::path::PathBuf::from(&self.target_folder)
+                                    .join("LICENSE.md");
                                 selected_artifacts.push(crate::models::manifest::ArtifactEntry {
                                     id: item.label.clone(),
                                     label: item.label.clone(),

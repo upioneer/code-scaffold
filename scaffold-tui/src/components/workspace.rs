@@ -13,6 +13,8 @@ pub struct WorkspaceItem {
     pub category: Category,
     pub description: Option<String>,
     pub version: Option<String>,
+    pub exists_in_target: bool,
+    pub target_version: Option<String>,
 }
 
 pub struct Workspace {
@@ -32,50 +34,111 @@ impl Workspace {
             category: Category::DeploymentTarget,
             description: Some("Press Enter to launch the target directory browser. The selected directory will become the root folder where all project assets are initialized.".into()),
             version: None,
+                    exists_in_target: false,
+                    target_version: None,
         });
 
-        items.push(WorkspaceItem {
-            label: "Web Dev".into(),
-            selected: false,
-            category: Category::AgentPersona,
-            description: None,
-            version: None,
-        });
-        items.push(WorkspaceItem {
-            label: "Docker / DevOps".into(),
-            selected: false,
-            category: Category::AgentPersona,
-            description: None,
-            version: None,
-        });
-        items.push(WorkspaceItem {
-            label: "Mobile (iOS/And)".into(),
-            selected: false,
-            category: Category::AgentPersona,
-            description: None,
-            version: None,
-        });
-        items.push(WorkspaceItem {
-            label: "DBA".into(),
-            selected: false,
-            category: Category::AgentPersona,
-            description: None,
-            version: None,
-        });
-        items.push(WorkspaceItem {
-            label: "Systems Scripting".into(),
-            selected: false,
-            category: Category::AgentPersona,
-            description: None,
-            version: None,
-        });
-        items.push(WorkspaceItem {
-            label: "Generic".into(),
-            selected: false,
-            category: Category::AgentPersona,
-            description: None,
-            version: None,
-        });
+        items.extend(vec![
+            WorkspaceItem {
+                label: "Generic".into(),
+                selected: false,
+                category: Category::AgentPersona,
+                description: Some("A versatile, unopinionated agent ready for general-purpose programming, debugging, and software architecture tasks without specific domain constraints.".into()),
+                version: None,
+                    exists_in_target: false,
+                    target_version: None,
+            },
+            WorkspaceItem {
+                label: "Web Dev".into(),
+                selected: false,
+                category: Category::AgentPersona,
+                description: Some("Specialized in modern web technologies (React, Vue, Node.js, HTML/CSS) focusing on responsive design, SEO best practices, and dynamic web application aesthetics.".into()),
+                version: None,
+                    exists_in_target: false,
+                    target_version: None,
+            },
+            WorkspaceItem {
+                label: "Mobile (iOS/And)".into(),
+                selected: false,
+                category: Category::AgentPersona,
+                description: Some("Expert in mobile app development, including iOS (Swift) and Android (Kotlin) as well as cross-platform frameworks like React Native and Flutter.".into()),
+                version: None,
+                    exists_in_target: false,
+                    target_version: None,
+            },
+            WorkspaceItem {
+                label: "DBA".into(),
+                selected: false,
+                category: Category::AgentPersona,
+                description: Some("Database Administrator focused on SQL/NoSQL schema design, query optimization, indexing strategies, and database migration safety.".into()),
+                version: None,
+                    exists_in_target: false,
+                    target_version: None,
+            },
+            WorkspaceItem {
+                label: "Systems Scripting".into(),
+                selected: false,
+                category: Category::AgentPersona,
+                description: Some("Aimed at low-level OS tasks, bash/powershell scripting, automation, system performance tuning, and CLI tool development.".into()),
+                version: None,
+                    exists_in_target: false,
+                    target_version: None,
+            },
+            WorkspaceItem {
+                label: "Containerization (Docker/K8s)".into(),
+                selected: false,
+                category: Category::AgentPersona,
+                description: Some("Focused strictly on container ecosystems. Excels at writing Dockerfiles, optimizing multi-stage image builds, orchestrating docker-compose, and building Kubernetes manifests.".into()),
+                version: None,
+                    exists_in_target: false,
+                    target_version: None,
+            },
+            WorkspaceItem {
+                label: "Cloud & DevOps Architect".into(),
+                selected: false,
+                category: Category::AgentPersona,
+                description: Some("Specialized in infrastructure-as-code (Terraform, CloudFormation), CI/CD pipeline automation (GitHub Actions), and provisioning robust cloud environments on AWS, Azure, or GCP.".into()),
+                version: None,
+                    exists_in_target: false,
+                    target_version: None,
+            },
+            WorkspaceItem {
+                label: "Data Scientist / ML".into(),
+                selected: false,
+                category: Category::AgentPersona,
+                description: Some("Specialized in the Python data ecosystem (Pandas, PyTorch, TensorFlow). Highly effective at data wrangling, model training, Jupyter notebooks, and statistical analysis.".into()),
+                version: None,
+                    exists_in_target: false,
+                    target_version: None,
+            },
+            WorkspaceItem {
+                label: "Security Analyst".into(),
+                selected: false,
+                category: Category::AgentPersona,
+                description: Some("An auditor-style agent focused on network security, cryptographic protocols, vulnerability scanning, and hardening systems against modern exploit techniques.".into()),
+                version: None,
+                    exists_in_target: false,
+                    target_version: None,
+            },
+            WorkspaceItem {
+                label: "Embedded / IoT".into(),
+                selected: false,
+                category: Category::AgentPersona,
+                description: Some("Focused on strict memory management and hardware interactions (C, C++, bare-metal Rust). Specialized in microcontrollers, RTOS, and highly constrained computational environments.".into()),
+                version: None,
+                    exists_in_target: false,
+                    target_version: None,
+            },
+            WorkspaceItem {
+                label: "Game Developer".into(),
+                selected: false,
+                category: Category::AgentPersona,
+                description: Some("Tuned for physics engines, 3D rendering pipelines, game loops, and state machines within environments like Unity (C#) or Unreal Engine (C++).".into()),
+                version: None,
+                    exists_in_target: false,
+                    target_version: None,
+            },
+        ]);
 
         let templates_dir = payload_dir.join(".templates");
         if templates_dir.exists() {
@@ -96,6 +159,8 @@ impl Workspace {
                         category: Category::Artifacts,
                         description: None,
                         version: None,
+                        exists_in_target: false,
+                        target_version: None,
                     });
                 }
             }
@@ -106,6 +171,8 @@ impl Workspace {
                 category: Category::Artifacts,
                 description: None,
                 version: None,
+                exists_in_target: false,
+                target_version: None,
             });
         }
 
@@ -128,6 +195,8 @@ impl Workspace {
                     category: Category::License,
                     description: Some("Do not include an open-source license template".into()),
                     version: None,
+                    exists_in_target: false,
+                    target_version: None,
                 });
                 for name in lic_names {
                     items.push(WorkspaceItem {
@@ -136,6 +205,8 @@ impl Workspace {
                         category: Category::License,
                         description: None,
                         version: None,
+                        exists_in_target: false,
+                        target_version: None,
                     });
                 }
             }
@@ -171,6 +242,8 @@ impl Workspace {
                         category: Category::AgentSkills,
                         description: desc,
                         version: vers,
+                        exists_in_target: false,
+                        target_version: None,
                     });
                 }
             } else {
@@ -180,6 +253,8 @@ impl Workspace {
                     category: Category::AgentSkills,
                     description: None,
                     version: None,
+                    exists_in_target: false,
+                    target_version: None,
                 });
             }
         } else {
@@ -189,6 +264,8 @@ impl Workspace {
                 category: Category::AgentSkills,
                 description: None,
                 version: None,
+                exists_in_target: false,
+                target_version: None,
             });
         }
 
@@ -250,28 +327,54 @@ impl Workspace {
             return;
         }
 
+        // 1. Reset
         for item in &mut self.items {
-            match item.category {
-                Category::Artifacts => {
-                    // Check if artifact file exists in the target folder
-                    if target.join(&item.label).exists() {
+            item.exists_in_target = false;
+            item.target_version = None;
+        }
+
+        let manifest_path = target.join("manifest.json");
+
+        if let Ok(content) = std::fs::read_to_string(&manifest_path) {
+            if let Ok(manifest) =
+                serde_json::from_str::<crate::models::manifest::Manifest>(&content)
+            {
+                for artifact in manifest.artifacts {
+                    if let Some(item) = self.items.iter_mut().find(|i| i.label == artifact.label) {
+                        item.exists_in_target = true;
                         item.selected = true;
                     }
                 }
-                Category::AgentSkills => {
-                    // Check if skill folder exists in the target .skills folder
-                    if target.join(".skills").join(&item.label).exists() {
+                for skill in manifest.skills {
+                    if let Some(item) = self.items.iter_mut().find(|i| i.label == skill.label) {
+                        item.exists_in_target = true;
                         item.selected = true;
                     }
                 }
-                Category::License => {
-                    // Difficult to pinpoint exact license without reading contents, but if the exact name exists:
-                    if target.join(&item.label).exists() || target.join("LICENSE.md").exists() {
-                        // For simplicity, we might not auto-select a specific license
+            }
+        }
+
+        for item in &mut self.items {
+            if item.category == Category::Artifacts {
+                let p1 = target.join(&item.label);
+                let p2 = target.join("project_details").join(&item.label);
+                if p1.exists() || p2.exists() {
+                    item.exists_in_target = true;
+                    item.selected = true;
+                }
+            } else if item.category == Category::AgentSkills {
+                let skill_meta = target.join(".skills").join(&item.label).join("meta.json");
+                if skill_meta.exists() {
+                    item.exists_in_target = true;
+                    item.selected = true;
+                    if let Ok(content) = std::fs::read_to_string(&skill_meta) {
+                        if let Ok(json) = serde_json::from_str::<serde_json::Value>(&content) {
+                            if let Some(v) = json.get("version").and_then(|v| v.as_str()) {
+                                item.target_version = Some(v.to_string());
+                            }
+                        }
                     }
                 }
-                Category::AgentPersona => {}
-                Category::DeploymentTarget => {}
             }
         }
     }
@@ -310,6 +413,16 @@ impl Component for Workspace {
                 self.items[actual_idx].selected = new_state;
 
                 // Enforce companions
+                if category == Category::AgentPersona {
+                    if label == "Web Dev" && new_state {
+                        if let Some(companion) = self.items.iter_mut().find(|i| {
+                            i.label == "seo-geo-aeo-auditor" && i.category == Category::AgentSkills
+                        }) {
+                            companion.selected = true;
+                        }
+                    }
+                }
+
                 if category == Category::AgentSkills {
                     if label == "firebase" {
                         if let Some(companion) = self
@@ -376,7 +489,19 @@ impl Component for Workspace {
         for (i, actual_idx) in visible.iter().enumerate() {
             let item = &self.items[*actual_idx];
             let checkbox = if item.selected { "[X]" } else { "[ ]" };
-            let display = format!("{} {}", checkbox, item.label);
+            let display = if item.exists_in_target {
+                if let (Some(tv), Some(v)) = (&item.target_version, &item.version) {
+                    if tv != v {
+                        format!("{} {} [upgrade to v{}]", checkbox, item.label, v)
+                    } else {
+                        format!("{} {} [Current version installed]", checkbox, item.label)
+                    }
+                } else {
+                    format!("{} {} [Exists]", checkbox, item.label)
+                }
+            } else {
+                format!("{} {}", checkbox, item.label)
+            };
 
             let style = Style::default().fg(theme.text).bg(theme.bg);
 
