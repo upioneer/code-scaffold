@@ -3,10 +3,24 @@ use anyhow::Result;
 use directories::ProjectDirs;
 use std::fs;
 use std::path::PathBuf;
-use std::sync::mpsc::Sender;
+use tokio::sync::mpsc::UnboundedSender;
 use std::time::Duration;
 
-pub async fn execute(manifest: &Manifest, tx: Sender<String>) -> Result<()> {
+fn copy_dir_all(src: impl AsRef<std::path::Path>, dst: impl AsRef<std::path::Path>) -> std::io::Result<()> {
+    fs::create_dir_all(&dst)?;
+    for entry in fs::read_dir(src)? {
+        let entry = entry?;
+        let ty = entry.file_type()?;
+        if ty.is_dir() {
+            copy_dir_all(entry.path(), dst.as_ref().join(entry.file_name()))?;
+        } else {
+            fs::copy(entry.path(), dst.as_ref().join(entry.file_name()))?;
+        }
+    }
+    Ok(())
+}
+
+pub async fn execute(manifest: &Manifest, tx: UnboundedSender<String>, payload_dir: &std::path::PathBuf, target_folder: &str) -> Result<()> {
     let _ = tx.send("=========================================".to_string());
     let _ = tx.send("Initiating Native Scaffolding Engine...".to_string());
 
@@ -31,8 +45,11 @@ pub async fn execute(manifest: &Manifest, tx: Sender<String>) -> Result<()> {
         if app.method == "mkdir" {
             let path = PathBuf::from(&app.target);
             if !path.exists() {
-                fs::create_dir_all(&path)?;
-                let _ = tx.send(format!(" -> Created target directory: {}", app.target));
+                if let Err(e) = fs::create_dir_all(&path) {
+                    let _ = tx.send(format!(" -> (Error) Failed to create directory {}: {}", app.target, e));
+                } else {
+                    let _ = tx.send(format!(" -> Created target directory: {}", app.target));
+                }
             } else {
                 let _ = tx.send(format!(" -> Directory exists (skipped): {}", app.target));
             }
@@ -49,17 +66,37 @@ pub async fn execute(manifest: &Manifest, tx: Sender<String>) -> Result<()> {
         if artifact.method == "touch" {
             if !path.exists() {
                 if let Some(parent) = path.parent() {
-                    fs::create_dir_all(parent)?;
+                    let _ = fs::create_dir_all(parent);
                 }
-                fs::write(&path, "")?;
-                let _ = tx.send(format!(" -> Initialized artifact: {}", artifact.target));
+                if let Err(e) = fs::write(&path, "") {
+                    let _ = tx.send(format!(" -> (Error) Failed to initialize artifact {}: {}", artifact.target, e));
+                } else {
+                    let _ = tx.send(format!(" -> Initialized artifact: {}", artifact.target));
+                }
             }
         } else if artifact.method == "copy" {
-            // Future Remote Fetch Logic
-            let _ = tx.send(format!(
-                " -> (Mocked) Pulled remote source for: {}",
-                artifact.target
-            ));
+            if let Some(src) = &artifact.source {
+                let src_path = PathBuf::from(src);
+                if src_path.exists() {
+                    if let Some(parent) = path.parent() {
+                        let _ = fs::create_dir_all(parent);
+                    }
+                    let res = if src_path.is_dir() {
+                        copy_dir_all(&src_path, &path)
+                    } else {
+                        fs::copy(&src_path, &path).map(|_| ())
+                    };
+                    if let Err(e) = res {
+                        let _ = tx.send(format!(" -> (Error) Failed to generate: {} ({})", artifact.target, e));
+                    } else {
+                        let _ = tx.send(format!(" -> Generated artifact: {}", artifact.target));
+                    }
+                } else {
+                    let _ = tx.send(format!(" -> (Missing Source) Failed to generate: {}", artifact.target));
+                }
+            } else {
+                let _ = tx.send(format!(" -> (No Source) Failed to generate: {}", artifact.target));
+            }
         }
     }
     tokio::time::sleep(Duration::from_millis(500)).await; // UX execution padding
@@ -69,10 +106,29 @@ pub async fn execute(manifest: &Manifest, tx: Sender<String>) -> Result<()> {
     let _ = tx.send("[3/3] Provisioning Target Skill Modules...".to_string());
     for skill in &manifest.skills {
         if skill.method == "copy" {
-            let _ = tx.send(format!(
-                " -> (Mocked) Bridged plugin container: {}",
-                skill.label
-            ));
+            let target_path = PathBuf::from(&skill.target);
+            if let Some(src) = &skill.source {
+                let src_path = PathBuf::from(src);
+                if src_path.exists() {
+                    if let Some(parent) = target_path.parent() {
+                        let _ = fs::create_dir_all(parent);
+                    }
+                    let res = if src_path.is_dir() {
+                        copy_dir_all(&src_path, &target_path)
+                    } else {
+                        fs::copy(&src_path, &target_path).map(|_| ())
+                    };
+                    if let Err(e) = res {
+                        let _ = tx.send(format!(" -> (Error) Failed to provision: {} ({})", skill.label, e));
+                    } else {
+                        let _ = tx.send(format!(" -> Provisioned module: {}", skill.label));
+                    }
+                } else {
+                    let _ = tx.send(format!(" -> (Missing Source) Failed to provision: {}", skill.label));
+                }
+            } else {
+                let _ = tx.send(format!(" -> (No Source) Failed to provision: {}", skill.label));
+            }
         } else if skill.method == "append" {
             let _ = tx.send(format!(
                 " -> (Mocked) Appended instructions for: {}",
@@ -89,8 +145,12 @@ pub async fn execute(manifest: &Manifest, tx: Sender<String>) -> Result<()> {
     for (k, v) in &manifest.env {
         env_block.push_str(&format!("{}={}\n", k, v));
     }
-    fs::write(".env", env_block)?;
-    let _ = tx.send(" -> Written localized .env definitions".to_string());
+    let env_path = PathBuf::from(target_folder).join(".env");
+    if let Err(e) = fs::write(&env_path, env_block) {
+        let _ = tx.send(format!(" -> (Error) Failed to write .env at {:?}: {}", env_path, e));
+    } else {
+        let _ = tx.send(" -> Written localized .env definitions".to_string());
+    }
 
     let _ = tx.send("".to_string());
     let _ = tx.send("Execution Cycle Completed Successfully!".to_string());

@@ -35,7 +35,7 @@ impl Tui {
 pub fn map_key_to_action(key: KeyEvent) -> Action {
     if key.modifiers.contains(KeyModifiers::CONTROL) {
         match key.code {
-            KeyCode::Char('x') => return Action::Execute,
+            KeyCode::Char('d') => return Action::Execute,
             KeyCode::Char('c') | KeyCode::Char('q') => return Action::Quit,
             _ => {}
         }
@@ -57,10 +57,20 @@ pub fn map_key_to_action(key: KeyEvent) -> Action {
 
 pub fn handle_terminal_events() -> anyhow::Result<Option<Action>> {
     if event::poll(std::time::Duration::from_millis(16))? {
-        if let Event::Key(key) = event::read()? {
-            if key.kind == KeyEventKind::Press {
-                return Ok(Some(map_key_to_action(key)));
+        match event::read()? {
+            Event::Key(key) => {
+                if key.kind == KeyEventKind::Press {
+                    return Ok(Some(map_key_to_action(key)));
+                }
             }
+            Event::Mouse(mouse_event) => {
+                match mouse_event.kind {
+                    event::MouseEventKind::ScrollUp => return Ok(Some(Action::Up)),
+                    event::MouseEventKind::ScrollDown => return Ok(Some(Action::Down)),
+                    _ => {}
+                }
+            }
+            _ => {}
         }
         Ok(None)
     } else {

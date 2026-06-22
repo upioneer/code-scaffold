@@ -33,6 +33,7 @@ pub enum WizardState {
     Skills,
     License,
     Complete,
+    Executing,
 }
 
 pub struct App {
@@ -52,11 +53,15 @@ pub struct App {
     footer: Footer,
     directory_browser: DirectoryBrowser,
     tx: UnboundedSender<String>,
+    rx: tokio::sync::mpsc::UnboundedReceiver<String>,
+    execution_logs: Vec<String>,
+    execution_scroll_offset: usize,
+    payload_dir: std::path::PathBuf,
 }
 
 impl App {
-    pub fn new(payload_dir: std::path::PathBuf) -> (Self, UnboundedSender<String>) {
-        let (tx, _rx) = mpsc::unbounded_channel();
+    pub fn new(payload_dir: std::path::PathBuf) -> Self {
+        let (tx, rx) = mpsc::unbounded_channel();
         let initial_target = if cfg!(windows) {
             "C:\\".to_string()
         } else {
@@ -65,7 +70,7 @@ impl App {
                 .unwrap_or_else(|| "/".to_string())
         };
 
-        let mut workspace = Workspace::new(payload_dir);
+        let mut workspace = Workspace::new(payload_dir.clone());
         workspace.detect_installed(&initial_target);
         
         let app = Self {
@@ -84,9 +89,13 @@ impl App {
             summary_pane: SummaryPane::new(),
             footer: Footer::new(),
             directory_browser: DirectoryBrowser::new(),
-            tx: tx.clone(),
+            tx,
+            rx,
+            execution_logs: Vec::new(),
+            execution_scroll_offset: 0,
+            payload_dir,
         };
-        (app, tx)
+        app
     }
 
     fn update_summary(&mut self) {
@@ -133,7 +142,7 @@ impl App {
         } else {
             self.summary_pane.title = " Deployment Summary ".to_string();
             self.summary_pane.summary_text = format!(
-                "Deployment Footprint:\n- Target: {}\n- {} Artifacts Configured\n- Persona: {}\n- {} Skills Bridged\n- License: {}\n\nSystem Ready. Press [Ctrl+X] to Deploy.",
+                "Deployment Footprint:\n- Target: {}\n- {} Artifacts Configured\n- Persona: {}\n- {} Skills Bridged\n- License: {}\n\nSystem Ready. Press [Enter] or [Ctrl+D] to Deploy.",
                 self.target_folder,
                 selected_artifacts,
                 if selected_persona.is_empty() { "None" } else { &selected_persona },
@@ -148,6 +157,22 @@ impl App {
         self.update_summary();
 
         while !self.should_quit {
+            while let Ok(msg) = self.rx.try_recv() {
+                self.execution_logs.push(msg);
+                if self.wizard_state == WizardState::Executing {
+                    // Auto-scroll if offset is 0
+                    let total = self.execution_logs.len();
+                    let start = if total > 6 + self.execution_scroll_offset {
+                        total - 6 - self.execution_scroll_offset
+                    } else {
+                        0
+                    };
+                    
+                    let display_logs: Vec<String> = self.execution_logs.iter().skip(start).take(6).cloned().collect();
+                    self.summary_pane.summary_text = display_logs.join("\n");
+                }
+            }
+
             let selected_label = self
                 .workspace
                 .selected_label()
@@ -164,6 +189,7 @@ impl App {
                 .unwrap_or("")
                 .to_string();
             self.description_pane.set_selected_label(&selected_label, &selected_desc, &selected_version);
+            self.description_pane.show_qr = self.wizard_state == WizardState::Executing;
 
             tui.terminal.draw(|f| {
                 let size = f.size();
@@ -287,9 +313,103 @@ impl App {
             Action::Quit => self.should_quit = true,
             Action::Execute => {
                 if self.wizard_state == WizardState::Complete {
+                    self.wizard_state = WizardState::Executing;
+                    self.summary_pane.title = " Deploying... ".to_string();
+                    self.summary_pane.summary_text = "Initializing engine...".to_string();
+
                     let tx_clone = self.tx.clone();
-                    self.should_quit = true;
-                    // To do: wire backend execution engine back in with standard out rendering
+                    
+                    let mut manifest_path = self.payload_dir.join("manifest.json");
+                    if !manifest_path.exists() {
+                        manifest_path = std::path::PathBuf::from("manifest.json");
+                    }
+                    
+                    let mut manifest = if let Ok(content) = std::fs::read_to_string(&manifest_path) {
+                        serde_json::from_str::<crate::models::manifest::Manifest>(&content).unwrap_or_else(|_| crate::models::manifest::Manifest {
+                            metadata: crate::models::manifest::ManifestMetadata { version: "3.23.4".into(), last_updated: "now".into() },
+                            env: std::collections::HashMap::new(),
+                            apps: Vec::new(), artifacts: Vec::new(), skills: Vec::new(),
+                        })
+                    } else {
+                        crate::models::manifest::Manifest {
+                            metadata: crate::models::manifest::ManifestMetadata { version: "3.23.4".into(), last_updated: "now".into() },
+                            env: std::collections::HashMap::new(),
+                            apps: Vec::new(), artifacts: Vec::new(), skills: Vec::new(),
+                        }
+                    };
+
+                    // Prefix apps targets with target_folder
+                    for app in &mut manifest.apps {
+                        let target_path = std::path::PathBuf::from(&self.target_folder).join(&app.target);
+                        app.target = target_path.to_string_lossy().to_string();
+                    }
+
+                    // Replace artifacts and skills with strictly user-selected ones
+                    let mut selected_artifacts = Vec::new();
+                    let mut selected_skills = Vec::new();
+
+                    for item in &self.workspace.items {
+                        if !item.selected { continue; }
+                        match item.category {
+                            Category::Artifacts => {
+                                let source = self.payload_dir.join(".templates").join(&item.label);
+                                let target = std::path::PathBuf::from(&self.target_folder).join(&item.label);
+                                selected_artifacts.push(crate::models::manifest::ArtifactEntry {
+                                    id: item.label.clone(),
+                                    label: item.label.clone(),
+                                    source: Some(source.to_string_lossy().to_string()),
+                                    target: target.to_string_lossy().to_string(),
+                                    method: "copy".into(),
+                                });
+                            }
+                            Category::AgentSkills => {
+                                let source = self.payload_dir.join(".skills").join(item.label.replace(".md", ""));
+                                let target = std::path::PathBuf::from(&self.target_folder).join(".skills").join(item.label.replace(".md", ""));
+                                selected_skills.push(crate::models::manifest::SkillEntry {
+                                    id: item.label.clone(),
+                                    label: item.label.clone(),
+                                    source: Some(source.to_string_lossy().to_string()),
+                                    target: target.to_string_lossy().to_string(),
+                                    method: "copy".into(),
+                                });
+                            }
+                            Category::AgentPersona => {
+                                let target = std::path::PathBuf::from(&self.target_folder).join(".agents").join("AGENTS.md");
+                                selected_artifacts.push(crate::models::manifest::ArtifactEntry {
+                                    id: item.label.clone(),
+                                    label: item.label.clone(),
+                                    source: None,
+                                    target: target.to_string_lossy().to_string(),
+                                    method: "touch".into(),
+                                });
+                            }
+                            Category::License => {
+                                let source = self.payload_dir.join(".licenses").join(format!("{}.md", item.label));
+                                let target = std::path::PathBuf::from(&self.target_folder).join("LICENSE");
+                                selected_artifacts.push(crate::models::manifest::ArtifactEntry {
+                                    id: item.label.clone(),
+                                    label: item.label.clone(),
+                                    source: Some(source.to_string_lossy().to_string()),
+                                    target: target.to_string_lossy().to_string(),
+                                    method: "copy".into(),
+                                });
+                            }
+                            _ => {}
+                        }
+                    }
+
+                    manifest.artifacts = selected_artifacts;
+                    manifest.skills = selected_skills;
+
+                    let payload_dir_clone = self.payload_dir.clone();
+                    let target_folder_clone = self.target_folder.clone();
+                    tokio::spawn(async move {
+                        if let Err(e) = crate::manifest_engine::execute(&manifest, tx_clone.clone(), &payload_dir_clone, &target_folder_clone).await {
+                            let _ = tx_clone.send(format!(" -> (FATAL) Execution failed: {}", e));
+                        }
+                        let _ = tx_clone.send("".to_string());
+                        let _ = tx_clone.send("[DONE] Deployment finished. Press [Esc] to exit.".into());
+                    });
                 }
             }
             Action::Tab => {
@@ -363,7 +483,53 @@ impl App {
                     self.directory_browser.open(&self.target_folder);
                 }
             }
+            Action::Up => {
+                if self.wizard_state == WizardState::Executing {
+                    let max_offset = self.execution_logs.len().saturating_sub(6);
+                    if self.execution_scroll_offset < max_offset {
+                        self.execution_scroll_offset += 1;
+                        let start = self.execution_logs.len().saturating_sub(6 + self.execution_scroll_offset);
+                        let display_logs: Vec<String> = self.execution_logs.iter().skip(start).take(6).cloned().collect();
+                        self.summary_pane.summary_text = display_logs.join("\n");
+                    }
+                } else if self.active_block == ActiveBlock::NavTree {
+                    let _ = self.nav_tree.update(action)?;
+                    self.workspace.set_category(self.nav_tree.selected_category());
+                } else if self.active_block == ActiveBlock::Workspace {
+                    let _ = self.workspace.update(action)?;
+                } else {
+                    let _ = self.summary_pane.update(action)?;
+                }
+            }
+            Action::Down => {
+                if self.wizard_state == WizardState::Executing {
+                    if self.execution_scroll_offset > 0 {
+                        self.execution_scroll_offset -= 1;
+                        let start = self.execution_logs.len().saturating_sub(6 + self.execution_scroll_offset);
+                        let display_logs: Vec<String> = self.execution_logs.iter().skip(start).take(6).cloned().collect();
+                        self.summary_pane.summary_text = display_logs.join("\n");
+                    }
+                } else if self.active_block == ActiveBlock::NavTree {
+                    let _ = self.nav_tree.update(action)?;
+                    self.workspace.set_category(self.nav_tree.selected_category());
+                } else if self.active_block == ActiveBlock::Workspace {
+                    let _ = self.workspace.update(action)?;
+                } else {
+                    let _ = self.summary_pane.update(action)?;
+                }
+            }
             Action::Enter => {
+                if self.active_block == ActiveBlock::Workspace {
+                    if let Some(idx) = self.workspace.state.selected() {
+                        let visible = self.workspace.visible_indices();
+                        if idx < visible.len() {
+                            let actual = visible[idx];
+                            if !self.workspace.items[actual].selected {
+                                let _ = self.workspace.update(Action::Char(' '));
+                            }
+                        }
+                    }
+                }
                 match self.wizard_state {
                     WizardState::DeploymentTarget => {
                         self.directory_browser.open(&self.target_folder);
@@ -399,10 +565,9 @@ impl App {
                         self.active_block = ActiveBlock::NavTree;
                     }
                     WizardState::Complete => {
-                        if self.active_block == ActiveBlock::Workspace {
-                            let _ = self.workspace.update(action.clone())?;
-                        }
+                        let _ = self.update(Action::Execute)?;
                     }
+                    WizardState::Executing => {}
                 }
                 self.update_summary();
             }
