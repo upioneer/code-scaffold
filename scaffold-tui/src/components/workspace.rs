@@ -143,21 +143,44 @@ impl Workspace {
         let templates_dir = payload_dir.join(".templates");
         if templates_dir.exists() {
             if let Ok(entries) = std::fs::read_dir(&templates_dir) {
-                let mut tmpl_names: Vec<String> = entries
+                let mut tmpl_names: Vec<(String, bool)> = entries
                     .flatten()
-                    .filter(|e| e.file_type().map(|ft| ft.is_file()).unwrap_or(false))
-                    .map(|e| e.file_name().to_string_lossy().to_string())
+                    .filter(|e| {
+                        if let Ok(ft) = e.file_type() {
+                            ft.is_file() || ft.is_dir()
+                        } else {
+                            false
+                        }
+                    })
+                    .map(|e| {
+                        let is_dir = e.file_type().map(|ft| ft.is_dir()).unwrap_or(false);
+                        let mut name = e.file_name().to_string_lossy().to_string();
+                        if is_dir {
+                            name.push('/');
+                        }
+                        (name, is_dir)
+                    })
                     .collect();
-                tmpl_names.sort();
-                for name in tmpl_names {
+                tmpl_names.sort_by(|a, b| a.0.cmp(&b.0));
+
+                for (name, _) in tmpl_names {
                     if name.to_lowercase() == "license.md" {
                         continue;
                     }
+
+                    let description = if name == "apps/" {
+                        Some("Core full-stack application scaffolding structure including nested directories for api, desktop, mobile (iOS/Android), web, cli, and docker environments.".to_string())
+                    } else if name == "packages/" {
+                        Some("Monorepo shared library directory for storing internal dependencies, shared UI components, TS types, and core backend crates.".to_string())
+                    } else {
+                        None
+                    };
+
                     items.push(WorkspaceItem {
                         label: name,
                         selected: false,
                         category: Category::Artifacts,
-                        description: None,
+                        description,
                         version: None,
                         exists_in_target: false,
                         target_version: None,
