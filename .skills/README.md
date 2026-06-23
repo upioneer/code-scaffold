@@ -26,6 +26,7 @@ This directory contains complex code payloads (skills) that the Code Scaffold en
 | **Playwright** | Browser automation and end-to-end testing with Playwright | v1.0.0 | `.skills/playwright` |
 | **Ratatui TUI Framework** | Build Terminal User Interfaces (TUI) using Ratatui in Rust. | v1.0.1 | `.skills/ratatui` |
 | **Resend** | Sends emails using the Resend API | v1.1.1 | `.skills/resend` |
+| **Scrollytelling** | Design architecture, workflows, and code implementations for scroll-triggered 3D model manipulation and interactive 'production explosion' views. | v1.0.0 | `.skills/scrollytelling` |
 | **SEO GEO AEO Auditor** | Unified model-agnostic Search Engine, Generative Engine, and Answer Engine Optimization auditor to analyze traditional visibility, AI engine discoverability, and snippet answers. | v1.0.0 | `.skills/seo-geo-aeo-auditor` |
 | **Supabase** | Supabase database and authentication integration | v1.1.1 | `.skills/supabase` |
 | **Telegram** | Telegram Bot API interactions | v1.1.1 | `.skills/telegram` |
