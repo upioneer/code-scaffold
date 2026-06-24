@@ -1,6 +1,6 @@
 {
   "name": "code_scaffold_website_deploy_linux_skill",
-  "version": "1.5.0",
+  "version": "5",
   "description": "Enterprise Linux Deployment Agent for deploying static sites and SPAs to Nginx locally or remotely via PuTTY CLI (plink/pscp) or SSH, featuring upfront architectural prompting, automatic .env setups, reference scripts, and non-destructive folder structures",
   "entryPoint": "./SKILL.md",
   "engines": {

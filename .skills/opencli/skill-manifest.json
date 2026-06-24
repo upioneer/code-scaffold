@@ -1,6 +1,6 @@
 {
   "name": "code_scaffold_opencli_skill",
-  "version": "1.0.0",
+  "version": "1",
   "description": "Bridge websites and the CLI for structured data extraction and browser automation",
   "entryPoint": "./SKILL.md",
   "engines": {

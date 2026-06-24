@@ -1,6 +1,6 @@
 {
   "name": "code_scaffold_upstash_skill",
-  "version": "1.0.1",
+  "version": "1",
   "description": "Serverless Redis management and rate limiting using Upstash.",
   "entryPoint": "./SKILL.md",
   "engines": {

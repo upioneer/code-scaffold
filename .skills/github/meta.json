@@ -1,6 +1,6 @@
 {
   "label": "GitHub",
   "description": "GitHub push workflow with .env-based identity configuration; merges github.md into the skill",
-  "version": "1.3.0",
+  "version": "3",
   "target": ".skills/github"
 }

@@ -35,3 +35,22 @@ When engaged in a cybersecurity task:
 2. **Framework Alignment:** Reference the appropriate MITRE or NIST framework to structure your investigation.
 3. **Scan Dependencies:** Run any external tools or ad-hoc skills through SkillSpector to acquire a risk score (0-100).
 4. **Execution:** Execute the validated skills, ensuring all actions are documented and map back to the targeted security frameworks.
+5. **Reporting:** Generate the comprehensive HTML report utilizing the format described above.
+
+## 4. Comprehensive HTML Reporting
+
+Upon completing a security scan or analysis task, you MUST generate a comprehensive HTML report. The report file name MUST include a timestamp (e.g., `security_scan_report_2026-06-24_120000.html`).
+
+The HTML report MUST adhere to this structural format:
+1. **Summary Header:** A high-level overview of the scan's purpose and findings.
+2. **Scan Metadata:** 
+   - **Target Source:** What was scanned (e.g., specific URL, local file system path, or network path).
+   - **Timestamp:** The exact time the scan was conducted.
+   - **Overall Confidence/Risk Level:** A numeric score from `0-100` (where `100` is the safest, and `0` is critical risk).
+3. **Categorized Findings:** Group findings into **CRITICAL**, **HIGH**, **MEDIUM**, and **LOW** severity sections. For each finding, provide a bulleted list explicitly detailing:
+   - **Vulnerability/Risk/Concern:** A detailed explanation of the issue.
+   - **Recommended Resolution Path:** Explicit steps or code changes required to remediate the risk.
+4. **Additional Advanced Context:**
+   - **Framework Mappings:** Map findings directly to NIST/MITRE control IDs (e.g., MITRE T1566).
+   - **Scope & Methodology Limitations:** What was explicitly excluded or unable to be scanned.
+   - **Mitigation Verification Steps:** How to test that the vulnerability was successfully closed after applying the fix.

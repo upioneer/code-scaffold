@@ -1,6 +1,6 @@
 {
   "label": "Upstash Redis Management",
   "description": "Serverless Redis management and rate limiting using Upstash.",
-  "version": "1.0.1",
+  "version": "1",
   "target": ".skills/upstash"
 }

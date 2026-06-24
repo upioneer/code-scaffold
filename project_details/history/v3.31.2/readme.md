@@ -5,7 +5,7 @@ This release strictly enforces typographical and structural requirements across 
 
 ## Formatting & Generative Updates
 1. **Typography Normalization:**
-   * Prohibited the use of em dashes (`—`) and en dashes (`–`) across all `readme.md` files project-wide.
+   * Prohibited the use of em dashes (` `) and en dashes (` `) across all `readme.md` files project-wide.
    * Standardized list markers to use asterisks (`*`) exclusively rather than hyphens.
    * Executed a recursive patching script across 105 history documents and core readmes to conform to the new typographical baseline without disrupting code block functionality.
 2. **Dynamic Skill Capabilities Parsing:**

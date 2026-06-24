@@ -1,6 +1,6 @@
 {
   "name": "code_scaffold_mermaid_skill",
-  "version": "1.1.1",
+  "version": "1",
   "description": "Mermaid diagram creation and rendering",
   "entryPoint": "./SKILL.md",
   "engines": {

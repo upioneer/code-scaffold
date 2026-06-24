@@ -1,6 +1,6 @@
 # Ansible
 
-**Version:** 1.0.0
+**Version:** 1
 
 ## Description
 Infrastructure automation, configuration management, and application deployment orchestration using Ansible.
@@ -19,4 +19,4 @@ Infrastructure automation, configuration management, and application deployment 
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog
-* **v1.0.0** : Initial release
+* **v1** : Add ansible and terraform skills, fix apps/packages deployment pathing

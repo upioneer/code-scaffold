@@ -1,6 +1,6 @@
 {
   "name": "code_scaffold_node_skill",
-  "version": "1.1.1",
+  "version": "1",
   "description": "Bootstraps a Node.js runtime environment",
   "entryPoint": "./SKILL.md",
   "engines": {

@@ -8,7 +8,7 @@ if ($NewVersion -notmatch "^\d+\.\d+\.\d+$") {
     exit 1
 }
 
-Write-Host "Bumping version to $NewVersion..." -ForegroundColor Cyan
+Write-Host "Bumping version to v$NewVersion..." -ForegroundColor Cyan
 
 # 1. Update Cargo.toml
 $CargoPath = "scaffold-tui\Cargo.toml"

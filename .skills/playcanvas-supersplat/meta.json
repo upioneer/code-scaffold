@@ -1,6 +1,6 @@
 {
   "label": "PlayCanvas SuperSplat",
   "description": "High-performance tool for editing and optimizing 3D Gaussian Splats.",
-  "version": "1.0.0",
+  "version": "1",
   "target": ".skills/playcanvas-supersplat"
 }
