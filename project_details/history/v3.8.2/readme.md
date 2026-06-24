@@ -1,4 +1,4 @@
-# Release v3.8.2 - Project Renaming
+# Release v3.8.2 : Project Renaming
 
 ## Overview
 This patch renames the internal Rust TUI workspace from `project-scaffold-tui` to simply `scaffold-tui` for brevity and alignment with the binary release names.

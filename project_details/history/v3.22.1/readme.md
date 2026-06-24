@@ -1,4 +1,4 @@
-# Release v3.22.1 - TUI Visual Polish & Workflow Improvements
+# Release v3.22.1 : TUI Visual Polish & Workflow Improvements
 
 ## Overview
 This minor patch addresses a few visual UI components, fixes a native OS dialog bug, and improves the UX fluidity of the deployment configuration workflow.

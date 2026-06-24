@@ -1,4 +1,4 @@
-# Release v3.9.1 - Multi-Palette Theme Architecture
+# Release v3.9.1 : Multi-Palette Theme Architecture
 
 ## Overview
 This patch completes Phase 2 of the application build roadmap, separating the core functional architecture away from the UI aesthetics by introducing dynamic layout render parameters.

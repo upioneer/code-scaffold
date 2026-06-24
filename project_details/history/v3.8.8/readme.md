@@ -1,4 +1,4 @@
-# Release v3.8.8 - Compiler Trace Extraction
+# Release v3.8.8 : Compiler Trace Extraction
 
 ## Overview
 This patch intercepts the remote GitHub Actions environment to dump its compilation logs straight back into the repository.

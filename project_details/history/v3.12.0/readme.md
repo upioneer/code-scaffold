@@ -1,4 +1,4 @@
-# Release v3.12.0 - Semantic Layout Alignment
+# Release v3.12.0 : Semantic Layout Alignment
 
 ## Overview
 This feature release realigns the Workspace User Interface with the exact structural components presented in the legacy `scaffold.ps1` application architecture.

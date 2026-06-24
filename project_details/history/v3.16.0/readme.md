@@ -1,4 +1,4 @@
-# Release v3.16.0 - Native RFD Deployment Target
+# Release v3.16.0 : Native RFD Deployment Target
 
 ## Overview
 This minor release expands the capabilities of the Modal Wizard by implementing a cross-platform Native OS Folder Picker (`rfd`). 

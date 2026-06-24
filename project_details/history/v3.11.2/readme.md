@@ -1,4 +1,4 @@
-# Release v3.11.2 - Release Publishing Permission Fix
+# Release v3.11.2 : Release Publishing Permission Fix
 
 ## Overview
 This patch resolves a final pipeline blockage where the `softprops/action-gh-release` step was failing with a 403 Forbidden error because it lacked explicit write permissions to the repository.

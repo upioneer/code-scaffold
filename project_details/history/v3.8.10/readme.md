@@ -1,4 +1,4 @@
-# Release v3.8.10 - Pipeline Reversal
+# Release v3.8.10 : Pipeline Reversal
 
 ## Overview
 This patch reverts the compiler interception workflow modifications that were added to extract the error trace.

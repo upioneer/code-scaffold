@@ -1,4 +1,4 @@
-# Release v3.17.1 - CI/CD Hotfix
+# Release v3.17.1 : CI/CD Hotfix
 
 ## Overview
 This patch resolves a strictly isolated unit testing failure that was preventing successful GitHub Action matrix compilations.

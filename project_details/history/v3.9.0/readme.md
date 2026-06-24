@@ -1,4 +1,4 @@
-# Release v3.9.0 - Primary Manifest Engine Assembly and Execution Hook
+# Release v3.9.0 : Primary Manifest Engine Assembly and Execution Hook
 
 ## Overview
 This patch officially bridges the frontend components directly into the local file system, replacing the legacy PowerShell scaffolding routines entirely with native Rust `fs` mutations!

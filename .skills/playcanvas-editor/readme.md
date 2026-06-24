@@ -3,7 +3,15 @@
 **Version:** 1.0.0
 
 ## Description
-Visual development environment for real-time 3D collaboration.
+Visual development environment for real time 3D collaboration.
+
+## Capabilities & Use Cases
+* Overview
+* AI Agent Instructions
+* Local Development
+* Code Standards (Strict)
+* API Automation
+* Testing
 
 ## Target Path
 `.skills/playcanvas-editor`
@@ -12,4 +20,4 @@ Visual development environment for real-time 3D collaboration.
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog
-* **v1.0.0** - Initial release
+* **v1.0.0** : Initial release

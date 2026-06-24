@@ -1,4 +1,4 @@
-# Release v3.14.0 - QoL Hotkeys, UI Cleanup, and Advanced Security Directives
+# Release v3.14.0 : QoL Hotkeys, UI Cleanup, and Advanced Security Directives
 
 ## Overview
 This minor release introduces several high-impact Quality-of-Life (QoL) improvements to the TUI interface, along with deep security expansions to the Web Development Agent Persona. 

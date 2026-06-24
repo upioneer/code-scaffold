@@ -1,4 +1,4 @@
-# Release v3.21.1 - Skill Configuration Patch
+# Release v3.21.1 : Skill Configuration Patch
 
 ## Overview
 This patch enforces strict schema adherence for all integrated skill payloads, establishing a firm structure for how `meta.json` files must be formatted going forward.

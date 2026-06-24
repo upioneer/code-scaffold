@@ -1,4 +1,4 @@
-# Release v3.13.0 - Installer Wizard Layout Overhaul
+# Release v3.13.0 : Installer Wizard Layout Overhaul
 
 ## Overview
 This feature release fundamentally restructures the layout of the UI to map exactly to the traditional "Installer Wizard" paradigm requested by the user.
