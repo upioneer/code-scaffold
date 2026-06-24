@@ -1,6 +1,6 @@
 {
   "label": "Open Design Prototypes",
   "description": "Create production-grade UI design prototypes using the open-source Open Design system",
-  "version": "1.0.0",
+  "version": "1",
   "target": ".skills/open-design"
 }

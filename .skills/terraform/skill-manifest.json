@@ -1,6 +1,6 @@
 {
   "name": "code_scaffold_terraform_skill",
-  "version": "1.0.0",
+  "version": "1",
   "description": "Infrastructure as Code (IaC) provisioning and state management using Terraform or OpenTofu.",
   "entryPoint": "./SKILL.md",
   "engines": {

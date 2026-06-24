@@ -1,6 +1,6 @@
 {
   "name": "code_scaffold_marp_skill",
-  "version": "1.1.1",
+  "version": "1",
   "description": "Generates Marp presentation slides from Markdown",
   "entryPoint": "./SKILL.md",
   "engines": {

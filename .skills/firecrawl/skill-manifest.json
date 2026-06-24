@@ -1,6 +1,6 @@
 {
   "name": "code_scaffold_firecrawl_skill",
-  "version": "1.0.0",
+  "version": "1",
   "description": "Crawl and scrape websites to clean markdown or structured data with Firecrawl API & CLI",
   "entryPoint": "./SKILL.md",
   "engines": {

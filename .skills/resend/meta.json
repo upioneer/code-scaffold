@@ -1,6 +1,6 @@
 {
   "label": "Resend",
   "description": "Sends emails using the Resend API",
-  "version": "1.1.1",
+  "version": "1",
   "target": ".skills/resend"
 }

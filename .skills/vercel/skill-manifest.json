@@ -1,6 +1,6 @@
 {
   "name": "code_scaffold_vercel_skill",
-  "version": "1.0.1",
+  "version": "1",
   "description": "Configuration and deployment routines for Vercel hosting.",
   "entryPoint": "./SKILL.md",
   "engines": {

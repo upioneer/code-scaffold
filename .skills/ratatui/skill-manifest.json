@@ -1,6 +1,6 @@
 {
   "name": "code_scaffold_ratatui_skill",
-  "version": "1.0.1",
+  "version": "3",
   "description": "Build Terminal User Interfaces (TUI) using Ratatui in Rust.",
   "entryPoint": "./SKILL.md",
   "engines": {

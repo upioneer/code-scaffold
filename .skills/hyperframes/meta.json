@@ -1,6 +1,6 @@
 {
   "label": "Hyperframes",
   "description": "Video rendering framework for AI agents to create videos using HTML, CSS, and JS.",
-  "version": "1.0.0",
+  "version": "1",
   "target": ".skills/hyperframes"
 }

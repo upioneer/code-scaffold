@@ -1,6 +1,6 @@
 {
   "name": "code_scaffold_firebase_skill",
-  "version": "1.1.2",
+  "version": "2",
   "description": "Firebase authentication and database connectivity",
   "entryPoint": "./SKILL.md",
   "engines": {

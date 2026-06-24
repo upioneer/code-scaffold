@@ -1,6 +1,6 @@
 {
   "name": "code_scaffold_playcanvas_engine_skill",
-  "version": "1.0.0",
+  "version": "1",
   "description": "Modular 3D/2D game engine for the web supporting WebGL and WebGPU.",
   "entryPoint": "./SKILL.md",
   "engines": {

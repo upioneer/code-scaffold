@@ -1,6 +1,6 @@
 {
   "label": "CyberSecurity Toolkit",
   "description": "Comprehensive cybersecurity arsenal integrating MITRE/NIST framework methodologies and NVIDIA SkillSpector vulnerability scanning.",
-  "version": "1.0.1",
+  "version": "2",
   "target": ".skills/cybersecurity-toolkit"
 }

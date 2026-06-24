@@ -1,6 +1,6 @@
 {
   "label": "Vercel Deployment Routine",
   "description": "Configuration and deployment routines for Vercel hosting.",
-  "version": "1.0.1",
+  "version": "1",
   "target": ".skills/vercel"
 }
