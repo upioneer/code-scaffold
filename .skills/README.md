@@ -9,6 +9,7 @@ This directory contains complex code payloads (skills) that the Code Scaffold en
 | **Ansible** | Infrastructure automation, configuration management, and application deployment orchestration using Ansible. | v1.0.0 | `.skills/ansible` |
 | **Braille Animations** | Create and manage unicode braille animations and spinners for CLIs and web apps. | v1.0.0 | `.skills/braille-animations` |
 | **Clerk Authentication Perimeter** | Authentication perimeter and identity management using Clerk. | v1.0.1 | `.skills/clerk` |
+| **CyberSecurity Toolkit** | Comprehensive cybersecurity arsenal integrating Anthropic Cybersecurity Skills library and NVIDIA SkillSpector. | v1.0.0 | `.skills/cybersecurity-toolkit` |
 | **Excalidraw** | Renders and embeds Excalidraw whiteboards | v1.1.1 | `.skills/excalidraw` |
 | **Firebase** | Firebase authentication and database connectivity | v1.1.2 | `.skills/firebase` |
 | **Firecrawl Scraper** | Crawl and scrape websites to clean markdown or structured data with Firecrawl API & CLI | v1.0.0 | `.skills/firecrawl` |

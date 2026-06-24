@@ -1,0 +1,14 @@
+{
+  "name": "code_scaffold_cybersecurity_toolkit_skill",
+  "version": "1.0.0",
+  "description": "Comprehensive cybersecurity arsenal integrating Anthropic Cybersecurity Skills library and NVIDIA SkillSpector scanning.",
+  "entryPoint": "./SKILL.md",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "requiredPermissions": [
+    "fs:read",
+    "fs:write",
+    "net:connect"
+  ]
+}

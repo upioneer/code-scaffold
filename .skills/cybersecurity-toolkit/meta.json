@@ -1,0 +1,6 @@
+{
+  "label": "CyberSecurity Toolkit",
+  "description": "Comprehensive cybersecurity arsenal integrating Anthropic Cybersecurity Skills library and NVIDIA SkillSpector scanning.",
+  "version": "1.0.0",
+  "target": ".skills/cybersecurity-toolkit"
+}
