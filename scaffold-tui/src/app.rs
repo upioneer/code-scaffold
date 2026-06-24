@@ -388,6 +388,8 @@ impl App {
                                     || item.label.eq_ignore_ascii_case(".env")
                                     || item.label.eq_ignore_ascii_case("license.md")
                                     || item.label.eq_ignore_ascii_case(".gitignore")
+                                    || item.label.eq_ignore_ascii_case("apps/")
+                                    || item.label.eq_ignore_ascii_case("packages/")
                                 {
                                     std::path::PathBuf::from(&self.target_folder)
                                 } else {

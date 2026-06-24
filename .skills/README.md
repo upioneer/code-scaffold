@@ -6,6 +6,7 @@ This directory contains complex code payloads (skills) that the Code Scaffold en
 
 | Label | Description | Version | Target Path |
 | :--- | :--- | :--- | :--- |
+| **Ansible** | Infrastructure automation, configuration management, and application deployment orchestration using Ansible. | v1.0.0 | `.skills/ansible` |
 | **Braille Animations** | Create and manage unicode braille animations and spinners for CLIs and web apps. | v1.0.0 | `.skills/braille-animations` |
 | **Clerk Authentication Perimeter** | Authentication perimeter and identity management using Clerk. | v1.0.1 | `.skills/clerk` |
 | **Excalidraw** | Renders and embeds Excalidraw whiteboards | v1.1.1 | `.skills/excalidraw` |
@@ -30,6 +31,7 @@ This directory contains complex code payloads (skills) that the Code Scaffold en
 | **SEO GEO AEO Auditor** | Unified model-agnostic Search Engine, Generative Engine, and Answer Engine Optimization auditor to analyze traditional visibility, AI engine discoverability, and snippet answers. | v1.0.0 | `.skills/seo-geo-aeo-auditor` |
 | **Supabase** | Supabase database and authentication integration | v1.1.1 | `.skills/supabase` |
 | **Telegram** | Telegram Bot API interactions | v1.1.1 | `.skills/telegram` |
+| **Terraform** | Infrastructure as Code (IaC) provisioning and state management using Terraform or OpenTofu. | v1.0.0 | `.skills/terraform` |
 | **Trackio ML Tracking** | Integration with Trackio for ML experiment tracking, dashboard deployments, and Hugging Face Spaces sync. | v1.0.0 | `.skills/trackio` |
 | **Upstash Redis Management** | Serverless Redis management and rate limiting using Upstash. | v1.0.1 | `.skills/upstash` |
 | **Vercel Deployment Routine** | Configuration and deployment routines for Vercel hosting. | v1.0.1 | `.skills/vercel` |
