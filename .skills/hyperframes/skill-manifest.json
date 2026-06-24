@@ -1,6 +1,6 @@
 {
   "name": "code_scaffold_hyperframes_skill",
-  "version": "1.0.0",
+  "version": "1",
   "description": "Video rendering framework for AI agents to create videos using HTML, CSS, and JS.",
   "entryPoint": "./SKILL.md",
   "engines": {

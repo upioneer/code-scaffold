@@ -1,6 +1,6 @@
 {
   "name": "code_scaffold_github_skill",
-  "version": "1.3.0",
+  "version": "3",
   "description": "GitHub push workflow with .env-based identity configuration; merges github.md into the skill",
   "entryPoint": "./SKILL.md",
   "engines": {

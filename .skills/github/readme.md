@@ -1,6 +1,6 @@
 # GitHub
 
-**Version:** 1.3.0
+**Version:** 3
 
 ## Description
 GitHub push workflow with .env based identity configuration; merges github.md into the skill
@@ -25,5 +25,6 @@ GitHub push workflow with .env based identity configuration; merges github.md in
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog
-* **v1.3.0** : Current release updates
-* **v1.0.0** : Initial release
+* **v3** : Add code hygiene step to github skill workflow
+* **v2** : Feat(github): merge github.md into skill with .env based config
+* **v1** : Update firebase and github skill configurations

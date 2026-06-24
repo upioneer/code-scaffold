@@ -1,6 +1,6 @@
 {
   "label": "Clerk Authentication Perimeter",
   "description": "Authentication perimeter and identity management using Clerk.",
-  "version": "1.0.1",
+  "version": "1",
   "target": ".skills/clerk"
 }

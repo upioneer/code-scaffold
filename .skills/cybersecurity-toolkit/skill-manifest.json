@@ -1,6 +1,6 @@
 {
   "name": "code_scaffold_cybersecurity_toolkit_skill",
-  "version": "1.0.1",
+  "version": "2",
   "description": "Comprehensive cybersecurity arsenal integrating MITRE/NIST framework methodologies and NVIDIA SkillSpector vulnerability scanning.",
   "entryPoint": "./SKILL.md",
   "engines": {

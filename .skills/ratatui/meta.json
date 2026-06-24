@@ -1,6 +1,6 @@
 {
   "label": "Ratatui TUI Framework",
   "description": "Build Terminal User Interfaces (TUI) using Ratatui in Rust.",
-  "version": "1.0.1",
+  "version": "3",
   "target": ".skills/ratatui"
 }

@@ -1,6 +1,6 @@
 {
   "name": "code_scaffold_braille_animations_skill",
-  "version": "1.0.0",
+  "version": "1",
   "description": "Create and manage unicode braille animations and spinners for CLIs and web apps.",
   "entryPoint": "./SKILL.md",
   "engines": {

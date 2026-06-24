@@ -1,6 +1,6 @@
 # Playwright
 
-**Version:** 1.0.0
+**Version:** 1
 
 ## Description
 Browser automation and end to end testing with Playwright
@@ -28,4 +28,4 @@ Browser automation and end to end testing with Playwright
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog
-* **v1.0.0** : Initial release
+* **v1** : Add Playwright skill and update documentation to v2.7.0
