@@ -1,12 +1,12 @@
-# SEO GEO AEO Auditor
+# PlayCanvas Engine
 
 **Version:** 1.0.0
 
 ## Description
-Unified model-agnostic Search Engine, Generative Engine, and Answer Engine Optimization auditor to analyze traditional visibility, AI engine discoverability, and snippet answers.
+Modular 3D/2D game engine for the web supporting WebGL and WebGPU.
 
 ## Target Path
-`.skills/seo-geo-aeo-auditor`
+`.skills/playcanvas-engine`
 
 ## Usage & Execution
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
