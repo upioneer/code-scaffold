@@ -1,4 +1,4 @@
-# Release v3.8.1 - CI/CD Hotfix
+# Release v3.8.1 : CI/CD Hotfix
 
 ## Overview
 This patch release addresses a failure in the continuous integration pipeline triggered during the v3.8.0 architectural shift. 

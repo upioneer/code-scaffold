@@ -1,4 +1,4 @@
-# Release v3.18.0 - Inline Setup Wizard & UX Improvements
+# Release v3.18.0 : Inline Setup Wizard & UX Improvements
 
 ## Overview
 This feature release heavily refines the Modal Setup Wizard by dissolving the hard popup blocker and resolving pathing issues for dynamic directory mounting.

@@ -1,4 +1,4 @@
-# Release v3.8.6 - Pipeline Clippy Overrides
+# Release v3.8.6 : Pipeline Clippy Overrides
 
 ## Overview
 This patch removes the strict warning boundaries at the pipeline level.

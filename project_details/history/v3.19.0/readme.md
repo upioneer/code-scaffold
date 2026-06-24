@@ -1,4 +1,4 @@
-# Release v3.19.0 - Universal Object Decoupling
+# Release v3.19.0 : Universal Object Decoupling
 
 ## Overview
 This patch completes the abstraction and total decoupling of all scaffolding objects (Artifacts, Agent Skills, and Licensing) from the core TUI application state.

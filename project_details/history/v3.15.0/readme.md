@@ -1,4 +1,4 @@
-# Release v3.15.0 - Guided Setup Wizard & Dynamic Footprints
+# Release v3.15.0 : Guided Setup Wizard & Dynamic Footprints
 
 ## Overview
 This feature release dramatically overhauls the deployment pipeline interface. It abstracts the raw logging output out of the frontend and introduces a seamless Modal Wizard layout to ensure configuration integrity.

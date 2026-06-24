@@ -1,4 +1,4 @@
-# Release v3.8.5 - Module Resolution Fix
+# Release v3.8.5 : Module Resolution Fix
 
 ## Overview
 This patch resolves a critical build halt in the GitHub Actions `cargo fmt` phase.

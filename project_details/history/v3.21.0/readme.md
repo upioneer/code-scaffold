@@ -1,4 +1,4 @@
-# Release v3.21.0 - Wizard UX & Details Pane
+# Release v3.21.0 : Wizard UX & Details Pane
 
 ## Overview
 This release prioritizes the deployment path selection to early-bound the wizard process, allowing for predictive artifact diffing. It also introduces a dynamic Details pane for configuration elements.

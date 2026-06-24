@@ -1,4 +1,4 @@
-# Release v3.17.0 - Animated Braille Splash Screen
+# Release v3.17.0 : Animated Braille Splash Screen
 
 ## Overview
 This minor release injects a custom animated unicode braille spinner directly into the Modal Wizard's Welcome Screen. 

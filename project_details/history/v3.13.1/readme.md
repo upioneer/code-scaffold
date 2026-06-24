@@ -1,4 +1,4 @@
-# Release v3.13.1 - Dynamic Header Versioning Bugfix
+# Release v3.13.1 : Dynamic Header Versioning Bugfix
 
 ## Overview
 This patch release resolves an issue where the TUI header was hardcoded to `v3.9.0` despite the underlying binaries advancing independently.

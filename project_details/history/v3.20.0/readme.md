@@ -1,4 +1,4 @@
-# Release v3.20.0 - Quality of Life & Persona Branching
+# Release v3.20.0 : Quality of Life & Persona Branching
 
 ## Overview
 This update introduces intelligent wizard branching alongside robust backward navigation hooks, drastically improving UX during onboarding loops.

@@ -5,6 +5,13 @@
 ## Description
 Infrastructure automation, configuration management, and application deployment orchestration using Ansible.
 
+## Capabilities & Use Cases
+* Installation Verification & Setup
+* Directory & Configuration Structure
+* Syntax & Baseline Templates
+* Engagement & Execution Commands
+* Troubleshooting & Logging
+
 ## Target Path
 `.skills/ansible`
 
@@ -12,4 +19,4 @@ Infrastructure automation, configuration management, and application deployment 
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog
-* **v1.0.0** - Initial release
+* **v1.0.0** : Initial release

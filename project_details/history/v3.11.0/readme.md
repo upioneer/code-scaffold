@@ -1,4 +1,4 @@
-# Release v3.11.0 - ARM Windows Architecture Targeting
+# Release v3.11.0 : ARM Windows Architecture Targeting
 
 ## Overview
 This feature release officially deprecates the legacy Intel Mac compilation target (`x86_64-apple-darwin`) in favor of native ARM64 Windows compilation support.
