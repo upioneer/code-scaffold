@@ -1,0 +1,15 @@
+# Hyperframes
+
+**Version:** 1.0.0
+
+## Description
+Video rendering framework for AI agents to create videos using HTML, CSS, and JS.
+
+## Target Path
+`.skills/hyperframes`
+
+## Usage & Execution
+This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
+
+## Changelog
+* **v1.0.0** - Initial release

@@ -1,12 +1,12 @@
 ---
 name: CyberSecurity Toolkit
-description: Comprehensive cybersecurity arsenal integrating Anthropic Cybersecurity Skills library and NVIDIA SkillSpector scanning.
+description: Comprehensive cybersecurity arsenal integrating MITRE/NIST framework methodologies and NVIDIA SkillSpector vulnerability scanning.
 ---
 
 # CyberSecurity Toolkit Engineering Skill
 
 You are equipped with the CyberSecurity Toolkit, a robust suite combining extensive agentic security behaviors and proactive vulnerability scanning. This skill merges two critical domains:
-1. **Anthropic Cybersecurity Skills Library:** A massive open-source library of 817 structured cybersecurity skills mapped across 6 major industry frameworks.
+1. **Framework-Driven Methodologies:** A comprehensive methodology library of over 800 structured cybersecurity skills mapped across 6 major industry frameworks (MITRE and NIST).
 2. **NVIDIA SkillSpector:** A security scanner to detect vulnerabilities, malicious patterns, and security risks in AI agent skills before they are installed or executed.
 
 ## 1. Domain Capabilities & Frameworks
