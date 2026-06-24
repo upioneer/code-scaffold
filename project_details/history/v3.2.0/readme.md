@@ -1,4 +1,4 @@
-# Walkthrough - v3.2.0
+# Walkthrough : v3.2.0
 
 ## Overview
 This update introduces the **Hyperframes** skill to the Code Scaffold engine. Hyperframes is an open-source video rendering framework that allows users to create videos using standard web technologies (HTML, CSS, and JavaScript).

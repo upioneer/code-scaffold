@@ -1,4 +1,4 @@
-# Release v3.21.2 - Schema Validation Sweep
+# Release v3.21.2 : Schema Validation Sweep
 
 ## Overview
 This patch completes a comprehensive repository sweep to ensure 100% compliance with the newly established `meta.json` schema rules. 

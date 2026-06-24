@@ -1,4 +1,4 @@
-# Release v3.8.3 - Code Hygiene Hotfix
+# Release v3.8.3 : Code Hygiene Hotfix
 
 ## Overview
 This patch addresses the `v3.8.2` continuous integration failures caused by compiler warnings and strict formatting checks.

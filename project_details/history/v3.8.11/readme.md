@@ -1,4 +1,4 @@
-# Release v3.8.11 - Focus Architecture and Action Map
+# Release v3.8.11 : Focus Architecture and Action Map
 
 ## Overview
 This patch establishes the global structural UI tracking, active input focusing logic, and key event routing matrix.

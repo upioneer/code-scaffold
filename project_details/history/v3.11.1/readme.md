@@ -1,4 +1,4 @@
-# Release v3.11.1 - Native TLS Abstraction Bugfix
+# Release v3.11.1 : Native TLS Abstraction Bugfix
 
 ## Overview
 This patch resolves a critical pipeline blockage where the GitHub Actions cross-compiler matrix was failing to build the `aarch64-unknown-linux-gnu` target due to complex OpenSSL C-binding requirements.

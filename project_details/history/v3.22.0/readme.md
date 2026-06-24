@@ -1,4 +1,4 @@
-# Release v3.22.0 - Trackio Skill Payload
+# Release v3.22.0 : Trackio Skill Payload
 
 ## Overview
 This feature release introduces the complete integration for **Trackio**, a powerful machine learning experiment tracking platform tailored for Hugging Face Spaces.

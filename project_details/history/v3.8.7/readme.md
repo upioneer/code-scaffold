@@ -1,4 +1,4 @@
-# Release v3.8.7 - Explicit Frame Lifetimes
+# Release v3.8.7 : Explicit Frame Lifetimes
 
 ## Overview
 This patch resolves a hard compiler error inside the TUI components rendering logic.

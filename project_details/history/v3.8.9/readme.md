@@ -1,4 +1,4 @@
-# Release v3.8.9 - Ratatui Import Fix
+# Release v3.8.9 : Ratatui Import Fix
 
 ## Overview
 This patch resolves the final compiler type error that halted the build matrix.

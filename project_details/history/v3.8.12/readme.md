@@ -1,4 +1,4 @@
-# Release v3.8.12 - Component Models and Dynamic Structure Loaders
+# Release v3.8.12 : Component Models and Dynamic Structure Loaders
 
 ## Overview
 This patch establishes the foundational data layer for the frontend scaffolding interface.

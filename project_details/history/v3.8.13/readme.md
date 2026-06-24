@@ -1,4 +1,4 @@
-# Release v3.8.13 - Dynamic Input Buffers and Thread Channels
+# Release v3.8.13 : Dynamic Input Buffers and Thread Channels
 
 ## Overview
 This patch completes the backend logic integration for the interactive UI, bridging standard keyboard inputs into localized data mutators.
