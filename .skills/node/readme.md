@@ -1,15 +1,16 @@
-# SEO GEO AEO Auditor
+# Node
 
-**Version:** 1.0.0
+**Version:** 1.1.1
 
 ## Description
-Unified model-agnostic Search Engine, Generative Engine, and Answer Engine Optimization auditor to analyze traditional visibility, AI engine discoverability, and snippet answers.
+Bootstraps a Node.js runtime environment
 
 ## Target Path
-`.skills/seo-geo-aeo-auditor`
+`.skills/node`
 
 ## Usage & Execution
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog
+* **v1.1.1** - Current release updates
 * **v1.0.0** - Initial release

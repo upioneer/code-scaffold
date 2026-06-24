@@ -1,12 +1,12 @@
-# SEO GEO AEO Auditor
+# Open Design Prototypes
 
 **Version:** 1.0.0
 
 ## Description
-Unified model-agnostic Search Engine, Generative Engine, and Answer Engine Optimization auditor to analyze traditional visibility, AI engine discoverability, and snippet answers.
+Create production-grade UI design prototypes using the open-source Open Design system
 
 ## Target Path
-`.skills/seo-geo-aeo-auditor`
+`.skills/open-design`
 
 ## Usage & Execution
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
