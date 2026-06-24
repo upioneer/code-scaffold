@@ -219,32 +219,43 @@ $state += [PSCustomObject]@{
 }
 
 if (Test-Path -Path $templatesDir) {
-    $templateItems = Get-ChildItem -Path $templatesDir -File
+    $templateItems = Get-ChildItem -Path $templatesDir
     foreach ($file in $templateItems) {
         if ($file.Name -match "(?i)^license\.md$") {
             continue
         }
+        
         $targetFile = "project_details\$($file.Name)"
         $isSelected = $false
-        if ($file.Name -match "(?i)^readme\.md$") {
-            $targetFile = $file.Name
-            $isSelected = $true
+        
+        if ($file.PSIsContainer) {
+            if ($file.Name -match "(?i)^(apps|packages)$") {
+                $targetFile = $file.Name
+            } else {
+                continue
+            }
         }
-        elseif ($file.Name -match "(?i)^vercel\.json$") {
-            $targetFile = $file.Name
-            $isSelected = $true
-        }
-        elseif ($file.Name -match "(?i)^deploy\.yml$") {
-            $targetFile = ".github\workflows\deploy.yml"
-            $isSelected = $true
-        }
-        elseif ($file.Name -match "(?i)^env\.example$") {
-            $targetFile = ".env.example"
-            $isSelected = $true
-        }
-        elseif ($file.Name -match "(?i)^(middleware\.ts|layout\.tsx|redis\.ts|ratelimit\.ts)$") {
-            $targetFile = $file.Name
-            $isSelected = $false
+        else {
+            if ($file.Name -match "(?i)^readme\.md$") {
+                $targetFile = $file.Name
+                $isSelected = $true
+            }
+            elseif ($file.Name -match "(?i)^vercel\.json$") {
+                $targetFile = $file.Name
+                $isSelected = $true
+            }
+            elseif ($file.Name -match "(?i)^deploy\.yml$") {
+                $targetFile = ".github\workflows\deploy.yml"
+                $isSelected = $true
+            }
+            elseif ($file.Name -match "(?i)^env\.example$") {
+                $targetFile = ".env.example"
+                $isSelected = $true
+            }
+            elseif ($file.Name -match "(?i)^(middleware\.ts|layout\.tsx|redis\.ts|ratelimit\.ts)$") {
+                $targetFile = $file.Name
+                $isSelected = $false
+            }
         }
         
         $finalTargetPath = Join-Path -Path $targetRoot -ChildPath $targetFile
@@ -1874,12 +1885,12 @@ foreach ($item in $state) {
                 else {
                     $performedCopy = $false
                     if (-not (Test-Path -Path $finalPath)) {
-                        Copy-Item -Path $item.Source -Destination $finalPath -Force
+                        Copy-Item -Path $item.Source -Destination $finalPath -Recurse -Force
                         Write-Host "Provisioned Artifact: $($item.Label)" -ForegroundColor Green
                         $performedCopy = $true
                     }
                     elseif ($item.Overwrite) {
-                        Copy-Item -Path $item.Source -Destination $finalPath -Force
+                        Copy-Item -Path $item.Source -Destination $finalPath -Recurse -Force
                         Write-Host "Overwrote Artifact: $($item.Label)" -ForegroundColor Green
                         $performedCopy = $true
                     }

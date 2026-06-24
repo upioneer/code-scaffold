@@ -1,0 +1,6 @@
+{
+  "label": "Ansible",
+  "description": "Infrastructure automation, configuration management, and application deployment orchestration using Ansible.",
+  "version": "1.0.0",
+  "target": ".skills/ansible"
+}
