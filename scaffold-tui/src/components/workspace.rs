@@ -379,9 +379,14 @@ impl Workspace {
 
         for item in &mut self.items {
             if item.category == Category::Artifacts {
-                let p1 = target.join(&item.label);
-                let p2 = target.join("project_details").join(&item.label);
-                if p1.exists() || p2.exists() {
+                let p2 = if item.label.eq_ignore_ascii_case("apps/")
+                    || item.label.eq_ignore_ascii_case("packages/")
+                {
+                    target.join(&item.label)
+                } else {
+                    target.join("project_details").join(&item.label)
+                };
+                if p2.exists() {
                     item.exists_in_target = true;
                     item.selected = true;
                 }
