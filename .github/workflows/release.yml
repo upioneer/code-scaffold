@@ -13,10 +13,10 @@ on:
 jobs:
   code_hygiene:
     name: Code Hygiene and Test Verification
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout Source Tree
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
 
       - name: Initialize Rust Infrastructure
         uses: dtolnay/rust-toolchain@stable
@@ -42,10 +42,10 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: ubuntu-latest
+          - os: ubuntu-24.04
             target: x86_64-unknown-linux-gnu
             artifact_name: scaffold-tui-linux-x64
-          - os: ubuntu-latest
+          - os: ubuntu-24.04
             target: aarch64-unknown-linux-gnu
             artifact_name: scaffold-tui-linux-arm64
           - os: windows-latest
@@ -60,7 +60,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout Source Tree
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
 
       - name: Initialize Rust Infrastructure Toolchain
         uses: dtolnay/rust-toolchain@stable
@@ -90,7 +90,7 @@ jobs:
           copy scaffold-tui\target\${{ matrix.target }}\release\scaffold-tui.exe .\${{ matrix.artifact_name }}
 
       - name: Stage Workspace Production Artifacts
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact_name }}
           path: ./${{ matrix.artifact_name }}
@@ -98,13 +98,13 @@ jobs:
   publish_release_binaries:
     name: Publish Release Asset Pool
     needs: matrix_release
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout Source Tree
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
 
       - name: Gather Staged Construction Artifacts
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v4
         with:
           path: ./dist
 
