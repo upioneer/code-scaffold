@@ -5,6 +5,7 @@ mod app;
 mod components;
 mod manifest_engine;
 mod models;
+mod prefs;
 mod sync;
 mod theme;
 mod tui;
