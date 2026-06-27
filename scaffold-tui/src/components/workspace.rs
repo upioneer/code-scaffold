@@ -49,6 +49,15 @@ impl Workspace {
                     target_version: None,
             },
             WorkspaceItem {
+                label: "AI Systems Engineer".into(),
+                selected: false,
+                category: Category::AgentPersona,
+                description: Some("Specialized in LLMs (hosted/local), multimodal generation (ComfyUI), and AI APIs (Claude, Gemini, Grok). Expert in AI CLI tools, OpenRouter, and advanced RAG/Agentic frameworks (LangGraph, PixelRAG, Dify).".into()),
+                version: None,
+                    exists_in_target: false,
+                    target_version: None,
+            },
+            WorkspaceItem {
                 label: "Cloud & DevOps Architect".into(),
                 selected: false,
                 category: Category::AgentPersona,
@@ -499,6 +508,20 @@ impl Component for Workspace {
                             .items
                             .iter_mut()
                             .find(|i| i.label == "terraform" && i.category == Category::AgentSkills)
+                        {
+                            companion.selected = true;
+                        }
+                    }
+                    if label == "AI Systems Engineer" && new_state {
+                        if let Some(companion) = self.items.iter_mut().find(|i| {
+                            i.label == "mcp-generator" && i.category == Category::AgentSkills
+                        }) {
+                            companion.selected = true;
+                        }
+                        if let Some(companion) = self
+                            .items
+                            .iter_mut()
+                            .find(|i| i.label == "trackio" && i.category == Category::AgentSkills)
                         {
                             companion.selected = true;
                         }
