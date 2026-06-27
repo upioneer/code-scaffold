@@ -76,8 +76,8 @@ impl App {
         let app = Self {
             should_quit: false,
             active_block: ActiveBlock::Workspace,
-            theme: Theme::default_theme(),
-            theme_idx: 1,
+            theme: Theme::get_by_index(crate::prefs::load_theme_idx()),
+            theme_idx: crate::prefs::load_theme_idx(),
             wizard_state: WizardState::DeploymentTarget,
             target_folder: initial_target,
             splash_tick_count: 0,
@@ -541,6 +541,7 @@ impl App {
             Action::Char('t') | Action::Char('T') => {
                 self.theme_idx = self.theme_idx.wrapping_add(1);
                 self.theme = crate::theme::Theme::get_by_index(self.theme_idx);
+                crate::prefs::save_theme_idx(self.theme_idx);
             }
             Action::Char('f') | Action::Char('F') => {
                 if self.wizard_state == WizardState::DeploymentTarget {
