@@ -6,3 +6,4 @@
 * **Expanded Quality of Life (QoL) Integrations**: 
   * Automatically pre-selects the `cybersecurity-toolkit` skill when the `Security Analyst` persona is actively engaged in the workspace generator.
   * Automatically pre-selects the `ansible` and `terraform` infrastructure skills when the `Cloud & DevOps Architect` persona is selected.
+* **GitHub Skill Subagent Migration**: Upgraded the generic GitHub push skill (v4) to natively mandate background CI/CD auditor subagents that check pipeline statuses at fast 30-second intervals.
