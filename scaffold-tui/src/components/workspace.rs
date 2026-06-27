@@ -442,6 +442,13 @@ impl Component for Workspace {
 
                 // Enforce companions
                 if category == Category::AgentPersona {
+                    if (label == "Web Dev" || label == "Mobile (iOS/And)") && new_state {
+                        if let Some(companion) = self.items.iter_mut().find(|i| {
+                            i.label == "privacy-policy" && i.category == Category::AgentSkills
+                        }) {
+                            companion.selected = true;
+                        }
+                    }
                     if label == "Web Dev" && new_state {
                         if let Some(companion) = self.items.iter_mut().find(|i| {
                             i.label == "seo-geo-aeo-auditor" && i.category == Category::AgentSkills

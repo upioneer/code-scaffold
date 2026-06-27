@@ -1,6 +1,6 @@
 {
     "metadata": {
-        "version": "4.1.0",
+        "version": "4.2.0",
         "lastUpdated": "2026-06-21T13:40:00Z"
     },
     "env": {
@@ -313,6 +313,20 @@
             "label": "Upstash Redis Management",
             "source": ".skills/upstash",
             "target": ".skills/upstash",
+            "method": "copy"
+        },
+        {
+            "id": "privacy-policy",
+            "label": "Privacy Policy Generator",
+            "source": ".skills/privacy-policy",
+            "target": ".skills/privacy-policy",
+            "method": "copy"
+        },
+        {
+            "id": "mcp-generator",
+            "label": "MCP Generator",
+            "source": ".skills/mcp-generator",
+            "target": ".skills/mcp-generator",
             "method": "copy"
         }
     ]
