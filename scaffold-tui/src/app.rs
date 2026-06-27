@@ -77,7 +77,7 @@ impl App {
             should_quit: false,
             active_block: ActiveBlock::Workspace,
             theme: Theme::default_theme(),
-            theme_idx: 0,
+            theme_idx: 1,
             wizard_state: WizardState::DeploymentTarget,
             target_folder: initial_target,
             splash_tick_count: 0,
