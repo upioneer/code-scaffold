@@ -18,6 +18,7 @@ This directory contains complex code payloads (skills) that the Code Scaffold en
 | **Hyperframes** | Video rendering framework for AI agents to create videos using HTML, CSS, and JS. | v1 | `.skills/hyperframes` |
 | **Manim Math Animations** | Mathematical animations using the Manim library. | v1 | `.skills/manim` |
 | **Marp** | Generates Marp presentation slides from Markdown | v1 | `.skills/marp` |
+| **MCP Generator** | Assists with creating new custom Model Context Protocol (MCP) servers, clients, and apps using official SDKs and best practices. | v2 | `.skills/mcp-generator` |
 | **Mermaid** | Mermaid diagram creation and rendering | v1 | `.skills/mermaid` |
 | **Node** | Bootstraps a Node.js runtime environment | v1 | `.skills/node` |
 | **Open Design Prototypes** | Create production grade UI design prototypes using the open source Open Design system | v1 | `.skills/open-design` |
@@ -27,6 +28,7 @@ This directory contains complex code payloads (skills) that the Code Scaffold en
 | **PlayCanvas Engine** | Modular 3D/2D game engine for the web supporting WebGL and WebGPU. | v1 | `.skills/playcanvas-engine` |
 | **PlayCanvas SuperSplat** | High performance tool for editing and optimizing 3D Gaussian Splats. | v1 | `.skills/playcanvas-supersplat` |
 | **Playwright** | Browser automation and end to end testing with Playwright | v1 | `.skills/playwright` |
+| **Privacy Policy Generator** | Generates a customizable privacy policy tailored to the project (website/app) with optional Google Analytics integration. | v4 | `.skills/privacy-policy` |
 | **Proxmox** | Proxmox VE LXC toolbox for building reusable templates, baseline app deployments, and SSH hardening. | v1 | `.skills/proxmox` |
 | **Ratatui TUI Framework** | Build Terminal User Interfaces (TUI) using Ratatui in Rust. | v3 | `.skills/ratatui` |
 | **Resend** | Sends emails using the Resend API | v1 | `.skills/resend` |
