@@ -177,8 +177,8 @@ impl Workspace {
                     };
 
                     items.push(WorkspaceItem {
-                        label: name,
-                        selected: false,
+                        label: name.clone(),
+                        selected: name.to_lowercase() == "agent.md",
                         category: Category::Artifacts,
                         description,
                         version: None,
@@ -243,7 +243,15 @@ impl Workspace {
                     .filter(|e| e.file_type().map(|ft| ft.is_dir()).unwrap_or(false))
                     .map(|e| e.file_name().to_string_lossy().to_string())
                     .collect();
-                skill_names.sort();
+                skill_names.sort_by(|a, b| {
+                    if a == "generic" {
+                        std::cmp::Ordering::Less
+                    } else if b == "generic" {
+                        std::cmp::Ordering::Greater
+                    } else {
+                        a.to_lowercase().cmp(&b.to_lowercase())
+                    }
+                });
                 for name in skill_names {
                     let mut desc = None;
                     let mut vers = None;
@@ -453,6 +461,30 @@ impl Component for Workspace {
                         if let Some(companion) = self.items.iter_mut().find(|i| {
                             i.label == "seo-geo-aeo-auditor" && i.category == Category::AgentSkills
                         }) {
+                            companion.selected = true;
+                        }
+                    }
+                    if label == "Security Analyst" && new_state {
+                        if let Some(companion) = self.items.iter_mut().find(|i| {
+                            i.label == "cybersecurity-toolkit"
+                                && i.category == Category::AgentSkills
+                        }) {
+                            companion.selected = true;
+                        }
+                    }
+                    if label == "Cloud & DevOps Architect" && new_state {
+                        if let Some(companion) = self
+                            .items
+                            .iter_mut()
+                            .find(|i| i.label == "ansible" && i.category == Category::AgentSkills)
+                        {
+                            companion.selected = true;
+                        }
+                        if let Some(companion) = self
+                            .items
+                            .iter_mut()
+                            .find(|i| i.label == "terraform" && i.category == Category::AgentSkills)
+                        {
                             companion.selected = true;
                         }
                     }
