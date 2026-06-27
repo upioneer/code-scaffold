@@ -76,7 +76,15 @@ git remote set-url origin "$GITHUB_REMOTE_URL"
 git push origin "$GITHUB_BRANCH"
 ```
 
-## Step 7: Update Documentation
+## Step 7: CI/CD Pipeline Verification via Subagent
+
+After executing a `git push` to the remote repository, you MUST proactively validate that the resulting GitHub Action pipeline completes successfully before considering the push task finished.
+* Do NOT use active polling scripts or continuous REST API loops, and do NOT block the primary CLI.
+* Instead, you MUST spin up a background subagent to handle the verification.
+* The subagent must utilize the `schedule` tool to set a recurring timer that checks the pipeline status every **30 seconds**.
+* The subagent should assert the final success state and notify you (using `send_message`) of any warnings, deprecation notices, or runtime errors so they can be addressed.
+
+## Step 8: Update Documentation
 
 Upon a successful push, review and update any of the following project artifacts as needed:
 
@@ -84,7 +92,7 @@ Upon a successful push, review and update any of the following project artifacts
 
 Do **not** create or update a `github.md` file — all GitHub configuration now lives in `.env`.
 
-## Step 8: Generate Versioned Walkthrough
+## Step 9: Generate Versioned Walkthrough
 
 * Update the `[PROJECT_ROOT]\project_details\history\[VERSION]` directory on each deployment cycle using standard semantic versioning (Major.Minor.Bugfix, e.g., v1.1.0).
 * Include screenshots where possible to document UI changes.
