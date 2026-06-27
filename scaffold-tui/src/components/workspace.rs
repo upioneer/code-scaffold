@@ -168,12 +168,27 @@ impl Workspace {
                         continue;
                     }
 
-                    let description = if name == "apps/" {
-                        Some("Core full-stack application scaffolding structure including nested directories for api, desktop, mobile (iOS/Android), web, cli, and docker environments.".to_string())
-                    } else if name == "packages/" {
-                        Some("Monorepo shared library directory for storing internal dependencies, shared UI components, TS types, and core backend crates.".to_string())
-                    } else {
-                        None
+                    let description = match name.as_str() {
+                        "apps/" => Some("Core full-stack application scaffolding structure including nested directories for api, desktop, mobile (iOS/Android), web, cli, and docker environments.".to_string()),
+                        "packages/" => Some("Monorepo shared library directory for storing internal dependencies, shared UI components, TS types, and core backend crates.".to_string()),
+                        "agent.md" => Some("System rules and behavioral instructions governing AI agent operations in the workspace.".to_string()),
+                        "brand.md" => Some("Design system document encompassing typography, color palettes, and UI component standards.".to_string()),
+                        "deploy.yml" => Some("GitHub Actions CI/CD workflow configuration for automated testing and deployment.".to_string()),
+                        "design.md" => Some("Architectural blueprints, database schemas, and frontend UI mockups.".to_string()),
+                        "env.example" => Some("Environment variable template demonstrating required configuration keys without exposing secrets.".to_string()),
+                        "firebase.md" => Some("Firebase configuration, security rules, and SDK initialization references.".to_string()),
+                        "github.md" => Some("GitHub workflow documentation and git integration rules.".to_string()),
+                        "layout.tsx" => Some("Next.js root layout component template establishing the core application shell.".to_string()),
+                        "middleware.ts" => Some("Next.js Edge Middleware for handling authentication routing and request manipulation.".to_string()),
+                        "plan.md" => Some("Strategic project roadmap, milestone tracking, and task decomposition.".to_string()),
+                        "ratelimit.ts" => Some("Upstash Redis-based rate limiting logic to protect API endpoints.".to_string()),
+                        "redis.ts" => Some("Upstash Redis client initialization and connection handling.".to_string()),
+                        "skills.md" => Some("Registry of custom AI agent skills and their associated capabilities.".to_string()),
+                        "testing.md" => Some("Quality assurance guidelines, test coverage requirements, and Playwright automation steps.".to_string()),
+                        "todo.md" => Some("Immediate, actionable checklist for granular feature implementation and bug fixes.".to_string()),
+                        "vercel.json" => Some("Vercel deployment configuration, serverless function settings, and routing rules.".to_string()),
+                        ".gitignore" => Some("Standard exclusions for build artifacts, node_modules, and environment files.".to_string()),
+                        _ => None,
                     };
 
                     items.push(WorkspaceItem {
