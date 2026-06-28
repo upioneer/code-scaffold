@@ -260,6 +260,40 @@ impl Workspace {
         }
 
         let skills_dir = payload_dir.join(".skills");
+
+        items.push(WorkspaceItem {
+            label: "[+] Bring Your Own Skill (BYOS)".into(),
+            selected: false,
+            category: Category::AgentSkills,
+            description: Some("Import a custom agent skill from an approved repository, URL, or CLI install command (e.g., npx/git clone/uvx).\n\nApproved Platforms:\n- agentskill.sh\n- agentskills.io\n- github.com\n- mcpservers.org\n- microsoft.github.io/skills\n- skills.sh\n- skillsmp.com".into()),
+            version: None,
+            exists_in_target: false,
+            target_version: None,
+        });
+
+        for custom_skill_url in crate::prefs::load_custom_skills() {
+            let name = custom_skill_url
+                .split('/')
+                .last()
+                .unwrap_or("custom-skill")
+                .trim()
+                .replace(".git", "");
+            let parsed_name = if name.is_empty() {
+                "custom-skill".to_string()
+            } else {
+                name
+            };
+            items.push(WorkspaceItem {
+                label: parsed_name,
+                selected: false,
+                category: Category::AgentSkills,
+                description: Some(custom_skill_url),
+                version: None,
+                exists_in_target: false,
+                target_version: None,
+            });
+        }
+
         if skills_dir.exists() {
             if let Ok(entries) = std::fs::read_dir(&skills_dir) {
                 let mut skill_names: Vec<String> = entries

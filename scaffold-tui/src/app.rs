@@ -32,6 +32,7 @@ pub enum WizardState {
     AgentPersona,
     Skills,
     License,
+    CustomSkillInput,
     Complete,
     Executing,
 }
@@ -43,6 +44,7 @@ pub struct App {
     pub theme_idx: usize,
     pub wizard_state: WizardState,
     pub target_folder: String,
+    pub custom_skill_input: String,
     pub splash_tick_count: usize,
     pub splash_frame_idx: usize,
     header: Header,
@@ -80,6 +82,7 @@ impl App {
             theme_idx: crate::prefs::load_theme_idx(),
             wizard_state: WizardState::DeploymentTarget,
             target_folder: initial_target,
+            custom_skill_input: String::new(),
             splash_tick_count: 0,
             splash_frame_idx: 0,
             header: Header::new(),
@@ -248,6 +251,22 @@ impl App {
                 );
                 let _ = self.footer.draw(f, main_layout[3], false, &self.theme);
                 let _ = self.directory_browser.draw(f, size, true, &self.theme);
+
+                if self.wizard_state == WizardState::CustomSkillInput {
+                    let text = format!("\n  Please enter a valid approved platform URL or CLI install command (e.g. npx/git clone):\n\n  > {}\u{2588}\n\n  Press [Enter] to submit, or [Esc] to cancel.", self.custom_skill_input);
+                    let popup_block = ratatui::widgets::Paragraph::new(text)
+                        .wrap(ratatui::widgets::Wrap { trim: false })
+                        .block(
+                            ratatui::widgets::Block::default()
+                                .title(" Import Custom Skill (BYOS) ")
+                                .borders(ratatui::widgets::Borders::ALL)
+                                .border_style(ratatui::style::Style::default().fg(self.theme.primary))
+                                .style(ratatui::style::Style::default().bg(self.theme.bg).fg(self.theme.text))
+                        );
+                    let area = Self::centered_rect(80, 40, size);
+                    f.render_widget(ratatui::widgets::Clear, area);
+                    f.render_widget(popup_block, area);
+                }
             })?;
 
             if let Some(action) = handle_terminal_events()? {
@@ -280,6 +299,83 @@ impl App {
     }
 
     pub fn update(&mut self, action: Action) -> Result<()> {
+        if self.wizard_state == WizardState::CustomSkillInput {
+            match action {
+                Action::Char(c) => {
+                    if self.custom_skill_input
+                        == "Invalid! Must be a valid approved platform URL or CLI command."
+                    {
+                        self.custom_skill_input.clear();
+                    }
+                    self.custom_skill_input.push(c);
+                }
+                Action::Backspace => {
+                    if self.custom_skill_input
+                        == "Invalid! Must be a valid approved platform URL or CLI command."
+                    {
+                        self.custom_skill_input.clear();
+                    }
+                    self.custom_skill_input.pop();
+                }
+                Action::Enter => {
+                    let input = self.custom_skill_input.trim();
+                    let approved_prefixes = [
+                        "https://github.com/",
+                        "https://skillsmp.com/",
+                        "https://agentskills.io/",
+                        "https://agentskill.sh/",
+                        "https://www.skills.sh/",
+                        "https://microsoft.github.io/skills/",
+                        "https://mcpservers.org/agent-skills",
+                        "npx ",
+                        "git clone ",
+                        "uvx ",
+                        "/learn ",
+                    ];
+
+                    if approved_prefixes
+                        .iter()
+                        .any(|prefix| input.starts_with(prefix))
+                    {
+                        let name = input
+                            .split('/')
+                            .last()
+                            .unwrap_or("custom-skill")
+                            .trim()
+                            .replace(".git", "");
+                        let parsed_name = if name.is_empty() {
+                            "custom-skill".to_string()
+                        } else {
+                            name
+                        };
+                        self.workspace
+                            .items
+                            .push(crate::components::workspace::WorkspaceItem {
+                                label: parsed_name,
+                                selected: true,
+                                category: crate::components::nav_tree::Category::AgentSkills,
+                                description: Some(input.to_string()),
+                                version: None,
+                                exists_in_target: false,
+                                target_version: None,
+                            });
+                        crate::prefs::add_custom_skill(input);
+                        self.wizard_state = WizardState::Skills;
+                    } else {
+                        self.custom_skill_input.clear();
+                        self.custom_skill_input.push_str(
+                            "Invalid! Must be a valid approved platform URL or CLI command.",
+                        );
+                    }
+                }
+                Action::Quit => {
+                    self.wizard_state = WizardState::Skills;
+                }
+                _ => {}
+            }
+            return Ok(());
+        }
+
         if self.directory_browser.is_open && action != Action::Tick {
             let _ = self.directory_browser.update(action);
             if !self.directory_browser.is_open {
@@ -408,6 +504,28 @@ impl App {
                                 });
                             }
                             Category::AgentSkills => {
+                                if let Some(desc) = &item.description {
+                                    if desc.starts_with("http")
+                                        || desc.starts_with("npx")
+                                        || desc.starts_with("git")
+                                        || desc.starts_with("uvx")
+                                        || desc.starts_with("/learn")
+                                    {
+                                        selected_skills.push(crate::models::manifest::SkillEntry {
+                                            id: item.label.clone(),
+                                            label: item.label.clone(),
+                                            source: Some(desc.clone()),
+                                            target: std::path::PathBuf::from(&self.target_folder)
+                                                .join(".skills")
+                                                .join(&item.label)
+                                                .to_string_lossy()
+                                                .to_string(),
+                                            method: "remote".into(),
+                                        });
+                                        continue;
+                                    }
+                                }
+
                                 let source = self
                                     .payload_dir
                                     .join(".skills")
@@ -656,9 +774,30 @@ impl App {
                     WizardState::Complete => {
                         let _ = self.update(Action::Execute)?;
                     }
-                    WizardState::Executing => {}
+                    WizardState::Executing | WizardState::CustomSkillInput => {}
                 }
                 self.update_summary();
+            }
+            Action::Char(' ') => {
+                if self.wizard_state == WizardState::Skills {
+                    if let Some(idx) = self.workspace.state.selected() {
+                        let visible = self.workspace.visible_indices();
+                        if idx < visible.len() {
+                            let actual = visible[idx];
+                            if self.workspace.items[actual].label
+                                == "[+] Bring Your Own Skill (BYOS)"
+                            {
+                                self.wizard_state = WizardState::CustomSkillInput;
+                                self.custom_skill_input.clear();
+                                return Ok(());
+                            }
+                        }
+                    }
+                }
+                if self.wizard_state != WizardState::Complete {
+                    self.active_block = ActiveBlock::Workspace;
+                    let _ = self.workspace.update(action.clone())?;
+                }
             }
             _ => {
                 if self.wizard_state != WizardState::Complete {
