@@ -1,6 +1,7 @@
 # Ratatui TUI Framework
 
 **Version:** 3
+**Target:** `.skills/ratatui`
 
 ## Description
 Build Terminal User Interfaces (TUI) using Ratatui in Rust.
@@ -9,10 +10,7 @@ Build Terminal User Interfaces (TUI) using Ratatui in Rust.
 * Directives
 * References
 
-## Target Path
-`.skills/ratatui`
-
-## Usage & Execution
+## Usage
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog

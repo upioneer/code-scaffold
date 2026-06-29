@@ -1,6 +1,7 @@
 # Terraform
 
 **Version:** 1
+**Target:** `.skills/terraform`
 
 ## Description
 Infrastructure as Code (IaC) provisioning and state management using Terraform or OpenTofu.
@@ -12,10 +13,7 @@ Infrastructure as Code (IaC) provisioning and state management using Terraform o
 * Engagement & Execution Commands
 * Troubleshooting & Logging
 
-## Target Path
-`.skills/terraform`
-
-## Usage & Execution
+## Usage
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog

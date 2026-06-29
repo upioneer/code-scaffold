@@ -1,0 +1,6 @@
+{
+  "label": "Slidev",
+  "description": "Comprehensive skill for building, configuring, and exporting Slidev markdown presentations.",
+  "version": "1",
+  "target": ".skills/slidev"
+}

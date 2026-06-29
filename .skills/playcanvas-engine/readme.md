@@ -1,6 +1,7 @@
 # PlayCanvas Engine
 
 **Version:** 1
+**Target:** `.skills/playcanvas-engine`
 
 ## Description
 Modular 3D/2D game engine for the web supporting WebGL and WebGPU.
@@ -13,10 +14,7 @@ Modular 3D/2D game engine for the web supporting WebGL and WebGPU.
 * Contextual Awareness
 * Common Tasks
 
-## Target Path
-`.skills/playcanvas-engine`
-
-## Usage & Execution
+## Usage
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog
