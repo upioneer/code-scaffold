@@ -1,6 +1,6 @@
 {
   "name": "slidev",
-  "version": "1",
+  "version": "2",
   "description": "Comprehensive skill for building, configuring, and exporting Slidev markdown presentations.",
   "entryPoint": "./SKILL.md",
   "engines": {

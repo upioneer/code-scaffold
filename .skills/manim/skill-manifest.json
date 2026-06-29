@@ -1,6 +1,6 @@
 {
   "name": "code_scaffold_manim_skill",
-  "version": "1",
+  "version": "2",
   "description": "Mathematical animations using the Manim library.",
   "entryPoint": "./SKILL.md",
   "engines": {

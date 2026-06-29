@@ -1,6 +1,6 @@
 {
   "name": "revealjs",
-  "version": "1",
+  "version": "2",
   "description": "Comprehensive toolkit and knowledge base for scaffolding, configuring, and exporting Reveal.js presentations.",
   "entryPoint": "./SKILL.md",
   "engines": {

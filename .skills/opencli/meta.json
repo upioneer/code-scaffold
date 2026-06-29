@@ -1,6 +1,6 @@
 {
   "label": "OpenCLI",
   "description": "Bridge websites and the CLI for structured data extraction and browser automation",
-  "version": "1",
+  "version": "2",
   "target": ".skills/opencli"
 }

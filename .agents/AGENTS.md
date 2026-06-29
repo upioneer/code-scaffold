@@ -17,8 +17,9 @@
   [1-2 sentences describing the skill's overarching purpose]
 
   ## Capabilities & Use Cases
-  * [Capability 1]
-  * [Capability 2]
+  [This section is our ONLY opportunity to demonstrate how useful, thoughtful, complete, and impressive the skill is. You MUST provide a highly detailed bulleted list mapping out the deep technical capabilities, domain frameworks, integrations, features, and precise operational mechanics of the skill. Do not undersell the payload!]
+  * [Detailed Capability 1]
+  * [Detailed Capability 2]
 
   ## Usage
   [How an AI agent or user should invoke or use this skill]

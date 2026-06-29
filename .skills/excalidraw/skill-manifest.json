@@ -1,6 +1,6 @@
 {
   "name": "code_scaffold_excalidraw_skill",
-  "version": "1",
+  "version": "2",
   "description": "Renders and embeds Excalidraw whiteboards",
   "entryPoint": "./SKILL.md",
   "engines": {

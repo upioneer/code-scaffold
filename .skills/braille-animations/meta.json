@@ -1,6 +1,6 @@
 {
   "label": "Braille Animations",
   "description": "Create and manage unicode braille animations and spinners for CLIs and web apps.",
-  "version": "1",
+  "version": "2",
   "target": ".skills/braille-animations"
 }

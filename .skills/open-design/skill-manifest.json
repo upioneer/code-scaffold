@@ -1,6 +1,6 @@
 {
   "name": "code_scaffold_open_design_skill",
-  "version": "1",
+  "version": "2",
   "description": "Create production-grade UI design prototypes using the open-source Open Design system",
   "entryPoint": "./SKILL.md",
   "engines": {

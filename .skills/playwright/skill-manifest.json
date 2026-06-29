@@ -1,6 +1,6 @@
 {
   "name": "code_scaffold_playwright_skill",
-  "version": "1",
+  "version": "2",
   "description": "Browser automation and end-to-end testing with Playwright",
   "entryPoint": "./SKILL.md",
   "engines": {
