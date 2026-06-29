@@ -7,42 +7,43 @@ This directory contains complex code payloads (skills) that the Code Scaffold en
 
 | Label | Description | Version | Target Path |
 | :--- | :--- | :--- | :--- |
-| **Ansible** | Infrastructure automation, configuration management, and application deployment orchestration using Ansible. | v1 | `.skills/ansible` |
-| **Braille Animations** | Create and manage unicode braille animations and spinners for CLIs and web apps. | v1 | `.skills/braille-animations` |
-| **Clerk Authentication Perimeter** | Authentication perimeter and identity management using Clerk. | v1 | `.skills/clerk` |
-| **CyberSecurity Toolkit** | Comprehensive cybersecurity arsenal integrating MITRE/NIST framework methodologies and NVIDIA SkillSpector vulnerability scanning. | v2 | `.skills/cybersecurity-toolkit` |
-| **Excalidraw** | Renders and embeds Excalidraw whiteboards | v1 | `.skills/excalidraw` |
-| **Firebase** | Firebase authentication and database connectivity | v2 | `.skills/firebase` |
-| **Firecrawl Scraper** | Crawl and scrape websites to clean markdown or structured data with Firecrawl API & CLI | v1 | `.skills/firecrawl` |
-| **GitHub** | GitHub push workflow with .env based identity configuration; merges github.md into the skill | v4 | `.skills/github` |
-| **Hyperframes** | Video rendering framework for AI agents to create videos using HTML, CSS, and JS. | v1 | `.skills/hyperframes` |
-| **Manim Math Animations** | Mathematical animations using the Manim library. | v1 | `.skills/manim` |
-| **Marp** | Generates Marp presentation slides from Markdown | v1 | `.skills/marp` |
-| **MCP Generator** | Assists with creating new custom Model Context Protocol (MCP) servers, clients, and apps using official SDKs and best practices. | v2 | `.skills/mcp-generator` |
-| **Mermaid** | Mermaid diagram creation and rendering | v1 | `.skills/mermaid` |
-| **Node** | Bootstraps a Node.js runtime environment | v1 | `.skills/node` |
-| **Open Design Prototypes** | Create production grade UI design prototypes using the open source Open Design system | v1 | `.skills/open-design` |
-| **OpenCLI** | Bridge websites and the CLI for structured data extraction and browser automation | v1 | `.skills/opencli` |
-| **p5.js Creative Coding** | Creative coding and visual animations using the p5.js library. | v1 | `.skills/p5js` |
-| **PlayCanvas Editor** | Visual development environment for real time 3D collaboration. | v1 | `.skills/playcanvas-editor` |
-| **PlayCanvas Engine** | Modular 3D/2D game engine for the web supporting WebGL and WebGPU. | v1 | `.skills/playcanvas-engine` |
-| **PlayCanvas SuperSplat** | High performance tool for editing and optimizing 3D Gaussian Splats. | v1 | `.skills/playcanvas-supersplat` |
-| **Playwright** | Browser automation and end to end testing with Playwright | v1 | `.skills/playwright` |
-| **Privacy Policy Generator** | Generates a customizable privacy policy tailored to the project (website/app) with optional Google Analytics integration. | v4 | `.skills/privacy-policy` |
-| **Proxmox** | Proxmox VE LXC toolbox for building reusable templates, baseline app deployments, and SSH hardening. | v1 | `.skills/proxmox` |
-| **Ratatui TUI Framework** | Build Terminal User Interfaces (TUI) using Ratatui in Rust. | v3 | `.skills/ratatui` |
-| **Resend** | Sends emails using the Resend API | v1 | `.skills/resend` |
-| **Reveal.js** | Comprehensive toolkit and knowledge base for scaffolding, configuring, and exporting Reveal.js presentations. | v1 | `.skills/revealjs` |
-| **Scrollytelling** | Design architecture, workflows, and code implementations for scroll triggered 3D model manipulation and interactive 'production explosion' views. | v1 | `.skills/scrollytelling` |
-| **SEO GEO AEO Auditor** | Unified model agnostic Search Engine, Generative Engine, and Answer Engine Optimization auditor to analyze traditional visibility, AI engine discoverability, and snippet answers. | v1 | `.skills/seo-geo-aeo-auditor` |
-| **Slidev** | Comprehensive skill for building, configuring, and exporting Slidev markdown presentations. | v1 | `.skills/slidev` |
-| **Supabase** | Supabase database and authentication integration | v1 | `.skills/supabase` |
-| **Telegram** | Telegram Bot API interactions | v1 | `.skills/telegram` |
-| **Terraform** | Infrastructure as Code (IaC) provisioning and state management using Terraform or OpenTofu. | v1 | `.skills/terraform` |
-| **Trackio ML Tracking** | Integration with Trackio for ML experiment tracking, dashboard deployments, and Hugging Face Spaces sync. | v1 | `.skills/trackio` |
-| **Upstash Redis Management** | Serverless Redis management and rate limiting using Upstash. | v1 | `.skills/upstash` |
-| **Vercel Deployment Routine** | Configuration and deployment routines for Vercel hosting. | v1 | `.skills/vercel` |
-| **Website Deploy Linux** | Enterprise Linux Deployment Agent for deploying static sites and SPAs to Nginx locally or remotely via PuTTY CLI (plink/pscp) or SSH, featuring upfront architectural prompting, automatic .env setups, reference scripts, and non destructive folder structures | v5 | `.skills/website-deploy-linux` |
+| **Ansible** | Infrastructure automation, configuration management, and application deployment orchestration using Ansible. | v2 | `.skills/ansible` |
+| **Braille Animations** | Create and manage unicode braille animations and spinners for CLIs and web apps. | v2 | `.skills/braille-animations` |
+| **Clerk Authentication Perimeter** | Authentication perimeter and identity management using Clerk. | v2 | `.skills/clerk` |
+| **CyberSecurity Toolkit** | Comprehensive cybersecurity arsenal integrating MITRE/NIST framework methodologies and NVIDIA SkillSpector vulnerability scanning. | v3 | `.skills/cybersecurity-toolkit` |
+| **Excalidraw** | Renders and embeds Excalidraw whiteboards | v2 | `.skills/excalidraw` |
+| **Firebase** | Firebase authentication and database connectivity | v3 | `.skills/firebase` |
+| **Firecrawl Scraper** | Crawl and scrape websites to clean markdown or structured data with Firecrawl API & CLI | v2 | `.skills/firecrawl` |
+| **GitHub** | GitHub push workflow with .env based identity configuration; merges github.md into the skill | v5 | `.skills/github` |
+| **Hyperframes** | Video rendering framework for AI agents to create videos using HTML, CSS, and JS. | v2 | `.skills/hyperframes` |
+| **Manim Math Animations** | Mathematical animations using the Manim library. | v2 | `.skills/manim` |
+| **Markmap** | Interactive hierarchical mindmaps derived directly from standard markdown syntax. | v1 | `.skills/markmap` |
+| **Marp** | Generates Marp presentation slides from Markdown | v2 | `.skills/marp` |
+| **MCP Generator** | Assists with creating new custom Model Context Protocol (MCP) servers, clients, and apps using official SDKs and best practices. | v3 | `.skills/mcp-generator` |
+| **Mermaid** | Mermaid diagram creation and rendering | v2 | `.skills/mermaid` |
+| **Node** | Bootstraps a Node.js runtime environment | v2 | `.skills/node` |
+| **Open Design Prototypes** | Create production grade UI design prototypes using the open source Open Design system | v2 | `.skills/open-design` |
+| **OpenCLI** | Bridge websites and the CLI for structured data extraction and browser automation | v2 | `.skills/opencli` |
+| **p5.js Creative Coding** | Creative coding and visual animations using the p5.js library. | v2 | `.skills/p5js` |
+| **PlayCanvas Editor** | Visual development environment for real time 3D collaboration. | v2 | `.skills/playcanvas-editor` |
+| **PlayCanvas Engine** | Modular 3D/2D game engine for the web supporting WebGL and WebGPU. | v2 | `.skills/playcanvas-engine` |
+| **PlayCanvas SuperSplat** | High performance tool for editing and optimizing 3D Gaussian Splats. | v2 | `.skills/playcanvas-supersplat` |
+| **Playwright** | Browser automation and end to end testing with Playwright | v2 | `.skills/playwright` |
+| **Privacy Policy Generator** | Generates a customizable privacy policy tailored to the project (website/app) with optional Google Analytics integration. | v5 | `.skills/privacy-policy` |
+| **Proxmox** | Proxmox VE LXC toolbox for building reusable templates, baseline app deployments, and SSH hardening. | v2 | `.skills/proxmox` |
+| **Ratatui TUI Framework** | Build Terminal User Interfaces (TUI) using Ratatui in Rust. | v4 | `.skills/ratatui` |
+| **Resend** | Sends emails using the Resend API | v2 | `.skills/resend` |
+| **Reveal.js** | Comprehensive toolkit and knowledge base for scaffolding, configuring, and exporting Reveal.js presentations. | v2 | `.skills/revealjs` |
+| **Scrollytelling** | Design architecture, workflows, and code implementations for scroll triggered 3D model manipulation and interactive 'production explosion' views. | v2 | `.skills/scrollytelling` |
+| **SEO GEO AEO Auditor** | Unified model agnostic Search Engine, Generative Engine, and Answer Engine Optimization auditor to analyze traditional visibility, AI engine discoverability, and snippet answers. | v2 | `.skills/seo-geo-aeo-auditor` |
+| **Slidev** | Comprehensive skill for building, configuring, and exporting Slidev markdown presentations. | v2 | `.skills/slidev` |
+| **Supabase** | Supabase database and authentication integration | v2 | `.skills/supabase` |
+| **Telegram** | Telegram Bot API interactions | v2 | `.skills/telegram` |
+| **Terraform** | Infrastructure as Code (IaC) provisioning and state management using Terraform or OpenTofu. | v2 | `.skills/terraform` |
+| **Trackio ML Tracking** | Integration with Trackio for ML experiment tracking, dashboard deployments, and Hugging Face Spaces sync. | v2 | `.skills/trackio` |
+| **Upstash Redis Management** | Serverless Redis management and rate limiting using Upstash. | v2 | `.skills/upstash` |
+| **Vercel Deployment Routine** | Configuration and deployment routines for Vercel hosting. | v2 | `.skills/vercel` |
+| **Website Deploy Linux** | Enterprise Linux Deployment Agent for deploying static sites and SPAs to Nginx locally or remotely via PuTTY CLI (plink/pscp) or SSH, featuring upfront architectural prompting, automatic .env setups, reference scripts, and non destructive folder structures | v6 | `.skills/website-deploy-linux` |
 
 ## Modifying Skills
 

@@ -1,6 +1,6 @@
 {
   "name": "code_scaffold_playcanvas_supersplat_skill",
-  "version": "1",
+  "version": "2",
   "description": "High-performance tool for editing and optimizing 3D Gaussian Splats.",
   "entryPoint": "./SKILL.md",
   "engines": {

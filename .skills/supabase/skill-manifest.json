@@ -1,6 +1,6 @@
 {
   "name": "code_scaffold_supabase_skill",
-  "version": "1",
+  "version": "2",
   "description": "Supabase database and authentication integration",
   "entryPoint": "./SKILL.md",
   "engines": {

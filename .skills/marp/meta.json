@@ -1,6 +1,6 @@
 {
   "label": "Marp",
   "description": "Generates Marp presentation slides from Markdown",
-  "version": "1",
+  "version": "2",
   "target": ".skills/marp"
 }

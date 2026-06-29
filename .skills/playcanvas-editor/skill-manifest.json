@@ -1,6 +1,6 @@
 {
   "name": "code_scaffold_playcanvas_editor_skill",
-  "version": "1",
+  "version": "2",
   "description": "Visual development environment for real-time 3D collaboration.",
   "entryPoint": "./SKILL.md",
   "engines": {
