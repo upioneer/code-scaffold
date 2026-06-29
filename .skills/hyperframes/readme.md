@@ -1,6 +1,7 @@
 # Hyperframes
 
 **Version:** 1
+**Target:** `.skills/hyperframes`
 
 ## Description
 Video rendering framework for AI agents to create videos using HTML, CSS, and JS.
@@ -16,10 +17,7 @@ Video rendering framework for AI agents to create videos using HTML, CSS, and JS
 * Advanced Usage
 * AI Agent "Vibe Coding"
 
-## Target Path
-`.skills/hyperframes`
-
-## Usage & Execution
+## Usage
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog

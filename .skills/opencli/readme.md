@@ -1,6 +1,7 @@
 # OpenCLI
 
 **Version:** 1
+**Target:** `.skills/opencli`
 
 ## Description
 Bridge websites and the CLI for structured data extraction and browser automation
@@ -14,10 +15,7 @@ Bridge websites and the CLI for structured data extraction and browser automatio
 * Agent Guidelines
 * Integration with run.js
 
-## Target Path
-`.skills/opencli`
-
-## Usage & Execution
+## Usage
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog

@@ -1,6 +1,7 @@
 # GitHub
 
 **Version:** 4
+**Target:** `.skills/github`
 
 ## Description
 GitHub push workflow with .env based identity configuration; merges github.md into the skill
@@ -19,14 +20,11 @@ GitHub push workflow with .env based identity configuration; merges github.md in
 * Step 8: Update Documentation
 * Step 9: Generate Versioned Walkthrough
 
-## Target Path
-`.skills/github`
-
-## Usage & Execution
+## Usage
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog
-* **v4** : Added CI/CD pipeline validation step, mandating the use of a background subagent polling at 30-second intervals.
+* **v4** : Added CI/CD pipeline validation step, mandating the use of a background subagent polling at 30 second intervals.
 * **v3** : Add code hygiene step to github skill workflow
 * **v2** : Feat(github): merge github.md into skill with .env based config
 * **v1** : Update firebase and github skill configurations

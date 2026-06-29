@@ -1,6 +1,7 @@
 # SEO GEO AEO Auditor
 
 **Version:** 1
+**Target:** `.skills/seo-geo-aeo-auditor`
 
 ## Description
 Unified model agnostic Search Engine, Generative Engine, and Answer Engine Optimization auditor to analyze traditional visibility, AI engine discoverability, and snippet answers.
@@ -17,10 +18,7 @@ Unified model agnostic Search Engine, Generative Engine, and Answer Engine Optim
 * Prioritized Action Checklist Generation
 * Report Compilation and Formatting
 
-## Target Path
-`.skills/seo-geo-aeo-auditor`
-
-## Usage & Execution
+## Usage
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog

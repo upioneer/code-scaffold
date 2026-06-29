@@ -1,6 +1,7 @@
 # CyberSecurity Toolkit
 
 **Version:** 2
+**Target:** `.skills/cybersecurity-toolkit`
 
 ## Description
 Comprehensive cybersecurity arsenal integrating MITRE/NIST framework methodologies and NVIDIA SkillSpector vulnerability scanning.
@@ -11,10 +12,7 @@ Comprehensive cybersecurity arsenal integrating MITRE/NIST framework methodologi
 * Operational Workflow
 * Comprehensive HTML Reporting
 
-## Target Path
-`.skills/cybersecurity-toolkit`
-
-## Usage & Execution
+## Usage
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog

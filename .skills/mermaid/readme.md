@@ -1,6 +1,7 @@
 # Mermaid
 
 **Version:** 1
+**Target:** `.skills/mermaid`
 
 ## Description
 Mermaid diagram creation and rendering
@@ -12,10 +13,7 @@ Mermaid diagram creation and rendering
 * Outputs
 * Constraints
 
-## Target Path
-`.skills/mermaid`
-
-## Usage & Execution
+## Usage
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog

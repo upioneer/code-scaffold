@@ -1,6 +1,7 @@
 # Marp
 
 **Version:** 1
+**Target:** `.skills/marp`
 
 ## Description
 Generates Marp presentation slides from Markdown
@@ -12,10 +13,7 @@ Generates Marp presentation slides from Markdown
 * Outputs
 * Constraints
 
-## Target Path
-`.skills/marp`
-
-## Usage & Execution
+## Usage
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog

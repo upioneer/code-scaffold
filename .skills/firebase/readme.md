@@ -1,6 +1,7 @@
 # Firebase
 
 **Version:** 2
+**Target:** `.skills/firebase`
 
 ## Description
 Firebase authentication and database connectivity
@@ -10,10 +11,7 @@ Firebase authentication and database connectivity
 * Agent Directives for Limit Verification
 * Deployment Steps
 
-## Target Path
-`.skills/firebase`
-
-## Usage & Execution
+## Usage
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog

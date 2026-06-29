@@ -1,6 +1,7 @@
 # Braille Animations
 
 **Version:** 1
+**Target:** `.skills/braille-animations`
 
 ## Description
 Create and manage unicode braille animations and spinners for CLIs and web apps.
@@ -16,10 +17,7 @@ Create and manage unicode braille animations and spinners for CLIs and web apps.
 * Browser based Braille Art
 * References
 
-## Target Path
-`.skills/braille-animations`
-
-## Usage & Execution
+## Usage
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog

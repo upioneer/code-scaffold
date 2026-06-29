@@ -1,6 +1,7 @@
 # PlayCanvas Editor
 
 **Version:** 1
+**Target:** `.skills/playcanvas-editor`
 
 ## Description
 Visual development environment for real time 3D collaboration.
@@ -13,10 +14,7 @@ Visual development environment for real time 3D collaboration.
 * API Automation
 * Testing
 
-## Target Path
-`.skills/playcanvas-editor`
-
-## Usage & Execution
+## Usage
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog

@@ -1,6 +1,7 @@
 # Trackio ML Tracking
 
 **Version:** 1
+**Target:** `.skills/trackio`
 
 ## Description
 Integration with Trackio for ML experiment tracking, dashboard deployments, and Hugging Face Spaces sync.
@@ -9,10 +10,7 @@ Integration with Trackio for ML experiment tracking, dashboard deployments, and 
 * Key Directives
 * Available References
 
-## Target Path
-`.skills/trackio`
-
-## Usage & Execution
+## Usage
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog
