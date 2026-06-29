@@ -1,6 +1,6 @@
 {
   "name": "code_scaffold_resend_skill",
-  "version": "1",
+  "version": "2",
   "description": "Sends emails using the Resend API",
   "entryPoint": "./SKILL.md",
   "engines": {

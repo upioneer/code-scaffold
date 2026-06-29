@@ -1,0 +1,13 @@
+{
+  "name": "markmap",
+  "version": "1",
+  "description": "Interactive hierarchical mindmaps derived directly from standard markdown syntax.",
+  "entryPoint": "./SKILL.md",
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "requiredPermissions": [
+    "fs:read",
+    "fs:write"
+  ]
+}

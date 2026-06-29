@@ -1,6 +1,6 @@
 {
   "label": "PlayCanvas Editor",
   "description": "Visual development environment for real-time 3D collaboration.",
-  "version": "1",
+  "version": "2",
   "target": ".skills/playcanvas-editor"
 }

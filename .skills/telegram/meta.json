@@ -1,6 +1,6 @@
 {
   "label": "Telegram",
   "description": "Telegram Bot API interactions",
-  "version": "1",
+  "version": "2",
   "target": ".skills/telegram"
 }

@@ -1,6 +1,6 @@
 {
   "name": "code_scaffold_clerk_skill",
-  "version": "1",
+  "version": "2",
   "description": "Authentication perimeter and identity management using Clerk.",
   "entryPoint": "./SKILL.md",
   "engines": {

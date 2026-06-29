@@ -1,6 +1,6 @@
 {
   "name": "code_scaffold_ansible_skill",
-  "version": "1",
+  "version": "2",
   "description": "Infrastructure automation, configuration management, and application deployment orchestration using Ansible.",
   "entryPoint": "./SKILL.md",
   "engines": {
