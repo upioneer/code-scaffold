@@ -1,6 +1,7 @@
 # Upstash Redis Management
 
 **Version:** 1
+**Target:** `.skills/upstash`
 
 ## Description
 Serverless Redis management and rate limiting using Upstash.
@@ -9,10 +10,7 @@ Serverless Redis management and rate limiting using Upstash.
 * Directives for Integration
 * Implementation Steps
 
-## Target Path
-`.skills/upstash`
-
-## Usage & Execution
+## Usage
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog

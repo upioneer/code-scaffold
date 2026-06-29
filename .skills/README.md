@@ -32,8 +32,10 @@ This directory contains complex code payloads (skills) that the Code Scaffold en
 | **Proxmox** | Proxmox VE LXC toolbox for building reusable templates, baseline app deployments, and SSH hardening. | v1 | `.skills/proxmox` |
 | **Ratatui TUI Framework** | Build Terminal User Interfaces (TUI) using Ratatui in Rust. | v3 | `.skills/ratatui` |
 | **Resend** | Sends emails using the Resend API | v1 | `.skills/resend` |
+| **Reveal.js** | Comprehensive toolkit and knowledge base for scaffolding, configuring, and exporting Reveal.js presentations. | v1 | `.skills/revealjs` |
 | **Scrollytelling** | Design architecture, workflows, and code implementations for scroll triggered 3D model manipulation and interactive 'production explosion' views. | v1 | `.skills/scrollytelling` |
 | **SEO GEO AEO Auditor** | Unified model agnostic Search Engine, Generative Engine, and Answer Engine Optimization auditor to analyze traditional visibility, AI engine discoverability, and snippet answers. | v1 | `.skills/seo-geo-aeo-auditor` |
+| **Slidev** | Comprehensive skill for building, configuring, and exporting Slidev markdown presentations. | v1 | `.skills/slidev` |
 | **Supabase** | Supabase database and authentication integration | v1 | `.skills/supabase` |
 | **Telegram** | Telegram Bot API interactions | v1 | `.skills/telegram` |
 | **Terraform** | Infrastructure as Code (IaC) provisioning and state management using Terraform or OpenTofu. | v1 | `.skills/terraform` |

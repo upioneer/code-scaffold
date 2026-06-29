@@ -1,6 +1,7 @@
 # PlayCanvas SuperSplat
 
 **Version:** 1
+**Target:** `.skills/playcanvas-supersplat`
 
 ## Description
 High performance tool for editing and optimizing 3D Gaussian Splats.
@@ -12,10 +13,7 @@ High performance tool for editing and optimizing 3D Gaussian Splats.
 * Splat Manipulation
 * Integration Patterns
 
-## Target Path
-`.skills/playcanvas-supersplat`
-
-## Usage & Execution
+## Usage
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog

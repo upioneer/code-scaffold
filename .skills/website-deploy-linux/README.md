@@ -1,6 +1,7 @@
 # Website Deploy Linux
 
 **Version:** 5
+**Target:** `.skills/website-deploy-linux`
 
 ## Description
 Enterprise Linux Deployment Agent for deploying static sites and SPAs to Nginx locally or remotely via PuTTY CLI (plink/pscp) or SSH, featuring upfront architectural prompting, automatic .env setups, reference scripts, and non destructive folder structures
@@ -43,10 +44,7 @@ Enterprise Linux Deployment Agent for deploying static sites and SPAs to Nginx l
 * Nginx Configuration, Validation, and Reload
 * Post Deployment Testing
 
-## Target Path
-`.skills/website-deploy-linux`
-
-## Usage & Execution
+## Usage
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog

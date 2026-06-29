@@ -1,6 +1,7 @@
 # Vercel Deployment Routine
 
 **Version:** 1
+**Target:** `.skills/vercel`
 
 ## Description
 Configuration and deployment routines for Vercel hosting.
@@ -9,10 +10,7 @@ Configuration and deployment routines for Vercel hosting.
 * Directives for Integration
 * Implementation Steps
 
-## Target Path
-`.skills/vercel`
-
-## Usage & Execution
+## Usage
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog

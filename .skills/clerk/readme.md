@@ -1,6 +1,7 @@
 # Clerk Authentication Perimeter
 
 **Version:** 1
+**Target:** `.skills/clerk`
 
 ## Description
 Authentication perimeter and identity management using Clerk.
@@ -9,10 +10,7 @@ Authentication perimeter and identity management using Clerk.
 * Directives for Integration
 * Implementation Steps
 
-## Target Path
-`.skills/clerk`
-
-## Usage & Execution
+## Usage
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog

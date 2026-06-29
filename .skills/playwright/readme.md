@@ -1,6 +1,7 @@
 # Playwright
 
 **Version:** 1
+**Target:** `.skills/playwright`
 
 ## Description
 Browser automation and end to end testing with Playwright
@@ -21,10 +22,7 @@ Browser automation and end to end testing with Playwright
 * How It Works
 * Tips
 
-## Target Path
-`.skills/playwright`
-
-## Usage & Execution
+## Usage
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog
