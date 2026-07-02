@@ -21,7 +21,7 @@ This directory contains complex code payloads (skills) that the Code Scaffold en
 | **Marp** | Generates Marp presentation slides from Markdown | v2 | `.skills/marp` |
 | **MCP Generator** | Assists with creating new custom Model Context Protocol (MCP) servers, clients, and apps using official SDKs and best practices. | v3 | `.skills/mcp-generator` |
 | **Mermaid** | Mermaid diagram creation and rendering | v2 | `.skills/mermaid` |
-| **Node** | Bootstraps a Node.js runtime environment | v2 | `.skills/node` |
+| **Node** | Bootstraps a Node.js runtime environment | v3 | `.skills/node` |
 | **Open Design Prototypes** | Create production grade UI design prototypes using the open source Open Design system | v2 | `.skills/open-design` |
 | **OpenCLI** | Bridge websites and the CLI for structured data extraction and browser automation | v2 | `.skills/opencli` |
 | **p5.js Creative Coding** | Creative coding and visual animations using the p5.js library. | v2 | `.skills/p5js` |

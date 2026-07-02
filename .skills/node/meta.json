@@ -1,6 +1,6 @@
 {
   "label": "Node",
   "description": "Bootstraps a Node.js runtime environment",
-  "version": "2",
+  "version": "3",
   "target": ".skills/node"
 }
