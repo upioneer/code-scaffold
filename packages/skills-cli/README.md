@@ -23,4 +23,5 @@ npx -y @code-scaffold/skills-cli add upioneer/cybersecurity-toolkit
 ## How It Works
 1. **Targeting:** The CLI parses the requested identifier (e.g., `upioneer/cybersecurity-toolkit`).
 2. **Extraction:** It connects directly to the target author's GitHub repository and executes a `git sparse-checkout` to pull **only** the requested skill folder.
-3. **Integration:** It deposits the payload into `.code_scaffold/skills/<skill-name>` inside your local project and registers it for immediate agent utilization.
+3. **Integration:** It deposits the payload into a universally neutral `.skills/<skill-name>` directory inside your local project.
+4. **Universal Agent Auto-Discovery:** The CLI actively bridges the gap between disparate AI ecosystems by dynamically constructing cross-platform pointer files (e.g., `.agents/skills.json` for Antigravity, and `.cursorrules` / `.opencode.md` for Cursor, Claude Code, and OpenCode). This instantly tricks any AI agent into auto-discovering the newly installed capability with absolutely zero configuration required by the developer.

@@ -57,6 +57,14 @@ export async function installAdHocSkill(skillIdentifier, targetProjectDir) {
       if (!currentRules.includes(".skills/")) {
         await fs.writeFile(cursorRules, currentRules + rule, "utf-8")
       }
+
+      // OpenCode Mapping
+      const openCodeFile = path.join(targetProjectDir, ".opencode.md")
+      let currentOpenCode = ""
+      try { currentOpenCode = await fs.readFile(openCodeFile, "utf-8") } catch (e) {}
+      if (!currentOpenCode.includes(".skills/")) {
+        await fs.writeFile(openCodeFile, currentOpenCode + rule, "utf-8")
+      }
     } catch (configError) {
       // Fail silently if configuration writing fails, to prevent blocking the skill installation
     }
