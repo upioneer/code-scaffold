@@ -3,8 +3,8 @@ import path from "path"
 import { execSync } from "child_process"
 
 export async function installAdHocSkill(skillIdentifier, targetProjectDir) {
-  const vendorDirectory = path.join(targetProjectDir, ".code_scaffold", "skills")
-  const internalRegistryPath = path.join(targetProjectDir, ".code_scaffold", "skills.json")
+  const vendorDirectory = path.join(targetProjectDir, ".skills")
+  const internalRegistryPath = path.join(vendorDirectory, "registry.json")
 
   await fs.mkdir(vendorDirectory, { recursive: true })
 
@@ -41,8 +41,27 @@ export async function installAdHocSkill(skillIdentifier, targetProjectDir) {
     }
 
     await fs.writeFile(internalRegistryPath, JSON.stringify(currentRegistry, null, 2), "utf-8")
-    return { success: true, registeredSkill: parsedMeta.name }
+    // Universal Agent Routing Configurations
+    try {
+      // Antigravity Mapping
+      const agyDir = path.join(targetProjectDir, ".agents")
+      await fs.mkdir(agyDir, { recursive: true })
+      const linkContent = { entries: [{ path: "../.skills" }] }
+      await fs.writeFile(path.join(agyDir, "skills.json"), JSON.stringify(linkContent, null, 2), "utf-8")
 
+      // Cursor / Claude Code Mapping
+      const cursorRules = path.join(targetProjectDir, ".cursorrules")
+      const rule = "\n# Code Scaffold Skills\nWhen using skills, actively read and adhere to the instructions inside the `.skills/` directory.\n"
+      let currentRules = ""
+      try { currentRules = await fs.readFile(cursorRules, "utf-8") } catch (e) {}
+      if (!currentRules.includes(".skills/")) {
+        await fs.writeFile(cursorRules, currentRules + rule, "utf-8")
+      }
+    } catch (configError) {
+      // Fail silently if configuration writing fails, to prevent blocking the skill installation
+    }
+
+    return { success: true, registeredSkill: parsedMeta.name }
   } catch (error) {
     throw new Error("Execution bootstrapper failed to deploy target package " + error.message)
   }
