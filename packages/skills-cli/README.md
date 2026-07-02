@@ -1,6 +1,6 @@
 # Code Scaffold Skills CLI
 
-**Version:** 1.0.2
+**Version:** 1.0.4
 **Repository:** [Code Scaffold](https://github.com/upioneer/code-scaffold)
 
 ## Description
