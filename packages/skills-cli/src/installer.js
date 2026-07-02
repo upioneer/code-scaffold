@@ -8,12 +8,21 @@ export async function installAdHocSkill(skillIdentifier, targetProjectDir) {
 
   await fs.mkdir(vendorDirectory, { recursive: true })
 
-  const targetUrl = "https://github.com/" + skillIdentifier + ".git"
-  const temporaryTargetDir = path.join(vendorDirectory, path.basename(skillIdentifier))
+  const [author, skillName] = skillIdentifier.split("/")
+  if (!author || !skillName) {
+    throw new Error("Invalid skill identifier format. Expected author/skill-name.")
+  }
+
+  const temporaryTargetDir = path.join(vendorDirectory, skillName)
+  const cloneDir = temporaryTargetDir + "_tmp"
 
   try {
-    execSync("git clone --depth 1 " + targetUrl + " " + temporaryTargetDir, { stdio: "ignore" })
-
+    const targetUrl = "https://github.com/" + author + "/code-scaffold.git"
+    execSync(`git clone --depth 1 --filter=blob:none --sparse ${targetUrl} "${cloneDir}"`, { stdio: "ignore" })
+    execSync(`git sparse-checkout set .skills/${skillName}`, { cwd: cloneDir, stdio: "ignore" })
+    
+    await fs.rename(path.join(cloneDir, ".skills", skillName), temporaryTargetDir)
+    await fs.rm(cloneDir, { recursive: true, force: true }).catch(() => {})
     const rawManifest = await fs.readFile(path.join(temporaryTargetDir, "skill-manifest.json"), "utf-8")
     const parsedMeta = JSON.parse(rawManifest)
 
