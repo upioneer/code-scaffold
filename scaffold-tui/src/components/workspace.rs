@@ -526,6 +526,11 @@ impl Component for Workspace {
                         }) {
                             companion.selected = true;
                         }
+                        if let Some(companion) = self.items.iter_mut().find(|i| {
+                            i.label == "playwright" && i.category == Category::AgentSkills
+                        }) {
+                            companion.selected = true;
+                        }
                     }
                     if label == "Security Analyst" && new_state {
                         if let Some(companion) = self.items.iter_mut().find(|i| {

@@ -1,0 +1,15 @@
+{
+  "name": "stealth-browser-mcp",
+  "version": "1",
+  "description": "Undetectable browser automation for MCP-compatible AI agents, bypassing Cloudflare and antibots via nodriver and CDP.",
+  "entryPoint": "./SKILL.md",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "requiredPermissions": [
+    "fs:read",
+    "fs:write",
+    "net:connect",
+    "env:read"
+  ]
+}

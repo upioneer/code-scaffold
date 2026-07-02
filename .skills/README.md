@@ -37,6 +37,7 @@ This directory contains complex code payloads (skills) that the Code Scaffold en
 | **Scrollytelling** | Design architecture, workflows, and code implementations for scroll triggered 3D model manipulation and interactive 'production explosion' views. | v2 | `.skills/scrollytelling` |
 | **SEO GEO AEO Auditor** | Unified model agnostic Search Engine, Generative Engine, and Answer Engine Optimization auditor to analyze traditional visibility, AI engine discoverability, and snippet answers. | v2 | `.skills/seo-geo-aeo-auditor` |
 | **Slidev** | Comprehensive skill for building, configuring, and exporting Slidev markdown presentations. | v2 | `.skills/slidev` |
+| **Stealth Browser MCP** | Undetectable browser automation for AI agents, bypassing Cloudflare and antibots via nodriver and CDP. | v1 | `.skills/stealth-browser-mcp` |
 | **Supabase** | Supabase database and authentication integration | v2 | `.skills/supabase` |
 | **Telegram** | Telegram Bot API interactions | v2 | `.skills/telegram` |
 | **Terraform** | Infrastructure as Code (IaC) provisioning and state management using Terraform or OpenTofu. | v2 | `.skills/terraform` |
