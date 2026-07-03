@@ -78,6 +78,7 @@ jobs:
         working-directory: scaffold-tui
         env:
           CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
+          CC_aarch64_unknown_linux_gnu: aarch64-linux-gnu-gcc
 
       - name: Consolidate Output Files (Unix)
         if: matrix.os != 'windows-latest'

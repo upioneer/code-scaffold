@@ -231,8 +231,85 @@ impl Theme {
         }
     }
 
+    pub fn bumble() -> Self {
+        Self {
+            name: "bumble",
+            bg: Color::Rgb(0, 0, 0),           // Black
+            text: Color::Rgb(255, 255, 255),   // White
+            primary: Color::Rgb(255, 235, 0),  // Yellow
+            secondary: Color::Rgb(40, 40, 40), // Dark Gray
+            accent: Color::Rgb(255, 235, 0),   // Yellow
+        }
+    }
+
+    pub fn amigo_1() -> Self {
+        Self {
+            name: "amigo1",
+            bg: Color::Rgb(0, 104, 71),           // Mexican Green
+            text: Color::Rgb(255, 255, 255),      // White
+            primary: Color::Rgb(206, 17, 38),     // Mexican Red
+            secondary: Color::Rgb(255, 255, 255), // White
+            accent: Color::Rgb(206, 17, 38),      // Red
+        }
+    }
+
+    pub fn amigo_2() -> Self {
+        Self {
+            name: "amigo2",
+            bg: Color::Rgb(206, 17, 38),          // Mexican Red
+            text: Color::Rgb(255, 255, 255),      // White
+            primary: Color::Rgb(0, 104, 71),      // Mexican Green
+            secondary: Color::Rgb(255, 255, 255), // White
+            accent: Color::Rgb(0, 104, 71),       // Green
+        }
+    }
+
+    pub fn amigo_3() -> Self {
+        Self {
+            name: "amigo3",
+            bg: Color::Rgb(255, 255, 255),     // White
+            text: Color::Rgb(0, 104, 71),      // Green
+            primary: Color::Rgb(206, 17, 38),  // Red
+            secondary: Color::Rgb(0, 104, 71), // Green
+            accent: Color::Rgb(206, 17, 38),   // Red
+        }
+    }
+
+    pub fn amigo_4() -> Self {
+        Self {
+            name: "amigo4",
+            bg: Color::Rgb(255, 255, 255),      // White
+            text: Color::Rgb(206, 17, 38),      // Red
+            primary: Color::Rgb(0, 104, 71),    // Green
+            secondary: Color::Rgb(206, 17, 38), // Red
+            accent: Color::Rgb(0, 104, 71),     // Green
+        }
+    }
+
+    pub fn bollywood_1() -> Self {
+        Self {
+            name: "bollywood1",
+            bg: Color::Rgb(255, 153, 51),         // Saffron
+            text: Color::Rgb(255, 255, 255),      // White
+            primary: Color::Rgb(19, 136, 8),      // India Green
+            secondary: Color::Rgb(255, 255, 255), // White
+            accent: Color::Rgb(19, 136, 8),       // Green
+        }
+    }
+
+    pub fn bollywood_2() -> Self {
+        Self {
+            name: "bollywood2",
+            bg: Color::Rgb(19, 136, 8),           // India Green
+            text: Color::Rgb(255, 255, 255),      // White
+            primary: Color::Rgb(255, 153, 51),    // Saffron
+            secondary: Color::Rgb(255, 255, 255), // White
+            accent: Color::Rgb(255, 153, 51),     // Saffron
+        }
+    }
+
     pub fn get_by_index(idx: usize) -> Self {
-        match idx % 20 {
+        match idx % 27 {
             0 => Self::cmd(),
             1 => Self::default_theme(),
             2 => Self::earth(),
@@ -253,6 +330,13 @@ impl Theme {
             17 => Self::usa_3(),
             18 => Self::usa_4(),
             19 => Self::who_dat(),
+            20 => Self::bumble(),
+            21 => Self::amigo_1(),
+            22 => Self::amigo_2(),
+            23 => Self::amigo_3(),
+            24 => Self::amigo_4(),
+            25 => Self::bollywood_1(),
+            26 => Self::bollywood_2(),
             _ => Self::default_theme(),
         }
     }
