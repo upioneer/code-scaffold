@@ -9,6 +9,7 @@ mod prefs;
 mod sync;
 mod theme;
 mod tui;
+mod updater;
 
 use anyhow::Result;
 use app::App;
@@ -24,6 +25,9 @@ async fn main() -> Result<()> {
         println!("Code Scaffold TUI v{}", env!("CARGO_PKG_VERSION"));
         return Ok(());
     }
+
+    // Ping GitHub for updates (non-blocking 3-second timeout)
+    let _ = updater::check_for_updates().await;
 
     // Process initialization and cache directory resolution
     let payload_dir = sync::sync_payload().await?;
