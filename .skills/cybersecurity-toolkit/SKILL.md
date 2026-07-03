@@ -1,68 +1,45 @@
 ---
 name: CyberSecurity Toolkit
-description: Comprehensive cybersecurity arsenal integrating MITRE/NIST framework methodologies, NVIDIA SkillSpector vulnerability scanning, and deep SAST secret detection.
+description: Comprehensive cybersecurity arsenal integrating MITRE and NIST framework methodologies, NVIDIA SkillSpector vulnerability scanning, and deep SAST secret detection.
 ---
 
 # CyberSecurity Toolkit Engineering Skill
 
-You are equipped with the CyberSecurity Toolkit, a robust suite combining extensive agentic security behaviors, proactive vulnerability scanning, rate limit auditing, and uncompromising Static Application Security Testing (SAST). 
+You are equipped with the CyberSecurity Toolkit, a robust suite combining extensive agentic security behaviors, proactive vulnerability scanning, rate limit auditing, and uncompromising Static Application Security Testing.
 
-## 1. Domain Capabilities & Frameworks
-You are expected to utilize the skills library to perform security analysis, threat hunting, and infrastructure hardening. The library's skills map deeply to the following frameworks:
-- **MITRE ATT&CK v19.1** (15 tactics, 286 techniques)
-- **NIST CSF 2.0** (Organizational posture: 6 functions, 22 categories)
-- **MITRE ATLAS v5.4** (AI/ML adversarial threats)
-- **MITRE D3FEND v1.3** (Defensive countermeasures)
-- **NIST AI RMF 1.0** (AI risk management)
-- **MITRE F3 v1.1** (Fight Fraud Framework: Positioning, Monetization)
+## 1. Domain Capabilities and Frameworks
+You are expected to utilize the skills library to perform security analysis, threat hunting, and infrastructure hardening. The library skills map deeply to the following frameworks. Refer to their official documentation for exact definitions and technique mappings:
+* **MITRE ATT&CK v19.1** (15 tactics, 286 techniques) https://attack.mitre.org
+* **NIST CSF 2.0** (Organizational posture: 6 functions, 22 categories) https://www.nist.gov/cyberframework
+* **MITRE ATLAS v5.4** (AI and ML adversarial threats) https://atlas.mitre.org
+* **MITRE D3FEND v1.3** (Defensive countermeasures) https://d3fend.mitre.org
+* **NIST AI RMF 1.0** (AI risk management) https://www.nist.gov/itl/ai
+* **MITRE F3 v1.1** (Fight Fraud Framework: Positioning, Monetization) https://mitre.org
 
 ## 2. SkillSpector Vulnerability Scanning
-Before utilizing, installing, or executing any third-party agent skill or unverified script, you MUST scan it using SkillSpector to ensure safe boundaries.
-- **Pattern Detection:** Detects 68 vulnerability patterns across 17 categories including Prompt Injection, Data Exfiltration, Privilege Escalation, Supply Chain, Excessive Agency, System Prompt Leakage, and Anti-Refusal mechanisms.
-- **Usage:** Run `skillspector scan <target_directory_or_repo>`.
-- **Enforcement:** Never install or execute skills exhibiting CRITICAL or HIGH severity findings without explicit verification.
+Before utilizing, installing, or executing any external agent skill or unverified script, you MUST scan it using SkillSpector to ensure safe boundaries.
+* **Delegation of Pattern Detection:** The SkillSpector binary internally houses the logic for 68 vulnerability patterns. Do not attempt to guess or manually scan for these patterns.
+* **Usage:** Execute the `skillspector scan` command against the target directory and append the `--format json` parameter.
+* **Parsing the Output:** You must read and parse the JSON output to determine the severity of the findings.
+* **Enforcement:** Never install or execute skills exhibiting MEDIUM, HIGH, or CRITICAL severity findings from the SkillSpector output without explicit verification.
+* **Explicit Verification:** If SkillSpector returns a MEDIUM, HIGH, or CRITICAL score, you must halt all autonomous execution and prompt the user via the terminal for a Y or N confirmation before proceeding.
 
-## 3. Rate Limiting & Exploitation Defense Auditing
+## 3. Rate Limiting and Exploitation Defense Auditing
 You must actively audit endpoints, login routes, and APIs for volumetric exploitation resilience.
-- **Brute Force:** Evaluate brute force susceptibility on all authentication boundaries.
-- **DDoS & Load Tolerance:** Verify Distributed Denial of Service resilience.
-- **Quota Management:** Validate quota management, token bucket algorithms, and rate limiting configurations.
-- **Simulated Traffic:** Gracefully simulate heavy traffic to surface missing defensive configurations.
+* **Execution:** Do not write custom fuzzers. You must use the bundled `invoke-volumetric-audit` script to perform these actions.
+* **Guardrails:** You must strictly ensure simulated traffic does not cause unintentional denial of service to production infrastructure. When passing arguments to the script, never exceed a maximum of 10 concurrent requests or 5 login attempts. 
 
-## 4. Comprehensive Code Quality & Secret Detection Engine (SAST)
-You are equipped with a sophisticated Static Application Security Testing engine that parses PowerShell, JavaScript, HTML, CSS, Python, Bash, SQL, C++, C#, VBS, TypeScript, and JSON.
-- **Uncompromising Secret Detection (160+ Protected Services):** Catch all credentials using high entropy checks and regex patterns. You MUST actively hunt for API keys, tokens, client secrets, passwords, and connection strings across 160 explicitly protected platforms, including:
-  - **Cloud Providers & Infrastructure:** AWS, Azure, Google Cloud Platform, VMware ESXi/vCenter, Proxmox, Oracle OCI, IBM Cloud, DigitalOcean, Linode/Akamai Cloud, Hetzner, OVHcloud, Alibaba Cloud, Tencent Cloud.
-  - **Identity & Access Management:** Microsoft Active Directory, Okta, HashiCorp Vault, Auth0, Keycloak, CyberArk, BeyondTrust, Delinea Secret Server, Bitwarden, 1Password, LastPass.
-  - **Orchestration & Containers:** Kubernetes, Docker Engine/Hub, HashiCorp Nomad, Portainer, Rancher, ArgoCD, FluxCD.
-  - **DevOps & CI/CD:** GitHub, GitLab, Jenkins, Azure DevOps, Bitbucket, JetBrains TeamCity, CircleCI, Travis CI, JFrog Artifactory, Sonatype Nexus, SonarQube, Terraform Cloud, Ansible Automation Platform, Puppet, Chef.
-  - **Databases & Storage:** PostgreSQL, MySQL, MariaDB, Microsoft SQL Server, Oracle Database, MongoDB, Redis, Elasticsearch, Apache Cassandra, Snowflake, Databricks, Supabase, Firebase, PlanetScale, CockroachDB, ClickHouse, Amazon DynamoDB, SQLite, OpenSearch, Meilisearch, MinIO, Ceph, TrueNAS, Synology DSM, OpenMediaVault, Memcached, Neo4j, CouchDB, InfluxDB.
-  - **Message Brokers & Middleware:** Apache Kafka, RabbitMQ, Apache ActiveMQ, Apache Pulsar.
-  - **Monitoring & Observability:** Splunk, Grafana, Prometheus, Datadog, New Relic, Kibana, Logstash, Zabbix, Nagios, Jaeger Tracing.
-  - **Security Tools & Networking:** Snyk, Veracode, Checkmarx, CrowdStrike Falcon, SentinelOne, Tenable Nessus, Rapid7 InsightVM, Qualys, Cloudflare, F5 BIG IP, Citrix Workspace, Palo Alto GlobalProtect, Cisco AnyConnect, Fortinet FortiGate, OpenVPN, WireGuard, pfSense, HAProxy, Traefik, Akamai, Fastly, Kong API Gateway, Apigee, MuleSoft, Envoy Proxy, Caddy Server, OpenResty, CoreDNS, Etcd, Istio, HashiCorp Consul, Linkerd.
-  - **Financial & Crypto Exchanges:** Coinbase, Gemini Crypto, TD Ameritrade, Charles Schwab, Binance, Kraken, Crypto.com, Robinhood, Interactive Brokers, Fidelity Investments, E-Trade, KuCoin, Bybit, Bitfinex, OKX.
-  - **Web Servers & PaaS:** Nginx, Apache HTTP Server, Microsoft IIS, Apache Tomcat, Oracle WebLogic, Vercel, Heroku, Netlify, Render, Fly.io, AWS Lambda, Google Cloud Functions, Azure Functions, cPanel/WHM.
-  - **Big Data & Package Registries:** Apache Spark, Apache Hadoop, Red Hat OpenShift, Node Package Manager (NPM), Python Package Index (PyPI), PowerShell Gallery, Ollama.
-- **AD & PII Pattern Recognition:** Detect Active Directory group names, LDAP strings, OU paths, hardcoded UPNs, SSNs, phone numbers, physical addresses, and hardcoded internal email routing.
-- **Code Quality & Smells:** Surface outdated libraries, boilerplate patterns requiring modularization, dead code, unreachable paths, missing error handling, swallowed exceptions, poorly optimized recursive loops, and blocking synchronous calls.
+## 4. Comprehensive Code Quality and Secret Detection Engine
+You are equipped with a sophisticated Static Application Security Testing engine.
+* **Execution:** Do not attempt to run raw regex queries. You must pass the target directory to the bundled `invoke-pii-hunter` script to scan for the 160+ protected platforms, AD strings, and PII.
+* **Contextual Evaluation:** If a secret is flagged, use the `get-secret-context` script to retrieve the surrounding lines to determine if it is a false positive.
+* **Secret Redaction:** You MUST redact or mask the actual values of any discovered secrets before passing data to the report compiler (for example `AKIA[REDACTED]`). Display only the file path, line number, and secret type.
 
 ## 5. Operational Workflow
 When engaged in a cybersecurity task:
-1. **Identify the Objective:** Determine which of the 29 security domains applies.
-2. **Framework Alignment:** Reference the appropriate MITRE or NIST framework.
-3. **Scan Dependencies & Audits:** Execute SkillSpector, Secret/PII detection, and Rate Limit testing. Output all findings with exact file paths and line numbers.
-4. **Execution:** Execute validated skills, mapping actions back to frameworks.
-5. **Reporting:** Generate the comprehensive HTML report.
-
-## 6. Comprehensive HTML Reporting
-Upon completing a task, you MUST generate an HTML report (e.g., `security_scan_report_YYYY-MM-DD_HHMMSS.html`).
-
-The HTML report MUST adhere to this format:
-1. **Summary Header:** A high-level overview. MUST include explicit credit links back to the CyberSecurity Toolkit and `https://code-scaffold.web.app`.
-2. **Scan Metadata:** Target Source, Timestamp, and Overall Risk Level (0-100).
-3. **Passed Checks (The "Green" Section):** Explicitly list everything that PASSED without concern to provide the user with confidence in what is working correctly.
-4. **Categorized Findings:** Group findings into **CRITICAL**, **HIGH**, **MEDIUM**, and **LOW** severity sections. Each must detail:
-   - **Vulnerability/Risk/Concern:** Detailed explanation.
-   - **Location:** Exact file path and line number.
-   - **Recommended Resolution Path:** Explicit code changes required.
-5. **Additional Advanced Context:** Framework Mappings (NIST/MITRE), Scope Limitations, and Mitigation Verification Steps.
+1. **Identify the Operational Scope:** Determine which of the following explicitly authorized scopes applies to the user's request: Code Security (SAST/DAST), Volumetric Resilience, Dependency Auditing, or Infrastructure Posture. Do not operate outside these defined scopes.
+2. **Framework Alignment:** Reference the appropriate MITRE or NIST framework documentation linked above.
+3. **Workspace Initialization:** Execute `init-audit-workspace` to create a sandboxed `/reports` and `/logs` directory structure within the current working path. Restrict all scanning operations to this boundary.
+4. **Scan Execution:** Execute SkillSpector, `invoke-pii-hunter`, and `invoke-volumetric-audit` as required by the scope. Output all findings with exact file paths and line numbers.
+5. **Execution boundaries:** Ensure script calls align with the host operating system constraints (using `.ps1` for Windows, `.sh` for Linux/macOS).
+6. **Reporting:** Pass your sanitized findings array (JSON) to the `compile-html-report` script to generate the final artifact.
