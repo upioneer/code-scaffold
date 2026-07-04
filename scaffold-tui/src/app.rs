@@ -27,6 +27,7 @@ pub enum ActiveBlock {
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum WizardState {
+    Welcome,
     DeploymentTarget,
     Artifacts,
     AgentPersona,
@@ -75,12 +76,18 @@ impl App {
         let mut workspace = Workspace::new(payload_dir.clone());
         workspace.detect_installed(&initial_target);
 
+        let wizard_state = if crate::prefs::has_seen_welcome() {
+            WizardState::DeploymentTarget
+        } else {
+            WizardState::Welcome
+        };
+
         let app = Self {
             should_quit: false,
             active_block: ActiveBlock::Workspace,
             theme: Theme::get_by_index(crate::prefs::load_theme_idx()),
             theme_idx: crate::prefs::load_theme_idx(),
-            wizard_state: WizardState::DeploymentTarget,
+            wizard_state,
             target_folder: initial_target,
             custom_skill_input: String::new(),
             splash_tick_count: 0,
@@ -133,6 +140,9 @@ impl App {
 
         if self.wizard_state != WizardState::Complete {
             let (title, text) = match self.wizard_state {
+                WizardState::Welcome => {
+                    (" Step 0: Welcome ", "Initializing workspace orchestrator...\nWaiting for user input.".to_string())
+                }
                 WizardState::DeploymentTarget => {
                     let default_dir = Self::default_target_dir();
                     let reset_text = if self.target_folder != default_dir {
@@ -278,7 +288,81 @@ impl App {
                 let _ = self.footer.draw(f, main_layout[3], false, &self.theme);
                 let _ = self.directory_browser.draw(f, size, true, &self.theme);
 
-                if self.wizard_state == WizardState::CustomSkillInput {
+                if self.wizard_state == WizardState::Welcome {
+                    let logo = r#"
+ ██████╗ ██████╗ ██████╗ ███████╗
+██╔════╝██╔═══██╗██╔══██╗██╔════╝
+██║     ██║   ██║██║  ██║█████╗  
+██║     ██║   ██║██║  ██║██╔══╝  
+╚██████╗╚██████╔╝██████╔╝███████╗
+ ╚═════╝ ╚═════╝ ╚═════╝ ╚══════╝
+                                 
+███████╗ ██████╗ █████╗ ███████╗███████╗ ██████╗ ██╗     ██████╗ 
+██╔════╝██╔════╝██╔══██╗██╔════╝██╔════╝██╔═══██╗██║     ██╔══██╗
+███████╗██║     ███████║█████╗  █████╗  ██║   ██║██║     ██║  ██║
+╚════██║██║     ██╔══██║██╔══╝  ██╔══╝  ██║   ██║██║     ██║  ██║
+███████║╚██████╗██║  ██║██║     ██║     ╚██████╔╝███████╗██████╔╝
+╚══════╝ ╚═════╝╚═╝  ╚═╝╚═╝     ╚═╝      ╚═════╝ ╚══════╝╚═════╝"#;
+
+                    let mut text_lines = Vec::new();
+                    // Optional top padding
+                    text_lines.push(ratatui::text::Line::from(""));
+                    for line in logo.lines() {
+                        if line.is_empty() {
+                            continue;
+                        }
+                        let mut spans = Vec::new();
+                        // Padding for logo centering approximation
+                        spans.push(ratatui::text::Span::raw("    "));
+                        let len = line.chars().count();
+                        for (j, ch) in line.chars().enumerate() {
+                            let ratio = if len > 1 { j as f32 / (len - 1) as f32 } else { 0.0 };
+                            let r = (180.0 * (1.0 - ratio) + 0.0 * ratio) as u8;
+                            let g = (0.0 * (1.0 - ratio) + 255.0 * ratio) as u8;
+                            let b = 255;
+                            spans.push(ratatui::text::Span::styled(ch.to_string(), ratatui::style::Style::default().fg(ratatui::style::Color::Rgb(r, g, b))));
+                        }
+                        text_lines.push(ratatui::text::Line::from(spans));
+                    }
+                    
+                    text_lines.push(ratatui::text::Line::from(""));
+                    text_lines.push(ratatui::text::Line::from(ratatui::text::Span::styled(
+                        "    The ultimate orchestrator for AI-driven workspaces.",
+                        ratatui::style::Style::default().fg(self.theme.secondary)
+                    )));
+                    text_lines.push(ratatui::text::Line::from(""));
+                    text_lines.push(ratatui::text::Line::from(""));
+                    
+                    let mut welcome = "    To make launching environments frictionless, you can add this executable to your system PATH.\n    This allows you to type 'code-scaffold' natively from any directory in terminal.\n".to_string();
+                    if cfg!(windows) {
+                        welcome.push_str("\n    Press [P] to automatically inject Code Scaffold into your User PATH.");
+                    } else {
+                        welcome.push_str("\n    On Linux/macOS, add to PATH by running: sudo ln -s $(pwd)/code-scaffold /usr/local/bin/");
+                    }
+                    welcome.push_str("\n\n    Press [Enter] or [Tab] to continue.");
+                    
+                    for line in welcome.lines() {
+                        text_lines.push(ratatui::text::Line::from(ratatui::text::Span::styled(
+                            line.to_string(),
+                            ratatui::style::Style::default().fg(self.theme.text).bg(self.theme.bg)
+                        )));
+                    }
+
+                    let popup_block = ratatui::widgets::Paragraph::new(text_lines)
+                        .alignment(ratatui::layout::Alignment::Left)
+                        .wrap(ratatui::widgets::Wrap { trim: false })
+                        .block(
+                            ratatui::widgets::Block::default()
+                                .title(" Step 0: Welcome ")
+                                .borders(ratatui::widgets::Borders::ALL)
+                                .border_style(ratatui::style::Style::default().fg(self.theme.primary))
+                                .style(ratatui::style::Style::default().bg(self.theme.bg).fg(self.theme.text))
+                        );
+                    
+                    let area = Self::centered_rect(80, 70, size);
+                    f.render_widget(ratatui::widgets::Clear, area);
+                    f.render_widget(popup_block, area);
+                } else if self.wizard_state == WizardState::CustomSkillInput {
                     let text = format!("\n  Please enter a valid approved platform URL or CLI install command (e.g. npx/git clone):\n\n  > {}\u{2588}\n\n  Press [Enter] to submit, or [Esc] to cancel.", self.custom_skill_input);
                     let popup_block = ratatui::widgets::Paragraph::new(text)
                         .wrap(ratatui::widgets::Wrap { trim: false })
@@ -715,6 +799,30 @@ impl App {
                     }
                 }
             }
+            Action::Char('p') | Action::Char('P') => {
+                if self.wizard_state == WizardState::Welcome && cfg!(windows) {
+                    if let Ok(exe_path) = std::env::current_exe() {
+                        if let Some(dir) = exe_path.parent() {
+                            let dir_str = dir.to_string_lossy().to_string();
+                            let script = format!(
+                                "$userPath = [Environment]::GetEnvironmentVariable('Path', 'User'); \
+                                 if ($userPath -notmatch [regex]::Escape('{}')) {{ \
+                                     $newPath = $userPath + ';{}'; \
+                                     [Environment]::SetEnvironmentVariable('Path', $newPath, 'User'); \
+                                 }}",
+                                dir_str, dir_str
+                            );
+                            let _ = std::process::Command::new("powershell")
+                                .args(&["-NoProfile", "-Command", &script])
+                                .status();
+                            
+                            self.wizard_state = WizardState::DeploymentTarget;
+                            crate::prefs::set_has_seen_welcome(true);
+                            self.update_summary();
+                        }
+                    }
+                }
+            }
             Action::Char('r') | Action::Char('R') => {
                 if self.wizard_state == WizardState::DeploymentTarget {
                     self.target_folder = Self::default_target_dir();
@@ -794,6 +902,10 @@ impl App {
                     }
                 }
                 match self.wizard_state {
+                    WizardState::Welcome => {
+                        self.wizard_state = WizardState::DeploymentTarget;
+                        crate::prefs::set_has_seen_welcome(true);
+                    }
                     WizardState::DeploymentTarget => {
                         self.directory_browser.open(&self.target_folder);
                     }
