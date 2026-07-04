@@ -7,7 +7,11 @@
 [Define the core architectural patterns here]
 
 ## Mandatory Execution Protocols
-* **Strict Semantic Versioning:** The versioning schema must strictly adhere to Semantic Versioning. Major and Minor version integers must be bumped for huge improvements and feature enhancements. The Patch integer (x.x.X) is strictly reserved for bugfixes and resolutions. Never use a Patch bump for a feature addition. ALWAYS use the root `./bump_version.ps1 <version>` script to execute the bump, which guarantees that `Cargo.toml`, `manifest.json`, and `Cargo.lock` remain perfectly synchronized.
+* **Strict Semantic Versioning:** The versioning schema must strictly adhere to Semantic Versioning (`major.minor.patch`) with the following logic:
+  - Major architectural or UI/UX changes receive +1.0.0 bumps. ALWAYS confirm with the user before bumping a major version.
+  - Feature additions or improvements (bundled or single) receive +0.1.0 bumps.
+  - Bugfixes/patches receive +0.0.1 bumps.
+  - ALWAYS use the root `./bump_version.ps1 <version>` script to execute the bump.
 * **Versioned Walkthroughs:** Every single time you bump the version, you MUST immediately create a new walkthrough document in `project_details/history/v[NEW_VERSION]/readme.md` detailing the updates. Include screenshots where possible. Never modify or overwrite existing version documentation once established.
 * **GitHub Actions Validation:** After executing a `git push` to the remote repository, you MUST proactively validate that the resulting GitHub Action pipeline completes successfully before considering the task finished. Wait for the action to complete and verify its success state. Additionally, you MUST proactively review the pipeline's annotations and logs for any warnings, deprecation notices, or runtime errors (such as Node.js version conflicts), provide context to the user regarding these warnings, and explicitly advise them on whether corrective action is necessary.
 * **GitHub Releases & Tagging:** When bumping the project version and pushing to GitHub to cut a new release, you MUST explicitly create and push a git tag matching the version string (e.g., `git tag vX.Y.Z` followed by `git push origin vX.Y.Z`).

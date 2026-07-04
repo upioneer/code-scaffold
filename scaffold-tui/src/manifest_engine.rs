@@ -88,6 +88,52 @@ pub async fn execute(
                     let _ = tx.send(format!(" -> Initialized artifact: {}", artifact.target));
                 }
             }
+        } else if artifact.method == "inject_persona" {
+            if let Some(src) = &artifact.source {
+                let src_path = PathBuf::from(src);
+                if src_path.exists() {
+                    if let Some(parent) = path.parent() {
+                        let _ = fs::create_dir_all(parent);
+                    }
+                    match fs::read_to_string(&src_path) {
+                        Ok(mut content) => {
+                            if let Some(desc) = &artifact.content {
+                                content = content.replace(
+                                    "[Define the agent's primary role and responsibilities here]",
+                                    desc,
+                                );
+                            }
+                            if let Err(e) = fs::write(&path, content) {
+                                let _ = tx.send(format!(
+                                    " -> (Error) Failed to write persona {}: {}",
+                                    artifact.target, e
+                                ));
+                            } else {
+                                let _ = tx.send(format!(
+                                    " -> Injected persona into: {}",
+                                    artifact.target
+                                ));
+                            }
+                        }
+                        Err(e) => {
+                            let _ = tx.send(format!(
+                                " -> (Error) Failed to read persona source {}: {}",
+                                src, e
+                            ));
+                        }
+                    }
+                } else {
+                    let _ = tx.send(format!(
+                        " -> (Missing Source) Failed to generate: {}",
+                        artifact.target
+                    ));
+                }
+            } else {
+                let _ = tx.send(format!(
+                    " -> (No Source) Failed to generate: {}",
+                    artifact.target
+                ));
+            }
         } else if artifact.method == "copy" {
             if let Some(src) = &artifact.source {
                 let src_path = PathBuf::from(src);

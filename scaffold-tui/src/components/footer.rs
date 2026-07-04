@@ -31,7 +31,7 @@ impl Component for Footer {
             theme.name
         );
         let text = Paragraph::new(text_content)
-            .style(Style::default().fg(theme.secondary).bg(theme.bg))
+            .style(Style::default().fg(theme.primary).bg(theme.bg))
             .alignment(ratatui::layout::Alignment::Center)
             .block(
                 Block::default()
