@@ -1,3 +1,4 @@
+use crate::theme::Theme;
 use directories::ProjectDirs;
 use serde_json::{json, Value};
 use std::fs;
@@ -95,5 +96,68 @@ pub fn has_seen_welcome() -> bool {
 pub fn set_has_seen_welcome(_val: bool) {
     let mut prefs = load_prefs();
     prefs["last_seen_version"] = json!(env!("CARGO_PKG_VERSION"));
+    save_prefs(&prefs);
+}
+
+pub fn load_custom_themes() -> Vec<Theme> {
+    let prefs = load_prefs();
+    let mut themes = Vec::new();
+    if let Some(arr) = prefs.get("custom_themes").and_then(|v| v.as_array()) {
+        for v in arr {
+            if let (
+                Some(name),
+                Some(bg),
+                Some(text),
+                Some(primary),
+                Some(secondary),
+                Some(accent),
+            ) = (
+                v.get("name").and_then(|s| s.as_str()),
+                v.get("bg").and_then(|s| s.as_str()),
+                v.get("text").and_then(|s| s.as_str()),
+                v.get("primary").and_then(|s| s.as_str()),
+                v.get("secondary").and_then(|s| s.as_str()),
+                v.get("accent").and_then(|s| s.as_str()),
+            ) {
+                if let (Some(c_bg), Some(c_text), Some(c_prim), Some(c_sec), Some(c_acc)) = (
+                    Theme::hex_to_color(bg),
+                    Theme::hex_to_color(text),
+                    Theme::hex_to_color(primary),
+                    Theme::hex_to_color(secondary),
+                    Theme::hex_to_color(accent),
+                ) {
+                    themes.push(Theme {
+                        name: name.to_string(),
+                        bg: c_bg,
+                        text: c_text,
+                        primary: c_prim,
+                        secondary: c_sec,
+                        accent: c_acc,
+                    });
+                }
+            }
+        }
+    }
+    themes
+}
+
+pub fn add_custom_theme(theme: &Theme) {
+    let mut prefs = load_prefs();
+    let mut arr = prefs
+        .get("custom_themes")
+        .and_then(|v| v.as_array())
+        .cloned()
+        .unwrap_or_else(Vec::new);
+
+    arr.push(json!({
+        "name": theme.name,
+        "bg": Theme::color_to_hex(&theme.bg),
+        "text": Theme::color_to_hex(&theme.text),
+        "primary": Theme::color_to_hex(&theme.primary),
+        "secondary": Theme::color_to_hex(&theme.secondary),
+        "accent": Theme::color_to_hex(&theme.accent),
+    }));
+
+    prefs["custom_themes"] = Value::Array(arr);
     save_prefs(&prefs);
 }

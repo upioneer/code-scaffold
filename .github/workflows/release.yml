@@ -44,19 +44,19 @@ jobs:
         include:
           - os: ubuntu-24.04
             target: x86_64-unknown-linux-gnu
-            artifact_name: scaffold-tui-linux-x64.tar.gz
+            artifact_name: code-scaffold-linux-x64.tar.gz
           - os: ubuntu-24.04
             target: aarch64-unknown-linux-gnu
-            artifact_name: scaffold-tui-linux-arm64.tar.gz
+            artifact_name: code-scaffold-linux-arm64.tar.gz
           - os: windows-latest
             target: aarch64-pc-windows-msvc
-            artifact_name: scaffold-tui-windows-arm64.zip
+            artifact_name: code-scaffold-windows-arm64.zip
           - os: macos-latest
             target: aarch64-apple-darwin
-            artifact_name: scaffold-tui-macos-arm64.tar.gz
+            artifact_name: code-scaffold-macos-arm64.tar.gz
           - os: windows-latest
             target: x86_64-pc-windows-msvc
-            artifact_name: scaffold-tui-windows-x64.zip
+            artifact_name: code-scaffold-windows-x64.zip
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout Source Tree
@@ -85,14 +85,14 @@ jobs:
       - name: Consolidate Output Files (Unix)
         if: matrix.os != 'windows-latest'
         run: |
-          cp scaffold-tui/target/${{ matrix.target }}/release/scaffold-tui ./scaffold-tui
-          tar -czvf ${{ matrix.artifact_name }} scaffold-tui
+          cp scaffold-tui/target/${{ matrix.target }}/release/code-scaffold ./code-scaffold
+          tar -czvf ${{ matrix.artifact_name }} code-scaffold
 
       - name: Consolidate Output Files (Windows)
         if: matrix.os == 'windows-latest'
         run: |
-          copy scaffold-tui\target\${{ matrix.target }}\release\scaffold-tui.exe .\scaffold-tui.exe
-          Compress-Archive -Path scaffold-tui.exe -DestinationPath ${{ matrix.artifact_name }}
+          copy scaffold-tui\target\${{ matrix.target }}\release\code-scaffold.exe .\code-scaffold.exe
+          Compress-Archive -Path code-scaffold.exe -DestinationPath ${{ matrix.artifact_name }}
 
       - name: Stage Workspace Production Artifacts
         uses: actions/upload-artifact@v4

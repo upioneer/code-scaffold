@@ -23,6 +23,8 @@ pub struct ArtifactEntry {
     pub source: Option<String>,
     pub target: String,
     pub method: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub content: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

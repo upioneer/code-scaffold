@@ -2,7 +2,7 @@ use ratatui::style::Color;
 
 #[derive(Debug, Clone)]
 pub struct Theme {
-    pub name: &'static str,
+    pub name: String,
     pub bg: Color,
     pub text: Color,
     pub primary: Color,
@@ -11,9 +11,61 @@ pub struct Theme {
 }
 
 impl Theme {
+    pub fn hex_to_color(hex: &str) -> Option<Color> {
+        let hex = hex.trim_start_matches('#');
+        if hex.len() != 6 {
+            return None;
+        }
+        let r = u8::from_str_radix(&hex[0..2], 16).ok()?;
+        let g = u8::from_str_radix(&hex[2..4], 16).ok()?;
+        let b = u8::from_str_radix(&hex[4..6], 16).ok()?;
+        Some(Color::Rgb(r, g, b))
+    }
+
+    pub fn color_to_hex(color: &Color) -> String {
+        if let Color::Rgb(r, g, b) = color {
+            format!("#{:02X}{:02X}{:02X}", r, g, b)
+        } else {
+            "#FFFFFF".to_string()
+        }
+    }
+
+    pub fn color_distance(c1: &Color, c2: &Color) -> f32 {
+        if let (Color::Rgb(r1, g1, b1), Color::Rgb(r2, g2, b2)) = (c1, c2) {
+            let dr = *r1 as f32 - *r2 as f32;
+            let dg = *g1 as f32 - *g2 as f32;
+            let db = *b1 as f32 - *b2 as f32;
+            (dr * dr + dg * dg + db * db).sqrt()
+        } else {
+            0.0
+        }
+    }
+
+    pub fn auto_derive_secondary(primary: &Color) -> Color {
+        if let Color::Rgb(r, g, b) = primary {
+            let r2 = (*r as f32 * 0.5) as u8;
+            let g2 = (*g as f32 * 0.5) as u8;
+            let b2 = (*b as f32 * 0.5) as u8;
+            Color::Rgb(r2, g2, b2)
+        } else {
+            Color::Rgb(128, 128, 128)
+        }
+    }
+
+    pub fn auto_derive_accent(primary: &Color) -> Color {
+        if let Color::Rgb(r, g, b) = primary {
+            let r2 = (*r as f32 * 1.5).min(255.0) as u8;
+            let g2 = (*g as f32 * 1.5).min(255.0) as u8;
+            let b2 = (*b as f32 * 1.5).min(255.0) as u8;
+            Color::Rgb(r2, g2, b2)
+        } else {
+            Color::Rgb(255, 255, 255)
+        }
+    }
+
     pub fn cmd() -> Self {
         Self {
-            name: "cmd",
+            name: "cmd".to_string(),
             bg: Color::Rgb(0, 0, 0),
             text: Color::Rgb(204, 204, 204),
             primary: Color::Rgb(255, 255, 255),
@@ -24,7 +76,7 @@ impl Theme {
 
     pub fn default_theme() -> Self {
         Self {
-            name: "default",
+            name: "default".to_string(),
             bg: Color::Rgb(10, 15, 30),
             text: Color::Rgb(248, 250, 252),
             primary: Color::Rgb(243, 210, 12),    // #f3d20c
@@ -35,7 +87,7 @@ impl Theme {
 
     pub fn earth() -> Self {
         Self {
-            name: "earth",
+            name: "earth".to_string(),
             bg: Color::Rgb(25, 20, 15),
             text: Color::Rgb(248, 250, 252),
             primary: Color::Rgb(123, 167, 88),   // #7ba758
@@ -46,7 +98,7 @@ impl Theme {
 
     pub fn knicks_in_5() -> Self {
         Self {
-            name: "knicksin5",
+            name: "knicksin5".to_string(),
             bg: Color::Rgb(0, 107, 182),          // Blue
             text: Color::Rgb(255, 255, 255),      // White
             primary: Color::Rgb(245, 132, 38),    // Orange
@@ -57,7 +109,7 @@ impl Theme {
 
     pub fn lime() -> Self {
         Self {
-            name: "lime",
+            name: "lime".to_string(),
             bg: Color::Rgb(15, 30, 15),
             text: Color::Rgb(248, 250, 252),
             primary: Color::Rgb(40, 215, 47),    // #28d72f
@@ -68,7 +120,7 @@ impl Theme {
 
     pub fn los_doyers_1() -> Self {
         Self {
-            name: "losdoyers1",
+            name: "losdoyers1".to_string(),
             bg: Color::Rgb(0, 90, 156),           // Dodger Blue
             text: Color::Rgb(255, 255, 255),      // White
             primary: Color::Rgb(239, 62, 66),     // Red
@@ -79,7 +131,7 @@ impl Theme {
 
     pub fn los_doyers_2() -> Self {
         Self {
-            name: "losdoyers2",
+            name: "losdoyers2".to_string(),
             bg: Color::Rgb(255, 255, 255),     // White
             text: Color::Rgb(0, 90, 156),      // Dodger Blue
             primary: Color::Rgb(239, 62, 66),  // Red
@@ -90,7 +142,7 @@ impl Theme {
 
     pub fn los_doyers_3() -> Self {
         Self {
-            name: "losdoyers3",
+            name: "losdoyers3".to_string(),
             bg: Color::Rgb(0, 90, 156),           // Dodger Blue
             text: Color::Rgb(255, 255, 255),      // White
             primary: Color::Rgb(165, 172, 175),   // Silver
@@ -101,7 +153,7 @@ impl Theme {
 
     pub fn ocean() -> Self {
         Self {
-            name: "ocean",
+            name: "ocean".to_string(),
             bg: Color::Rgb(10, 25, 30),
             text: Color::Rgb(248, 250, 252),
             primary: Color::Rgb(70, 185, 160),   // #46b9a0
@@ -112,7 +164,7 @@ impl Theme {
 
     pub fn osx() -> Self {
         Self {
-            name: "osx",
+            name: "osx".to_string(),
             bg: Color::Rgb(255, 255, 255),
             text: Color::Rgb(0, 0, 0),
             primary: Color::Rgb(0, 122, 255),
@@ -123,7 +175,7 @@ impl Theme {
 
     pub fn plum() -> Self {
         Self {
-            name: "plum",
+            name: "plum".to_string(),
             bg: Color::Rgb(10, 15, 30),
             text: Color::Rgb(248, 250, 252),
             primary: Color::Rgb(59, 170, 196),   // #3baac4
@@ -134,7 +186,7 @@ impl Theme {
 
     pub fn posh() -> Self {
         Self {
-            name: "posh",
+            name: "posh".to_string(),
             bg: Color::Rgb(1, 36, 86),
             text: Color::Rgb(238, 237, 240),
             primary: Color::Rgb(249, 241, 165),
@@ -145,7 +197,7 @@ impl Theme {
 
     pub fn starburst() -> Self {
         Self {
-            name: "starburst",
+            name: "starburst".to_string(),
             bg: Color::Rgb(15, 15, 10),
             text: Color::Rgb(248, 250, 252),
             primary: Color::Rgb(172, 247, 8),  // #acf708
@@ -156,7 +208,7 @@ impl Theme {
 
     pub fn tifosi() -> Self {
         Self {
-            name: "tifosi",
+            name: "tifosi".to_string(),
             bg: Color::Rgb(239, 26, 45),       // Rosso Corsa Red
             text: Color::Rgb(255, 255, 255),   // White
             primary: Color::Rgb(255, 242, 0),  // Scudetto Yellow
@@ -167,7 +219,7 @@ impl Theme {
 
     pub fn ubu() -> Self {
         Self {
-            name: "ubu",
+            name: "ubu".to_string(),
             bg: Color::Rgb(48, 10, 36),
             text: Color::Rgb(255, 255, 255),
             primary: Color::Rgb(233, 84, 32),
@@ -178,7 +230,7 @@ impl Theme {
 
     pub fn usa_1() -> Self {
         Self {
-            name: "usa1",
+            name: "usa1".to_string(),
             bg: Color::Rgb(179, 25, 66),          // Red
             text: Color::Rgb(255, 255, 255),      // White
             primary: Color::Rgb(10, 49, 97),      // Blue
@@ -189,7 +241,7 @@ impl Theme {
 
     pub fn usa_2() -> Self {
         Self {
-            name: "usa2",
+            name: "usa2".to_string(),
             bg: Color::Rgb(255, 255, 255),     // White
             text: Color::Rgb(10, 49, 97),      // Blue
             primary: Color::Rgb(179, 25, 66),  // Red
@@ -200,7 +252,7 @@ impl Theme {
 
     pub fn usa_3() -> Self {
         Self {
-            name: "usa3",
+            name: "usa3".to_string(),
             bg: Color::Rgb(10, 49, 97),           // Blue
             text: Color::Rgb(255, 255, 255),      // White
             primary: Color::Rgb(179, 25, 66),     // Red
@@ -211,7 +263,7 @@ impl Theme {
 
     pub fn usa_4() -> Self {
         Self {
-            name: "usa4",
+            name: "usa4".to_string(),
             bg: Color::Rgb(10, 49, 97),         // Blue
             text: Color::Rgb(255, 255, 255),    // White
             primary: Color::Rgb(255, 255, 255), // White
@@ -222,7 +274,7 @@ impl Theme {
 
     pub fn who_dat() -> Self {
         Self {
-            name: "whodat",
+            name: "whodat".to_string(),
             bg: Color::Rgb(0, 0, 0),              // Pure Black
             text: Color::Rgb(255, 255, 255),      // White
             primary: Color::Rgb(211, 188, 141),   // Gold
@@ -233,7 +285,7 @@ impl Theme {
 
     pub fn bumble() -> Self {
         Self {
-            name: "bumble",
+            name: "bumble".to_string(),
             bg: Color::Rgb(0, 0, 0),           // Black
             text: Color::Rgb(255, 255, 255),   // White
             primary: Color::Rgb(255, 235, 0),  // Yellow
@@ -244,7 +296,7 @@ impl Theme {
 
     pub fn amigo_1() -> Self {
         Self {
-            name: "amigo1",
+            name: "amigo1".to_string(),
             bg: Color::Rgb(0, 104, 71),           // Mexican Green
             text: Color::Rgb(255, 255, 255),      // White
             primary: Color::Rgb(206, 17, 38),     // Mexican Red
@@ -255,7 +307,7 @@ impl Theme {
 
     pub fn amigo_2() -> Self {
         Self {
-            name: "amigo2",
+            name: "amigo2".to_string(),
             bg: Color::Rgb(206, 17, 38),          // Mexican Red
             text: Color::Rgb(255, 255, 255),      // White
             primary: Color::Rgb(0, 104, 71),      // Mexican Green
@@ -266,7 +318,7 @@ impl Theme {
 
     pub fn amigo_3() -> Self {
         Self {
-            name: "amigo3",
+            name: "amigo3".to_string(),
             bg: Color::Rgb(255, 255, 255),     // White
             text: Color::Rgb(0, 104, 71),      // Green
             primary: Color::Rgb(206, 17, 38),  // Red
@@ -277,7 +329,7 @@ impl Theme {
 
     pub fn amigo_4() -> Self {
         Self {
-            name: "amigo4",
+            name: "amigo4".to_string(),
             bg: Color::Rgb(255, 255, 255),      // White
             text: Color::Rgb(206, 17, 38),      // Red
             primary: Color::Rgb(0, 104, 71),    // Green
@@ -288,7 +340,7 @@ impl Theme {
 
     pub fn bollywood_1() -> Self {
         Self {
-            name: "bollywood1",
+            name: "bollywood1".to_string(),
             bg: Color::Rgb(255, 153, 51),         // Saffron
             text: Color::Rgb(255, 255, 255),      // White
             primary: Color::Rgb(19, 136, 8),      // India Green
@@ -299,7 +351,7 @@ impl Theme {
 
     pub fn bollywood_2() -> Self {
         Self {
-            name: "bollywood2",
+            name: "bollywood2".to_string(),
             bg: Color::Rgb(19, 136, 8),           // India Green
             text: Color::Rgb(255, 255, 255),      // White
             primary: Color::Rgb(255, 153, 51),    // Saffron
@@ -308,36 +360,42 @@ impl Theme {
         }
     }
 
+    pub fn built_ins() -> Vec<Self> {
+        vec![
+            Self::cmd(),
+            Self::default_theme(),
+            Self::earth(),
+            Self::knicks_in_5(),
+            Self::lime(),
+            Self::los_doyers_1(),
+            Self::los_doyers_2(),
+            Self::los_doyers_3(),
+            Self::ocean(),
+            Self::osx(),
+            Self::plum(),
+            Self::posh(),
+            Self::starburst(),
+            Self::tifosi(),
+            Self::ubu(),
+            Self::usa_1(),
+            Self::usa_2(),
+            Self::usa_3(),
+            Self::usa_4(),
+            Self::who_dat(),
+            Self::bumble(),
+            Self::amigo_1(),
+            Self::amigo_2(),
+            Self::amigo_3(),
+            Self::amigo_4(),
+            Self::bollywood_1(),
+            Self::bollywood_2(),
+        ]
+    }
+
     pub fn get_by_index(idx: usize) -> Self {
-        match idx % 27 {
-            0 => Self::cmd(),
-            1 => Self::default_theme(),
-            2 => Self::earth(),
-            3 => Self::knicks_in_5(),
-            4 => Self::lime(),
-            5 => Self::los_doyers_1(),
-            6 => Self::los_doyers_2(),
-            7 => Self::los_doyers_3(),
-            8 => Self::ocean(),
-            9 => Self::osx(),
-            10 => Self::plum(),
-            11 => Self::posh(),
-            12 => Self::starburst(),
-            13 => Self::tifosi(),
-            14 => Self::ubu(),
-            15 => Self::usa_1(),
-            16 => Self::usa_2(),
-            17 => Self::usa_3(),
-            18 => Self::usa_4(),
-            19 => Self::who_dat(),
-            20 => Self::bumble(),
-            21 => Self::amigo_1(),
-            22 => Self::amigo_2(),
-            23 => Self::amigo_3(),
-            24 => Self::amigo_4(),
-            25 => Self::bollywood_1(),
-            26 => Self::bollywood_2(),
-            _ => Self::default_theme(),
-        }
+        let mut all_themes = Self::built_ins();
+        all_themes.extend(crate::prefs::load_custom_themes());
+        let wrapped_idx = idx % all_themes.len();
+        all_themes.remove(wrapped_idx)
     }
 }

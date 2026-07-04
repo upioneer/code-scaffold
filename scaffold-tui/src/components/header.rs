@@ -14,7 +14,10 @@ pub struct Header {
 impl Header {
     pub fn new() -> Self {
         Self {
-            version: format!("v{}", env!("CARGO_PKG_VERSION")),
+            version: format!(
+                "v{}",
+                option_env!("GIT_VERSION").unwrap_or(env!("CARGO_PKG_VERSION"))
+            ),
         }
     }
 }

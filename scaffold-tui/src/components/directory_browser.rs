@@ -218,12 +218,13 @@ impl Component for DirectoryBrowser {
             .collect();
 
         let title = if self.is_creating_folder {
-            format!(" Create Folder: {}_ ", self.new_folder_name)
-        } else {
             format!(
-                " Select Folder: {} (Space to Confirm, Esc to Cancel) ",
-                self.current_path.to_string_lossy()
+                " Create Folder: {}_ (Enter to Submit, Esc to Cancel) ",
+                self.new_folder_name
             )
+        } else {
+            let clean_path = self.current_path.to_string_lossy().replace("\\\\?\\", "");
+            format!(" Press [Space] to select: {} ", clean_path)
         };
 
         let list = List::new(items)
@@ -231,10 +232,11 @@ impl Component for DirectoryBrowser {
                 Block::default()
                     .borders(Borders::ALL)
                     .title(title)
-                    .border_style(Style::default().fg(theme.accent).bg(theme.bg))
-                    .style(Style::default().bg(theme.bg)),
+                    .border_style(Style::default().fg(theme.primary).bg(theme.bg))
+                    .style(Style::default().bg(theme.bg))
+                    .padding(ratatui::widgets::Padding::new(4, 4, 1, 1)),
             )
-            .highlight_style(Style::default().bg(theme.accent).fg(theme.bg))
+            .highlight_style(Style::default().bg(theme.primary).fg(theme.bg))
             .highlight_symbol(">>");
 
         f.render_stateful_widget(list, area, &mut self.state);

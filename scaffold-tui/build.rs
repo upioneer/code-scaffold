@@ -38,4 +38,20 @@ fn main() {
 
     std::fs::write(&dest_path, changelog_text).expect("Failed to write changelog to OUT_DIR");
     println!("cargo:rerun-if-changed={}", changelog_path);
+
+    // Extract dynamic git version for the UI header
+    if let Ok(output) = std::process::Command::new("git")
+        .args(["describe", "--tags", "--always", "--dirty"])
+        .output()
+    {
+        if output.status.success() {
+            let mut git_version = String::from_utf8_lossy(&output.stdout).trim().to_string();
+            if git_version.starts_with('v') {
+                git_version = git_version[1..].to_string();
+            }
+            println!("cargo:rustc-env=GIT_VERSION={}", git_version);
+        }
+    }
+    // Also trigger rebuild if HEAD changes
+    println!("cargo:rerun-if-changed=../.git/HEAD");
 }
