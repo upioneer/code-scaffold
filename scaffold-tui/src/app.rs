@@ -62,15 +62,15 @@ pub struct App {
 }
 
 impl App {
+    pub fn default_target_dir() -> String {
+        directories::UserDirs::new()
+            .map(|u| u.home_dir().to_path_buf().to_string_lossy().to_string())
+            .unwrap_or_else(|| if cfg!(windows) { "C:\\".to_string() } else { "/".to_string() })
+    }
+
     pub fn new(payload_dir: std::path::PathBuf) -> Self {
         let (tx, rx) = mpsc::unbounded_channel();
-        let initial_target = if cfg!(windows) {
-            "C:\\".to_string()
-        } else {
-            directories::UserDirs::new()
-                .map(|u| u.home_dir().to_path_buf().to_string_lossy().to_string())
-                .unwrap_or_else(|| "/".to_string())
-        };
+        let initial_target = Self::default_target_dir();
 
         let mut workspace = Workspace::new(payload_dir.clone());
         workspace.detect_installed(&initial_target);
@@ -133,7 +133,21 @@ impl App {
 
         if self.wizard_state != WizardState::Complete {
             let (title, text) = match self.wizard_state {
-                WizardState::DeploymentTarget => (" Step 1: Deployment Target ", format!("{} The current deployment target is ({}).\nPress [Enter] or [F] to browse for a folder.\nPress [Tab] to keep current folder and proceed.", BRAILLE_FRAMES[self.splash_frame_idx], self.target_folder)),
+                WizardState::DeploymentTarget => {
+                    let default_dir = Self::default_target_dir();
+                    let reset_text = if self.target_folder != default_dir {
+                        "\nPress [R] to reset default directory."
+                    } else {
+                        ""
+                    };
+                    (
+                        " Step 1: Deployment Target ",
+                        format!(
+                            "{} The current deployment target is ({}).\nPress [Enter] or [F] to browse for a folder.\nPress [C] to change default directory.{}\nPress [Tab] to keep current folder and proceed.",
+                            BRAILLE_FRAMES[self.splash_frame_idx], self.target_folder, reset_text
+                        ),
+                    )
+                }
                 WizardState::Artifacts => (" Step 2: Core Artifacts ", "Use [Up/Down] to navigate and [Space] to toggle files.\nPress [Enter] or [Tab] when ready to proceed.\nPress [Shift+Tab] to go back.".to_string()),
                 WizardState::AgentPersona => (" Step 3: Agent Persona ", "Select the primary focus for the Agent. This will tailor testing guidelines and instructions.\nPress [Enter] or [Tab] to proceed to Skills.\nPress [Shift+Tab] to go back.".to_string()),
                 WizardState::Skills => (" Step 4: Agent Skills ", "Select the domain skills you need. Notice how GitHub and Firebase toggle their companion artifacts!\nPress [Enter] or [Tab] to proceed to Licensing.\nPress [Shift+Tab] to go back.".to_string()),
@@ -661,9 +675,16 @@ impl App {
                 self.theme = crate::theme::Theme::get_by_index(self.theme_idx);
                 crate::prefs::save_theme_idx(self.theme_idx);
             }
-            Action::Char('f') | Action::Char('F') => {
+            Action::Char('f') | Action::Char('F') | Action::Char('c') | Action::Char('C') => {
                 if self.wizard_state == WizardState::DeploymentTarget {
                     self.directory_browser.open(&self.target_folder);
+                }
+            }
+            Action::Char('r') | Action::Char('R') => {
+                if self.wizard_state == WizardState::DeploymentTarget {
+                    self.target_folder = Self::default_target_dir();
+                    self.workspace.detect_installed(&self.target_folder);
+                    self.update_summary();
                 }
             }
             Action::Up => {
