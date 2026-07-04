@@ -6,6 +6,7 @@ use ratatui::prelude::{Constraint, Direction, Layout, Rect};
 use ratatui::style::Style;
 use ratatui::widgets::{Block, Borders, Clear, List, ListItem, ListState};
 use std::path::PathBuf;
+use std::time::Instant;
 
 pub struct DirectoryBrowser {
     pub current_path: PathBuf,
@@ -15,6 +16,8 @@ pub struct DirectoryBrowser {
     pub selected_path: Option<String>,
     pub is_creating_folder: bool,
     pub new_folder_name: String,
+    pub search_buffer: String,
+    pub last_search: Instant,
 }
 
 impl DirectoryBrowser {
@@ -28,6 +31,8 @@ impl DirectoryBrowser {
             selected_path: None,
             is_creating_folder: false,
             new_folder_name: String::new(),
+            search_buffer: String::new(),
+            last_search: Instant::now(),
         };
         db.load_directory();
         db
@@ -143,6 +148,20 @@ impl Component for DirectoryBrowser {
             Action::Char(' ') => {
                 self.selected_path = Some(self.current_path.to_string_lossy().to_string());
                 self.is_open = false;
+            }
+            Action::Char(c) => {
+                let now = Instant::now();
+                if now.duration_since(self.last_search).as_secs() > 1 {
+                    self.search_buffer.clear();
+                }
+                self.search_buffer.push(c.to_ascii_lowercase());
+                self.last_search = now;
+                for (idx, (name, _)) in self.items.iter().enumerate() {
+                    if name.to_lowercase().starts_with(&self.search_buffer) {
+                        self.state.select(Some(idx));
+                        break;
+                    }
+                }
             }
             Action::Quit => {
                 self.is_open = false;
