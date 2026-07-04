@@ -59,6 +59,7 @@ pub struct App {
     rx: tokio::sync::mpsc::UnboundedReceiver<String>,
     execution_logs: Vec<String>,
     execution_scroll_offset: usize,
+    pub welcome_scroll_offset: u16,
     payload_dir: std::path::PathBuf,
 }
 
@@ -109,6 +110,7 @@ impl App {
             rx,
             execution_logs: Vec::new(),
             execution_scroll_offset: 0,
+            welcome_scroll_offset: 0,
             payload_dir,
         };
         app
@@ -295,7 +297,22 @@ impl App {
                 let _ = self.directory_browser.draw(f, size, true, &self.theme);
 
                 if self.wizard_state == WizardState::Welcome {
-                    let logo = r#"
+                    let logo = if size.width < 75 {
+                        ""
+                    } else if size.width < 100 {
+                        r#"
+  ____ ___  ____  _____ 
+ / ___/ _ \|  _ \| ____|
+| |  | | | | | | |  _|  
+| |__| |_| | |_| | |___ 
+ \____\___/|____/|_____|
+  ____   ____    _    _____ _____ ___  _     ____  
+ / ___| / ___|  / \  |  ___|  ___/ _ \| |   |  _ \ 
+ \___ \| |     / _ \ | |_  | |_ | | | | |   | | | |
+  ___) | |___ / ___ \|  _| |  _|| |_| | |___| |_| |
+ |____/ \____/_/   \_\_|   |_|   \___/|_____|____/"#
+                    } else {
+                        r#"
  ██████╗ ██████╗ ██████╗ ███████╗
 ██╔════╝██╔═══██╗██╔══██╗██╔════╝
 ██║     ██║   ██║██║  ██║█████╗  
@@ -308,7 +325,8 @@ impl App {
 ███████╗██║     ███████║█████╗  █████╗  ██║   ██║██║     ██║  ██║
 ╚════██║██║     ██╔══██║██╔══╝  ██╔══╝  ██║   ██║██║     ██║  ██║
 ███████║╚██████╗██║  ██║██║     ██║     ╚██████╔╝███████╗██████╔╝
-╚══════╝ ╚═════╝╚═╝  ╚═╝╚═╝     ╚═╝      ╚═════╝ ╚══════╝╚═════╝"#;
+╚══════╝ ╚═════╝╚═╝  ╚═╝╚═╝     ╚═╝      ╚═════╝ ╚══════╝╚═════╝"#
+                    };
 
                     let mut text_lines = Vec::new();
                     // Optional top padding
@@ -318,8 +336,7 @@ impl App {
                             continue;
                         }
                         let mut spans = Vec::new();
-                        // Padding for logo centering approximation
-                        spans.push(ratatui::text::Span::raw("    "));
+                        // Removed manual padding in favor of block padding
                         let len = line.chars().count();
                         for (j, ch) in line.chars().enumerate() {
                             let ratio = if len > 1 { j as f32 / (len - 1) as f32 } else { 0.0 };
@@ -333,19 +350,41 @@ impl App {
 
                     text_lines.push(ratatui::text::Line::from(""));
                     text_lines.push(ratatui::text::Line::from(ratatui::text::Span::styled(
-                        "    The ultimate orchestrator for AI-driven workspaces.",
+                        "The ultimate orchestrator for AI-driven workspaces.",
                         ratatui::style::Style::default().fg(self.theme.secondary)
                     )));
                     text_lines.push(ratatui::text::Line::from(""));
                     text_lines.push(ratatui::text::Line::from(""));
 
-                    let mut welcome = "    To make launching environments frictionless, you can add this executable to your system PATH.\n    This allows you to type 'code-scaffold' natively from any directory in terminal.\n".to_string();
-                    if cfg!(windows) {
-                        welcome.push_str("\n    Press [P] to automatically inject Code Scaffold into your User PATH.");
-                    } else {
-                        welcome.push_str("\n    On Linux/macOS, add to PATH by running: sudo ln -s $(pwd)/code-scaffold /usr/local/bin/");
+                    let mut is_in_path = false;
+                    if let Ok(exe_path) = std::env::current_exe() {
+                        if let Some(dir) = exe_path.parent() {
+                            if let Ok(path_var) = std::env::var("PATH") {
+                                let dir_str = dir.to_string_lossy().to_string();
+                                is_in_path = path_var.contains(&dir_str);
+                            }
+                        }
                     }
-                    welcome.push_str("\n\n    Press [Enter] or [Tab] to continue.");
+
+                    let mut welcome = String::new();
+                    if is_in_path {
+                        welcome.push_str("✅ Code Scaffold is successfully detected in your system PATH!\nYou can natively launch it from any directory in your terminal.");
+                    } else {
+                        welcome.push_str("To make launching environments frictionless, you can add this executable to your system PATH.\nThis allows you to type 'code-scaffold' natively from any directory in terminal.\n");
+                        if cfg!(windows) {
+                            welcome.push_str("\nPress [P] to automatically inject Code Scaffold into your User PATH.");
+                        } else {
+                            welcome.push_str("\nOn Linux/macOS, add to PATH by running: sudo ln -s $(pwd)/code-scaffold /usr/local/bin/");
+                        }
+                    }
+
+                    let changelog_str = include_str!(concat!(env!("OUT_DIR"), "/changelog.txt"));
+                    if !changelog_str.trim().is_empty() {
+                        welcome.push_str("\n\n");
+                        welcome.push_str(changelog_str);
+                    }
+
+                    welcome.push_str("\n\nPress [Enter] or [Tab] to continue.");
 
                     for line in welcome.lines() {
                         text_lines.push(ratatui::text::Line::from(ratatui::text::Span::styled(
@@ -357,17 +396,32 @@ impl App {
                     let popup_block = ratatui::widgets::Paragraph::new(text_lines)
                         .alignment(ratatui::layout::Alignment::Left)
                         .wrap(ratatui::widgets::Wrap { trim: false })
+                        .scroll((self.welcome_scroll_offset, 0))
                         .block(
                             ratatui::widgets::Block::default()
                                 .title(" Step 0: Welcome ")
                                 .borders(ratatui::widgets::Borders::ALL)
                                 .border_style(ratatui::style::Style::default().fg(self.theme.primary))
                                 .style(ratatui::style::Style::default().bg(self.theme.bg).fg(self.theme.text))
+                                .padding(ratatui::widgets::Padding::new(4, 4, 1, 1))
                         );
 
                     let area = Self::centered_rect(80, 70, size);
                     f.render_widget(ratatui::widgets::Clear, area);
                     f.render_widget(popup_block, area);
+
+                    let mut scrollbar_state = ratatui::widgets::ScrollbarState::new(20)
+                        .position(self.welcome_scroll_offset as usize);
+
+                    f.render_stateful_widget(
+                        ratatui::widgets::Scrollbar::default()
+                            .orientation(ratatui::widgets::ScrollbarOrientation::VerticalRight)
+                            .begin_symbol(Some("▲"))
+                            .end_symbol(Some("▼"))
+                            .style(ratatui::style::Style::default().fg(self.theme.primary)),
+                        area,
+                        &mut scrollbar_state
+                    );
                 } else if self.wizard_state == WizardState::CustomSkillInput {
                     let text = format!("\n  Please enter a valid approved platform URL or CLI install command (e.g. npx/git clone):\n\n  > {}\u{2588}\n\n  Press [Enter] to submit, or [Esc] to cancel.", self.custom_skill_input);
                     let popup_block = ratatui::widgets::Paragraph::new(text)
@@ -838,7 +892,9 @@ impl App {
                 }
             }
             Action::Up => {
-                if self.wizard_state == WizardState::Executing {
+                if self.wizard_state == WizardState::Welcome {
+                    self.welcome_scroll_offset = self.welcome_scroll_offset.saturating_sub(1);
+                } else if self.wizard_state == WizardState::Executing {
                     let max_offset = self.execution_logs.len().saturating_sub(6);
                     if self.execution_scroll_offset < max_offset {
                         self.execution_scroll_offset += 1;
@@ -867,7 +923,10 @@ impl App {
                 }
             }
             Action::Down => {
-                if self.wizard_state == WizardState::Executing {
+                if self.wizard_state == WizardState::Welcome {
+                    self.welcome_scroll_offset =
+                        self.welcome_scroll_offset.saturating_add(1).min(20);
+                } else if self.wizard_state == WizardState::Executing {
                     if self.execution_scroll_offset > 0 {
                         self.execution_scroll_offset -= 1;
                         let start = self
