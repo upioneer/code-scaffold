@@ -861,6 +861,7 @@ impl App {
                         .set_category(self.nav_tree.selected_category());
                 } else if self.active_block == ActiveBlock::Workspace {
                     let _ = self.workspace.update(action)?;
+                    self.update_summary();
                 } else {
                     let _ = self.summary_pane.update(action)?;
                 }
@@ -888,6 +889,7 @@ impl App {
                         .set_category(self.nav_tree.selected_category());
                 } else if self.active_block == ActiveBlock::Workspace {
                     let _ = self.workspace.update(action)?;
+                    self.update_summary();
                 } else {
                     let _ = self.summary_pane.update(action)?;
                 }
