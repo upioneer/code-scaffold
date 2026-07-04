@@ -1,0 +1,14 @@
+{
+  "name": "code-scaffold-harness",
+  "version": "1",
+  "description": "Agent harness for headlessly deploying Code Scaffold assets.",
+  "entryPoint": "./SKILL.md",
+  "engines": {
+    "node": ">=18"
+  },
+  "requiredPermissions": [
+    "fs:read",
+    "fs:write",
+    "sys:exec"
+  ]
+}
