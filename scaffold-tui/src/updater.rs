@@ -66,10 +66,10 @@ pub async fn check_for_updates() -> Result<()> {
                     .build()
                 {
                     if let Ok(status) = updater.update() {
-                        println!(
-                            "Update successful ({}). Please relaunch the application.",
-                            status.version()
-                        );
+                        println!("Update successful (v{}).", status.version());
+                        println!("Press [Enter] to exit. You can then relaunch the application.");
+                        let mut final_input = String::new();
+                        std::io::stdin().read_line(&mut final_input).unwrap_or(0);
                         std::process::exit(0);
                     } else {
                         println!("Update failed. Continuing to application...");
