@@ -1,0 +1,15 @@
+{
+  "name": "rust",
+  "version": "1",
+  "description": "Orchestrates Rust workspace topologies, optimized compilation profiles, and local automation scripts.",
+  "entryPoint": "./SKILL.md",
+  "engines": {
+    "scaffold": ">=5.0.0"
+  },
+  "requiredPermissions": [
+    "fs:read",
+    "fs:write",
+    "net:connect",
+    "run:command"
+  ]
+}

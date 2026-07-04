@@ -81,4 +81,16 @@ pub fn remove_custom_skill(url: &str) {
         prefs["custom_skills"] = json!(skills);
         save_prefs(&prefs);
     }
+}pub fn has_seen_welcome() -> bool {
+    let prefs = load_prefs();
+    prefs
+        .get("has_seen_welcome")
+        .and_then(|v| v.as_bool())
+        .unwrap_or(false)
+}
+
+pub fn set_has_seen_welcome(val: bool) {
+    let mut prefs = load_prefs();
+    prefs["has_seen_welcome"] = json!(val);
+    save_prefs(&prefs);
 }

@@ -39,6 +39,7 @@ This directory contains complex code payloads (skills) that the Code Scaffold en
 | **Ratatui TUI Framework** | Build Terminal User Interfaces (TUI) using Ratatui in Rust. | v4 | `.skills/ratatui` |
 | **Resend** | Sends emails using the Resend API | v2 | `.skills/resend` |
 | **Reveal.js** | Comprehensive toolkit and knowledge base for scaffolding, configuring, and exporting Reveal.js presentations. | v2 | `.skills/revealjs` |
+| **Rust** | Orchestrates Rust workspace topologies, optimized compilation profiles, and local automation scripts. | v1 | `.skills/rust` |
 | **Scrollytelling** | Design architecture, workflows, and code implementations for scroll triggered 3D model manipulation and interactive 'production explosion' views. | v2 | `.skills/scrollytelling` |
 | **SEO GEO AEO Auditor** | Unified model agnostic Search Engine, Generative Engine, and Answer Engine Optimization auditor to analyze traditional visibility, AI engine discoverability, and snippet answers. | v2 | `.skills/seo-geo-aeo-auditor` |
 | **Slidev** | Comprehensive skill for building, configuring, and exporting Slidev markdown presentations. | v2 | `.skills/slidev` |
