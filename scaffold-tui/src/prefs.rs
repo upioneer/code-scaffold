@@ -84,14 +84,16 @@ pub fn remove_custom_skill(url: &str) {
 }
 pub fn has_seen_welcome() -> bool {
     let prefs = load_prefs();
-    prefs
-        .get("has_seen_welcome")
-        .and_then(|v| v.as_bool())
-        .unwrap_or(false)
+    let current_version = env!("CARGO_PKG_VERSION");
+    let seen_version = prefs
+        .get("last_seen_version")
+        .and_then(|v| v.as_str())
+        .unwrap_or("");
+    seen_version == current_version
 }
 
-pub fn set_has_seen_welcome(val: bool) {
+pub fn set_has_seen_welcome(_val: bool) {
     let mut prefs = load_prefs();
-    prefs["has_seen_welcome"] = json!(val);
+    prefs["last_seen_version"] = json!(env!("CARGO_PKG_VERSION"));
     save_prefs(&prefs);
 }
