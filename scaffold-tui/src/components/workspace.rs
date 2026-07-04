@@ -281,10 +281,10 @@ impl Workspace {
             let parsed_name = if name.is_empty() {
                 "custom-skill".to_string()
             } else {
-                name
+                name.replace("skills-", "")
             };
             items.push(WorkspaceItem {
-                label: parsed_name,
+                label: format!("(BYOS) {}", parsed_name),
                 selected: false,
                 category: Category::AgentSkills,
                 description: Some(custom_skill_url),

@@ -150,7 +150,19 @@ impl App {
                 }
                 WizardState::Artifacts => (" Step 2: Core Artifacts ", "Use [Up/Down] to navigate and [Space] to toggle files.\nPress [Enter] or [Tab] when ready to proceed.\nPress [Shift+Tab] to go back.".to_string()),
                 WizardState::AgentPersona => (" Step 3: Agent Persona ", "Select the primary focus for the Agent. This will tailor testing guidelines and instructions.\nPress [Enter] or [Tab] to proceed to Skills.\nPress [Shift+Tab] to go back.".to_string()),
-                WizardState::Skills => (" Step 4: Agent Skills ", "Select the domain skills you need. Notice how GitHub and Firebase toggle their companion artifacts!\nPress [Enter] or [Tab] to proceed to Licensing.\nPress [Shift+Tab] to go back.".to_string()),
+                WizardState::Skills => {
+                    let mut text = "Select the domain skills you need. Notice how GitHub and Firebase toggle their companion artifacts!\nPress [Enter] or [Tab] to proceed to Licensing.\nPress [Shift+Tab] to go back.".to_string();
+                    if let Some(idx) = self.workspace.state.selected() {
+                        let visible = self.workspace.visible_indices();
+                        if idx < visible.len() {
+                            let actual = visible[idx];
+                            if self.workspace.items[actual].label.starts_with("(BYOS) ") {
+                                text.push_str("\nPress [Shift+D] to delete custom skill.");
+                            }
+                        }
+                    }
+                    (" Step 4: Agent Skills ", text)
+                }
                 WizardState::License => (" Step 5: Licensing ", "Choose an open-source license.\nPress [Enter] or [Tab] to complete the wizard.\nPress [Shift+Tab] to go back.".to_string()),
                 _ => ("", "".to_string()),
             };
@@ -678,6 +690,29 @@ impl App {
             Action::Char('f') | Action::Char('F') | Action::Char('c') | Action::Char('C') => {
                 if self.wizard_state == WizardState::DeploymentTarget {
                     self.directory_browser.open(&self.target_folder);
+                }
+            }
+            Action::Char('D') => {
+                if self.wizard_state == WizardState::Skills {
+                    if let Some(idx) = self.workspace.state.selected() {
+                        let visible = self.workspace.visible_indices();
+                        if idx < visible.len() {
+                            let actual = visible[idx];
+                            if self.workspace.items[actual].label.starts_with("(BYOS) ") {
+                                if let Some(url) = self.workspace.items[actual].description.clone() {
+                                    crate::prefs::remove_custom_skill(&url);
+                                }
+                                self.workspace.items.remove(actual);
+                                let new_visible = self.workspace.visible_indices();
+                                if let Some(current_idx) = self.workspace.state.selected() {
+                                    if current_idx >= new_visible.len() && !new_visible.is_empty() {
+                                        self.workspace.state.select(Some(new_visible.len() - 1));
+                                    }
+                                }
+                                self.update_summary();
+                            }
+                        }
+                    }
                 }
             }
             Action::Char('r') | Action::Char('R') => {

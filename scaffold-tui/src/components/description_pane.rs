@@ -152,30 +152,12 @@ impl Component for DescriptionPane {
         };
 
         let mut desc_lines: Vec<Line> = vec![title_line, Line::from("")];
-        // Word-wrap manually into the available width
-        let wrap_width = sections[0].width.saturating_sub(1) as usize;
-        if wrap_width > 0 {
-            let mut current_line = String::new();
-            for word in desc_text.split_whitespace() {
-                if current_line.is_empty() {
-                    current_line = word.to_string();
-                } else if current_line.len() + 1 + word.len() <= wrap_width {
-                    current_line.push(' ');
-                    current_line.push_str(word);
-                } else {
-                    desc_lines.push(Line::from(Span::styled(
-                        current_line.clone(),
-                        Style::default().fg(theme.text),
-                    )));
-                    current_line = word.to_string();
-                }
-            }
-            if !current_line.is_empty() {
-                desc_lines.push(Line::from(Span::styled(
-                    current_line,
-                    Style::default().fg(theme.text),
-                )));
-            }
+        // Preserve explicit newlines, let ratatui handle word-wrapping natively
+        for line in desc_text.lines() {
+            desc_lines.push(Line::from(Span::styled(
+                line.to_string(),
+                Style::default().fg(theme.text),
+            )));
         }
 
         let desc_para = Paragraph::new(desc_lines)
