@@ -72,3 +72,13 @@ pub fn add_custom_skill(url: &str) {
         save_prefs(&prefs);
     }
 }
+
+pub fn remove_custom_skill(url: &str) {
+    let mut prefs = load_prefs();
+    let mut skills = load_custom_skills();
+    if let Some(pos) = skills.iter().position(|x| x == url) {
+        skills.remove(pos);
+        prefs["custom_skills"] = json!(skills);
+        save_prefs(&prefs);
+    }
+}
