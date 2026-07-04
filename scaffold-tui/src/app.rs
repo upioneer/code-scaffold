@@ -66,7 +66,13 @@ impl App {
     pub fn default_target_dir() -> String {
         directories::UserDirs::new()
             .map(|u| u.home_dir().to_path_buf().to_string_lossy().to_string())
-            .unwrap_or_else(|| if cfg!(windows) { "C:\\".to_string() } else { "/".to_string() })
+            .unwrap_or_else(|| {
+                if cfg!(windows) {
+                    "C:\\".to_string()
+                } else {
+                    "/".to_string()
+                }
+            })
     }
 
     pub fn new(payload_dir: std::path::PathBuf) -> Self {
@@ -324,7 +330,7 @@ impl App {
                         }
                         text_lines.push(ratatui::text::Line::from(spans));
                     }
-                    
+
                     text_lines.push(ratatui::text::Line::from(""));
                     text_lines.push(ratatui::text::Line::from(ratatui::text::Span::styled(
                         "    The ultimate orchestrator for AI-driven workspaces.",
@@ -332,7 +338,7 @@ impl App {
                     )));
                     text_lines.push(ratatui::text::Line::from(""));
                     text_lines.push(ratatui::text::Line::from(""));
-                    
+
                     let mut welcome = "    To make launching environments frictionless, you can add this executable to your system PATH.\n    This allows you to type 'code-scaffold' natively from any directory in terminal.\n".to_string();
                     if cfg!(windows) {
                         welcome.push_str("\n    Press [P] to automatically inject Code Scaffold into your User PATH.");
@@ -340,7 +346,7 @@ impl App {
                         welcome.push_str("\n    On Linux/macOS, add to PATH by running: sudo ln -s $(pwd)/code-scaffold /usr/local/bin/");
                     }
                     welcome.push_str("\n\n    Press [Enter] or [Tab] to continue.");
-                    
+
                     for line in welcome.lines() {
                         text_lines.push(ratatui::text::Line::from(ratatui::text::Span::styled(
                             line.to_string(),
@@ -358,7 +364,7 @@ impl App {
                                 .border_style(ratatui::style::Style::default().fg(self.theme.primary))
                                 .style(ratatui::style::Style::default().bg(self.theme.bg).fg(self.theme.text))
                         );
-                    
+
                     let area = Self::centered_rect(80, 70, size);
                     f.render_widget(ratatui::widgets::Clear, area);
                     f.render_widget(popup_block, area);
@@ -783,7 +789,8 @@ impl App {
                         if idx < visible.len() {
                             let actual = visible[idx];
                             if self.workspace.items[actual].label.starts_with("(BYOS) ") {
-                                if let Some(url) = self.workspace.items[actual].description.clone() {
+                                if let Some(url) = self.workspace.items[actual].description.clone()
+                                {
                                     crate::prefs::remove_custom_skill(&url);
                                 }
                                 self.workspace.items.remove(actual);
@@ -815,7 +822,7 @@ impl App {
                             let _ = std::process::Command::new("powershell")
                                 .args(&["-NoProfile", "-Command", &script])
                                 .status();
-                            
+
                             self.wizard_state = WizardState::DeploymentTarget;
                             crate::prefs::set_has_seen_welcome(true);
                             self.update_summary();
