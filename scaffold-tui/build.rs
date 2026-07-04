@@ -20,4 +20,22 @@ fn main() {
             println!("cargo:warning=Failed to compile windows resources: {}", e);
         }
     }
+
+    let version = std::env::var("CARGO_PKG_VERSION").unwrap_or_else(|_| "1.0.0".to_string());
+    let out_dir = std::env::var("OUT_DIR").unwrap();
+    let dest_path = std::path::Path::new(&out_dir).join("changelog.txt");
+
+    let changelog_path = format!("../project_details/history/v{}/readme.md", version);
+    let mut changelog_text = format!("What's new in v{}:\n", version);
+    if let Ok(content) = std::fs::read_to_string(&changelog_path) {
+        for line in content.lines() {
+            if line.starts_with("* ") || line.starts_with("- ") {
+                changelog_text.push_str(line);
+                changelog_text.push('\n');
+            }
+        }
+    }
+
+    std::fs::write(&dest_path, changelog_text).expect("Failed to write changelog to OUT_DIR");
+    println!("cargo:rerun-if-changed={}", changelog_path);
 }
