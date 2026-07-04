@@ -1,6 +1,6 @@
 [package]
 name = "scaffold-tui"
-version = "5.5.0"
+version = "5.7.0"
 edition = "2021"
 
 [dependencies]
@@ -19,3 +19,6 @@ self_update = { version = "0.39", default-features = false, features = ["archive
 [build-dependencies]
 winres = "0.1.12"
 
+[[bin]]
+name = "code-scaffold"
+path = "src/main.rs"

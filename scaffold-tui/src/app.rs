@@ -33,9 +33,16 @@ pub enum WizardState {
     AgentPersona,
     Skills,
     License,
-    CustomSkillInput,
     Complete,
+    AgentOverwritePrompt,
     Executing,
+    CustomSkillInput,
+    ThemeNameInput,
+    ThemeBgInput,
+    ThemeTextInput,
+    ThemePrimaryInput,
+    ThemeSecondaryInput,
+    ThemeAccentInput,
 }
 
 pub struct App {
@@ -46,6 +53,15 @@ pub struct App {
     pub wizard_state: WizardState,
     pub target_folder: String,
     pub custom_skill_input: String,
+    pub custom_theme_name: String,
+    pub custom_theme_bg: String,
+    pub custom_theme_text: String,
+    pub custom_theme_primary: String,
+    pub custom_theme_secondary: String,
+    pub custom_theme_accent: String,
+    pub theme_input_buffer: String,
+    pub is_advanced_theme_mode: bool,
+    pub theme_input_error: String,
     pub splash_tick_count: usize,
     pub splash_frame_idx: usize,
     header: Header,
@@ -60,7 +76,9 @@ pub struct App {
     execution_logs: Vec<String>,
     execution_scroll_offset: usize,
     pub welcome_scroll_offset: u16,
+    pub welcome_max_scroll: std::cell::Cell<u16>,
     payload_dir: std::path::PathBuf,
+    pub agent_overwrite_choice: Option<bool>,
 }
 
 impl App {
@@ -95,8 +113,17 @@ impl App {
             theme: Theme::get_by_index(crate::prefs::load_theme_idx()),
             theme_idx: crate::prefs::load_theme_idx(),
             wizard_state,
-            target_folder: initial_target,
+            target_folder: Self::default_target_dir(),
             custom_skill_input: String::new(),
+            custom_theme_name: String::new(),
+            custom_theme_bg: String::new(),
+            custom_theme_text: String::new(),
+            custom_theme_primary: String::new(),
+            custom_theme_secondary: String::new(),
+            custom_theme_accent: String::new(),
+            theme_input_buffer: String::new(),
+            is_advanced_theme_mode: false,
+            theme_input_error: String::new(),
             splash_tick_count: 0,
             splash_frame_idx: 0,
             header: Header::new(),
@@ -111,12 +138,29 @@ impl App {
             execution_logs: Vec::new(),
             execution_scroll_offset: 0,
             welcome_scroll_offset: 0,
+            welcome_max_scroll: std::cell::Cell::new(0),
             payload_dir,
+            agent_overwrite_choice: None,
         };
         app
     }
 
     fn update_summary(&mut self) {
+        if matches!(
+            self.wizard_state,
+            WizardState::Executing
+                | WizardState::CustomSkillInput
+                | WizardState::ThemeNameInput
+                | WizardState::ThemeBgInput
+                | WizardState::ThemeTextInput
+                | WizardState::ThemePrimaryInput
+                | WizardState::ThemeSecondaryInput
+                | WizardState::ThemeAccentInput
+                | WizardState::AgentOverwritePrompt
+        ) {
+            return;
+        }
+
         let selected_artifacts = self
             .workspace
             .items
@@ -130,7 +174,7 @@ impl App {
             .filter(|i| i.selected && i.category == Category::AgentPersona)
             .map(|i| i.label.clone())
             .collect::<Vec<_>>()
-            .join("");
+            .join(", ");
         let selected_skills = self
             .workspace
             .items
@@ -158,11 +202,12 @@ impl App {
                     } else {
                         ""
                     };
+                    let clean_path = self.target_folder.replace("\\\\?\\", "");
                     (
                         " Step 1: Deployment Target ",
                         format!(
-                            "{} The current deployment target is ({}).\nPress [Enter] or [F] to browse for a folder.\nPress [C] to change default directory.{}\nPress [Tab] to keep current folder and proceed.",
-                            BRAILLE_FRAMES[self.splash_frame_idx], self.target_folder, reset_text
+                            "{} The current deployment target is: {}\nPress [Enter] or [F] to browse for a folder.\nPress [C] to change default directory.{}\nPress [Tab] to keep current folder and proceed.",
+                            BRAILLE_FRAMES[self.splash_frame_idx], clean_path, reset_text
                         ),
                     )
                 }
@@ -187,10 +232,11 @@ impl App {
             self.summary_pane.title = title.to_string();
             self.summary_pane.summary_text = text;
         } else {
-            self.summary_pane.title = " Deployment Summary ".to_string();
+            self.summary_pane.title = " Step 6: Ready to Deploy ".to_string();
+            let clean_path = self.target_folder.replace("\\\\?\\", "");
             self.summary_pane.summary_text = format!(
-                "Deployment Footprint:\n- Target: {}\n- {} Artifacts Configured\n- Persona: {}\n- {} Skills Bridged\n- License: {}\n\nSystem Ready. Press [Enter] or [Ctrl+D] to Deploy.",
-                self.target_folder,
+                "Deployment Footprint:\n- Target: {}\n- {} Artifacts Configured\n- Persona(s): {}\n- {} Skills Bridged\n- License: {}\n\n*** SYSTEM READY! Press [Enter] now to deploy the project scaffolding! ***\n(Press [Shift+Tab] to go back)",
+                clean_path,
                 selected_artifacts,
                 if selected_persona.is_empty() { "None" } else { &selected_persona },
                 selected_skills,
@@ -257,7 +303,7 @@ impl App {
                     .constraints([
                         Constraint::Length(3), // Header
                         Constraint::Min(10),   // Main Body
-                        Constraint::Length(8), // Summary Pane
+                        Constraint::Length(11), // Summary Pane
                         Constraint::Length(3), // Footer
                     ])
                     .split(size);
@@ -393,6 +439,21 @@ impl App {
                         )));
                     }
 
+                    let area = Self::centered_rect(80, 70, size);
+                    let mut max_lines = 0;
+                    let inner_width = area.width.saturating_sub(10) as usize;
+                    for line in &text_lines {
+                        let w = line.width();
+                        if inner_width > 0 {
+                            max_lines += (w / inner_width) + 1;
+                        } else {
+                            max_lines += 1;
+                        }
+                    }
+                    let visible_height = area.height.saturating_sub(2) as usize;
+                    let max_scroll = max_lines.saturating_sub(visible_height) as u16;
+                    self.welcome_max_scroll.set(max_scroll);
+
                     let popup_block = ratatui::widgets::Paragraph::new(text_lines)
                         .alignment(ratatui::layout::Alignment::Left)
                         .wrap(ratatui::widgets::Wrap { trim: false })
@@ -406,11 +467,10 @@ impl App {
                                 .padding(ratatui::widgets::Padding::new(4, 4, 1, 1))
                         );
 
-                    let area = Self::centered_rect(80, 70, size);
                     f.render_widget(ratatui::widgets::Clear, area);
                     f.render_widget(popup_block, area);
 
-                    let mut scrollbar_state = ratatui::widgets::ScrollbarState::new(20)
+                    let mut scrollbar_state = ratatui::widgets::ScrollbarState::new(max_scroll as usize)
                         .position(self.welcome_scroll_offset as usize);
 
                     f.render_stateful_widget(
@@ -423,7 +483,7 @@ impl App {
                         &mut scrollbar_state
                     );
                 } else if self.wizard_state == WizardState::CustomSkillInput {
-                    let text = format!("\n  Please enter a valid approved platform URL or CLI install command (e.g. npx/git clone):\n\n  > {}\u{2588}\n\n  Press [Enter] to submit, or [Esc] to cancel.", self.custom_skill_input);
+                    let text = format!("Please enter a valid approved platform URL or CLI install command (e.g. npx/git clone):\n\n> {}\u{2588}\n\nPress [Enter] to submit, or [Esc] to cancel.", self.custom_skill_input);
                     let popup_block = ratatui::widgets::Paragraph::new(text)
                         .wrap(ratatui::widgets::Wrap { trim: false })
                         .block(
@@ -432,8 +492,58 @@ impl App {
                                 .borders(ratatui::widgets::Borders::ALL)
                                 .border_style(ratatui::style::Style::default().fg(self.theme.primary))
                                 .style(ratatui::style::Style::default().bg(self.theme.bg).fg(self.theme.text))
+                                .padding(ratatui::widgets::Padding::new(4, 4, 1, 1))
                         );
                     let area = Self::centered_rect(80, 40, size);
+                    f.render_widget(ratatui::widgets::Clear, area);
+                    f.render_widget(popup_block, area);
+                } else if matches!(
+                    self.wizard_state,
+                    WizardState::ThemeNameInput
+                        | WizardState::ThemeBgInput
+                        | WizardState::ThemeTextInput
+                        | WizardState::ThemePrimaryInput
+                        | WizardState::ThemeSecondaryInput
+                        | WizardState::ThemeAccentInput
+                ) {
+                    let prompt = match self.wizard_state {
+                        WizardState::ThemeNameInput => "Step 1: Enter a unique Theme Name (Max 15 chars, no spaces)".to_string(),
+                        WizardState::ThemeBgInput => format!("Step 2: Enter Background Hex (e.g. #1E1E1E)\n\nName: {}", self.custom_theme_name),
+                        WizardState::ThemeTextInput => format!("Step 3: Enter Text Hex (e.g. #FFFFFF)\n\nName: {} | BG: {}", self.custom_theme_name, self.custom_theme_bg),
+                        WizardState::ThemePrimaryInput => format!("Step 4: Enter Primary Highlight Hex (e.g. #FF0055)\n\nName: {} | BG: {} | Text: {}", self.custom_theme_name, self.custom_theme_bg, self.custom_theme_text),
+                        WizardState::ThemeSecondaryInput => format!("Step 5 (Advanced): Enter Secondary Hex\n\nName: {} | BG: {} | Text: {} | Primary: {}", self.custom_theme_name, self.custom_theme_bg, self.custom_theme_text, self.custom_theme_primary),
+                        WizardState::ThemeAccentInput => format!("Step 6 (Advanced): Enter Accent Hex\n\nName: {} | BG: {} | Text: {} | Primary: {} | Sec: {}", self.custom_theme_name, self.custom_theme_bg, self.custom_theme_text, self.custom_theme_primary, self.custom_theme_secondary),
+                        _ => String::new(),
+                    };
+
+                    let error_msg = if !self.theme_input_error.is_empty() {
+                        format!("\n\n[ERROR]: {}", self.theme_input_error)
+                    } else {
+                        String::new()
+                    };
+
+                    let tab_hint = if self.wizard_state == WizardState::ThemeNameInput {
+                        if self.is_advanced_theme_mode {
+                            "\n\n[Advanced Mode ON - 5 Colors] (Press [Tab] to toggle off)"
+                        } else {
+                            "\n\n[Standard Mode - 3 Colors] (Press [Tab] for 5 Colors)"
+                        }
+                    } else {
+                        ""
+                    };
+
+                    let text = format!("{}\n\n> {}\u{2588}{}{}\n\nPress [Enter] to submit, or [Esc] to cancel.", prompt, self.theme_input_buffer, error_msg, tab_hint);
+                    let popup_block = ratatui::widgets::Paragraph::new(text)
+                        .wrap(ratatui::widgets::Wrap { trim: false })
+                        .block(
+                            ratatui::widgets::Block::default()
+                                .title(" Custom Theme Builder ")
+                                .borders(ratatui::widgets::Borders::ALL)
+                                .border_style(ratatui::style::Style::default().fg(self.theme.primary))
+                                .style(ratatui::style::Style::default().bg(self.theme.bg).fg(self.theme.text))
+                                .padding(ratatui::widgets::Padding::new(4, 4, 1, 1))
+                        );
+                    let area = Self::centered_rect(80, 50, size);
                     f.render_widget(ratatui::widgets::Clear, area);
                     f.render_widget(popup_block, area);
                 }
@@ -545,7 +655,176 @@ impl App {
             }
             return Ok(());
         }
+        if matches!(
+            self.wizard_state,
+            WizardState::ThemeNameInput
+                | WizardState::ThemeBgInput
+                | WizardState::ThemeTextInput
+                | WizardState::ThemePrimaryInput
+                | WizardState::ThemeSecondaryInput
+                | WizardState::ThemeAccentInput
+        ) {
+            match action {
+                Action::Char(c) => {
+                    if !self.theme_input_error.is_empty() {
+                        self.theme_input_error.clear();
+                    }
+                    self.theme_input_buffer.push(c);
+                }
+                Action::Backspace => {
+                    if !self.theme_input_error.is_empty() {
+                        self.theme_input_error.clear();
+                    }
+                    self.theme_input_buffer.pop();
+                }
+                Action::Tab => {
+                    if self.wizard_state == WizardState::ThemeNameInput {
+                        self.is_advanced_theme_mode = !self.is_advanced_theme_mode;
+                    }
+                }
+                Action::Quit => {
+                    self.wizard_state = WizardState::Welcome;
+                    self.theme_input_buffer.clear();
+                }
+                Action::Enter => {
+                    if !self.theme_input_error.is_empty() {
+                        self.theme_input_error.clear();
+                        self.theme_input_buffer.clear();
+                        return Ok(());
+                    }
 
+                    let val = self.theme_input_buffer.trim().to_string();
+
+                    match self.wizard_state {
+                        WizardState::ThemeNameInput => {
+                            if val.is_empty()
+                                || val.len() > 15
+                                || !val.chars().all(|c| c.is_alphanumeric() || c == '-')
+                            {
+                                self.theme_input_error =
+                                    "Invalid name! Alphanumeric & hyphens only. Max 15 chars."
+                                        .to_string();
+                            } else {
+                                self.custom_theme_name = val;
+                                self.theme_input_buffer.clear();
+                                self.wizard_state = WizardState::ThemeBgInput;
+                            }
+                        }
+                        WizardState::ThemeBgInput => {
+                            if Theme::hex_to_color(&val).is_none() {
+                                self.theme_input_error =
+                                    "Invalid hex code! Must be 6 characters (e.g. #FFFFFF)."
+                                        .to_string();
+                            } else {
+                                self.custom_theme_bg = val;
+                                self.theme_input_buffer.clear();
+                                self.wizard_state = WizardState::ThemeTextInput;
+                            }
+                        }
+                        WizardState::ThemeTextInput => {
+                            if let Some(text_color) = Theme::hex_to_color(&val) {
+                                if let Some(bg_color) = Theme::hex_to_color(&self.custom_theme_bg) {
+                                    let dist = Theme::color_distance(&text_color, &bg_color);
+                                    if dist < 50.0 {
+                                        self.theme_input_error = format!("Contrast Guard Triggered: Distance {:.1} is too low. Please increase contrast.", dist);
+                                    } else {
+                                        self.custom_theme_text = val;
+                                        self.theme_input_buffer.clear();
+                                        self.wizard_state = WizardState::ThemePrimaryInput;
+                                    }
+                                }
+                            } else {
+                                self.theme_input_error = "Invalid hex code!".to_string();
+                            }
+                        }
+                        WizardState::ThemePrimaryInput => {
+                            if let Some(primary_color) = Theme::hex_to_color(&val) {
+                                if let Some(bg_color) = Theme::hex_to_color(&self.custom_theme_bg) {
+                                    let dist = Theme::color_distance(&primary_color, &bg_color);
+                                    if dist < 40.0 {
+                                        self.theme_input_error = format!("Contrast Guard Triggered: Highlight distance {:.1} is too low.", dist);
+                                    } else {
+                                        self.custom_theme_primary = val;
+                                        self.theme_input_buffer.clear();
+
+                                        if self.is_advanced_theme_mode {
+                                            self.wizard_state = WizardState::ThemeSecondaryInput;
+                                        } else {
+                                            // Finish in 3-color mode!
+                                            self.custom_theme_secondary = Theme::color_to_hex(
+                                                &Theme::auto_derive_secondary(&primary_color),
+                                            );
+                                            self.custom_theme_accent = Theme::color_to_hex(
+                                                &Theme::auto_derive_accent(&primary_color),
+                                            );
+
+                                            let new_theme = Theme {
+                                                name: self.custom_theme_name.clone(),
+                                                bg: Theme::hex_to_color(&self.custom_theme_bg)
+                                                    .unwrap(),
+                                                text: Theme::hex_to_color(&self.custom_theme_text)
+                                                    .unwrap(),
+                                                primary: Theme::hex_to_color(
+                                                    &self.custom_theme_primary,
+                                                )
+                                                .unwrap(),
+                                                secondary: Theme::hex_to_color(
+                                                    &self.custom_theme_secondary,
+                                                )
+                                                .unwrap(),
+                                                accent: Theme::hex_to_color(
+                                                    &self.custom_theme_accent,
+                                                )
+                                                .unwrap(),
+                                            };
+                                            crate::prefs::add_custom_theme(&new_theme);
+                                            self.theme = new_theme;
+                                            self.wizard_state = WizardState::Welcome;
+                                        }
+                                    }
+                                }
+                            } else {
+                                self.theme_input_error = "Invalid hex code!".to_string();
+                            }
+                        }
+                        WizardState::ThemeSecondaryInput => {
+                            if Theme::hex_to_color(&val).is_none() {
+                                self.theme_input_error = "Invalid hex code!".to_string();
+                            } else {
+                                self.custom_theme_secondary = val;
+                                self.theme_input_buffer.clear();
+                                self.wizard_state = WizardState::ThemeAccentInput;
+                            }
+                        }
+                        WizardState::ThemeAccentInput => {
+                            if Theme::hex_to_color(&val).is_none() {
+                                self.theme_input_error = "Invalid hex code!".to_string();
+                            } else {
+                                self.custom_theme_accent = val;
+                                self.theme_input_buffer.clear();
+
+                                let new_theme = Theme {
+                                    name: self.custom_theme_name.clone(),
+                                    bg: Theme::hex_to_color(&self.custom_theme_bg).unwrap(),
+                                    text: Theme::hex_to_color(&self.custom_theme_text).unwrap(),
+                                    primary: Theme::hex_to_color(&self.custom_theme_primary)
+                                        .unwrap(),
+                                    secondary: Theme::hex_to_color(&self.custom_theme_secondary)
+                                        .unwrap(),
+                                    accent: Theme::hex_to_color(&self.custom_theme_accent).unwrap(),
+                                };
+                                crate::prefs::add_custom_theme(&new_theme);
+                                self.theme = new_theme;
+                                self.wizard_state = WizardState::Welcome;
+                            }
+                        }
+                        _ => {}
+                    }
+                }
+                _ => {}
+            }
+            return Ok(());
+        }
         if self.directory_browser.is_open && action != Action::Tick {
             let _ = self.directory_browser.update(action);
             if !self.directory_browser.is_open {
@@ -578,6 +857,17 @@ impl App {
             Action::Quit => self.should_quit = true,
             Action::Execute => {
                 if self.wizard_state == WizardState::Complete {
+                    let agent_path = std::path::PathBuf::from(&self.target_folder)
+                        .join(".agents")
+                        .join("AGENTS.md");
+
+                    if agent_path.exists() && self.agent_overwrite_choice.is_none() {
+                        self.wizard_state = WizardState::AgentOverwritePrompt;
+                        self.summary_pane.title = " Conflict Detected ".to_string();
+                        self.summary_pane.summary_text = "The target directory already contains an AGENTS.md file.\n\nPress [Y] to Overwrite it.\nPress [N] to Leave it Intact.".to_string();
+                        return Ok(());
+                    }
+
                     self.wizard_state = WizardState::Executing;
                     self.summary_pane.title = " Deploying... ".to_string();
                     self.summary_pane.summary_text = "Initializing engine...".to_string();
@@ -671,6 +961,7 @@ impl App {
                                     source: Some(source.to_string_lossy().to_string()),
                                     target: target.to_string_lossy().to_string(),
                                     method: "copy".into(),
+                                    content: None,
                                 });
                             }
                             Category::AgentSkills => {
@@ -712,16 +1003,48 @@ impl App {
                                 });
                             }
                             Category::AgentPersona => {
+                                if self.agent_overwrite_choice == Some(false) {
+                                    continue;
+                                }
                                 let target = std::path::PathBuf::from(&self.target_folder)
                                     .join(".agents")
                                     .join("AGENTS.md");
-                                selected_artifacts.push(crate::models::manifest::ArtifactEntry {
-                                    id: item.label.clone(),
-                                    label: item.label.clone(),
-                                    source: None,
-                                    target: target.to_string_lossy().to_string(),
-                                    method: "touch".into(),
-                                });
+
+                                if let Some(existing) = selected_artifacts
+                                    .iter_mut()
+                                    .find(|a| a.method == "inject_persona")
+                                {
+                                    if let (Some(existing_content), Some(new_content)) =
+                                        (&mut existing.content, &item.description)
+                                    {
+                                        *existing_content = format!(
+                                            "{}\n* **{}**: {}",
+                                            existing_content, item.label, new_content
+                                        );
+                                    }
+                                } else {
+                                    let content = if let Some(desc) = &item.description {
+                                        Some(format!("* **{}**: {}", item.label, desc))
+                                    } else {
+                                        None
+                                    };
+                                    selected_artifacts.push(
+                                        crate::models::manifest::ArtifactEntry {
+                                            id: "agent_personas".to_string(),
+                                            label: "Agent Personas".to_string(),
+                                            source: Some(
+                                                self.payload_dir
+                                                    .join(".templates")
+                                                    .join("agent.md")
+                                                    .to_string_lossy()
+                                                    .to_string(),
+                                            ),
+                                            target: target.to_string_lossy().to_string(),
+                                            method: "inject_persona".into(),
+                                            content,
+                                        },
+                                    );
+                                }
                             }
                             Category::License => {
                                 let source = self
@@ -736,6 +1059,7 @@ impl App {
                                     source: Some(source.to_string_lossy().to_string()),
                                     target: target.to_string_lossy().to_string(),
                                     method: "copy".into(),
+                                    content: None,
                                 });
                             }
                             _ => {}
@@ -782,54 +1106,58 @@ impl App {
                 }
             }
             Action::ShiftTab => {
-                if self.wizard_state == WizardState::Complete {
-                    self.active_block = match self.active_block {
-                        ActiveBlock::NavTree => ActiveBlock::Workspace,
-                        ActiveBlock::Workspace => ActiveBlock::NavTree,
-                        ActiveBlock::SummaryPane => ActiveBlock::Workspace,
-                    };
-                } else {
-                    match self.wizard_state {
-                        WizardState::Artifacts => {
-                            self.wizard_state = WizardState::DeploymentTarget;
-                            self.workspace.set_category(Category::DeploymentTarget);
-                            self.nav_tree.set_selected(Category::DeploymentTarget);
-                        }
-                        WizardState::AgentPersona => {
+                match self.wizard_state {
+                    WizardState::Complete => {
+                        self.wizard_state = WizardState::License;
+                        self.workspace.set_category(Category::License);
+                        self.nav_tree.set_selected(Category::License);
+                        self.active_block = ActiveBlock::Workspace;
+                    }
+                    WizardState::Artifacts => {
+                        self.wizard_state = WizardState::DeploymentTarget;
+                        self.workspace.set_category(Category::DeploymentTarget);
+                        self.nav_tree.set_selected(Category::DeploymentTarget);
+                    }
+                    WizardState::AgentPersona => {
+                        self.wizard_state = WizardState::Artifacts;
+                        self.workspace.set_category(Category::Artifacts);
+                        self.nav_tree.set_selected(Category::Artifacts);
+                    }
+                    WizardState::Skills => {
+                        let has_agent = self
+                            .workspace
+                            .items
+                            .iter()
+                            .any(|i| i.selected && i.label == "agent.md");
+                        if has_agent {
+                            self.wizard_state = WizardState::AgentPersona;
+                            self.workspace.set_category(Category::AgentPersona);
+                            self.nav_tree.set_selected(Category::AgentPersona);
+                        } else {
                             self.wizard_state = WizardState::Artifacts;
                             self.workspace.set_category(Category::Artifacts);
                             self.nav_tree.set_selected(Category::Artifacts);
                         }
-                        WizardState::Skills => {
-                            let has_agent = self
-                                .workspace
-                                .items
-                                .iter()
-                                .any(|i| i.selected && i.label == "agent.md");
-                            if has_agent {
-                                self.wizard_state = WizardState::AgentPersona;
-                                self.workspace.set_category(Category::AgentPersona);
-                                self.nav_tree.set_selected(Category::AgentPersona);
-                            } else {
-                                self.wizard_state = WizardState::Artifacts;
-                                self.workspace.set_category(Category::Artifacts);
-                                self.nav_tree.set_selected(Category::Artifacts);
-                            }
-                        }
-                        WizardState::License => {
-                            self.wizard_state = WizardState::Skills;
-                            self.workspace.set_category(Category::AgentSkills);
-                            self.nav_tree.set_selected(Category::AgentSkills);
-                        }
-                        _ => {}
                     }
-                    self.update_summary();
+                    WizardState::License => {
+                        self.wizard_state = WizardState::Skills;
+                        self.workspace.set_category(Category::AgentSkills);
+                        self.nav_tree.set_selected(Category::AgentSkills);
+                    }
+                    _ => {}
                 }
+                self.update_summary();
             }
             Action::Char('t') | Action::Char('T') => {
                 self.theme_idx = self.theme_idx.wrapping_add(1);
                 self.theme = crate::theme::Theme::get_by_index(self.theme_idx);
                 crate::prefs::save_theme_idx(self.theme_idx);
+            }
+            Action::Char('E') => {
+                self.wizard_state = WizardState::ThemeNameInput;
+                self.theme_input_buffer.clear();
+                self.is_advanced_theme_mode = false;
+                self.theme_input_error.clear();
             }
             Action::Char('f') | Action::Char('F') | Action::Char('c') | Action::Char('C') => {
                 if self.wizard_state == WizardState::DeploymentTarget {
@@ -891,6 +1219,20 @@ impl App {
                     self.update_summary();
                 }
             }
+            Action::Char('y') | Action::Char('Y') => {
+                if self.wizard_state == WizardState::AgentOverwritePrompt {
+                    self.agent_overwrite_choice = Some(true);
+                    self.wizard_state = WizardState::Complete;
+                    let _ = self.update(Action::Execute)?;
+                }
+            }
+            Action::Char('n') | Action::Char('N') => {
+                if self.wizard_state == WizardState::AgentOverwritePrompt {
+                    self.agent_overwrite_choice = Some(false);
+                    self.wizard_state = WizardState::Complete;
+                    let _ = self.update(Action::Execute)?;
+                }
+            }
             Action::Up => {
                 if self.wizard_state == WizardState::Welcome {
                     self.welcome_scroll_offset = self.welcome_scroll_offset.saturating_sub(1);
@@ -924,8 +1266,10 @@ impl App {
             }
             Action::Down => {
                 if self.wizard_state == WizardState::Welcome {
-                    self.welcome_scroll_offset =
-                        self.welcome_scroll_offset.saturating_add(1).min(20);
+                    self.welcome_scroll_offset = self
+                        .welcome_scroll_offset
+                        .saturating_add(1)
+                        .min(self.welcome_max_scroll.get());
                 } else if self.wizard_state == WizardState::Executing {
                     if self.execution_scroll_offset > 0 {
                         self.execution_scroll_offset -= 1;
@@ -1010,7 +1354,15 @@ impl App {
                     WizardState::Complete => {
                         let _ = self.update(Action::Execute)?;
                     }
-                    WizardState::Executing | WizardState::CustomSkillInput => {}
+                    WizardState::Executing
+                    | WizardState::CustomSkillInput
+                    | WizardState::ThemeNameInput
+                    | WizardState::ThemeBgInput
+                    | WizardState::ThemeTextInput
+                    | WizardState::ThemePrimaryInput
+                    | WizardState::ThemeSecondaryInput
+                    | WizardState::ThemeAccentInput
+                    | WizardState::AgentOverwritePrompt => {}
                 }
                 self.update_summary();
             }

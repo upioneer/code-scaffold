@@ -496,7 +496,7 @@ impl Component for Workspace {
                 let category = self.items[actual_idx].category.clone();
                 let label = self.items[actual_idx].label.clone();
 
-                if category == Category::License || category == Category::AgentPersona {
+                if category == Category::License {
                     for item in &mut self.items {
                         if item.category == category {
                             item.selected = false;

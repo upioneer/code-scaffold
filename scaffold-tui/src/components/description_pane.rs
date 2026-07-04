@@ -94,14 +94,11 @@ impl Component for DescriptionPane {
 
         // Split inner area: description on top, QR label + QR below
         let qr_height = if self.show_qr {
-            (self.qr_lines.len() as u16).min(inner.height.saturating_sub(6))
+            (self.qr_lines.len() as u16).min(inner.height.saturating_sub(2)) // Leave room for top padding or label
         } else {
             0
         };
-        let desc_height = inner
-            .height
-            .saturating_sub(qr_height)
-            .saturating_sub(if self.show_qr { 2 } else { 0 });
+        let desc_height = if self.show_qr { 0 } else { inner.height };
 
         let sections = Layout::default()
             .direction(Direction::Vertical)
