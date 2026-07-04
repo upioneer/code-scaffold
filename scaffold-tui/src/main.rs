@@ -3,6 +3,7 @@
 mod action;
 mod app;
 mod components;
+mod headless;
 mod manifest_engine;
 mod models;
 mod prefs;
@@ -31,6 +32,16 @@ async fn main() -> Result<()> {
 
     // Process initialization and cache directory resolution
     let payload_dir = sync::sync_payload().await?;
+
+    if args.iter().any(|arg| arg == "--help" || arg == "-h" || arg == "/help" || arg == "/h") {
+        headless::print_headless_help(payload_dir);
+        return Ok(());
+    }
+
+    if args.iter().any(|arg| arg == "--headless") {
+        headless::run_headless(payload_dir, args).await?;
+        return Ok(());
+    }
 
     let tui = Tui::new()?;
     let mut app = App::new(payload_dir);
