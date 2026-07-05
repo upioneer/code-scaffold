@@ -33,24 +33,32 @@ pub fn print_headless_help(payload_dir: std::path::PathBuf) {
             "--personas": "OPTIONAL. Comma-separated labels of Agent Personas.",
             "--artifacts": "OPTIONAL. Comma-separated labels of Core Artifacts.",
             "--skills": "OPTIONAL. Comma-separated labels of Agent Skills.",
-            "--license": "OPTIONAL. License label (e.g. 'MIT')."
+            "--license": "OPTIONAL. License label (e.g. 'MIT').",
+            "--json-output": "OPTIONAL. Outputs execution results in machine-readable JSON.",
+            "--dry-run": "OPTIONAL. Outputs the constructed manifest without executing it.",
+            "--version-json": "OPTIONAL. Outputs the version in machine-readable JSON."
         },
         "available_personas": personas,
         "available_artifacts": artifacts,
         "available_skills": skills,
         "available_licenses": licenses,
-        "example_deployment_script": "code-scaffold.exe --headless --target \"C:\\my_project\" --personas \"Web Dev,AI Systems Engineer\" --artifacts \"readme.md,.gitignore\" --skills \"github,typescript\" --license \"MIT\""
+        "example_deployment_script": "code-scaffold.exe --headless --target \"C:\\my_project\" --personas \"Web Dev,AI Systems Engineer\" --artifacts \"readme.md,.gitignore\" --skills \"github,typescript\" --license \"MIT\" --json-output"
     });
 
     println!("{}", serde_json::to_string_pretty(&output).unwrap());
 }
 
-pub async fn run_headless(payload_dir: std::path::PathBuf, args: Vec<String>) -> anyhow::Result<()> {
+pub async fn run_headless(
+    payload_dir: std::path::PathBuf,
+    args: Vec<String>,
+) -> anyhow::Result<()> {
     let mut target = String::new();
     let mut arg_personas = Vec::new();
     let mut arg_artifacts = Vec::new();
     let mut arg_skills = Vec::new();
     let mut arg_license = String::new();
+    let mut json_output = false;
+    let mut dry_run = false;
 
     let mut i = 0;
     while i < args.len() {
@@ -63,19 +71,28 @@ pub async fn run_headless(payload_dir: std::path::PathBuf, args: Vec<String>) ->
             }
             "--personas" => {
                 if i + 1 < args.len() {
-                    arg_personas = args[i + 1].split(',').map(|s| s.trim().to_string()).collect();
+                    arg_personas = args[i + 1]
+                        .split(',')
+                        .map(|s| s.trim().to_string())
+                        .collect();
                     i += 1;
                 }
             }
             "--artifacts" => {
                 if i + 1 < args.len() {
-                    arg_artifacts = args[i + 1].split(',').map(|s| s.trim().to_string()).collect();
+                    arg_artifacts = args[i + 1]
+                        .split(',')
+                        .map(|s| s.trim().to_string())
+                        .collect();
                     i += 1;
                 }
             }
             "--skills" => {
                 if i + 1 < args.len() {
-                    arg_skills = args[i + 1].split(',').map(|s| s.trim().to_string()).collect();
+                    arg_skills = args[i + 1]
+                        .split(',')
+                        .map(|s| s.trim().to_string())
+                        .collect();
                     i += 1;
                 }
             }
@@ -85,17 +102,32 @@ pub async fn run_headless(payload_dir: std::path::PathBuf, args: Vec<String>) ->
                     i += 1;
                 }
             }
+            "--json-output" => {
+                json_output = true;
+            }
+            "--dry-run" => {
+                dry_run = true;
+            }
             _ => {}
         }
         i += 1;
     }
 
     if target.is_empty() {
-        eprintln!("Error: --target is required in --headless mode.");
+        if json_output {
+            eprintln!(
+                "{}",
+                serde_json::json!({ "status": "error", "message": "--target is required in --headless mode." })
+            );
+        } else {
+            eprintln!("Error: --target is required in --headless mode.");
+        }
         std::process::exit(1);
     }
 
-    println!("Initializing headless deployment to {}...", target);
+    if !json_output {
+        println!("Initializing headless deployment to {}...", target);
+    }
 
     let mut manifest = crate::models::manifest::Manifest {
         metadata: crate::models::manifest::ManifestMetadata {
@@ -124,9 +156,12 @@ pub async fn run_headless(payload_dir: std::path::PathBuf, args: Vec<String>) ->
     }
 
     let workspace = Workspace::new(payload_dir.clone());
-    
+
     // Convert args to lower-case for robust matching
-    let arg_artifacts: Vec<String> = arg_artifacts.into_iter().map(|s| s.to_lowercase()).collect();
+    let arg_artifacts: Vec<String> = arg_artifacts
+        .into_iter()
+        .map(|s| s.to_lowercase())
+        .collect();
     let arg_personas: Vec<String> = arg_personas.into_iter().map(|s| s.to_lowercase()).collect();
     let arg_skills: Vec<String> = arg_skills.into_iter().map(|s| s.to_lowercase()).collect();
     let arg_license = arg_license.to_lowercase();
@@ -148,14 +183,16 @@ pub async fn run_headless(payload_dir: std::path::PathBuf, args: Vec<String>) ->
                     } else {
                         std::path::PathBuf::from(&target).join("project_details")
                     };
-                    manifest.artifacts.push(crate::models::manifest::ArtifactEntry {
-                        id: item.label.clone(),
-                        label: item.label.clone(),
-                        source: Some(source.to_string_lossy().to_string()),
-                        target: target_dir.join(&item.label).to_string_lossy().to_string(),
-                        method: "copy".into(),
-                        content: None,
-                    });
+                    manifest
+                        .artifacts
+                        .push(crate::models::manifest::ArtifactEntry {
+                            id: item.label.clone(),
+                            label: item.label.clone(),
+                            source: Some(source.to_string_lossy().to_string()),
+                            target: target_dir.join(&item.label).to_string_lossy().to_string(),
+                            method: "copy".into(),
+                            content: None,
+                        });
                 }
             }
             Category::AgentSkills => {
@@ -177,18 +214,28 @@ pub async fn run_headless(payload_dir: std::path::PathBuf, args: Vec<String>) ->
             Category::AgentPersona => {
                 if arg_personas.contains(&label_lower) {
                     let target_dir = std::path::PathBuf::from(&target).join(".agents");
-                    
-                    if !manifest.artifacts.iter().any(|a| a.method == "inject_persona") {
-                        manifest.artifacts.push(crate::models::manifest::ArtifactEntry {
-                            id: "AGENTS.md".into(),
-                            label: "AGENTS.md".into(),
-                            source: None,
-                            target: target_dir.join("AGENTS.md").to_string_lossy().to_string(),
-                            method: "inject_persona".into(),
-                            content: Some(item.label.clone()),
-                        });
+
+                    if !manifest
+                        .artifacts
+                        .iter()
+                        .any(|a| a.method == "inject_persona")
+                    {
+                        manifest
+                            .artifacts
+                            .push(crate::models::manifest::ArtifactEntry {
+                                id: "AGENTS.md".into(),
+                                label: "AGENTS.md".into(),
+                                source: None,
+                                target: target_dir.join("AGENTS.md").to_string_lossy().to_string(),
+                                method: "inject_persona".into(),
+                                content: Some(item.label.clone()),
+                            });
                     } else {
-                        if let Some(existing) = manifest.artifacts.iter_mut().find(|a| a.method == "inject_persona") {
+                        if let Some(existing) = manifest
+                            .artifacts
+                            .iter_mut()
+                            .find(|a| a.method == "inject_persona")
+                        {
                             let mut current = existing.content.clone().unwrap_or_default();
                             current.push_str(", ");
                             current.push_str(&item.label);
@@ -199,44 +246,73 @@ pub async fn run_headless(payload_dir: std::path::PathBuf, args: Vec<String>) ->
             }
             Category::License => {
                 if label_lower == arg_license && label_lower != "none" {
-                    let source = payload_dir.join(".licenses").join(format!("{}.md", item.label));
-                    manifest.artifacts.push(crate::models::manifest::ArtifactEntry {
-                        id: "license.md".into(),
-                        label: "license.md".into(),
-                        source: Some(source.to_string_lossy().to_string()),
-                        target: std::path::PathBuf::from(&target).join("license.md").to_string_lossy().to_string(),
-                        method: "copy".into(),
-                        content: None,
-                    });
+                    let source = payload_dir
+                        .join(".licenses")
+                        .join(format!("{}.md", item.label));
+                    manifest
+                        .artifacts
+                        .push(crate::models::manifest::ArtifactEntry {
+                            id: "license.md".into(),
+                            label: "license.md".into(),
+                            source: Some(source.to_string_lossy().to_string()),
+                            target: std::path::PathBuf::from(&target)
+                                .join("license.md")
+                                .to_string_lossy()
+                                .to_string(),
+                            method: "copy".into(),
+                            content: None,
+                        });
                 }
             }
             _ => {}
         }
     }
 
+    if dry_run {
+        if json_output {
+            println!("{}", serde_json::to_string_pretty(&manifest).unwrap());
+        } else {
+            println!("Dry run mode. Constructed manifest:\n{:#?}", manifest);
+        }
+        return Ok(());
+    }
+
     let (tx, mut rx) = tokio::sync::mpsc::unbounded_channel();
-    
+
     // Output listener loop
     let rx_task = tokio::spawn(async move {
         while let Some(msg) = rx.recv().await {
-            println!("{}", msg);
+            if !json_output {
+                println!("{}", msg);
+            }
         }
     });
 
-    if let Err(e) = crate::manifest_engine::execute(
-        &manifest,
-        tx.clone(),
-        &payload_dir,
-        &target,
-    ).await {
-        eprintln!("Deployment failed: {}", e);
+    if let Err(e) =
+        crate::manifest_engine::execute(&manifest, tx.clone(), &payload_dir, &target).await
+    {
+        if json_output {
+            eprintln!(
+                "{}",
+                serde_json::json!({ "status": "error", "message": e.to_string() })
+            );
+        } else {
+            eprintln!("Deployment failed: {}", e);
+        }
         std::process::exit(1);
     }
-    
+
     // Drop tx so the receiver loop closes
     drop(tx);
     let _ = rx_task.await;
-    
-    println!("Headless deployment completed successfully!");
+
+    if json_output {
+        println!(
+            "{}",
+            serde_json::json!({ "status": "success", "message": "Headless deployment completed successfully!" })
+        );
+    } else {
+        println!("Headless deployment completed successfully!");
+    }
     Ok(())
 }

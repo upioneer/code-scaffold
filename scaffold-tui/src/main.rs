@@ -27,13 +27,22 @@ async fn main() -> Result<()> {
         return Ok(());
     }
 
+    if args.iter().any(|arg| arg == "--version-json") {
+        let output = serde_json::json!({ "version": env!("CARGO_PKG_VERSION") });
+        println!("{}", serde_json::to_string_pretty(&output).unwrap());
+        return Ok(());
+    }
+
     // Ping GitHub for updates (non-blocking 3-second timeout)
     let _ = updater::check_for_updates().await;
 
     // Process initialization and cache directory resolution
     let payload_dir = sync::sync_payload().await?;
 
-    if args.iter().any(|arg| arg == "--help" || arg == "-h" || arg == "/help" || arg == "/h") {
+    if args
+        .iter()
+        .any(|arg| arg == "--help" || arg == "-h" || arg == "/help" || arg == "/h")
+    {
         headless::print_headless_help(payload_dir);
         return Ok(());
     }

@@ -24,7 +24,7 @@ code-scaffold.exe /help
 
 To execute a headless deployment, you must provide the `--headless` flag along with the absolute target directory. You can optionally comma-separate artifacts, skills, and personas:
 ```bash
-code-scaffold.exe --headless --target "/absolute/path/to/target" --personas "Web Dev,AI Systems Engineer" --artifacts "readme.md,.gitignore" --skills "github,typescript" --license "MIT"
+code-scaffold.exe --headless --target "/absolute/path/to/target" --personas "Web Dev,AI Systems Engineer" --artifacts "readme.md,.gitignore" --skills "github,typescript" --license "MIT" --json-output
 ```
 
 ### Argument Details
@@ -33,6 +33,9 @@ code-scaffold.exe --headless --target "/absolute/path/to/target" --personas "Web
 * `--artifacts` (Optional): A comma-separated list of core artifacts (e.g. `readme.md`, `apps/`, `packages/`, `.gitignore`).
 * `--skills` (Optional): A comma-separated list of agent skills (e.g. `github`, `firebase`).
 * `--license` (Optional): An open source license label (e.g. `MIT`).
+* `--json-output` (Optional): Outputs execution results in a strictly machine-readable JSON payload, suppressing all standard TUI logs. Perfect for programmatic integration.
+* `--dry-run` (Optional): Constructs the deployment manifest and outputs it as JSON (when combined with `--json-output`) without executing any file modifications.
+* `--version-json` (Optional): Outputs the current Code Scaffold version as a JSON object (e.g. `{"version": "5.9.0"}`).
 
 ### Best Practices for Agents
 1. Before deploying, always query `code-scaffold.exe /help` to ingest the absolute list of currently available labels. The labels are matched in a case-insensitive manner.
