@@ -45,18 +45,23 @@ jobs:
           - os: ubuntu-24.04
             target: x86_64-unknown-linux-gnu
             artifact_name: code-scaffold-linux-x64.tar.gz
+            ota_artifact_name: ota-payload-linux-x64.tar.gz
           - os: ubuntu-24.04
             target: aarch64-unknown-linux-gnu
             artifact_name: code-scaffold-linux-arm64.tar.gz
+            ota_artifact_name: ota-payload-linux-arm64.tar.gz
           - os: windows-latest
             target: aarch64-pc-windows-msvc
             artifact_name: code-scaffold-windows-arm64.zip
+            ota_artifact_name: ota-payload-windows-arm64.zip
           - os: macos-latest
             target: aarch64-apple-darwin
             artifact_name: code-scaffold-macos-arm64.tar.gz
+            ota_artifact_name: ota-payload-macos-arm64.tar.gz
           - os: windows-latest
             target: x86_64-pc-windows-msvc
             artifact_name: code-scaffold-windows-x64.zip
+            ota_artifact_name: ota-payload-windows-x64.zip
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout Source Tree
@@ -87,18 +92,24 @@ jobs:
         run: |
           cp scaffold-tui/target/${{ matrix.target }}/release/code-scaffold ./code-scaffold
           tar -czvf ${{ matrix.artifact_name }} code-scaffold
+          cp code-scaffold ./update.bin
+          tar -czvf ${{ matrix.ota_artifact_name }} update.bin
 
       - name: Consolidate Output Files (Windows)
         if: matrix.os == 'windows-latest'
         run: |
           copy scaffold-tui\target\${{ matrix.target }}\release\code-scaffold.exe .\code-scaffold.exe
           Compress-Archive -Path code-scaffold.exe -DestinationPath ${{ matrix.artifact_name }}
+          copy scaffold-tui\target\${{ matrix.target }}\release\code-scaffold.exe .\update.exe
+          Compress-Archive -Path update.exe -DestinationPath ${{ matrix.ota_artifact_name }}
 
       - name: Stage Workspace Production Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.artifact_name }}
-          path: ./${{ matrix.artifact_name }}
+          name: bundle-${{ matrix.target }}
+          path: |
+            ./${{ matrix.artifact_name }}
+            ./${{ matrix.ota_artifact_name }}
 
   publish_release_binaries:
     name: Publish Release Asset Pool
