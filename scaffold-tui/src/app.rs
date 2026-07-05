@@ -206,7 +206,7 @@ impl App {
                     (
                         " Step 1: Deployment Target ",
                         format!(
-                            "{} The current deployment target is: {}\nPress [Enter] or [F] to browse for a folder.\nPress [C] to change default directory.{}\nPress [Tab] to keep current folder and proceed.",
+                            "{} The current deployment target is: {}\nPress [Enter] or [F] to browse for a folder.\nPress [C] to change default directory.{}\nPress [Tab] to keep current folder and proceed.\nPress [E] to launch custom theme engine.",
                             BRAILLE_FRAMES[self.splash_frame_idx], clean_path, reset_text
                         ),
                     )
