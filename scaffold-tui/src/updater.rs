@@ -4,17 +4,23 @@ use tokio::time::timeout;
 
 pub async fn check_for_updates() -> Result<()> {
     let target_str = if cfg!(target_os = "windows") && cfg!(target_arch = "x86_64") {
-        "windows-x64"
+        "ota-payload-windows-x64"
     } else if cfg!(target_os = "windows") && cfg!(target_arch = "aarch64") {
-        "windows-arm64"
+        "ota-payload-windows-arm64"
     } else if cfg!(target_os = "linux") && cfg!(target_arch = "x86_64") {
-        "linux-x64"
+        "ota-payload-linux-x64"
     } else if cfg!(target_os = "linux") && cfg!(target_arch = "aarch64") {
-        "linux-arm64"
+        "ota-payload-linux-arm64"
     } else if cfg!(target_os = "macos") && cfg!(target_arch = "aarch64") {
-        "macos-arm64"
+        "ota-payload-macos-arm64"
     } else {
         return Ok(());
+    };
+
+    let bin_name = if cfg!(target_os = "windows") {
+        "update.exe"
+    } else {
+        "update.bin"
     };
 
     // Fast 3-second timeout to prevent hanging offline users during the network check
@@ -22,7 +28,7 @@ pub async fn check_for_updates() -> Result<()> {
         if let Ok(updater) = self_update::backends::github::Update::configure()
             .repo_owner("upioneer")
             .repo_name("code-scaffold")
-            .bin_name("code-scaffold")
+            .bin_name(bin_name)
             .target(target_str)
             .show_download_progress(true)
             .show_output(false)
@@ -57,7 +63,7 @@ pub async fn check_for_updates() -> Result<()> {
                 if let Ok(updater) = self_update::backends::github::Update::configure()
                     .repo_owner("upioneer")
                     .repo_name("code-scaffold")
-                    .bin_name("code-scaffold")
+                    .bin_name(bin_name)
                     .target(target_str)
                     .show_download_progress(true)
                     .show_output(false)
