@@ -454,18 +454,31 @@ impl App {
                     let max_scroll = max_lines.saturating_sub(visible_height) as u16;
                     self.welcome_max_scroll.set(max_scroll);
 
+                    let mut block = ratatui::widgets::Block::default()
+                        .title(" Step 0: Welcome ")
+                        .borders(ratatui::widgets::Borders::ALL)
+                        .border_style(ratatui::style::Style::default().fg(self.theme.primary))
+                        .style(ratatui::style::Style::default().bg(self.theme.bg).fg(self.theme.text))
+                        .padding(ratatui::widgets::Padding::new(4, 4, 1, 1));
+
+                    if !is_in_path && max_scroll > 0 && self.welcome_scroll_offset < max_scroll {
+                        if self.splash_tick_count % 60 < 30 {
+                            block = block.title(
+                                ratatui::widgets::block::Title::from(ratatui::text::Span::styled(
+                                    " ▼ Scroll ▼ ",
+                                    ratatui::style::Style::default().fg(self.theme.accent).add_modifier(ratatui::style::Modifier::BOLD)
+                                ))
+                                .position(ratatui::widgets::block::Position::Bottom)
+                                .alignment(ratatui::layout::Alignment::Center)
+                            );
+                        }
+                    }
+
                     let popup_block = ratatui::widgets::Paragraph::new(text_lines)
                         .alignment(ratatui::layout::Alignment::Left)
                         .wrap(ratatui::widgets::Wrap { trim: false })
                         .scroll((self.welcome_scroll_offset, 0))
-                        .block(
-                            ratatui::widgets::Block::default()
-                                .title(" Step 0: Welcome ")
-                                .borders(ratatui::widgets::Borders::ALL)
-                                .border_style(ratatui::style::Style::default().fg(self.theme.primary))
-                                .style(ratatui::style::Style::default().bg(self.theme.bg).fg(self.theme.text))
-                                .padding(ratatui::widgets::Padding::new(4, 4, 1, 1))
-                        );
+                        .block(block);
 
                     f.render_widget(ratatui::widgets::Clear, area);
                     f.render_widget(popup_block, area);
