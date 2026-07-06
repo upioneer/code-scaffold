@@ -1,0 +1,8 @@
+{
+  "name": "tui-splash",
+  "version": "1",
+  "description": "Architectural playbook and best practices for building robust, instant-on, and visually stunning modern terminal splash screens.",
+  "entryPoint": "./SKILL.md",
+  "engines": {},
+  "requiredPermissions": []
+}

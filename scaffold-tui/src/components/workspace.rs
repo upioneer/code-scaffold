@@ -142,7 +142,7 @@ impl Workspace {
                 label: "Web Dev".into(),
                 selected: false,
                 category: Category::AgentPersona,
-                description: Some("Specialized in modern web technologies (React, Vue, Node.js, HTML/CSS) focusing on responsive design, SEO best practices, and dynamic web application aesthetics.".into()),
+                description: Some("Specialized in modern web technologies (React, Vue, Node.js, HTML/CSS) focusing on responsive design, SEO best practices, and dynamic web application aesthetics. MUST strictly enforce security best practices: implement appropriate rate limiting, securely hash passwords, and protect against common attacks.".into()),
                 version: None,
                     exists_in_target: false,
                     target_version: None,
