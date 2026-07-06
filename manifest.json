@@ -1,6 +1,6 @@
 {
     "metadata": {
-        "version": "6.1.1",
+        "version": "6.2.0",
         "lastUpdated": "2026-06-21T13:40:00Z"
     },
     "env": {
@@ -257,6 +257,13 @@
             "label": "Trackio ML Tracking",
             "source": ".skills/trackio",
             "target": ".skills/trackio",
+            "method": "copy"
+        },
+        {
+            "id": "tui-splash",
+            "label": "TUI Splash Architecture",
+            "source": ".skills/tui-splash",
+            "target": ".skills/tui-splash",
             "method": "copy"
         },
         {

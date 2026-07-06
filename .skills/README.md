@@ -49,6 +49,7 @@ This directory contains complex code payloads (skills) that the Code Scaffold en
 | **Telegram** | Telegram Bot API interactions | v2 | `.skills/telegram` |
 | **Terraform** | Infrastructure as Code (IaC) provisioning and state management using Terraform or OpenTofu. | v2 | `.skills/terraform` |
 | **Trackio ML Tracking** | Integration with Trackio for ML experiment tracking, dashboard deployments, and Hugging Face Spaces sync. | v2 | `.skills/trackio` |
+| **TUI Splash** | Architectural playbook and best practices for building robust, instant-on, and visually stunning modern terminal splash screens. | v1 | `.skills/tui-splash` |
 | **Upstash Redis Management** | Serverless Redis management and rate limiting using Upstash. | v2 | `.skills/upstash` |
 | **Vercel Deployment Routine** | Configuration and deployment routines for Vercel hosting. | v2 | `.skills/vercel` |
 | **Website Deploy Linux** | Enterprise Linux Deployment Agent for deploying static sites and SPAs to Nginx locally or remotely via PuTTY CLI (plink/pscp) or SSH, featuring upfront architectural prompting, automatic .env setups, reference scripts, and non destructive folder structures | v6 | `.skills/website-deploy-linux` |

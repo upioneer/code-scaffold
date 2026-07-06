@@ -36,6 +36,7 @@ pub enum WizardState {
     Complete,
     AgentOverwritePrompt,
     Executing,
+    UpdateComplete,
     CustomSkillInput,
     ThemeNameInput,
     ThemeBgInput,
@@ -79,6 +80,7 @@ pub struct App {
     pub welcome_max_scroll: std::cell::Cell<u16>,
     payload_dir: std::path::PathBuf,
     pub agent_overwrite_choice: Option<bool>,
+    pub update_available: Option<String>,
 }
 
 impl App {
@@ -141,7 +143,9 @@ impl App {
             welcome_max_scroll: std::cell::Cell::new(0),
             payload_dir,
             agent_overwrite_choice: None,
+            update_available: None,
         };
+        crate::updater::spawn_update_checker(app.tx.clone());
         app
     }
 
@@ -206,7 +210,7 @@ impl App {
                     (
                         " Step 1: Deployment Target ",
                         format!(
-                            "{} The current deployment target is: {}\nPress [Enter] or [F] to browse for a folder.\nPress [C] to change default directory.{}\nPress [Tab] to keep current folder and proceed.\nPress [E] to launch custom theme engine.",
+                            "{} The current deployment target is: {}\nPress [Enter] or [F] to browse for a folder.\nPress [C] to change default directory.{}\nPress [Tab] to keep current folder and proceed.\nPress [Shift+E] to launch custom theme engine.",
                             BRAILLE_FRAMES[self.splash_frame_idx], clean_path, reset_text
                         ),
                     )
@@ -251,6 +255,17 @@ impl App {
 
         while !self.should_quit {
             while let Ok(msg) = self.rx.try_recv() {
+                if let Some(version) = msg.strip_prefix("[UPDATE_AVAILABLE] ") {
+                    self.update_available = Some(version.to_string());
+                    self.header.update_available = Some(version.to_string());
+                    continue;
+                }
+                if msg == "[UPDATE_COMPLETE]" {
+                    self.wizard_state = WizardState::UpdateComplete;
+                    self.summary_pane.title = " Update Successful ".to_string();
+                    self.summary_pane.summary_text = "The TUI has been successfully updated in-place.\n\nPress [Enter] to exit. You may then relaunch the application.".to_string();
+                    continue;
+                }
                 self.execution_logs.push(msg);
                 if self.wizard_state == WizardState::Executing {
                     // Auto-scroll if offset is 0
@@ -869,6 +884,11 @@ impl App {
             }
             Action::Quit => self.should_quit = true,
             Action::Execute => {
+                if self.wizard_state == WizardState::UpdateComplete {
+                    self.should_quit = true;
+                    return Ok(());
+                }
+
                 if self.wizard_state == WizardState::Complete {
                     let agent_path = std::path::PathBuf::from(&self.target_folder)
                         .join(".agents")
@@ -1246,6 +1266,37 @@ impl App {
                     let _ = self.update(Action::Execute)?;
                 }
             }
+            Action::Char('u') | Action::Char('U') => {
+                if self.update_available.is_some() {
+                    self.wizard_state = WizardState::Executing;
+                    self.summary_pane.title = " Applying Update ".to_string();
+                    self.summary_pane.summary_text =
+                        "Downloading in-place update payload...".to_string();
+                    self.execution_logs
+                        .push("Starting self-update routine...".to_string());
+
+                    let tx_clone = self.tx.clone();
+                    tokio::spawn(async move {
+                        let _ =
+                            tx_clone.send("Downloading latest binary from GitHub...".to_string());
+                        match tokio::task::spawn_blocking(move || crate::updater::perform_update())
+                            .await
+                        {
+                            Ok(Ok(_)) => {
+                                let _ = tx_clone
+                                    .send("Update successful! Shutting down...".to_string());
+                                let _ = tx_clone.send("[UPDATE_COMPLETE]".to_string());
+                            }
+                            Ok(Err(e)) => {
+                                let _ = tx_clone.send(format!("Update failed: {}", e));
+                            }
+                            Err(e) => {
+                                let _ = tx_clone.send(format!("Task panic: {}", e));
+                            }
+                        }
+                    });
+                }
+            }
             Action::Up => {
                 if self.wizard_state == WizardState::Welcome {
                     self.welcome_scroll_offset = self.welcome_scroll_offset.saturating_sub(1);
@@ -1375,6 +1426,7 @@ impl App {
                     | WizardState::ThemePrimaryInput
                     | WizardState::ThemeSecondaryInput
                     | WizardState::ThemeAccentInput
+                    | WizardState::UpdateComplete
                     | WizardState::AgentOverwritePrompt => {}
                 }
                 self.update_summary();
