@@ -33,8 +33,7 @@ async fn main() -> Result<()> {
         return Ok(());
     }
 
-    // Ping GitHub for updates (non-blocking 3-second timeout)
-    let _ = updater::check_for_updates().await;
+    // Updates are now polled asynchronously in the background by the TUI
 
     // Process initialization and cache directory resolution
     let payload_dir = sync::sync_payload().await?;

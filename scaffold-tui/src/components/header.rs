@@ -9,6 +9,7 @@ use serde_json::Value;
 
 pub struct Header {
     pub version: String,
+    pub update_available: Option<String>,
 }
 
 impl Header {
@@ -18,6 +19,7 @@ impl Header {
                 "v{}",
                 option_env!("GIT_VERSION").unwrap_or(env!("CARGO_PKG_VERSION"))
             ),
+            update_available: None,
         }
     }
 }
@@ -34,7 +36,14 @@ impl Component for Header {
         _active: bool,
         theme: &Theme,
     ) -> Result<()> {
-        let title = format!(" Code Scaffold TUI {} ", self.version);
+        let title = if let Some(update) = &self.update_available {
+            format!(
+                " Code Scaffold TUI {} [Update Available: v{} - Press U] ",
+                self.version, update
+            )
+        } else {
+            format!(" Code Scaffold TUI {} ", self.version)
+        };
         let text = Paragraph::new(title)
             .style(Style::default().fg(theme.text).bg(theme.bg))
             .alignment(ratatui::layout::Alignment::Center)
