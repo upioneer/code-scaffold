@@ -476,7 +476,7 @@ impl App {
                         .style(ratatui::style::Style::default().bg(self.theme.bg).fg(self.theme.text))
                         .padding(ratatui::widgets::Padding::new(4, 4, 1, 1));
 
-                    if !is_in_path && max_scroll > 0 && self.welcome_scroll_offset < max_scroll {
+                    if max_scroll > 0 && self.welcome_scroll_offset < max_scroll {
                         if self.splash_tick_count % 60 < 30 {
                             block = block.title(
                                 ratatui::widgets::block::Title::from(ratatui::text::Span::styled(

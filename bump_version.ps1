@@ -35,4 +35,50 @@ cargo update --workspace
 Set-Location ..
 Write-Host "Updated Cargo.lock" -ForegroundColor Green
 
-Write-Host "Version bump complete! Do not forget to create project_details\history\v$NewVersion\readme.md before committing." -ForegroundColor Yellow
+# 4. Automate TUI Capture (VHS)
+$TapePath = "project_details/assets/demo.tape"
+$HistoryDir = "project_details\history\v$NewVersion"
+if (Test-Path $TapePath) {
+    $vhsCommand = $null
+    $isWin = $IsWindows -or ($PSVersionTable.Platform -match 'Win') -or ($env:OS -match 'Windows')
+
+    if ($isWin) {
+        if (Get-Command wsl -ErrorAction SilentlyContinue -and (wsl bash -c "command -v vhs" 2>$null)) {
+            $vhsCommand = "wsl vhs $(($TapePath -replace '\\', '/'))"
+            Write-Host "Running VHS via WSL (headless-safe)..." -ForegroundColor Cyan
+        } elseif (Get-Command vhs -ErrorAction SilentlyContinue) {
+            $vhsCommand = "vhs $TapePath"
+            Write-Host "Running VHS natively..." -ForegroundColor Cyan
+            Write-Host "Warning: On Windows, native VHS may hang in headless CI/Agent environments due to PTY limitations." -ForegroundColor Yellow
+        }
+    } elseif (Get-Command vhs -ErrorAction SilentlyContinue) {
+        $vhsCommand = "vhs $TapePath"
+        Write-Host "Running VHS natively..." -ForegroundColor Cyan
+    }
+
+    if ($vhsCommand) {
+        Invoke-Expression $vhsCommand
+        
+        # Ensure history directory exists
+        if (-not (Test-Path $HistoryDir)) {
+            New-Item -ItemType Directory -Force -Path $HistoryDir | Out-Null
+        }
+        
+        # Move generated assets
+        if (Test-Path demo.gif) { Move-Item -Force demo.gif "$HistoryDir\demo.gif" }
+        if (Test-Path demo.png) { Move-Item -Force demo.png "$HistoryDir\demo.png" }
+        if (Test-Path demo_splash.png) { Move-Item -Force demo_splash.png "$HistoryDir\demo_splash.png" }
+        if (Test-Path demo_main.png) { Move-Item -Force demo_main.png "$HistoryDir\demo_main.png" }
+        if (Test-Path demo_final.png) { Move-Item -Force demo_final.png "$HistoryDir\demo_final.png" }
+        
+        Write-Host "VHS capture complete! Assets moved to $HistoryDir" -ForegroundColor Green
+    } else {
+        if ($isWin) {
+            Write-Host "Notice: 'vhs' not found natively or in WSL. Skipping TUI capture." -ForegroundColor Yellow
+        } else {
+            Write-Host "Notice: 'vhs' is not installed. Skipping automated TUI capture." -ForegroundColor Yellow
+        }
+    }
+}
+
+Write-Host "Version bump complete! Do not forget to create $HistoryDir\readme.md before committing." -ForegroundColor Yellow

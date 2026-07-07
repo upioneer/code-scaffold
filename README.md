@@ -8,7 +8,7 @@
 [![GitHub last commit](https://img.shields.io/github/last-commit/upioneer/code-scaffold.svg)](https://github.com/upioneer/code-scaffold/commits/main)
 
 
-Code Scaffold is a modular, robust, and highly visual PowerShell-based provisioning engine. It is designed to bootstrap new development projects with predefined directory structures, architectural templates, and complex skill payloads, all driven by a high-fidelity Terminal User Interface (TUI).
+Code Scaffold is a modular, robust, and highly visual native TUI provisioning engine (built in Rust with Ratatui). It is designed to bootstrap new development projects with predefined directory structures, architectural templates, and complex skill payloads, all driven by a high-fidelity Terminal User Interface.
 
 ![Code Scaffold Screenshot 1](project_details/assets/screenshot8.png)
 
@@ -18,7 +18,7 @@ Code Scaffold is a modular, robust, and highly visual PowerShell-based provision
 * **Remote Synchronization Engine**: Capable of dynamically fetching the latest `manifest.json` from the remote GitHub repository. If an update is detected, it automatically downloads and caches the latest `.templates` and `.skills` payloads before execution.
 * **Intelligent Environment Detection**: Detects if it is running in "Local Dev" mode (within the core repository) to preserve source files, or in "Production" mode where it uses a secure temporary workspace (`$env:TEMP\Scaffold_Workspace`).
 * **Dynamic Payload Library**: Easily extensible. By placing a new folder with a `meta.json` inside the `.skills` directory, the engine will automatically discover it and present it as an option in the UI.
-* **Secure Provisioning**: Automatically generates a stringent `.gitignore` for standard security policies, and in production mode, the `scaffold.ps1` script acts as a self-destructing bootstrapper.
+* **Secure Provisioning**: Automatically generates a stringent `.gitignore` for standard security policies, and in production mode, the engine acts as a self-destructing bootstrapper.
 * **Automated Baseline Documentation**: Automatically generates a structured `README.md` in the target directory, dynamically titled with the project's folder name, to provide a consistent starting point for all scaffolded projects.
 * **Immutable Version History**: Adheres to a strict versioning protocol, maintaining snapshots of every significant deployment cycle in `project_details\history`.
 
@@ -27,7 +27,7 @@ Code Scaffold is a modular, robust, and highly visual PowerShell-based provision
 ## Architecture Overview
 
 The system operates on a dual-layer architecture:
-1. **The Core Script (`scaffold.ps1`)**: The bootstrapper that handles the sync engine, user interface rendering, and file provisioning logic.
+1. **The Core Engine (`code-scaffold`)**: The native Rust TUI executable that handles the sync engine, user interface rendering, and file provisioning logic. *(Note: The legacy `scaffold.ps1` bootstrapper is deprecated).*
 2. **The Payload Library (`.skills` & `.templates`)**: Hidden directories containing raw source code and Markdown files. Each skill subdirectory must contain a strict `meta.json` file schema:
 
 ```json
@@ -41,13 +41,14 @@ The system operates on a dual-layer architecture:
 
 ## Usage
 
-Run the script from your terminal:
+Run the native executable from your terminal (e.g., on Windows):
 
 ```powershell
-.\scaffold.ps1
+.\code-scaffold.exe
 ```
+*(Note: The legacy `scaffold.ps1` bootstrapper is deprecated).*
 
-1. **Target Selection**: The script will prompt you for a target directory. Leave it blank to use the current directory.
+1. **Target Selection**: The engine will prompt you for a target directory. Leave it blank to use the current directory.
 2. **Module Selection**: Navigate the menu using the **[Up/Down Arrow]** keys.
 3. **Shortcuts**: 
     * **[Space]**: Toggle individual selection (prompts to overwrite if the artifact already exists).
@@ -63,10 +64,3 @@ Run the script from your terminal:
 ## Agent Skills Library
 
 Code Scaffold features a rapidly growing library of specialized AI skills. For a complete list of available payloads, detailed descriptions, and their target deployment paths, please refer to the **[Agent Skills Library](.skills/README.md)**.
-
-## Project Constraints
-
-This tool was designed under strict constraints to ensure broad compatibility and robust performance:
-* No emojis allowed in the UI or generated code.
-* Absolutely no semicolons used in the PowerShell logic.
-* Automated documentation adheres strictly to Markdown formatting with asterisks for lists (no em-dashes).

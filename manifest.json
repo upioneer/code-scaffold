@@ -1,6 +1,6 @@
 {
     "metadata": {
-        "version": "6.2.0",
+        "version": "6.3.0",
         "lastUpdated": "2026-06-21T13:40:00Z"
     },
     "env": {
@@ -260,10 +260,10 @@
             "method": "copy"
         },
         {
-            "id": "tui-splash",
-            "label": "TUI Splash Architecture",
-            "source": ".skills/tui-splash",
-            "target": ".skills/tui-splash",
+            "id": "tui-tools",
+            "label": "TUI Tools Architecture",
+            "source": ".skills/tui-tools",
+            "target": ".skills/tui-tools",
             "method": "copy"
         },
         {
