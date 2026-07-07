@@ -65,7 +65,9 @@ Before pushing, ensure the root `README.md` includes a visually rich set of badg
 
 ## Step 6: Execute and Push
 
-Perform the Git commands corresponding to the user's choice. Once the state is clean (or if the branch was simply ahead with no conflicts), execute the appropriate push:
+Perform the Git commands corresponding to the user's choice. Once the state is clean (or if the branch was simply ahead with no conflicts), you MUST pause and ask the user for explicit permission to push. NEVER execute the push commands without direct authorization.
+
+Once the user explicitly approves, execute the appropriate push:
 
 ```powershell
 git config user.name  "$GITHUB_USER"

@@ -1,6 +1,0 @@
-{
-  "label": "TUI Splash",
-  "description": "Architectural playbook and best practices for building robust, instant-on, and visually stunning modern terminal splash screens.",
-  "version": "1",
-  "target": ".skills/tui-splash"
-}
