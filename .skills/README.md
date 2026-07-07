@@ -3,11 +3,6 @@
 This directory contains complex code payloads (skills) that the Code Scaffold engine can provision into target projects. Each skill is encapsulated in its own directory and must contain a `meta.json` file defining its properties.
 
 ## Available Skills
-# Agent Skills Library
-
-This directory contains complex code payloads (skills) that the Code Scaffold engine can provision into target projects. Each skill is encapsulated in its own directory and must contain a `meta.json` file defining its properties.
-
-## Available Skills
 
 
 | Label | Description | Version | Target Path |
@@ -22,10 +17,10 @@ This directory contains complex code payloads (skills) that the Code Scaffold en
 | **Firecrawl Scraper** | Crawl and scrape websites to clean markdown or structured data with Firecrawl API & CLI | v2 | `.skills/firecrawl` |
 | **GitHub** | GitHub push workflow with .env based identity configuration; merges github.md into the skill | v5 | `.skills/github` |
 | **Hyperframes** | Video rendering framework for AI agents to create videos using HTML, CSS, and JS. | v2 | `.skills/hyperframes` |
+| **MCP Generator** | Assists with creating new custom Model Context Protocol (MCP) servers, clients, and apps using official SDKs and best practices. | v3 | `.skills/mcp-generator` |
 | **Manim Math Animations** | Mathematical animations using the Manim library. | v2 | `.skills/manim` |
 | **Markmap** | Interactive hierarchical mindmaps derived directly from standard markdown syntax. | v1 | `.skills/markmap` |
 | **Marp** | Generates Marp presentation slides from Markdown | v2 | `.skills/marp` |
-| **MCP Generator** | Assists with creating new custom Model Context Protocol (MCP) servers, clients, and apps using official SDKs and best practices. | v3 | `.skills/mcp-generator` |
 | **Mermaid** | Mermaid diagram creation and rendering | v2 | `.skills/mermaid` |
 | **Node** | Bootstraps a Node.js runtime environment | v3 | `.skills/node` |
 | **Open Design Prototypes** | Create production grade UI design prototypes using the open source Open Design system | v2 | `.skills/open-design` |
@@ -49,7 +44,7 @@ This directory contains complex code payloads (skills) that the Code Scaffold en
 | **Telegram** | Telegram Bot API interactions | v2 | `.skills/telegram` |
 | **Terraform** | Infrastructure as Code (IaC) provisioning and state management using Terraform or OpenTofu. | v2 | `.skills/terraform` |
 | **Trackio ML Tracking** | Integration with Trackio for ML experiment tracking, dashboard deployments, and Hugging Face Spaces sync. | v2 | `.skills/trackio` |
-| **TUI Splash** | Architectural playbook and best practices for building robust, instant-on, and visually stunning modern terminal splash screens. | v1 | `.skills/tui-splash` |
+| **TUI Tools** | Architectural playbook and tooling (including VHS integration) for building robust, instant-on, and visually stunning modern terminal splash screens and integrations. | v2 | `.skills/tui-tools` |
 | **Upstash Redis Management** | Serverless Redis management and rate limiting using Upstash. | v2 | `.skills/upstash` |
 | **Vercel Deployment Routine** | Configuration and deployment routines for Vercel hosting. | v2 | `.skills/vercel` |
 | **Website Deploy Linux** | Enterprise Linux Deployment Agent for deploying static sites and SPAs to Nginx locally or remotely via PuTTY CLI (plink/pscp) or SSH, featuring upfront architectural prompting, automatic .env setups, reference scripts, and non destructive folder structures | v6 | `.skills/website-deploy-linux` |
