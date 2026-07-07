@@ -1,7 +1,7 @@
 ---
 name: TUI Tools
 description: Architectural playbook and tooling (including VHS integration) for building robust, instant-on, and visually stunning modern terminal splash screens and integrations.
-version: 2
+version: 3
 ---
 
 # TUI Tools Architectural Playbook
@@ -49,6 +49,7 @@ For maintaining premium version history and release documentation, static screen
 * **The `.tape` File**: Use VHS `.tape` scripts to orchestrate the CLI sequence. This includes typing commands (`Type "my-cli"`), executing (`Enter`), sleeping to wait for renders (`Sleep 2s`), and capturing outputs (`Screenshot file.png` or `Output file.gif`).
 * **UI Manipulation**: VHS can send specialized keystrokes (`Down`, `Up`, `Space`, `Tab`, `Ctrl+C`) to navigate complex TUI wizards perfectly and repeatedly for every release.
 * **Configuration**: Set robust visual defaults at the top of your `.tape` files (e.g., `Set FontSize 15`, `Set Width 1200`, `Set Height 800`, `Set Padding 20`, `Set Theme "Dracula"`, `Set Framerate 60`).
+* **Order of Operations (Pre-Compilation)**: VHS executes predefined commands against the *currently compiled* binary. It does not natively compile code. Therefore, you MUST explicitly compile the application (e.g., `cargo build`, `npm run build`) immediately *before* executing the `.tape` script. Failure to do so guarantees the screenshots will reflect old, cached versions of the application rather than the newly bumped code.
 * **Deployment Integration**: Always wire the `vhs` execution into the build pipeline or version-bump scripts. This ensures that every release branch automatically generates pristine, up-to-date `.gif` and `.png` assets.
 * **Documentation Embedding**: Output files should be placed alongside their respective changelogs and directly embedded using standard markdown tags (e.g., `![Demo](demo.gif)`). Because `vhs` uses a headless Chromium emulator internally, the resulting captures reflect exactly how the TUI appears in a premium desktop terminal.
 

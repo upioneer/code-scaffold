@@ -5,7 +5,12 @@ use std::fs;
 use std::path::PathBuf;
 
 fn get_prefs_path() -> Option<PathBuf> {
-    if let Some(proj_dirs) = ProjectDirs::from("com", "upioneer", "code-scaffold") {
+    #[cfg(debug_assertions)]
+    let app_name = "code-scaffold-dev";
+    #[cfg(not(debug_assertions))]
+    let app_name = "code-scaffold";
+
+    if let Some(proj_dirs) = ProjectDirs::from("com", "upioneer", app_name) {
         let config_dir = proj_dirs.config_dir();
         if !config_dir.exists() {
             let _ = fs::create_dir_all(config_dir);

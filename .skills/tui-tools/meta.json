@@ -1,6 +1,6 @@
 {
   "label": "TUI Tools",
   "description": "Architectural playbook and tooling (including VHS integration) for building robust, instant-on, and visually stunning modern terminal splash screens and integrations.",
-  "version": "2",
+  "version": "3",
   "target": ".skills/tui-tools"
 }
