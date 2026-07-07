@@ -35,7 +35,13 @@ cargo update --workspace
 Set-Location ..
 Write-Host "Updated Cargo.lock" -ForegroundColor Green
 
-# 4. Automate TUI Capture (VHS)
+# 4. Compile the updated binary before screenshots
+Write-Host "Compiling updated binary..." -ForegroundColor Cyan
+Set-Location scaffold-tui
+cargo build
+Set-Location ..
+
+# 5. Automate TUI Capture (VHS)
 $TapePath = "project_details/assets/demo.tape"
 $HistoryDir = "project_details\history\v$NewVersion"
 if (Test-Path $TapePath) {
@@ -43,7 +49,7 @@ if (Test-Path $TapePath) {
     $isWin = $IsWindows -or ($PSVersionTable.Platform -match 'Win') -or ($env:OS -match 'Windows')
 
     if ($isWin) {
-        if (Get-Command wsl -ErrorAction SilentlyContinue -and (wsl bash -c "command -v vhs" 2>$null)) {
+        if ((Get-Command wsl -ErrorAction SilentlyContinue) -and (wsl bash -c "command -v vhs" 2>$null)) {
             $vhsCommand = "wsl vhs $(($TapePath -replace '\\', '/'))"
             Write-Host "Running VHS via WSL (headless-safe)..." -ForegroundColor Cyan
         } elseif (Get-Command vhs -ErrorAction SilentlyContinue) {

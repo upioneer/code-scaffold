@@ -40,6 +40,7 @@ fn main() {
     println!("cargo:rerun-if-changed={}", changelog_path);
 
     // Extract dynamic git version for the UI header
+    let cargo_version = std::env::var("CARGO_PKG_VERSION").unwrap_or_default();
     if let Ok(output) = std::process::Command::new("git")
         .args(["describe", "--tags", "--always", "--dirty"])
         .output()
@@ -49,6 +50,13 @@ fn main() {
             if git_version.starts_with('v') {
                 git_version = git_version[1..].to_string();
             }
+
+            // Auto-heal dirty version bumps: if CARGO_PKG_VERSION has just been bumped,
+            // the git tag will still return the old dirty version until the new tag is pushed.
+            if git_version.ends_with("-dirty") && !git_version.starts_with(&cargo_version) {
+                git_version = cargo_version;
+            }
+
             println!("cargo:rustc-env=GIT_VERSION={}", git_version);
         }
     }

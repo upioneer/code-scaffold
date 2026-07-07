@@ -85,6 +85,14 @@ pub struct App {
 
 impl App {
     pub fn default_target_dir() -> String {
+        #[cfg(debug_assertions)]
+        return if cfg!(windows) {
+            "C:\\Users\\Developer".to_string()
+        } else {
+            "/home/developer".to_string()
+        };
+
+        #[cfg(not(debug_assertions))]
         directories::UserDirs::new()
             .map(|u| u.home_dir().to_path_buf().to_string_lossy().to_string())
             .unwrap_or_else(|| {
