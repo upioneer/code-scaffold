@@ -182,6 +182,7 @@ impl Workspace {
                         "packages/" => Some("Monorepo shared library directory for storing internal dependencies, shared UI components, TS types, and core backend crates.".to_string()),
                         "agent.md" => Some("System rules and behavioral instructions governing AI agent operations in the workspace.".to_string()),
                         "brand.md" => Some("Design system document encompassing typography, color palettes, and UI component standards.".to_string()),
+                        "contributing.md" => Some("Community contribution guidelines, PR policies, and codebase governance rules.".to_string()),
                         "deploy.yml" => Some("GitHub Actions CI/CD workflow configuration for automated testing and deployment.".to_string()),
                         "design.md" => Some("Architectural blueprints, database schemas, and frontend UI mockups.".to_string()),
                         "env.example" => Some("Environment variable template demonstrating required configuration keys without exposing secrets.".to_string()),
@@ -251,6 +252,39 @@ impl Workspace {
                         selected: false,
                         category: Category::License,
                         description: None,
+                        version: None,
+                        exists_in_target: false,
+                        target_version: None,
+                    });
+                }
+            }
+        }
+
+        let contributions_dir = payload_dir.join(".contributions");
+        if contributions_dir.exists() {
+            if let Ok(entries) = std::fs::read_dir(&contributions_dir) {
+                let mut cont_names: Vec<String> = entries
+                    .flatten()
+                    .filter(|e| e.file_type().map(|ft| ft.is_file()).unwrap_or(false))
+                    .map(|e| {
+                        let name = e.file_name().to_string_lossy().to_string();
+                        name.strip_suffix(".md").unwrap_or(&name).to_string()
+                    })
+                    .collect();
+                cont_names.sort();
+
+                for name in cont_names {
+                    let description = match name.as_str() {
+                        "open-source" => Some("Standard open-source contribution guidelines permitting PRs and community development.".to_string()),
+                        "strict-ownership" => Some("Soft-closed PR policy enforcing issues/discussions only to maintain strict architectural integrity.".to_string()),
+                        _ => None,
+                    };
+
+                    items.push(WorkspaceItem {
+                        label: name,
+                        selected: false,
+                        category: Category::ContributingTemplate,
+                        description,
                         version: None,
                         exists_in_target: false,
                         target_version: None,
@@ -496,7 +530,7 @@ impl Component for Workspace {
                 let category = self.items[actual_idx].category.clone();
                 let label = self.items[actual_idx].label.clone();
 
-                if category == Category::License {
+                if category == Category::License || category == Category::ContributingTemplate {
                     for item in &mut self.items {
                         if item.category == category {
                             item.selected = false;

@@ -11,8 +11,10 @@ pub enum Category {
     DeploymentTarget,
     Artifacts,
     AgentPersona,
+    ContributingTemplate,
     AgentSkills,
     License,
+    Deploy,
 }
 
 pub struct NavTree {
@@ -30,8 +32,13 @@ impl NavTree {
                 (Category::DeploymentTarget, "Deployment Target".to_string()),
                 (Category::Artifacts, "Artifacts".to_string()),
                 (Category::AgentPersona, "Agent Persona".to_string()),
+                (
+                    Category::ContributingTemplate,
+                    "Contributing Template".to_string(),
+                ),
                 (Category::AgentSkills, "Agent Skills".to_string()),
                 (Category::License, "License".to_string()),
+                (Category::Deploy, "Deploy".to_string()),
             ],
             state,
             selected_idx: 0,
@@ -94,7 +101,7 @@ impl Component for NavTree {
             .block(
                 Block::default()
                     .borders(Borders::ALL)
-                    .title(" Categories ")
+                    .title(" Steps ")
                     .border_style(border_style)
                     .style(Style::default().bg(theme.bg)),
             )
