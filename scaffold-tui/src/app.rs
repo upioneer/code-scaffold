@@ -31,6 +31,7 @@ pub enum WizardState {
     DeploymentTarget,
     Artifacts,
     AgentPersona,
+    ContributingTemplate,
     Skills,
     License,
     Complete,
@@ -224,7 +225,8 @@ impl App {
                     )
                 }
                 WizardState::Artifacts => (" Step 2: Core Artifacts ", "Use [Up/Down] to navigate and [Space] to toggle files.\nPress [Enter] or [Tab] when ready to proceed.\nPress [Shift+Tab] to go back.".to_string()),
-                WizardState::AgentPersona => (" Step 3: Agent Persona ", "Select the primary focus for the Agent. This will tailor testing guidelines and instructions.\nPress [Enter] or [Tab] to proceed to Skills.\nPress [Shift+Tab] to go back.".to_string()),
+                WizardState::AgentPersona => (" Step 3: Agent Persona ", "Select the primary focus for the Agent. This will tailor testing guidelines and instructions.\nPress [Enter] or [Tab] to proceed to Contributing Template.\nPress [Shift+Tab] to go back.".to_string()),
+                WizardState::ContributingTemplate => (" Step 4: Contributing Template ", "Select an open-source or proprietary PR contribution policy.\nPress [Enter] or [Tab] to proceed to Skills.\nPress [Shift+Tab] to go back.".to_string()),
                 WizardState::Skills => {
                     let mut text = "Select the domain skills you need. Notice how GitHub and Firebase toggle their companion artifacts!\nPress [Enter] or [Tab] to proceed to Licensing.\nPress [Shift+Tab] to go back.".to_string();
                     if let Some(idx) = self.workspace.state.selected() {
@@ -236,15 +238,15 @@ impl App {
                             }
                         }
                     }
-                    (" Step 4: Agent Skills ", text)
+                    (" Step 5: Agent Skills ", text)
                 }
-                WizardState::License => (" Step 5: Licensing ", "Choose an open-source license.\nPress [Enter] or [Tab] to complete the wizard.\nPress [Shift+Tab] to go back.".to_string()),
+                WizardState::License => (" Step 6: Licensing ", "Choose an open-source license.\nPress [Enter] or [Tab] to complete the wizard.\nPress [Shift+Tab] to go back.".to_string()),
                 _ => ("", "".to_string()),
             };
             self.summary_pane.title = title.to_string();
             self.summary_pane.summary_text = text;
         } else {
-            self.summary_pane.title = " Step 6: Ready to Deploy ".to_string();
+            self.summary_pane.title = " Step 7: Ready to Deploy ".to_string();
             let clean_path = self.target_folder.replace("\\\\?\\", "");
             self.summary_pane.summary_text = format!(
                 "Deployment Footprint:\n- Target: {}\n- {} Artifacts Configured\n- Persona(s): {}\n- {} Skills Bridged\n- License: {}\n\n*** SYSTEM READY! Press [Enter] now to deploy the project scaffolding! ***\n(Press [Shift+Tab] to go back)",
@@ -1087,6 +1089,22 @@ impl App {
                                     );
                                 }
                             }
+                            Category::ContributingTemplate => {
+                                let source = self
+                                    .payload_dir
+                                    .join(".contributions")
+                                    .join(format!("{}.md", item.label));
+                                let target = std::path::PathBuf::from(&self.target_folder)
+                                    .join("CONTRIBUTING.md");
+                                selected_artifacts.push(crate::models::manifest::ArtifactEntry {
+                                    id: item.label.clone(),
+                                    label: item.label.clone(),
+                                    source: Some(source.to_string_lossy().to_string()),
+                                    target: target.to_string_lossy().to_string(),
+                                    method: "copy".into(),
+                                    content: None,
+                                });
+                            }
                             Category::License => {
                                 let source = self
                                     .payload_dir
@@ -1165,6 +1183,32 @@ impl App {
                         self.nav_tree.set_selected(Category::Artifacts);
                     }
                     WizardState::Skills => {
+                        let has_agent = self
+                            .workspace
+                            .items
+                            .iter()
+                            .any(|i| i.selected && i.label == "agent.md");
+                        let has_contributing = self
+                            .workspace
+                            .items
+                            .iter()
+                            .any(|i| i.selected && i.label == "contributing.md");
+
+                        if has_contributing {
+                            self.wizard_state = WizardState::ContributingTemplate;
+                            self.workspace.set_category(Category::ContributingTemplate);
+                            self.nav_tree.set_selected(Category::ContributingTemplate);
+                        } else if has_agent {
+                            self.wizard_state = WizardState::AgentPersona;
+                            self.workspace.set_category(Category::AgentPersona);
+                            self.nav_tree.set_selected(Category::AgentPersona);
+                        } else {
+                            self.wizard_state = WizardState::Artifacts;
+                            self.workspace.set_category(Category::Artifacts);
+                            self.nav_tree.set_selected(Category::Artifacts);
+                        }
+                    }
+                    WizardState::ContributingTemplate => {
                         let has_agent = self
                             .workspace
                             .items
@@ -1399,10 +1443,20 @@ impl App {
                             .items
                             .iter()
                             .any(|i| i.selected && i.label == "agent.md");
+                        let has_contributing = self
+                            .workspace
+                            .items
+                            .iter()
+                            .any(|i| i.selected && i.label == "contributing.md");
+
                         if has_agent {
                             self.wizard_state = WizardState::AgentPersona;
                             self.workspace.set_category(Category::AgentPersona);
                             self.nav_tree.set_selected(Category::AgentPersona);
+                        } else if has_contributing {
+                            self.wizard_state = WizardState::ContributingTemplate;
+                            self.workspace.set_category(Category::ContributingTemplate);
+                            self.nav_tree.set_selected(Category::ContributingTemplate);
                         } else {
                             self.wizard_state = WizardState::Skills;
                             self.workspace.set_category(Category::AgentSkills);
@@ -1410,6 +1464,23 @@ impl App {
                         }
                     }
                     WizardState::AgentPersona => {
+                        let has_contributing = self
+                            .workspace
+                            .items
+                            .iter()
+                            .any(|i| i.selected && i.label == "contributing.md");
+
+                        if has_contributing {
+                            self.wizard_state = WizardState::ContributingTemplate;
+                            self.workspace.set_category(Category::ContributingTemplate);
+                            self.nav_tree.set_selected(Category::ContributingTemplate);
+                        } else {
+                            self.wizard_state = WizardState::Skills;
+                            self.workspace.set_category(Category::AgentSkills);
+                            self.nav_tree.set_selected(Category::AgentSkills);
+                        }
+                    }
+                    WizardState::ContributingTemplate => {
                         self.wizard_state = WizardState::Skills;
                         self.workspace.set_category(Category::AgentSkills);
                         self.nav_tree.set_selected(Category::AgentSkills);
@@ -1421,9 +1492,11 @@ impl App {
                     }
                     WizardState::License => {
                         self.wizard_state = WizardState::Complete;
+                        self.workspace.set_category(Category::Deploy);
+                        self.nav_tree.set_selected(Category::Deploy);
                         self.active_block = ActiveBlock::NavTree;
                     }
-                    WizardState::Complete => {
+                    WizardState::Complete | WizardState::UpdateComplete => {
                         let _ = self.update(Action::Execute)?;
                     }
                     WizardState::Executing
@@ -1434,7 +1507,6 @@ impl App {
                     | WizardState::ThemePrimaryInput
                     | WizardState::ThemeSecondaryInput
                     | WizardState::ThemeAccentInput
-                    | WizardState::UpdateComplete
                     | WizardState::AgentOverwritePrompt => {}
                 }
                 self.update_summary();

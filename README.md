@@ -12,6 +12,19 @@ Code Scaffold is a modular, robust, and highly visual native TUI provisioning en
 
 ![Code Scaffold Screenshot 1](project_details/assets/screenshot8.png)
 
+## Compatibility & Integration
+
+Code Scaffold is built to seamlessly adapt to a wide spectrum of workflows. Whether you are driving it manually or via an autonomous AI system, it provides native support for:
+
+- [x] **Terminal/CLI** (Native ratatui execution)
+- [x] **Agent Harness** (e.g., Hermes / Openclaw integration)
+- [x] **Agent Client Protocol (ACP)** ([Learn more](ACP.md))
+- [x] **Headless CI/CD Pipelines** (GitHub Actions / GitLab CI)
+- [x] **Model Context Protocol (MCP)** (Exposing scaffolding via MCP)
+
+### Agent Client Protocol (ACP)
+Code Scaffold is officially compatible with the Agent Client Protocol (ACP). This allows the tool to act interchangeably as both an Agent and a Client to suit a wider range of workflows. See **[ACP.md](ACP.md)** for detailed engagement information.
+
 ## Features
 
 * **High-Fidelity TUI**: A deeply interactive, color-coded terminal interface featuring animated ASCII branding, staggered visual loading, and clean category-based module selection.

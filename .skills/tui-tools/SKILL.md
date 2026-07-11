@@ -1,7 +1,7 @@
 ---
 name: TUI Tools
 description: Architectural playbook and tooling (including VHS integration) for building robust, instant-on, and visually stunning modern terminal splash screens and integrations.
-version: 3
+version: 4
 ---
 
 # TUI Tools Architectural Playbook
@@ -62,8 +62,8 @@ To bypass this, execute the `vhs` capture through Windows Subsystem for Linux (W
 Before running VHS via WSL for the first time, you MUST proactively prompt the user to authorize a one-time WSL environment preparation. Because standard Ubuntu `apt` repositories are frequently missing or broken for these specific tools, you MUST install them via static binaries:
 
 ```powershell
-# 1. Ensure extraction tools are available
-wsl -u root bash -c "apt-get update && apt-get install -y xz-utils"
+# 1. Ensure extraction tools and headless Chromium graphics dependencies are available
+wsl -u root bash -c "apt-get update && apt-get install -y xz-utils libnss3 libasound2 libgbm1 libxkbcommon0 libxcomposite1 libxdamage1 libxfixes3 libxrandr2 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libpango-1.0-0 libcairo2"
 
 # 2. Install FFmpeg Static Binary
 wsl -u root bash -c "cd /tmp && curl -fsSL https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz -o ffmpeg.tar.xz && tar -xf ffmpeg.tar.xz && cp ffmpeg-*-static/ffmpeg /usr/local/bin/ffmpeg && chmod +x /usr/local/bin/ffmpeg"
