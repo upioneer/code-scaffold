@@ -1,5 +1,6 @@
 #![allow(warnings)]
 
+mod acp_server;
 mod action;
 mod app;
 mod components;
@@ -48,6 +49,11 @@ async fn main() -> Result<()> {
 
     if args.iter().any(|arg| arg == "--headless") {
         headless::run_headless(payload_dir, args).await?;
+        return Ok(());
+    }
+
+    if args.iter().any(|arg| arg == "--acp" || arg == "--server") {
+        acp_server::run_acp_server(payload_dir, args).await?;
         return Ok(());
     }
 

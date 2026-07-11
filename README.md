@@ -8,7 +8,7 @@
 [![GitHub last commit](https://img.shields.io/github/last-commit/upioneer/code-scaffold.svg)](https://github.com/upioneer/code-scaffold/commits/main)
 
 
-Code Scaffold is a modular, robust, and highly visual native TUI provisioning engine (built in Rust with Ratatui). It is designed to bootstrap new development projects with predefined directory structures, architectural templates, and complex skill payloads, all driven by a high-fidelity Terminal User Interface.
+Code Scaffold is a modular, robust, and highly visual native TUI provisioning engine. It is designed to bootstrap new development projects with predefined directory structures, architectural templates, and complex skill payloads, all driven by a high-fidelity Terminal User Interface.
 
 ![Code Scaffold Screenshot 1](project_details/assets/screenshot8.png)
 
@@ -16,11 +16,11 @@ Code Scaffold is a modular, robust, and highly visual native TUI provisioning en
 
 Code Scaffold is built to seamlessly adapt to a wide spectrum of workflows. Whether you are driving it manually or via an autonomous AI system, it provides native support for:
 
-- [x] **Terminal/CLI** (Native ratatui execution)
-- [x] **Agent Harness** (e.g., Hermes / Openclaw integration)
-- [x] **Agent Client Protocol (ACP)** ([Learn more](ACP.md))
-- [x] **Headless CI/CD Pipelines** (GitHub Actions / GitLab CI)
-- [x] **Model Context Protocol (MCP)** (Exposing scaffolding via MCP)
+- ✅ **Terminal/CLI** (Native command-line execution)
+- ✅ **Agent Harness** (ex: Hermes / Openclaw integration)
+- ✅ **Agent Client Protocol (ACP)** ([Learn more](ACP.md))
+- ✅ **Headless CI/CD Pipelines** (GitHub Actions / GitLab CI)
+- ✅ **Model Context Protocol (MCP)** (Exposing scaffolding via MCP)
 
 ### Agent Client Protocol (ACP)
 Code Scaffold is officially compatible with the Agent Client Protocol (ACP). This allows the tool to act interchangeably as both an Agent and a Client to suit a wider range of workflows. See **[ACP.md](ACP.md)** for detailed engagement information.
