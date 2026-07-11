@@ -13,3 +13,7 @@ This release introduces **Scaffold Connect**, a zero-trust, ephemeral bridging p
 
 ## Policy Upgrades
 * Formalized the overarching repository operations into a `CONTRIBUTING.md` soft-closed rulebook. This protects the AI framework's internal memory state while actively promoting ecosystem plugins via the BYOS architecture.
+
+## Screenshots
+![Code Scaffold Demo](demo.gif)
+![Code Scaffold Splash](demo_splash.png)
