@@ -65,6 +65,16 @@ export async function installAdHocSkill(skillIdentifier, targetProjectDir) {
       if (!currentOpenCode.includes(".skills/")) {
         await fs.writeFile(openCodeFile, currentOpenCode + rule, "utf-8")
       }
+
+      // Devin CLI & Devin Desktop Mapping
+      const devinDir = path.join(targetProjectDir, ".devin", "rules")
+      await fs.mkdir(devinDir, { recursive: true })
+      const devinRules = path.join(devinDir, "skills.md")
+      let currentDevin = ""
+      try { currentDevin = await fs.readFile(devinRules, "utf-8") } catch (e) {}
+      if (!currentDevin.includes(".skills/")) {
+        await fs.writeFile(devinRules, currentDevin + rule, "utf-8")
+      }
     } catch (configError) {
       // Fail silently if configuration writing fails, to prevent blocking the skill installation
     }
