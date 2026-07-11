@@ -45,6 +45,15 @@ pub enum WizardState {
     ThemePrimaryInput,
     ThemeSecondaryInput,
     ThemeAccentInput,
+    AgentCopilot,
+}
+
+#[derive(Debug, Clone)]
+pub struct AgentSession {
+    pub pin: String,
+    pub key: String,
+    pub status: String,
+    pub recent_activity: Vec<String>,
 }
 
 pub struct App {
@@ -82,6 +91,7 @@ pub struct App {
     payload_dir: std::path::PathBuf,
     pub agent_overwrite_choice: Option<bool>,
     pub update_available: Option<String>,
+    pub agent_session: Option<AgentSession>,
 }
 
 impl App {
@@ -153,6 +163,7 @@ impl App {
             payload_dir,
             agent_overwrite_choice: None,
             update_available: None,
+            agent_session: None,
         };
         crate::updater::spawn_update_checker(app.tx.clone());
         app
@@ -169,6 +180,7 @@ impl App {
                 | WizardState::ThemePrimaryInput
                 | WizardState::ThemeSecondaryInput
                 | WizardState::ThemeAccentInput
+                | WizardState::AgentCopilot
                 | WizardState::AgentOverwritePrompt
         ) {
             return;
@@ -275,6 +287,21 @@ impl App {
                     self.summary_pane.title = " Update Successful ".to_string();
                     self.summary_pane.summary_text = "The TUI has been successfully updated in-place.\n\nPress [Enter] to exit. You may then relaunch the application.".to_string();
                     continue;
+                }
+                if let Some(agent_name) = msg.strip_prefix("AGENT_PAIRED:") {
+                    self.header.agent_connected = Some(agent_name.to_string());
+                    if let Some(session) = &mut self.agent_session {
+                        session.status = "PAIRED".to_string();
+                        session
+                            .recent_activity
+                            .push(format!("Handshake complete. Client: {}", agent_name));
+                    }
+                    continue;
+                }
+                if let Some(session) = &mut self.agent_session {
+                    if self.wizard_state == WizardState::AgentCopilot {
+                        session.recent_activity.push(msg.clone());
+                    }
                 }
                 self.execution_logs.push(msg);
                 if self.wizard_state == WizardState::Executing {
@@ -591,6 +618,7 @@ impl App {
                         WizardState::ThemePrimaryInput => "Primary",
                         WizardState::ThemeSecondaryInput => "Secondary",
                         WizardState::ThemeAccentInput => "Accent",
+                        WizardState::AgentCopilot => "Copilot",
                         _ => "",
                     };
 
@@ -608,6 +636,32 @@ impl App {
                                 .padding(ratatui::widgets::Padding::new(4, 4, 1, 1))
                         );
                     let area = Self::centered_rect(80, 50, size);
+                    f.render_widget(ratatui::widgets::Clear, area);
+                    f.render_widget(popup_block, area);
+                } else if self.wizard_state == WizardState::AgentCopilot {
+                    let mut title_name = "Agent".to_string();
+                    let mut text = "Initializing remote agent broker...\n\n".to_string();
+                    if let Some(session) = &self.agent_session {
+                        text.push_str(&format!("PIN: {}\nStatus: {}\n\n", session.pin, session.status));
+                        for act in &session.recent_activity {
+                            text.push_str(&format!("> {}\n", act));
+                        }
+                    }
+                    if let Some(agent) = &self.header.agent_connected {
+                        title_name = agent.clone();
+                    }
+
+                    let popup_block = ratatui::widgets::Paragraph::new(text)
+                        .wrap(ratatui::widgets::Wrap { trim: false })
+                        .block(
+                            ratatui::widgets::Block::default()
+                                .title(format!(" 🤖 {} Co-Pilot ", title_name))
+                                .borders(ratatui::widgets::Borders::ALL)
+                                .border_style(ratatui::style::Style::default().fg(self.theme.accent))
+                                .style(ratatui::style::Style::default().bg(self.theme.bg).fg(self.theme.text))
+                                .padding(ratatui::widgets::Padding::new(4, 4, 1, 1))
+                        );
+                    let area = Self::centered_rect(80, 80, size);
                     f.render_widget(ratatui::widgets::Clear, area);
                     f.render_widget(popup_block, area);
                 }
@@ -727,6 +781,7 @@ impl App {
                 | WizardState::ThemePrimaryInput
                 | WizardState::ThemeSecondaryInput
                 | WizardState::ThemeAccentInput
+                | WizardState::AgentCopilot
         ) {
             match action {
                 Action::Char(c) => {
@@ -918,7 +973,13 @@ impl App {
                     }
                 }
             }
-            Action::Quit => self.should_quit = true,
+            Action::Quit => {
+                if self.wizard_state == WizardState::AgentCopilot {
+                    self.wizard_state = WizardState::DeploymentTarget;
+                } else {
+                    self.should_quit = true;
+                }
+            }
             Action::Execute => {
                 if self.wizard_state == WizardState::UpdateComplete {
                     self.should_quit = true;
@@ -1357,6 +1418,32 @@ impl App {
                     let _ = self.update(Action::Execute)?;
                 }
             }
+            Action::Char('a') | Action::Char('A') => {
+                if self.agent_session.is_some() {
+                    if self.wizard_state == WizardState::AgentCopilot {
+                        self.wizard_state = WizardState::DeploymentTarget;
+                    } else {
+                        self.wizard_state = WizardState::AgentCopilot;
+                    }
+                } else {
+                    let session = crate::scaffold_connect::ScaffoldConnectSession::new_ephemeral();
+                    let session_clone = session.clone();
+                    self.agent_session = Some(crate::app::AgentSession {
+                        pin: session.pin.clone(),
+                        key: session.key.clone(),
+                        status: "Connecting...".to_string(),
+                        recent_activity: vec!["Initializing ephemeral keys...".to_string()],
+                    });
+                    self.wizard_state = WizardState::AgentCopilot;
+
+                    let tx_clone = self.tx.clone();
+                    tokio::spawn(async move {
+                        if let Err(e) = session_clone.connect(tx_clone.clone()).await {
+                            let _ = tx_clone.send(format!("Scaffold Connect Error: {}", e));
+                        }
+                    });
+                }
+            }
             Action::Char('u') | Action::Char('U') => {
                 if self.update_available.is_some() {
                     self.wizard_state = WizardState::Executing;
@@ -1546,6 +1633,7 @@ impl App {
                     | WizardState::ThemePrimaryInput
                     | WizardState::ThemeSecondaryInput
                     | WizardState::ThemeAccentInput
+                    | WizardState::AgentCopilot
                     | WizardState::AgentOverwritePrompt => {}
                 }
                 self.update_summary();
