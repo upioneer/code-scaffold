@@ -1,6 +1,6 @@
 [package]
 name = "scaffold-tui"
-version = "6.5.0"
+version = "7.0.0"
 edition = "2021"
 
 [dependencies]
@@ -19,6 +19,11 @@ agent-client-protocol = "1.2.0"
 agent-client-protocol-rmcp = "2.0.0"
 rmcp = "2.2.0"
 schemars = "1.2.1"
+tokio-tungstenite = "0.30.0"
+futures-util = "0.3.32"
+aes-gcm = "0.11.0"
+base64 = "0.22.1"
+rand = "0.8.5"
 
 [build-dependencies]
 winres = "0.1.12"

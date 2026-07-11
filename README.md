@@ -3,14 +3,11 @@
 [![GitHub stars](https://img.shields.io/github/stars/upioneer/code-scaffold.svg?style=social&label=Star&maxAge=2592000)](https://GitHub.com/upioneer/code-scaffold/stargazers/)
 [![GitHub forks](https://img.shields.io/github/forks/upioneer/code-scaffold.svg?style=social&label=Fork&maxAge=2592000)](https://GitHub.com/upioneer/code-scaffold/network/)
 [![GitHub issues](https://img.shields.io/github/issues/upioneer/code-scaffold.svg)](https://GitHub.com/upioneer/code-scaffold/issues/)
-[![GitHub pull-requests](https://img.shields.io/github/issues-pr/upioneer/code-scaffold.svg)](https://GitHub.com/upioneer/code-scaffold/pulls/)
-[![GitHub contributors](https://img.shields.io/github/contributors/upioneer/code-scaffold.svg)](https://GitHub.com/upioneer/code-scaffold/graphs/contributors/)
 [![GitHub last commit](https://img.shields.io/github/last-commit/upioneer/code-scaffold.svg)](https://github.com/upioneer/code-scaffold/commits/main)
-
 
 Code Scaffold is a modular, robust, and highly visual native TUI provisioning engine. It is designed to bootstrap new development projects with predefined directory structures, architectural templates, and complex skill payloads, all driven by a high-fidelity Terminal User Interface.
 
-![Code Scaffold Screenshot 1](project_details/assets/screenshot8.png)
+![Code Scaffold Screenshot 1](project_details/history/v6.5.0/demo.gif)
 
 ## Compatibility & Integration
 
@@ -35,7 +32,7 @@ Code Scaffold is officially compatible with the Agent Client Protocol (ACP). Thi
 * **Automated Baseline Documentation**: Automatically generates a structured `README.md` in the target directory, dynamically titled with the project's folder name, to provide a consistent starting point for all scaffolded projects.
 * **Immutable Version History**: Adheres to a strict versioning protocol, maintaining snapshots of every significant deployment cycle in `project_details\history`.
 
-![Code Scaffold Screenshot 2](project_details/assets/screenshot5.png)
+![Code Scaffold Screenshot 2](project_details/history/v6.5.0/demo_splash.png)
 
 ## Architecture Overview
 

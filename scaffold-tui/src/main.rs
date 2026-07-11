@@ -8,6 +8,7 @@ mod headless;
 mod manifest_engine;
 mod models;
 mod prefs;
+mod scaffold_connect;
 mod sync;
 mod theme;
 mod tui;
