@@ -219,7 +219,7 @@ impl App {
                     (
                         " Step 1: Deployment Target ",
                         format!(
-                            "{} The current deployment target is: {}\nPress [Enter] or [F] to browse for a folder.\nPress [C] to change default directory.{}\nPress [Tab] to keep current folder and proceed.\nPress [Shift+E] to launch custom theme engine.",
+                            "{} The current deployment target is: {}\nPress [Enter] or [F] to browse for a folder.\nPress [C] to change default directory.{}\nPress [Tab] to keep current folder and proceed.\nPress [Shift+E] to launch custom theme engine.\nPress [W] to review the Welcome message.",
                             BRAILLE_FRAMES[self.splash_frame_idx], clean_path, reset_text
                         ),
                     )
@@ -402,18 +402,32 @@ impl App {
                     let mut text_lines = Vec::new();
                     // Optional top padding
                     text_lines.push(ratatui::text::Line::from(""));
+
+                    // Extract the current theme's primary and accent colors safely
+                    let c1 = self.theme.primary;
+                    let mut c2 = self.theme.accent;
+
+                    if crate::theme::Theme::color_distance(&c1, &c2) < 10.0 {
+                        c2 = self.theme.secondary;
+                    }
+                    if crate::theme::Theme::color_distance(&c1, &c2) < 10.0 {
+                        c2 = crate::theme::Theme::auto_derive_accent(&c1);
+                    }
+
+                    let (r1, g1, b1) = if let ratatui::style::Color::Rgb(r, g, b) = c1 { (r as f32, g as f32, b as f32) } else { (255.0, 255.0, 255.0) };
+                    let (r2, g2, b2) = if let ratatui::style::Color::Rgb(r, g, b) = c2 { (r as f32, g as f32, b as f32) } else { (200.0, 200.0, 200.0) };
+
                     for line in logo.lines() {
                         if line.is_empty() {
                             continue;
                         }
                         let mut spans = Vec::new();
-                        // Removed manual padding in favor of block padding
                         let len = line.chars().count();
                         for (j, ch) in line.chars().enumerate() {
                             let ratio = if len > 1 { j as f32 / (len - 1) as f32 } else { 0.0 };
-                            let r = (180.0 * (1.0 - ratio) + 0.0 * ratio) as u8;
-                            let g = (0.0 * (1.0 - ratio) + 255.0 * ratio) as u8;
-                            let b = 255;
+                            let r = (r1 * (1.0 - ratio) + r2 * ratio) as u8;
+                            let g = (g1 * (1.0 - ratio) + g2 * ratio) as u8;
+                            let b = (b1 * (1.0 - ratio) + b2 * ratio) as u8;
                             spans.push(ratatui::text::Span::styled(ch.to_string(), ratatui::style::Style::default().fg(ratatui::style::Color::Rgb(r, g, b))));
                         }
                         text_lines.push(ratatui::text::Line::from(spans));
@@ -570,7 +584,19 @@ impl App {
                         ""
                     };
 
-                    let text = format!("{}\n\n> {}\u{2588}{}{}\n\nPress [Enter] to submit, or [Esc] to cancel.", prompt, self.theme_input_buffer, error_msg, tab_hint);
+                    let input_prefix = match self.wizard_state {
+                        WizardState::ThemeNameInput => "Theme Name",
+                        WizardState::ThemeBgInput => "Background",
+                        WizardState::ThemeTextInput => "Text",
+                        WizardState::ThemePrimaryInput => "Primary",
+                        WizardState::ThemeSecondaryInput => "Secondary",
+                        WizardState::ThemeAccentInput => "Accent",
+                        _ => "",
+                    };
+
+                    let link_hint = "\n\nNeed inspiration? Visit: schemecolor.com/palettes";
+
+                    let text = format!("{}\n\n{}: > {}\u{2588}{}{}{}\n\nPress [Enter] to submit, or [Esc] to cancel.", prompt, input_prefix, self.theme_input_buffer, error_msg, tab_hint, link_hint);
                     let popup_block = ratatui::widgets::Paragraph::new(text)
                         .wrap(ratatui::widgets::Wrap { trim: false })
                         .block(
@@ -1243,6 +1269,19 @@ impl App {
                 self.theme_input_buffer.clear();
                 self.is_advanced_theme_mode = false;
                 self.theme_input_error.clear();
+            }
+            Action::Char('w') | Action::Char('W') => {
+                if self.wizard_state != WizardState::Welcome
+                    && self.wizard_state != WizardState::CustomSkillInput
+                    && self.wizard_state != WizardState::ThemeNameInput
+                    && self.wizard_state != WizardState::ThemeBgInput
+                    && self.wizard_state != WizardState::ThemeTextInput
+                    && self.wizard_state != WizardState::ThemePrimaryInput
+                    && self.wizard_state != WizardState::ThemeSecondaryInput
+                    && self.wizard_state != WizardState::ThemeAccentInput
+                {
+                    self.wizard_state = WizardState::Welcome;
+                }
             }
             Action::Char('f') | Action::Char('F') | Action::Char('c') | Action::Char('C') => {
                 if self.wizard_state == WizardState::DeploymentTarget {
