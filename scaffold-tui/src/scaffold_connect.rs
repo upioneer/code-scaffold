@@ -47,8 +47,8 @@ impl ScaffoldConnectSession {
             self.pin
         );
         tx.send(format!(
-            "Establishing Scaffold Connect bridge to {}...",
-            relay_url
+            "Establishing zero-trust Scaffold Connect bridge [Room: {}]...",
+            self.pin
         ))?;
 
         let (ws_stream, _) = connect_async(&relay_url).await?;
@@ -78,6 +78,70 @@ impl ScaffoldConnectSession {
                                                 client_info.get("name").and_then(|n| n.as_str())
                                             {
                                                 tx.send(format!("AGENT_PAIRED:{}", name))?;
+                                                
+                                                // Send handshake acknowledgment
+                                                let res_payload = serde_json::json!({
+                                                    "jsonrpc": "2.0",
+                                                    "id": rpc.id,
+                                                    "result": { "status": "connected" }
+                                                }).to_string();
+                                                
+                                                let mut rng = OsRng;
+                                                let mut nonce_bytes = [0u8; 12];
+                                                rng.fill_bytes(&mut nonce_bytes);
+                                                let out_nonce = Nonce::from_slice(&nonce_bytes);
+                                                
+                                                if let Ok(encrypted) = cipher.encrypt(out_nonce, res_payload.as_bytes()) {
+                                                    let mut final_payload = nonce_bytes.to_vec();
+                                                    final_payload.extend(encrypted);
+                                                    use futures_util::SinkExt;
+                                                    let _ = write.send(Message::Binary(final_payload.into())).await;
+                                                }
+                                            }
+                                        }
+                                    }
+                                } else if rpc.method.as_deref() == Some("execute_command") {
+                                    if let Some(params) = rpc.params {
+                                        if let Some(cmd) = params.get("command").and_then(|c| c.as_str()) {
+                                            tx.send(format!("⚡ Agent executing: {}", cmd))?;
+                                            
+                                            // Execute command natively
+                                            let output = std::process::Command::new("cmd")
+                                                .args(&["/C", cmd])
+                                                .output();
+                                                
+                                            let result = match output {
+                                                Ok(out) => {
+                                                    let mut s = String::from_utf8_lossy(&out.stdout).to_string();
+                                                    if !out.stderr.is_empty() {
+                                                        s.push_str("\nSTDERR:\n");
+                                                        s.push_str(&String::from_utf8_lossy(&out.stderr));
+                                                    }
+                                                    s
+                                                },
+                                                Err(e) => format!("Execution Failed: {}", e),
+                                            };
+                                            
+                                            // Echo the output directly back into the user's TUI so they can see what the agent sees
+                                            tx.send(format!("Output: {}", result.trim()))?;
+                                            
+                                            // Encrypt and send result back to agent
+                                            let res_payload = serde_json::json!({
+                                                "jsonrpc": "2.0",
+                                                "id": rpc.id,
+                                                "result": result
+                                            }).to_string();
+                                            
+                                            let mut rng = OsRng;
+                                            let mut nonce_bytes = [0u8; 12];
+                                            rng.fill_bytes(&mut nonce_bytes);
+                                            let out_nonce = Nonce::from_slice(&nonce_bytes);
+                                            
+                                            if let Ok(encrypted) = cipher.encrypt(out_nonce, res_payload.as_bytes()) {
+                                                let mut final_payload = nonce_bytes.to_vec();
+                                                final_payload.extend(encrypted);
+                                                use futures_util::SinkExt;
+                                                let _ = write.send(Message::Binary(final_payload.into())).await;
                                             }
                                         }
                                     }

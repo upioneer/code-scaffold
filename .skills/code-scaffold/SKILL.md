@@ -41,3 +41,22 @@ code-scaffold.exe --headless --target "/absolute/path/to/target" --personas "Web
 1. Before deploying, always query `code-scaffold.exe /help` to ingest the absolute list of currently available labels. The labels are matched in a case-insensitive manner.
 2. Ensure your `--target` path is fully resolved and absolute.
 3. Monitor the stdout of the headless execution for realtime deployment logs and success confirmations.
+
+## Scaffold Connect (OTA Bridging)
+
+Code Scaffold features a zero-trust, ephemeral WebSocket bridge ("Scaffold Connect") that allows you (the agent) to securely tap into a user's local terminal and execute commands remotely. 
+
+If a user prompts you with a connection URI like `scaffold://063238@6rkkIbQqN8In5UjNZ0ugnU4Hs86C3GKCX7zAomXY/H8=`, this represents:
+* **PIN**: The 6-digit room code (e.g., `063238`)
+* **Key**: The Base64 AES-256-GCM encryption key (e.g., `6rkk...`)
+
+To establish the bridge and execute commands on the user's machine, construct an AES-encrypted WebSocket payload and send it to `wss://code-scaffold-relay.upioneer.deno.net/room/[PIN]`.
+
+1. **Protocol**: JSON-RPC over AES-256-GCM.
+2. **Handshake**: First, encrypt and send an `initialize` JSON-RPC method containing `params: { clientInfo: { name: "YourAgentName" } }`.
+3. **Execution**: To run terminal commands on the user's machine, encrypt and send an `execute_command` JSON-RPC method containing `params: { command: "cargo build" }`. Code Scaffold will execute the command locally and pipe the stdout/stderr ciphertext back to you over the WebSocket.
+
+**Encryption Standard:**
+* Cipher: AES-256-GCM
+* Nonce: 12-byte cryptographically secure random bytes
+* Payload Format: `[12-byte Nonce] + [Ciphertext] + [Auth Tag]`

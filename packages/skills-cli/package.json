@@ -1,9 +1,12 @@
 {
   "name": "@code-scaffold/skills-cli",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Ad-hoc installer for Code Scaffold skills",
   "bin": {
     "skills": "./bin/cli.js"
   },
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "ws": "^8.21.0"
+  }
 }
