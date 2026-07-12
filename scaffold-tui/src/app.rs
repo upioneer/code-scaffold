@@ -48,6 +48,7 @@ pub enum WizardState {
     AgentCopilotWelcome,
     AgentCopilotTimerSelection,
     AgentCopilot,
+    ConfirmExit,
 }
 
 #[derive(Debug, Clone)]
@@ -61,6 +62,7 @@ pub struct AgentSession {
 
 pub struct App {
     pub should_quit: bool,
+    pub restart_requested: bool,
     pub active_block: ActiveBlock,
     pub theme: Theme,
     pub theme_idx: usize,
@@ -97,6 +99,7 @@ pub struct App {
     pub agent_session: Option<AgentSession>,
     pub copilot_timer_input: String,
     pub copilot_timer_error: String,
+    pub cancel_tx: Option<tokio::sync::oneshot::Sender<()>>,
 }
 
 impl App {
@@ -135,6 +138,7 @@ impl App {
 
         let app = Self {
             should_quit: false,
+            restart_requested: false,
             active_block: ActiveBlock::Workspace,
             theme: Theme::get_by_index(crate::prefs::load_theme_idx()),
             theme_idx: crate::prefs::load_theme_idx(),
@@ -171,6 +175,7 @@ impl App {
             agent_session: None,
             copilot_timer_input: "60".to_string(),
             copilot_timer_error: String::new(),
+            cancel_tx: None,
         };
         crate::updater::spawn_update_checker(app.tx.clone());
         app
@@ -191,6 +196,7 @@ impl App {
                 | WizardState::AgentCopilotTimerSelection
                 | WizardState::AgentCopilot
                 | WizardState::AgentOverwritePrompt
+                | WizardState::ConfirmExit
         ) {
             return;
         }
@@ -292,18 +298,41 @@ impl App {
                     continue;
                 }
                 if msg == "[UPDATE_COMPLETE]" {
-                    self.wizard_state = WizardState::UpdateComplete;
-                    self.summary_pane.title = " Update Successful ".to_string();
-                    self.summary_pane.summary_text = "The TUI has been successfully updated in-place.\n\nPress [Enter] to exit. You may then relaunch the application.".to_string();
+                    self.should_quit = true;
+                    self.restart_requested = true;
+                    continue;
+                }
+                if msg == "[CONNECTION_DROPPED]" {
+                    self.header.agent_connected = None;
+                    if let Some(session) = &mut self.agent_session {
+                        session.status = "DISCONNECTED".to_string();
+                        session.pin = "".to_string();
+                        session.key = "".to_string();
+                        session.recent_activity.push(
+                            "Connection dropped by remote relay. Please re-pair.".to_string(),
+                        );
+                    }
                     continue;
                 }
                 if let Some(agent_name) = msg.strip_prefix("AGENT_PAIRED:") {
-                    self.header.agent_connected = Some(agent_name.to_string());
-                    if let Some(session) = &mut self.agent_session {
-                        session.status = "PAIRED".to_string();
-                        session
-                            .recent_activity
-                            .push(format!("Handshake complete. Client: {}", agent_name));
+                    if agent_name == "TIMEOUT" {
+                        self.header.agent_connected = None;
+                        if let Some(session) = &mut self.agent_session {
+                            session.status = "EXPIRED".to_string();
+                            session.pin = "".to_string();
+                            session.key = "".to_string();
+                            session
+                                .recent_activity
+                                .push("Session expired. Please re-pair.".to_string());
+                        }
+                    } else {
+                        self.header.agent_connected = Some(agent_name.to_string());
+                        if let Some(session) = &mut self.agent_session {
+                            session.status = "PAIRED".to_string();
+                            session
+                                .recent_activity
+                                .push(format!("Handshake complete. Client: {}", agent_name));
+                        }
                     }
                     continue;
                 }
@@ -698,7 +727,11 @@ impl App {
                     let mut title_name = "Agent".to_string();
                     let mut text = "Initializing remote agent broker...\n\n".to_string();
                     if let Some(session) = &self.agent_session {
-                        text.push_str(&format!("Provide this URI to your agent:\n> scaffold://{}@{}\n\nStatus: {}\n\n", session.pin, session.key, session.status));
+                        if !session.pin.is_empty() {
+                            text.push_str(&format!("Provide this URI to your agent:\n> scaffold://{}@{}\n\nStatus: {}\n\n", session.pin, session.key, session.status));
+                        } else {
+                            text.push_str(&format!("Status: {}\n\n", session.status));
+                        }
 
                         if let Some(expiry) = session.expires_at {
                             let now = std::time::Instant::now();
@@ -728,13 +761,33 @@ impl App {
                         .wrap(ratatui::widgets::Wrap { trim: false })
                         .block(
                             ratatui::widgets::Block::default()
-                                .title(format!(" 🤖 {} Co-Pilot ", title_name))
+                                .title(if self.header.agent_connected.is_some() {
+                                    format!(" 🤖 Scaffold Connect [{}] ", title_name)
+                                } else {
+                                    " 🤖 Scaffold Connect ".to_string()
+                                })
                                 .borders(ratatui::widgets::Borders::ALL)
                                 .border_style(ratatui::style::Style::default().fg(self.theme.accent))
                                 .style(ratatui::style::Style::default().bg(self.theme.bg).fg(self.theme.text))
                                 .padding(ratatui::widgets::Padding::new(4, 4, 1, 1))
                         );
                     let area = Self::top_centered_rect(80, 90, size);
+                    f.render_widget(ratatui::widgets::Clear, area);
+                    f.render_widget(popup_block, area);
+                } else if self.wizard_state == WizardState::ConfirmExit {
+                    let text = "Are you sure you want to exit Code Scaffold?\n\nPress [Enter] or [Y] to exit.\nPress [Esc] or [N] to cancel.";
+                    let popup_block = ratatui::widgets::Paragraph::new(text)
+                        .wrap(ratatui::widgets::Wrap { trim: false })
+                        .alignment(ratatui::layout::Alignment::Center)
+                        .block(
+                            ratatui::widgets::Block::default()
+                                .title(" Confirm Exit ")
+                                .borders(ratatui::widgets::Borders::ALL)
+                                .border_style(ratatui::style::Style::default().fg(self.theme.accent))
+                                .style(ratatui::style::Style::default().bg(self.theme.bg).fg(self.theme.text))
+                                .padding(ratatui::widgets::Padding::new(2, 2, 2, 2))
+                        );
+                    let area = Self::centered_rect(40, 20, size);
                     f.render_widget(ratatui::widgets::Clear, area);
                     f.render_widget(popup_block, area);
                 }
@@ -911,6 +964,12 @@ impl App {
                             });
                             self.wizard_state = WizardState::AgentCopilot;
 
+                            if let Some(old_tx) = self.cancel_tx.take() {
+                                let _ = old_tx.send(());
+                            }
+                            let (cancel_tx, cancel_rx) = tokio::sync::oneshot::channel::<()>();
+                            self.cancel_tx = Some(cancel_tx);
+
                             let tx_clone = self.tx.clone();
                             tokio::spawn(async move {
                                 let (stop_tx, mut stop_rx) = tokio::sync::oneshot::channel();
@@ -925,8 +984,15 @@ impl App {
                                     }
                                 });
 
-                                if let Err(e) = session_clone.connect(tx_clone.clone()).await {
-                                    let _ = tx_clone.send(format!("Scaffold Connect Error: {}", e));
+                                tokio::select! {
+                                    res = session_clone.connect(tx_clone.clone()) => {
+                                        if let Err(e) = res {
+                                            let _ = tx_clone.send(format!("Scaffold Connect Error: {}", e));
+                                        }
+                                    }
+                                    _ = cancel_rx => {
+                                        let _ = tx_clone.send("[CONNECTION_DROPPED]".to_string());
+                                    }
                                 }
                                 let _ = stop_tx.send(());
                             });
@@ -1140,13 +1206,20 @@ impl App {
                     }
                 }
             }
-            Action::Quit => {
-                if self.wizard_state == WizardState::AgentCopilot {
-                    self.wizard_state = WizardState::DeploymentTarget;
-                } else {
+            Action::Quit => match self.wizard_state {
+                WizardState::DeploymentTarget | WizardState::Welcome => {
+                    self.wizard_state = WizardState::ConfirmExit;
+                }
+                WizardState::ConfirmExit
+                | WizardState::Executing
+                | WizardState::UpdateComplete
+                | WizardState::Complete => {
                     self.should_quit = true;
                 }
-            }
+                _ => {
+                    self.wizard_state = WizardState::DeploymentTarget;
+                }
+            },
             Action::Execute => {
                 if self.wizard_state == WizardState::UpdateComplete {
                     self.should_quit = true;
@@ -1578,22 +1651,50 @@ impl App {
                                     crate::scaffold_connect::ScaffoldConnectSession::new_ephemeral(
                                     );
                                 let session_clone = session.clone();
-                                let current_expiry =
-                                    self.agent_session.as_ref().and_then(|s| s.expires_at);
+                                let minutes = self.copilot_timer_input.parse::<u64>().unwrap_or(60);
+                                let new_expiry = Some(
+                                    std::time::Instant::now()
+                                        + std::time::Duration::from_secs(minutes * 60),
+                                );
                                 self.agent_session = Some(crate::app::AgentSession {
                                     pin: session.pin.clone(),
                                     key: session.key.clone(),
                                     status: "Connecting...".to_string(),
                                     recent_activity: vec!["Rotated ephemeral keys...".to_string()],
-                                    expires_at: current_expiry,
+                                    expires_at: new_expiry,
                                 });
+
+                                if let Some(old_tx) = self.cancel_tx.take() {
+                                    let _ = old_tx.send(());
+                                }
+                                let (cancel_tx, cancel_rx) = tokio::sync::oneshot::channel::<()>();
+                                self.cancel_tx = Some(cancel_tx);
 
                                 let tx_clone = self.tx.clone();
                                 tokio::spawn(async move {
-                                    if let Err(e) = session_clone.connect(tx_clone.clone()).await {
-                                        let _ =
-                                            tx_clone.send(format!("Scaffold Connect Error: {}", e));
+                                    let (stop_tx, mut stop_rx) = tokio::sync::oneshot::channel();
+
+                                    let tx_timer = tx_clone.clone();
+                                    tokio::spawn(async move {
+                                        tokio::select! {
+                                            _ = tokio::time::sleep(tokio::time::Duration::from_secs(minutes * 60)) => {
+                                                let _ = tx_timer.send("AGENT_PAIRED:TIMEOUT".to_string());
+                                            }
+                                            _ = stop_rx => {}
+                                        }
+                                    });
+
+                                    tokio::select! {
+                                        res = session_clone.connect(tx_clone.clone()) => {
+                                            if let Err(e) = res {
+                                                let _ = tx_clone.send(format!("Scaffold Connect Error: {}", e));
+                                            }
+                                        }
+                                        _ = cancel_rx => {
+                                            let _ = tx_clone.send("[CONNECTION_DROPPED]".to_string());
+                                        }
                                     }
+                                    let _ = stop_tx.send(());
                                 });
                             }
                             Err(msg) => {
@@ -1606,14 +1707,18 @@ impl App {
                 }
             }
             Action::Char('y') | Action::Char('Y') => {
-                if self.wizard_state == WizardState::AgentOverwritePrompt {
+                if self.wizard_state == WizardState::ConfirmExit {
+                    self.should_quit = true;
+                } else if self.wizard_state == WizardState::AgentOverwritePrompt {
                     self.agent_overwrite_choice = Some(true);
                     self.wizard_state = WizardState::Complete;
                     let _ = self.update(Action::Execute)?;
                 }
             }
             Action::Char('n') | Action::Char('N') => {
-                if self.wizard_state == WizardState::AgentOverwritePrompt {
+                if self.wizard_state == WizardState::ConfirmExit {
+                    self.wizard_state = WizardState::DeploymentTarget;
+                } else if self.wizard_state == WizardState::AgentOverwritePrompt {
                     self.agent_overwrite_choice = Some(false);
                     self.wizard_state = WizardState::Complete;
                     let _ = self.update(Action::Execute)?;
@@ -1755,6 +1860,9 @@ impl App {
                     }
                 }
                 match self.wizard_state {
+                    WizardState::ConfirmExit => {
+                        self.should_quit = true;
+                    }
                     WizardState::Welcome => {
                         self.wizard_state = WizardState::DeploymentTarget;
                         crate::prefs::set_has_seen_welcome(true);

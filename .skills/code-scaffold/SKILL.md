@@ -46,17 +46,73 @@ code-scaffold.exe --headless --target "/absolute/path/to/target" --personas "Web
 
 Code Scaffold features a zero-trust, ephemeral WebSocket bridge ("Scaffold Connect") that allows you (the agent) to securely tap into a user's local terminal and execute commands remotely. 
 
-If a user prompts you with a connection URI like `scaffold://063238@6rkkIbQqN8In5UjNZ0ugnU4Hs86C3GKCX7zAomXY/H8=`, this represents:
-* **PIN**: The 6-digit room code (e.g., `063238`)
-* **Key**: The Base64 AES-256-GCM encryption key (e.g., `6rkk...`)
+If a user prompts you with a connection URI like `scaffold://063238@6rkkIbQqN8In5UjNZ0ugnU4Hs86C3GKCX7zAomXY/H8=`, do NOT attempt to write your own custom bridge connection scripts from scratch. Instead, **strictly follow these steps**:
 
-To establish the bridge and execute commands on the user's machine, construct an AES-encrypted WebSocket payload and send it to `wss://code-scaffold-relay.upioneer.deno.net/room/[PIN]`.
+1. Ensure your environment has the required dependencies by running:
+   ```bash
+   pip install websockets cryptography
+   ```
 
-1. **Protocol**: JSON-RPC over AES-256-GCM.
-2. **Handshake**: First, encrypt and send an `initialize` JSON-RPC method containing `params: { clientInfo: { name: "YourAgentName" } }`.
-3. **Execution**: To run terminal commands on the user's machine, encrypt and send an `execute_command` JSON-RPC method containing `params: { command: "cargo build" }`. Code Scaffold will execute the command locally and pipe the stdout/stderr ciphertext back to you over the WebSocket.
+2. Save the following exact Python script to `/tmp/scaffold_client.py` (or a similar scratch directory):
+   ```python
+   import sys, json, base64, os, asyncio, websockets
+   from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
-**Encryption Standard:**
-* Cipher: AES-256-GCM
-* Nonce: 12-byte cryptographically secure random bytes
-* Payload Format: `[12-byte Nonce] + [Ciphertext] + [Auth Tag]`
+   async def run_command(uri, cmd):
+       try:
+           pin, b64key = uri.replace("scaffold://", "").split("@")
+           key = base64.b64decode(b64key)
+           aesgcm = AESGCM(key)
+       except Exception as e:
+           print(f"Error parsing URI: {e}")
+           return
+
+       url = f"wss://code-scaffold-relay.upioneer.deno.net/room/{pin}"
+       
+       async with websockets.connect(url) as ws:
+           def send_msg(payload):
+               nonce = os.urandom(12)
+               ciphertext = aesgcm.encrypt(nonce, json.dumps(payload).encode('utf-8'), None)
+               return ws.send(nonce + ciphertext)
+
+           # 1. Initialize
+           await send_msg({
+               "jsonrpc": "2.0", 
+               "id": 1, 
+               "method": "initialize", 
+               "params": {"clientInfo": {"name": "ScaffoldAgent"}}
+           })
+           
+           # 2. Execute Command
+           await send_msg({
+               "jsonrpc": "2.0", 
+               "id": 2, 
+               "method": "execute_command", 
+               "params": {"command": cmd}
+           })
+           
+           # 3. Listen for response
+           while True:
+               msg = await ws.recv()
+               nonce, ciphertext = msg[:12], msg[12:]
+               try:
+                   plaintext = aesgcm.decrypt(nonce, ciphertext, None)
+                   data = json.loads(plaintext.decode('utf-8'))
+                   if data.get("id") == 2 and "result" in data:
+                       print(data["result"])
+                       break
+               except Exception:
+                   pass
+
+   if __name__ == "__main__":
+       if len(sys.argv) < 3:
+           print('Usage: python scaffold_client.py "scaffold://URI" "command"')
+           sys.exit(1)
+       asyncio.run(run_command(sys.argv[1], sys.argv[2]))
+   ```
+
+3. Execute remote commands on the user's machine by invoking the script with the exact URI and your desired command:
+   ```bash
+   python /tmp/scaffold_client.py "scaffold://063238@6rkk..." "cargo build"
+   ```
+   The script will securely connect, execute the command, print the `stdout`/`stderr` from the user's machine, and cleanly exit.

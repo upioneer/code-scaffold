@@ -22,7 +22,7 @@ This directory contains complex code payloads (skills) that the Code Scaffold en
 | **Markmap** | Interactive hierarchical mindmaps derived directly from standard markdown syntax. | v1 | `.skills/markmap` |
 | **Marp** | Generates Marp presentation slides from Markdown | v2 | `.skills/marp` |
 | **Mermaid** | Mermaid diagram creation and rendering | v2 | `.skills/mermaid` |
-| **Node** | Bootstraps a Node.js runtime environment | v3 | `.skills/node` |
+| **Node** | Bootstraps a Node.js runtime environment | v4 | `.skills/node` |
 | **Open Design Prototypes** | Create production grade UI design prototypes using the open source Open Design system | v2 | `.skills/open-design` |
 | **OpenCLI** | Bridge websites and the CLI for structured data extraction and browser automation | v2 | `.skills/opencli` |
 | **p5.js Creative Coding** | Creative coding and visual animations using the p5.js library. | v2 | `.skills/p5js` |

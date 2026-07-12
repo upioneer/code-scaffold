@@ -174,6 +174,7 @@ impl ScaffoldConnectSession {
             }
         }
 
+        let _ = tx.send("[CONNECTION_DROPPED]".to_string());
         Ok(())
     }
 }

@@ -49,8 +49,10 @@ if (Test-Path $TapePath) {
     $isWin = $IsWindows -or ($PSVersionTable.Platform -match 'Win') -or ($env:OS -match 'Windows')
 
     if ($isWin) {
-        if ((Get-Command wsl -ErrorAction SilentlyContinue) -and (wsl bash -c "command -v vhs" 2>$null)) {
-            $vhsCommand = "wsl vhs $(($TapePath -replace '\\', '/'))"
+        if ((Get-Command wsl -ErrorAction SilentlyContinue) -and (wsl bash -c 'export PATH="/usr/local/bin:$PATH"; command -v vhs' 2>$null)) {
+            $wslPath = wsl wslpath -u "$($PWD.Path)"
+            $wslTapePath = $TapePath -replace '\\', '/'
+            $vhsCommand = "wsl bash -c `"export PATH='/usr/local/bin:`$PATH'; cd '$wslPath' && vhs '$wslTapePath'`""
             Write-Host "Running VHS via WSL (headless-safe)..." -ForegroundColor Cyan
         } elseif (Get-Command vhs -ErrorAction SilentlyContinue) {
             $vhsCommand = "vhs $TapePath"
