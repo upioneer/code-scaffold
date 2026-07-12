@@ -40,7 +40,7 @@ impl Component for Header {
     ) -> Result<()> {
         let mut banner = format!(" Code Scaffold TUI {} ", self.version);
         if let Some(agent) = &self.agent_connected {
-            banner.push_str(&format!(" [🤖 Agent Connected: {} - Press A] ", agent));
+            banner.push_str(&format!(" [🤖 Agent Connected: {} - Press C] ", agent));
         }
         if let Some(update) = &self.update_available {
             banner.push_str(&format!(" [Update Available: v{} - Press U] ", update));

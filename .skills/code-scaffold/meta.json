@@ -1,6 +1,6 @@
 {
   "label": "Code Scaffold Harness",
   "description": "Agent harness for headlessly deploying Code Scaffold assets.",
-  "version": "2",
+  "version": "3",
   "target": ".skills/code-scaffold"
 }

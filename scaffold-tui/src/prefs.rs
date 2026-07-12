@@ -104,6 +104,73 @@ pub fn set_has_seen_welcome(_val: bool) {
     save_prefs(&prefs);
 }
 
+pub fn has_seen_copilot_welcome() -> bool {
+    let prefs = load_prefs();
+    prefs
+        .get("has_seen_copilot_welcome")
+        .and_then(|v| v.as_bool())
+        .unwrap_or(false)
+}
+
+pub fn set_has_seen_copilot_welcome(val: bool) {
+    let mut prefs = load_prefs();
+    prefs["has_seen_copilot_welcome"] = json!(val);
+    save_prefs(&prefs);
+}
+
+pub fn can_rotate_keys() -> Result<(), String> {
+    let prefs = load_prefs();
+    let now = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap_or_default()
+        .as_secs();
+
+    if let Some(arr) = prefs.get("rotation_history").and_then(|v| v.as_array()) {
+        let mut recent_rotations: Vec<u64> = arr
+            .iter()
+            .filter_map(|v| v.as_u64())
+            .filter(|&ts| now.saturating_sub(ts) < 86400) // Within 24 hours
+            .collect();
+
+        recent_rotations.sort_unstable();
+
+        if recent_rotations.len() >= 10 {
+            return Err("Rate limit: Max 10 rotations per 24 hours.".to_string());
+        }
+
+        if let Some(last) = recent_rotations.last() {
+            let elapsed = now.saturating_sub(*last);
+            if elapsed < 60 {
+                return Err(format!("Rate limit: Wait {}s to rotate again.", 60 - elapsed));
+            }
+        }
+    }
+    Ok(())
+}
+
+pub fn log_key_rotation() {
+    let mut prefs = load_prefs();
+    let now = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap_or_default()
+        .as_secs();
+
+    let mut recent_rotations: Vec<u64> = prefs
+        .get("rotation_history")
+        .and_then(|v| v.as_array())
+        .map(|arr| {
+            arr.iter()
+                .filter_map(|v| v.as_u64())
+                .filter(|&ts| now.saturating_sub(ts) < 86400)
+                .collect()
+        })
+        .unwrap_or_default();
+
+    recent_rotations.push(now);
+    prefs["rotation_history"] = json!(recent_rotations);
+    save_prefs(&prefs);
+}
+
 pub fn load_custom_themes() -> Vec<Theme> {
     let prefs = load_prefs();
     let mut themes = Vec::new();

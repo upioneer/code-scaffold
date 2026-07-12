@@ -45,6 +45,8 @@ pub enum WizardState {
     ThemePrimaryInput,
     ThemeSecondaryInput,
     ThemeAccentInput,
+    AgentCopilotWelcome,
+    AgentCopilotTimerSelection,
     AgentCopilot,
 }
 
@@ -54,6 +56,7 @@ pub struct AgentSession {
     pub key: String,
     pub status: String,
     pub recent_activity: Vec<String>,
+    pub expires_at: Option<std::time::Instant>,
 }
 
 pub struct App {
@@ -92,6 +95,8 @@ pub struct App {
     pub agent_overwrite_choice: Option<bool>,
     pub update_available: Option<String>,
     pub agent_session: Option<AgentSession>,
+    pub copilot_timer_input: String,
+    pub copilot_timer_error: String,
 }
 
 impl App {
@@ -164,6 +169,8 @@ impl App {
             agent_overwrite_choice: None,
             update_available: None,
             agent_session: None,
+            copilot_timer_input: "60".to_string(),
+            copilot_timer_error: String::new(),
         };
         crate::updater::spawn_update_checker(app.tx.clone());
         app
@@ -180,6 +187,8 @@ impl App {
                 | WizardState::ThemePrimaryInput
                 | WizardState::ThemeSecondaryInput
                 | WizardState::ThemeAccentInput
+                | WizardState::AgentCopilotWelcome
+                | WizardState::AgentCopilotTimerSelection
                 | WizardState::AgentCopilot
                 | WizardState::AgentOverwritePrompt
         ) {
@@ -231,7 +240,7 @@ impl App {
                     (
                         " Step 1: Deployment Target ",
                         format!(
-                            "{} The current deployment target is: {}\nPress [Enter] or [F] to browse for a folder.\nPress [C] to change default directory.{}\nPress [Tab] to keep current folder and proceed.\nPress [Shift+E] to launch custom theme engine.\nPress [W] to review the Welcome message.",
+                            "{} The current deployment target is: {}\nPress [Enter] or [F] to browse for a folder.\nPress [C] for Scaffold Connect.{}\nPress [Tab] to keep current folder and proceed.\nPress [Shift+E] to launch custom theme engine.\nPress [W] to review the Welcome message.",
                             BRAILLE_FRAMES[self.splash_frame_idx], clean_path, reset_text
                         ),
                     )
@@ -617,7 +626,8 @@ impl App {
                         WizardState::ThemeTextInput => "Text",
                         WizardState::ThemePrimaryInput => "Primary",
                         WizardState::ThemeSecondaryInput => "Secondary",
-                        WizardState::ThemeAccentInput => "Accent",
+                        WizardState::ThemeAccentInput => "Theme (Accent)",
+                        WizardState::AgentCopilotWelcome => "Agent Bridge",
                         WizardState::AgentCopilot => "Copilot",
                         _ => "",
                     };
@@ -638,11 +648,74 @@ impl App {
                     let area = Self::centered_rect(80, 50, size);
                     f.render_widget(ratatui::widgets::Clear, area);
                     f.render_widget(popup_block, area);
+                } else if self.wizard_state == WizardState::AgentCopilotWelcome {
+                    let text = format!(
+                        "Agent Connection Setup\n\nTo bridge an AI agent (like Claude, ChatGPT, or Devin) to this machine, you must first equip it with the Code Scaffold skill.\n\nInstruct your agent to run the following installation payload:\n\n> npx @code-scaffold/skills-cli add upioneer/code-scaffold\n\n{}\n\nPress [Enter] to generate your ephemeral room key.",
+                        qrcode::QrCode::new(b"npx @code-scaffold/skills-cli add upioneer/code-scaffold")
+                            .unwrap()
+                            .render::<qrcode::render::unicode::Dense1x2>()
+                            .quiet_zone(false)
+                            .build()
+                    );
+                    let popup_block = ratatui::widgets::Paragraph::new(text)
+                        .alignment(ratatui::layout::Alignment::Center)
+                        .wrap(ratatui::widgets::Wrap { trim: false })
+                        .block(
+                            ratatui::widgets::Block::default()
+                                .title(" Scaffold Connect ")
+                                .borders(ratatui::widgets::Borders::ALL)
+                                .border_style(
+                                    ratatui::style::Style::default().fg(self.theme.secondary),
+                                ),
+                        );
+                    let area = Self::top_centered_rect(80, 90, size);
+                    f.render_widget(ratatui::widgets::Clear, area);
+                    f.render_widget(popup_block, area);
+                } else if self.wizard_state == WizardState::AgentCopilotTimerSelection {
+                    let mut text = "Enter session duration in minutes (1 - 480):\n\n".to_string();
+                    text.push_str(&format!("> {}\u{2588}\n\n", self.copilot_timer_input));
+                    
+                    if !self.copilot_timer_error.is_empty() {
+                        text.push_str(&format!("[ERROR]: {}\n\n", self.copilot_timer_error));
+                    }
+                    
+                    text.push_str("Press [Enter] to start the room, or [Esc] to cancel.");
+
+                    let popup_block = ratatui::widgets::Paragraph::new(text)
+                        .wrap(ratatui::widgets::Wrap { trim: false })
+                        .block(
+                            ratatui::widgets::Block::default()
+                                .title(" Session Expiration ")
+                                .borders(ratatui::widgets::Borders::ALL)
+                                .border_style(ratatui::style::Style::default().fg(self.theme.accent))
+                                .style(ratatui::style::Style::default().bg(self.theme.bg).fg(self.theme.text))
+                                .padding(ratatui::widgets::Padding::new(4, 4, 1, 1))
+                        );
+                    let area = Self::centered_rect(60, 20, size);
+                    f.render_widget(ratatui::widgets::Clear, area);
+                    f.render_widget(popup_block, area);
                 } else if self.wizard_state == WizardState::AgentCopilot {
                     let mut title_name = "Agent".to_string();
                     let mut text = "Initializing remote agent broker...\n\n".to_string();
                     if let Some(session) = &self.agent_session {
-                        text.push_str(&format!("PIN: {}\nStatus: {}\n\n", session.pin, session.status));
+                        text.push_str(&format!("Provide this URI to your agent:\n> scaffold://{}@{}\n\nStatus: {}\n\n", session.pin, session.key, session.status));
+                        
+                        if let Some(expiry) = session.expires_at {
+                            let now = std::time::Instant::now();
+                            if expiry > now {
+                                let rem = expiry.duration_since(now).as_secs();
+                                let h = rem / 3600;
+                                let m = (rem % 3600) / 60;
+                                let s = rem % 60;
+                                text.push_str(&format!("Time Remaining: {:02}:{:02}:{:02}\n\n", h, m, s));
+                            } else {
+                                text.push_str("Time Remaining: 00:00:00 (EXPIRED)\n\n");
+                            }
+                        }
+
+                        if self.header.agent_connected.is_none() {
+                            text.push_str("(Press [R] to rotate PIN and encryption keys)\n\n");
+                        }
                         for act in &session.recent_activity {
                             text.push_str(&format!("> {}\n", act));
                         }
@@ -661,7 +734,7 @@ impl App {
                                 .style(ratatui::style::Style::default().bg(self.theme.bg).fg(self.theme.text))
                                 .padding(ratatui::widgets::Padding::new(4, 4, 1, 1))
                         );
-                    let area = Self::centered_rect(80, 80, size);
+                    let area = Self::top_centered_rect(80, 90, size);
                     f.render_widget(ratatui::widgets::Clear, area);
                     f.render_widget(popup_block, area);
                 }
@@ -683,6 +756,26 @@ impl App {
                 Constraint::Percentage((100 - percent_y) / 2),
                 Constraint::Percentage(percent_y),
                 Constraint::Percentage((100 - percent_y) / 2),
+            ])
+            .split(r);
+
+        Layout::default()
+            .direction(Direction::Horizontal)
+            .constraints([
+                Constraint::Percentage((100 - percent_x) / 2),
+                Constraint::Percentage(percent_x),
+                Constraint::Percentage((100 - percent_x) / 2),
+            ])
+            .split(popup_layout[1])[1]
+    }
+
+    fn top_centered_rect(percent_x: u16, percent_y: u16, r: Rect) -> Rect {
+        let popup_layout = Layout::default()
+            .direction(Direction::Vertical)
+            .constraints([
+                Constraint::Length(2), // Top margin
+                Constraint::Percentage(percent_y),
+                Constraint::Min(0),
             ])
             .split(r);
 
@@ -773,6 +866,76 @@ impl App {
             }
             return Ok(());
         }
+        if self.wizard_state == WizardState::AgentCopilotTimerSelection {
+            match action {
+                Action::Char(c) => {
+                    if !self.copilot_timer_error.is_empty() {
+                        self.copilot_timer_error.clear();
+                    }
+                    if c.is_ascii_digit() && self.copilot_timer_input.len() < 5 {
+                        self.copilot_timer_input.push(c);
+                    }
+                }
+                Action::Backspace => {
+                    if !self.copilot_timer_error.is_empty() {
+                        self.copilot_timer_error.clear();
+                    }
+                    self.copilot_timer_input.pop();
+                }
+                Action::Quit => {
+                    self.wizard_state = WizardState::Welcome;
+                    self.copilot_timer_error.clear();
+                    self.copilot_timer_input = "60".to_string();
+                }
+                Action::Enter => {
+                    if !self.copilot_timer_error.is_empty() {
+                        self.copilot_timer_error.clear();
+                        return Ok(());
+                    }
+                    
+                    let val: Result<u64, _> = self.copilot_timer_input.parse();
+                    match val {
+                        Ok(minutes) if (1..=480).contains(&minutes) => {
+                            let session = crate::scaffold_connect::ScaffoldConnectSession::new_ephemeral();
+                            let session_clone = session.clone();
+                            self.agent_session = Some(crate::app::AgentSession {
+                                pin: session.pin.clone(),
+                                key: session.key.clone(),
+                                status: "Connecting...".to_string(),
+                                recent_activity: vec!["Initializing ephemeral keys...".to_string()],
+                                expires_at: Some(std::time::Instant::now() + std::time::Duration::from_secs(minutes * 60)),
+                            });
+                            self.wizard_state = WizardState::AgentCopilot;
+                            
+                            let tx_clone = self.tx.clone();
+                            tokio::spawn(async move {
+                                let (stop_tx, mut stop_rx) = tokio::sync::oneshot::channel();
+                                
+                                let tx_timer = tx_clone.clone();
+                                tokio::spawn(async move {
+                                    tokio::select! {
+                                        _ = tokio::time::sleep(tokio::time::Duration::from_secs(minutes * 60)) => {
+                                            let _ = tx_timer.send("AGENT_PAIRED:TIMEOUT".to_string());
+                                        }
+                                        _ = stop_rx => {}
+                                    }
+                                });
+
+                                if let Err(e) = session_clone.connect(tx_clone.clone()).await {
+                                    let _ = tx_clone.send(format!("Scaffold Connect Error: {}", e));
+                                }
+                                let _ = stop_tx.send(());
+                            });
+                        }
+                        _ => {
+                            self.copilot_timer_error = "Must be a valid number between 1 and 480.".to_string();
+                        }
+                    }
+                }
+                _ => {}
+            }
+            return Ok(());
+        }
         if matches!(
             self.wizard_state,
             WizardState::ThemeNameInput
@@ -781,7 +944,6 @@ impl App {
                 | WizardState::ThemePrimaryInput
                 | WizardState::ThemeSecondaryInput
                 | WizardState::ThemeAccentInput
-                | WizardState::AgentCopilot
         ) {
             match action {
                 Action::Char(c) => {
@@ -1344,7 +1506,7 @@ impl App {
                     self.wizard_state = WizardState::Welcome;
                 }
             }
-            Action::Char('f') | Action::Char('F') | Action::Char('c') | Action::Char('C') => {
+            Action::Char('f') | Action::Char('F') => {
                 if self.wizard_state == WizardState::DeploymentTarget {
                     self.directory_browser.open(&self.target_folder);
                 }
@@ -1402,6 +1564,36 @@ impl App {
                     self.target_folder = Self::default_target_dir();
                     self.workspace.detect_installed(&self.target_folder);
                     self.update_summary();
+                } else if self.wizard_state == WizardState::AgentCopilot {
+                    if self.agent_session.is_some() && self.header.agent_connected.is_none() {
+                        match crate::prefs::can_rotate_keys() {
+                            Ok(_) => {
+                                crate::prefs::log_key_rotation();
+                                let session = crate::scaffold_connect::ScaffoldConnectSession::new_ephemeral();
+                                let session_clone = session.clone();
+                                let current_expiry = self.agent_session.as_ref().and_then(|s| s.expires_at);
+                                self.agent_session = Some(crate::app::AgentSession {
+                                    pin: session.pin.clone(),
+                                    key: session.key.clone(),
+                                    status: "Connecting...".to_string(),
+                                    recent_activity: vec!["Rotated ephemeral keys...".to_string()],
+                                    expires_at: current_expiry,
+                                });
+
+                                let tx_clone = self.tx.clone();
+                                tokio::spawn(async move {
+                                    if let Err(e) = session_clone.connect(tx_clone.clone()).await {
+                                        let _ = tx_clone.send(format!("Scaffold Connect Error: {}", e));
+                                    }
+                                });
+                            },
+                            Err(msg) => {
+                                if let Some(session) = &mut self.agent_session {
+                                    session.recent_activity.push(msg);
+                                }
+                            }
+                        }
+                    }
                 }
             }
             Action::Char('y') | Action::Char('Y') => {
@@ -1418,30 +1610,28 @@ impl App {
                     let _ = self.update(Action::Execute)?;
                 }
             }
-            Action::Char('a') | Action::Char('A') => {
+            Action::Char('K') => {
                 if self.agent_session.is_some() {
+                    self.agent_session = None;
+                    self.header.agent_connected = None;
+                    if self.wizard_state == WizardState::AgentCopilot {
+                        self.wizard_state = WizardState::DeploymentTarget;
+                    }
+                }
+            }
+            Action::Char('c') | Action::Char('C') => {
+                self.copilot_timer_input = "60".to_string();
+                self.copilot_timer_error.clear();
+                if !crate::prefs::has_seen_copilot_welcome() {
+                    self.wizard_state = WizardState::AgentCopilotWelcome;
+                } else if self.agent_session.is_some() {
                     if self.wizard_state == WizardState::AgentCopilot {
                         self.wizard_state = WizardState::DeploymentTarget;
                     } else {
                         self.wizard_state = WizardState::AgentCopilot;
                     }
                 } else {
-                    let session = crate::scaffold_connect::ScaffoldConnectSession::new_ephemeral();
-                    let session_clone = session.clone();
-                    self.agent_session = Some(crate::app::AgentSession {
-                        pin: session.pin.clone(),
-                        key: session.key.clone(),
-                        status: "Connecting...".to_string(),
-                        recent_activity: vec!["Initializing ephemeral keys...".to_string()],
-                    });
-                    self.wizard_state = WizardState::AgentCopilot;
-
-                    let tx_clone = self.tx.clone();
-                    tokio::spawn(async move {
-                        if let Err(e) = session_clone.connect(tx_clone.clone()).await {
-                            let _ = tx_clone.send(format!("Scaffold Connect Error: {}", e));
-                        }
-                    });
+                    self.wizard_state = WizardState::AgentCopilotTimerSelection;
                 }
             }
             Action::Char('u') | Action::Char('U') => {
@@ -1625,6 +1815,10 @@ impl App {
                     WizardState::Complete | WizardState::UpdateComplete => {
                         let _ = self.update(Action::Execute)?;
                     }
+                    WizardState::AgentCopilotWelcome => {
+                        crate::prefs::set_has_seen_copilot_welcome(true);
+                        self.wizard_state = WizardState::AgentCopilotTimerSelection;
+                    }
                     WizardState::Executing
                     | WizardState::CustomSkillInput
                     | WizardState::ThemeNameInput
@@ -1633,6 +1827,7 @@ impl App {
                     | WizardState::ThemePrimaryInput
                     | WizardState::ThemeSecondaryInput
                     | WizardState::ThemeAccentInput
+                    | WizardState::AgentCopilotTimerSelection
                     | WizardState::AgentCopilot
                     | WizardState::AgentOverwritePrompt => {}
                 }
