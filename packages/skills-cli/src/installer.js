@@ -21,14 +21,34 @@ export async function installAdHocSkill(skillIdentifier, targetProjectDir) {
     await fs.rm(cloneDir, { recursive: true, force: true }).catch(() => {})
     
     const targetUrl = "https://github.com/" + author + "/code-scaffold.git"
+    
+    // Purge environment variables that frequently crash automated nested git operations
+    const safeEnv = { ...process.env }
+    delete safeEnv.GIT_DIR
+    delete safeEnv.GIT_WORK_TREE
+    delete safeEnv.GIT_INDEX_FILE
+    delete safeEnv.GIT_OBJECT_DIRECTORY
+    delete safeEnv.GIT_TERMINAL_PROMPT
+
     try {
-      // Attempt advanced sparse clone for optimization
-      execSync(`git clone --depth 1 --filter=blob:none --sparse ${targetUrl} "${cloneDir}"`, { stdio: "pipe" })
-      execSync(`git sparse-checkout set .skills/${skillName}`, { cwd: cloneDir, stdio: "pipe" })
+      execSync(`git clone --depth 1 --filter=blob:none --sparse ${targetUrl} "${cloneDir}"`, { env: safeEnv, stdio: "ignore", timeout: 30000 })
+      execSync(`git sparse-checkout set .skills/${skillName}`, { cwd: cloneDir, env: safeEnv, stdio: "ignore", timeout: 30000 })
     } catch (sparseError) {
-      // Fallback for older git versions that do not support --sparse or --filter
+      console.log(`[skills-cli] Phase 1 (Sparse Clone) failed. Retrying with shallow clone...`)
       await fs.rm(cloneDir, { recursive: true, force: true }).catch(() => {})
-      execSync(`git clone --depth 1 ${targetUrl} "${cloneDir}"`, { stdio: "pipe" })
+      try {
+        execSync(`git clone --depth 1 ${targetUrl} "${cloneDir}"`, { env: safeEnv, stdio: "ignore", timeout: 30000 })
+      } catch (shallowError) {
+        console.log(`[skills-cli] Phase 2 (Shallow Clone) failed. Retrying with direct tarball download...`)
+        await fs.rm(cloneDir, { recursive: true, force: true }).catch(() => {})
+        await fs.mkdir(cloneDir, { recursive: true })
+        try {
+          const tarballUrl = `https://github.com/${author}/code-scaffold/archive/refs/heads/main.tar.gz`
+          execSync(`curl -sSL ${tarballUrl} | tar -xz -C "${cloneDir}" --strip-components=1`, { env: safeEnv, stdio: "ignore", timeout: 45000 })
+        } catch (curlError) {
+          throw new Error("All extraction phases failed. Agent environment restricts git and curl/tar operations.")
+        }
+      }
     }
     
     await fs.rename(path.join(cloneDir, ".skills", skillName), temporaryTargetDir)

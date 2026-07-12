@@ -482,8 +482,10 @@ impl App {
                     let (r1, g1, b1) = if let ratatui::style::Color::Rgb(r, g, b) = c1 { (r as f32, g as f32, b as f32) } else { (255.0, 255.0, 255.0) };
                     let (r2, g2, b2) = if let ratatui::style::Color::Rgb(r, g, b) = c2 { (r as f32, g as f32, b as f32) } else { (200.0, 200.0, 200.0) };
 
+                    let logo = logo.trim_start_matches('\n');
                     for line in logo.lines() {
                         if line.is_empty() {
+                            text_lines.push(ratatui::text::Line::from(""));
                             continue;
                         }
                         let mut spans = Vec::new();
@@ -679,7 +681,7 @@ impl App {
                     f.render_widget(popup_block, area);
                 } else if self.wizard_state == WizardState::AgentCopilotWelcome {
                     let text = format!(
-                        "Agent Connection Setup\n\nTo bridge an AI agent (like Claude, ChatGPT, or Devin) to this machine, you must first equip it with the Code Scaffold skill.\n\nInstruct your agent to run the following installation payload:\n\n> npx @code-scaffold/skills-cli add upioneer/code-scaffold\n\n{}\n\nPress [Enter] to generate your ephemeral room key.",
+                        "⚠️ SCAFFOLD CONNECT IS CURRENTLY IN ALPHA ⚠️\n\nAgent Connection Setup\n\nTo bridge an AI agent (like Claude, ChatGPT, or Devin) to this machine, you must first equip it with the Code Scaffold skill.\n\nInstruct your agent to run the following installation payload:\n\n> npx @code-scaffold/skills-cli add upioneer/code-scaffold\n\n{}\n\nPress [Enter] to generate your ephemeral room key.",
                         qrcode::QrCode::new(b"npx @code-scaffold/skills-cli add upioneer/code-scaffold")
                             .unwrap()
                             .render::<qrcode::render::unicode::Dense1x2>()
@@ -691,7 +693,7 @@ impl App {
                         .wrap(ratatui::widgets::Wrap { trim: false })
                         .block(
                             ratatui::widgets::Block::default()
-                                .title(" Scaffold Connect ")
+                                .title(" Scaffold Connect (ALPHA) ")
                                 .borders(ratatui::widgets::Borders::ALL)
                                 .border_style(
                                     ratatui::style::Style::default().fg(self.theme.secondary),
@@ -762,9 +764,9 @@ impl App {
                         .block(
                             ratatui::widgets::Block::default()
                                 .title(if self.header.agent_connected.is_some() {
-                                    format!(" 🤖 Scaffold Connect [{}] ", title_name)
+                                    format!(" 🤖 Scaffold Connect (ALPHA) [{}] ", title_name)
                                 } else {
-                                    " 🤖 Scaffold Connect ".to_string()
+                                    " 🤖 Scaffold Connect (ALPHA) ".to_string()
                                 })
                                 .borders(ratatui::widgets::Borders::ALL)
                                 .border_style(ratatui::style::Style::default().fg(self.theme.accent))
@@ -785,9 +787,9 @@ impl App {
                                 .borders(ratatui::widgets::Borders::ALL)
                                 .border_style(ratatui::style::Style::default().fg(self.theme.accent))
                                 .style(ratatui::style::Style::default().bg(self.theme.bg).fg(self.theme.text))
-                                .padding(ratatui::widgets::Padding::new(2, 2, 2, 2))
+                                .padding(ratatui::widgets::Padding::new(2, 2, 1, 1))
                         );
-                    let area = Self::centered_rect(40, 20, size);
+                    let area = Self::centered_rect(40, 30, size);
                     f.render_widget(ratatui::widgets::Clear, area);
                     f.render_widget(popup_block, area);
                 }
@@ -1207,7 +1209,7 @@ impl App {
                 }
             }
             Action::Quit => match self.wizard_state {
-                WizardState::DeploymentTarget | WizardState::Welcome => {
+                WizardState::DeploymentTarget => {
                     self.wizard_state = WizardState::ConfirmExit;
                 }
                 WizardState::ConfirmExit
