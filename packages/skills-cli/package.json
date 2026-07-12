@@ -1,9 +1,14 @@
 {
   "name": "@code-scaffold/skills-cli",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Ad-hoc installer for Code Scaffold skills",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/upioneer/code-scaffold.git",
+    "directory": "packages/skills-cli"
+  },
   "bin": {
-    "skills": "./bin/cli.js"
+    "skills": "bin/cli.js"
   },
   "type": "module",
   "dependencies": {
