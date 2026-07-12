@@ -1,6 +1,6 @@
 {
   "name": "@code-scaffold/skills-cli",
-  "version": "1.0.8",
+  "version": "1.0.9-test.1",
   "description": "Ad-hoc installer for Code Scaffold skills",
   "repository": {
     "type": "git",
