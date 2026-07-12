@@ -1,6 +1,0 @@
-{
-  "label": "CyberSecurity Toolkit",
-  "description": "Comprehensive cybersecurity arsenal integrating MITRE and NIST framework methodologies, NVIDIA SkillSpector vulnerability scanning, and deep SAST secret detection.",
-  "version": "6",
-  "target": ".skills/cybersecurity-toolkit"
-}

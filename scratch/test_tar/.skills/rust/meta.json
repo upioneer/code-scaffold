@@ -1,6 +1,0 @@
-{
-  "label": "Rust",
-  "description": "Orchestrates Rust workspace topologies, optimized compilation profiles, and local automation scripts.",
-  "version": "1",
-  "target": ".skills/rust"
-}

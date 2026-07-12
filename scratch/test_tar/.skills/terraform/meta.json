@@ -1,6 +1,0 @@
-{
-  "label": "Terraform",
-  "description": "Infrastructure as Code (IaC) provisioning and state management using Terraform or OpenTofu.",
-  "version": "2",
-  "target": ".skills/terraform"
-}

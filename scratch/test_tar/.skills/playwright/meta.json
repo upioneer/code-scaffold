@@ -1,6 +1,0 @@
-{
-  "label": "Playwright",
-  "description": "Browser automation and end-to-end testing with Playwright",
-  "version": "2",
-  "target": ".skills/playwright"
-}

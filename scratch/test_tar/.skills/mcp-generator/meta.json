@@ -1,6 +1,0 @@
-{
-  "label": "MCP Generator",
-  "description": "Assists with creating new custom Model Context Protocol (MCP) servers, clients, and apps using official SDKs and best practices.",
-  "version": "3",
-  "target": ".skills/mcp-generator"
-}

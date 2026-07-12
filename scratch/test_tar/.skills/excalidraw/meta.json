@@ -1,6 +1,0 @@
-{
-  "label": "Excalidraw",
-  "description": "Renders and embeds Excalidraw whiteboards",
-  "version": "2",
-  "target": ".skills/excalidraw"
-}

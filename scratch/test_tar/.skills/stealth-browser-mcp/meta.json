@@ -1,6 +1,0 @@
-{
-  "label": "Stealth Browser MCP",
-  "description": "Undetectable browser automation for MCP-compatible AI agents, bypassing Cloudflare and antibots via nodriver and CDP.",
-  "version": "1",
-  "target": ".skills/stealth-browser-mcp"
-}
