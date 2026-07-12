@@ -38,15 +38,19 @@ impl Component for Header {
         _active: bool,
         theme: &Theme,
     ) -> Result<()> {
-        let mut banner = format!(" Code Scaffold TUI {} ", self.version);
-        if let Some(agent) = &self.agent_connected {
-            banner.push_str(&format!(" [🤖 Agent Connected: {} - Press C] ", agent));
-        }
+        let chunks = ratatui::layout::Layout::default()
+            .direction(ratatui::layout::Direction::Horizontal)
+            .constraints([
+                ratatui::layout::Constraint::Percentage(50),
+                ratatui::layout::Constraint::Percentage(50),
+            ])
+            .split(area);
+
+        let mut left_banner = format!(" Code Scaffold TUI {} ", self.version);
         if let Some(update) = &self.update_available {
-            banner.push_str(&format!(" [Update Available: v{} - Press U] ", update));
+            left_banner.push_str(&format!(" [Update Available: v{} - Press U] ", update));
         }
-        let title = banner;
-        let text = Paragraph::new(title)
+        let left_text = Paragraph::new(left_banner)
             .style(Style::default().fg(theme.text).bg(theme.bg))
             .alignment(ratatui::layout::Alignment::Center)
             .block(
@@ -55,7 +59,22 @@ impl Component for Header {
                     .border_style(Style::default().fg(theme.secondary).bg(theme.bg))
                     .style(Style::default().bg(theme.bg)),
             );
-        f.render_widget(text, area);
+        f.render_widget(left_text, chunks[0]);
+
+        let mut right_banner = " ⚠️ Scaffold Connect is currently in alpha ⚠️ ".to_string();
+        if let Some(agent) = &self.agent_connected {
+            right_banner.push_str(&format!(" [🤖 Agent Connected: {} - Press C] ", agent));
+        }
+        let right_text = Paragraph::new(right_banner)
+            .style(Style::default().fg(theme.text).bg(theme.bg))
+            .alignment(ratatui::layout::Alignment::Center)
+            .block(
+                Block::default()
+                    .borders(Borders::ALL)
+                    .border_style(Style::default().fg(theme.accent).bg(theme.bg))
+                    .style(Style::default().bg(theme.bg)),
+            );
+        f.render_widget(right_text, chunks[1]);
         Ok(())
     }
 }
