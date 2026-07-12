@@ -65,7 +65,7 @@ async fn main() -> Result<()> {
     if app.restart_requested {
         if let Ok(exe) = std::env::current_exe() {
             let args: Vec<String> = std::env::args().skip(1).collect();
-            let _ = std::process::Command::new(exe).args(args).spawn();
+            let _ = std::process::Command::new(exe).args(args).status();
         }
     }
 
