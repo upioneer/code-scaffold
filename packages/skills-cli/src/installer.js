@@ -49,13 +49,23 @@ export async function installAdHocSkill(skillIdentifier, targetProjectDir) {
       const linkContent = { entries: [{ path: "../.skills" }] }
       await fs.writeFile(path.join(agyDir, "skills.json"), JSON.stringify(linkContent, null, 2), "utf-8")
 
-      // Cursor / Claude Code Mapping
-      const cursorRules = path.join(targetProjectDir, ".cursorrules")
+      // Cursor Mapping
+      const cursorDir = path.join(targetProjectDir, ".cursor", "rules")
+      await fs.mkdir(cursorDir, { recursive: true })
+      const cursorRules = path.join(cursorDir, "skills.mdc")
       const rule = "\n# Code Scaffold Skills\nWhen using skills, actively read and adhere to the instructions inside the `.skills/` directory.\n"
       let currentRules = ""
       try { currentRules = await fs.readFile(cursorRules, "utf-8") } catch (e) {}
       if (!currentRules.includes(".skills/")) {
         await fs.writeFile(cursorRules, currentRules + rule, "utf-8")
+      }
+
+      // Claude Code Mapping
+      const claudeCodeFile = path.join(targetProjectDir, "CLAUDE.md")
+      let currentClaudeCode = ""
+      try { currentClaudeCode = await fs.readFile(claudeCodeFile, "utf-8") } catch (e) {}
+      if (!currentClaudeCode.includes(".skills/")) {
+        await fs.writeFile(claudeCodeFile, currentClaudeCode + rule, "utf-8")
       }
 
       // OpenCode Mapping
