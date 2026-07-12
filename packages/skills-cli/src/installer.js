@@ -17,6 +17,9 @@ export async function installAdHocSkill(skillIdentifier, targetProjectDir) {
   const cloneDir = temporaryTargetDir + "_tmp"
 
   try {
+    // Robust pre-cleanup: Ensure the temporary directory is empty before cloning
+    await fs.rm(cloneDir, { recursive: true, force: true }).catch(() => {})
+    
     const targetUrl = "https://github.com/" + author + "/code-scaffold.git"
     execSync(`git clone --depth 1 --filter=blob:none --sparse ${targetUrl} "${cloneDir}"`, { stdio: "ignore" })
     execSync(`git sparse-checkout set .skills/${skillName}`, { cwd: cloneDir, stdio: "ignore" })
