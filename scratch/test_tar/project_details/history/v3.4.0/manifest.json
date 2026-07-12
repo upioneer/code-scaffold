@@ -1,0 +1,211 @@
+{
+    "metadata": {
+        "version": "3.4.0",
+        "lastUpdated": "2026-05-26T00:10:00Z"
+    },
+    "apps": [
+        {
+            "id": "src",
+            "label": "Source Code (/src)",
+            "target": "src",
+            "method": "mkdir"
+        },
+        {
+            "id": "tests",
+            "label": "Test Suite (/tests)",
+            "target": "tests",
+            "method": "mkdir"
+        },
+        {
+            "id": "docs",
+            "label": "Documentation (/docs)",
+            "target": "docs",
+            "method": "mkdir"
+        }
+    ],
+    "artifacts": [
+        {
+            "id": "agent",
+            "label": "AGENT.md",
+            "target": "AGENT.md",
+            "method": "touch"
+        },
+        {
+            "id": "design",
+            "label": "DESIGN.md",
+            "target": "DESIGN.md",
+            "method": "touch"
+        },
+        {
+            "id": "license",
+            "label": "LICENSE.md",
+            "target": "LICENSE.md",
+            "method": "touch"
+        },
+        {
+            "id": "plan",
+            "label": "PLAN.md",
+            "target": "PLAN.md",
+            "method": "touch"
+        },
+        {
+            "id": "readme",
+            "label": "README.md",
+            "target": "README.md",
+            "method": "touch"
+        },
+        {
+            "id": "skills",
+            "label": "SKILLS.md",
+            "target": "SKILLS.md",
+            "method": "touch"
+        },
+        {
+            "id": "testing",
+            "label": "TESTING.md",
+            "target": "TESTING.md",
+            "method": "touch"
+        },
+        {
+            "id": "todo",
+            "label": "TODO.md",
+            "target": "TODO.md",
+            "method": "touch"
+        }
+    ],
+    "skills": [
+        {
+            "id": "braille-animations",
+            "label": "Braille Animations",
+            "source": ".skills/braille-animations",
+            "target": ".skills/braille-animations",
+            "method": "copy"
+        },
+        {
+            "id": "excalidraw",
+            "label": "Excalidraw Diagrams",
+            "source": ".skills/excalidraw",
+            "target": ".skills/excalidraw",
+            "method": "copy"
+        },
+        {
+            "id": "firebase",
+            "label": "Firebase Management",
+            "source": ".skills/firebase",
+            "target": ".skills/firebase",
+            "method": "copy"
+        },
+        {
+            "id": "firecrawl",
+            "label": "Firecrawl Scraper",
+            "source": ".skills/firecrawl",
+            "target": ".skills/firecrawl",
+            "method": "copy"
+        },
+        {
+            "id": "github",
+            "label": "GitHub Automation",
+            "source": ".skills/github",
+            "target": ".skills/github",
+            "method": "copy"
+        },
+        {
+            "id": "hyperframes",
+            "label": "Hyperframes Video",
+            "source": ".skills/hyperframes",
+            "target": ".skills/hyperframes",
+            "method": "copy"
+        },
+        {
+            "id": "manim",
+            "label": "Manim Math Animations",
+            "source": ".skills/manim",
+            "target": ".skills/manim",
+            "method": "copy"
+        },
+        {
+            "id": "marp",
+            "label": "Marp Presentations",
+            "source": ".skills/marp",
+            "target": ".skills/marp",
+            "method": "copy"
+        },
+        {
+            "id": "mermaid",
+            "label": "Mermaid Diagrams",
+            "source": ".skills/mermaid/template.md",
+            "target": "SKILLS.md",
+            "method": "append"
+        },
+        {
+            "id": "node",
+            "label": "Node Development",
+            "source": ".skills/node",
+            "target": ".skills/node",
+            "method": "copy"
+        },
+        {
+            "id": "opencli",
+            "label": "OpenCLI Bridge",
+            "source": ".skills/opencli",
+            "target": ".skills/opencli",
+            "method": "copy"
+        },
+        {
+            "id": "p5js",
+            "label": "p5.js Creative Coding",
+            "source": ".skills/p5js",
+            "target": ".skills/p5js",
+            "method": "copy"
+        },
+        {
+            "id": "playcanvas-editor",
+            "label": "PlayCanvas Editor",
+            "source": ".skills/playcanvas-editor",
+            "target": ".skills/playcanvas-editor",
+            "method": "copy"
+        },
+        {
+            "id": "playcanvas-engine",
+            "label": "PlayCanvas Engine",
+            "source": ".skills/playcanvas-engine",
+            "target": ".skills/playcanvas-engine",
+            "method": "copy"
+        },
+        {
+            "id": "playcanvas-supersplat",
+            "label": "PlayCanvas SuperSplat",
+            "source": ".skills/playcanvas-supersplat",
+            "target": ".skills/playcanvas-supersplat",
+            "method": "copy"
+        },
+        {
+            "id": "playwright",
+            "label": "Playwright Automation",
+            "source": ".skills/playwright",
+            "target": ".skills/playwright",
+            "method": "copy"
+        },
+        {
+            "id": "resend",
+            "label": "Resend Email Services",
+            "source": ".skills/resend",
+            "target": ".skills/resend",
+            "method": "copy"
+        },
+        {
+            "id": "supabase",
+            "label": "Supabase Management",
+            "source": ".skills/supabase/db",
+            "target": "src/db",
+            "method": "copy"
+        },
+        {
+            "id": "telegram",
+            "label": "Telegram Notifications",
+            "source": ".skills/telegram",
+            "target": ".skills/telegram",
+            "method": "copy"
+        }
+    ]
+}

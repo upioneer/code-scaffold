@@ -1,0 +1,15 @@
+{
+  "name": "proxmox-skill",
+  "version": "2",
+  "description": "Proxmox VE LXC toolbox for building reusable templates, baseline app deployments, and SSH hardening.",
+  "entryPoint": "./SKILL.md",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "requiredPermissions": [
+    "fs:read",
+    "fs:write",
+    "net:connect",
+    "sys:command"
+  ]
+}

@@ -1,0 +1,367 @@
+# Track
+
+## Introduction
+
+Trackio helps you organize your experiments within a **project**.
+A project is a collection of **runs**, where each run represents a single execution of your code with a specific set of parameters and results.
+
+## Initialization
+
+To start tracking an experiment with Trackio, you first need to initialize a project with the [init()](/docs/trackio/v0.27.0/en/api#trackio.init) function:
+
+```python
+import trackio
+
+trackio.init(project="my_project")
+```
+
+* If the project already exists, it will be loaded.
+* If not, Trackio will create a new one.
+
+In both cases, a new run is started automatically, ready for you to log data.
+
+### Naming your run
+
+It's a good idea to give each run a meaningful name for easier organization and later reference.
+You can set a name using the `name` parameter:
+
+```python
+trackio.init(project="my_project", name="my_first_run")
+```
+
+If no name is provided, Trackio generates a default one.
+
+### Grouping runs
+
+You can organize related runs into groups using the `group` parameter. This is particularly useful when you're running multiple experiments with different configurations but want to compare them together:
+
+```python
+# Group runs by experiment type
+trackio.init(project="my_project", name="baseline_run_1", group="baseline")
+trackio.init(project="my_project", name="augmented_run_1", group="augmented")
+trackio.init(project="my_project", name="tuned_run_1", group="tuned")
+```
+
+Runs with the same group name can be grouped together in sidebar, making it easier to compare related experiments. You can also group runs by any other configuration parameter (see [Tracking Configuration](#tracking-configuration) below).
+
+### Remote logging (Hugging Face Space or self-hosted server)
+
+By default, metrics are stored locally and you open the dashboard on your machine. You can instead send metrics to:
+
+- A **Hugging Face Space**, by passing `space_id` (or setting `TRACKIO_SPACE_ID`). Trackio can create or reuse the Space and sync data there.
+- A **self-hosted Trackio server** (HTTP or HTTPS), by passing `server_url` (or setting `TRACKIO_SERVER_URL`). Use the write-access URL from `trackio.show()` (optionally with `write_token` in the query), or a base URL plus `TRACKIO_WRITE_TOKEN`. The client authenticates with the same **write token** the dashboard uses (not your Hugging Face token).
+
+If both a Space and a self-hosted URL are configured (`space_id` / `TRACKIO_SPACE_ID` together with `server_url` / `TRACKIO_SERVER_URL`), **the Space takes precedence** and the self-hosted URL is ignored. Options such as `dataset_id` and `bucket_id` apply to Hugging Face deployments; when only `server_url` is in effect, configure storage on the host that runs the server (see [Environment Variables](environment_variables)).
+
+For setup steps (running `trackio show`, binding to `0.0.0.0`, write tokens), see [Self-host the Server](self_hosted_server).
+
+The built-in dashboard polls for new runs and metrics every **1 second** on localhost and every **2 seconds** when opened on a Hugging Face Space (`*.hf.space`), to ease rate limits on the Space URL.
+
+## Logging Data
+
+Once your run is initialized, you can start logging data using the [log()](/docs/trackio/v0.27.0/en/api#trackio.log) function:
+
+```python
+trackio.log({"loss": 0.05})
+```
+
+Trackio is written defensively so Trackio-side failures should never take down your main experiment code. Under normal usage, issues inside Trackio's logging, flushing, or delivery paths degrade to warnings and local buffering rather than exceptions from your training loop.
+
+Each call to [log()](/docs/trackio/v0.27.0/en/api#trackio.log) automatically increments the step counter.
+If you want to log multiple metrics at once, pass them together:
+
+```python
+trackio.log({
+    "loss": 0.05,
+    "accuracy": 0.95,
+})
+```
+
+### Logging tables
+
+You can log tabular data using the [Table](/docs/trackio/v0.27.0/en/api#trackio.Table) class. This is useful for tracking results like predictions, or any structured data. Tables can include image columns using the [Image](/docs/trackio/v0.27.0/en/api#trackio.TrackioImage) class.
+
+```python
+import pandas as pd
+
+df = pd.DataFrame(
+    {
+        "prompt": ["Trackio", "Logging is"],
+        "completion": ["is great!", "easy and fun!"],
+        "reward": [0.123, 0.456],
+    }
+)
+trackio.log(
+    {
+        ...
+        "texts": trackio.Table(dataframe=df),
+    }
+)
+```
+
+<iframe 
+    src="https://trackio-documentation.hf.space/?project=log-table&metrics=loss,text&sidebar=hidden" 
+    width="600" 
+    height="630" 
+    style="border:0;">
+
+### Logging reports (Markdown)
+
+You can log markdown reports using the `Markdown` class. Reports are shown in the **Reports** page in the dashboard, where the newest report appears first.
+
+```python
+trackio.log(
+    {
+        "training_report": trackio.Markdown(
+            """# Training Report
+
+Final validation accuracy: **0.92**
+
+- Best epoch: 18
+- Early stopping: enabled
+"""
+        )
+    }
+)
+```
+
+You can log reports multiple times during a run (for example, one report per checkpoint), and Trackio will keep the full history across steps.
+
+For a complete runnable script, see `examples/training-with-report.py`.
+
+### Logging images
+
+You can log images using the [Image](/docs/trackio/v0.27.0/en/api#trackio.TrackioImage) class.
+
+```python
+trackio.log({"image": trackio.Image(value="path/to/image.png", caption="Image caption")})
+```
+
+Images can be logged from a path, a numpy array, or a PIL Image.
+
+### Logging videos
+
+You can log videos using the [Video](/docs/trackio/v0.27.0/en/api#trackio.TrackioVideo) class.
+
+```python
+import trackio
+import numpy as np
+
+# Create a simple video from numpy array
+frames = np.random.randint(0, 255, (10, 3, 64, 64), dtype=np.uint8)
+video = trackio.Video(frames, caption="Random video", fps=30)
+trackio.log({"my_video": video})
+
+# Create a batch of videos
+batch_frames = np.random.randint(0, 255, (3, 10, 3, 64, 64), dtype=np.uint8)
+batch_video = trackio.Video(batch_frames, caption="Batch of videos", fps=15)
+trackio.log({"batch_videos": batch_video})
+
+# Create video from file path
+video = trackio.Video("path/to/video.mp4", caption="Video from file")
+trackio.log({"file_video": video})
+```
+
+Videos can be logged from a file path or a numpy array.
+
+**Numpy array requirements:**
+- Must be of type `np.uint8` with RGB values in the range `[0, 255]`
+- Shape should be either:
+  - `(frames, channels, height, width)` for a single video
+  - `(batch, frames, channels, height, width)` for multiple videos (will be tiled into a grid)
+
+### Logging audio
+
+You can log audio using the [Audio](/docs/trackio/v0.27.0/en/api#trackio.TrackioAudio) class.
+
+```python
+import trackio
+import numpy as np
+
+# Generate a 1-second 440 Hz sine wave (mono)
+sr = 16000
+t = np.linspace(0, 1, sr, endpoint=False)
+wave = 0.2 * np.sin(2 * np.pi * 440 * t)
+audio = trackio.Audio(wave, caption="A4 sine", sample_rate=sr, format="wav")
+trackio.log({"tone": audio})
+
+# Stereo from numpy array (shape: samples, 2)
+stereo = np.stack([wave, wave], axis=1)
+audio = trackio.Audio(stereo, caption="Stereo", sample_rate=sr, format="mp3")
+trackio.log({"stereo": audio})
+
+# From an existing file
+audio = trackio.Audio("path/to/audio.wav", caption="From file")
+trackio.log({"file_audio": audio})
+```
+
+Audio can be logged from a file path or a numpy array.
+
+**Numpy array requirements:**
+- Shape should be either `(samples,)` for mono or `(samples, 2)` for stereo
+- `sample_rate` must be provided when logging from a numpy array
+- Values may be float or integer; floats are peak-normalized and converted to 16-bit PCM
+- `format` can be `"wav"` or `"mp3"` when logging from a numpy array (default `"wav"`)
+
+### Logging system metrics
+
+Trackio can automatically log system metrics in the background. It supports both NVIDIA GPUs and Apple Silicon (M-series) Macs.
+
+**Installation:**
+
+```bash
+# NVIDIA GPU monitoring
+pip install trackio[gpu]
+
+# Apple Silicon system monitoring
+pip install trackio[apple-gpu]
+```
+
+**Automatic logging (default):**
+
+When the appropriate package is installed and compatible hardware is detected, system metrics are logged automatically in the background (every 10 seconds by default):
+
+```python
+import trackio
+
+# Auto-enabled when hardware is detected
+trackio.init(project="my_project")
+
+for step in range(100):
+    # ... training code ...
+    trackio.log({"loss": loss})
+# System metrics are logged automatically in the background
+
+trackio.finish()
+```
+
+You can customize the interval or disable auto-logging:
+
+```python
+# Custom interval
+trackio.init(project="my_project", gpu_log_interval=5.0)
+
+# Disable auto-logging
+trackio.init(project="my_project", auto_log_gpu=False)
+```
+
+**Manual logging:**
+
+You can also log system metrics manually at specific times using [log_gpu()](/docs/trackio/v0.27.0/en/api#trackio.log_gpu):
+
+```python
+import trackio
+
+trackio.init(project="my_project", auto_log_gpu=False)
+
+for step in range(100):
+    # ... training code ...
+    trackio.log({"loss": loss})
+    trackio.log_gpu()  # Log system metrics at current time
+
+trackio.finish()
+```
+
+**NVIDIA GPU metrics:**
+
+Per-GPU metrics (`gpu/{i}/{metric}`):
+- `gpu/0/utilization` - GPU utilization %
+- `gpu/0/memory_utilization` - Memory controller utilization %
+- `gpu/0/allocated_memory` - Memory allocated in GiB
+- `gpu/0/total_memory` - Total memory in GiB
+- `gpu/0/memory_usage` - Memory usage ratio (0-1)
+- `gpu/0/temp` - Temperature in Celsius
+- `gpu/0/power` - Power draw in watts
+- `gpu/0/power_percent` - Power as % of limit
+- `gpu/0/power_limit` - Power limit in watts
+- `gpu/0/sm_clock` - SM clock speed in MHz
+- `gpu/0/memory_clock` - Memory clock speed in MHz
+- `gpu/0/fan_speed` - Fan speed %
+- `gpu/0/performance_state` - Performance state (P0-P15)
+- `gpu/0/energy_consumed` - Energy consumed since run start in Joules
+- `gpu/0/pcie_tx` - PCIe transmit bandwidth in MB/s
+- `gpu/0/pcie_rx` - PCIe receive bandwidth in MB/s
+- `gpu/0/throttle_thermal` - Thermal throttling (0/1)
+- `gpu/0/throttle_power` - Power throttling (0/1)
+- `gpu/0/throttle_hw_slowdown` - Hardware slowdown (0/1)
+- `gpu/0/throttle_apps` - Application clock throttling (0/1)
+- `gpu/0/corrected_memory_errors` - ECC corrected errors
+- `gpu/0/uncorrected_memory_errors` - ECC uncorrected errors
+
+Aggregated metrics:
+- `gpu/mean_utilization` - Mean GPU utilization across all GPUs
+- `gpu/total_allocated_memory` - Total memory used across all GPUs in GiB
+- `gpu/total_power` - Total power draw across all GPUs
+- `gpu/max_temp` - Maximum temperature across all GPUs
+
+**Apple Silicon metrics:**
+
+- `cpu/utilization` - Overall CPU utilization %
+- `cpu/{i}/utilization` - Per-core CPU utilization %
+- `cpu/frequency` - Current CPU frequency in MHz
+- `cpu/frequency_max` - Maximum CPU frequency in MHz
+- `memory/used` - Memory used in GiB
+- `memory/total` - Total memory in GiB
+- `memory/available` - Available memory in GiB
+- `memory/percent` - Memory usage %
+- `swap/used` - Swap used in GiB
+- `swap/total` - Total swap in GiB
+- `swap/percent` - Swap usage %
+- `temp/{label}` - Temperature sensor readings in Celsius (if available)
+- `gpu/detected` - Whether an Apple GPU was detected (0/1)
+
+## Finishing a Run
+
+When your run is complete, finalize it with [finish()](/docs/trackio/v0.27.0/en/api#trackio.finish).
+This marks the run as completed and saves all logged data:
+
+```python
+trackio.finish()
+```
+
+## Resuming a Run
+
+Trackio identifies runs internally by a stable `run_id`. The human-readable `name`
+is no longer required to be unique, so you can create multiple runs with the same
+display name.
+
+If you need to continue the latest run with a given name (for example, after an
+interruption), call [init()](/docs/trackio/v0.27.0/en/api#trackio.init) again with the same project and run name, and set
+`resume="must"`:
+
+```python
+trackio.init(project="my_project", name="my_first_run", resume="must")
+```
+
+This will load the most recently created run with that name so you can keep
+logging data using the same `run_id`. But if you set `resume="must"`, and no previous run exists with the same name, Trackio will raise an error. 
+
+For more flexibility, use `resume="allow"`. This will resume the latest run with
+that name if one exists, or create a new run otherwise.
+
+The default is `resume="never"`, which always creates a fresh run with a new
+`run_id`, even if another run with the same `name` already exists.
+
+## Tracking Configuration
+
+You can also track configuration parameters for your runs. This is useful for keeping track of hyperparameters or other settings used in your experiments. You can log configuration data using the `config` parameter in the [init()](/docs/trackio/v0.27.0/en/api#trackio.init) function:
+
+```python
+for batch_size in [16, 32, 64]:
+    for lr in [0.001, 0.01, 0.1]:
+        trackio.init(
+            project="hyperparameter_tuning",
+            name=f"lr_{lr}_batch_{batch_size}_run",
+            config={
+                "learning_rate": lr,
+                "batch_size": batch_size,
+            }
+        )
+        # ... your training code ...
+        trackio.finish()
+```
+
+In the dashboard, you can then group by "learning_rate" or "batch_size" to more easily compare runs with different hyperparameters.
+
+
+

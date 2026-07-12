@@ -1,0 +1,15 @@
+{
+  "name": "code_scaffold_mcp_generator_skill",
+  "version": "3",
+  "description": "Assists with creating new custom Model Context Protocol (MCP) servers, clients, and apps using official SDKs and best practices.",
+  "entryPoint": "./SKILL.md",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "requiredPermissions": [
+    "fs:read",
+    "fs:write",
+    "net:connect",
+    "sys:exec"
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "label": "Markmap",
+  "description": "Interactive hierarchical mindmaps derived directly from standard markdown syntax.",
+  "version": "1",
+  "target": ".skills/markmap"
+}

@@ -1,0 +1,6 @@
+{
+  "label": "PlayCanvas Engine",
+  "description": "Modular 3D/2D game engine for the web supporting WebGL and WebGPU.",
+  "version": "2",
+  "target": ".skills/playcanvas-engine"
+}

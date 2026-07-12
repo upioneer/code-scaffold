@@ -1,0 +1,6 @@
+{
+  "label": "Firecrawl Scraper",
+  "description": "Crawl and scrape websites to clean markdown or structured data with Firecrawl API & CLI",
+  "version": "2",
+  "target": ".skills/firecrawl"
+}

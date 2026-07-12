@@ -1,0 +1,6 @@
+{
+  "label": "Proxmox",
+  "description": "Proxmox VE LXC toolbox for building reusable templates, baseline app deployments, and SSH hardening.",
+  "version": "2",
+  "target": ".skills/proxmox"
+}

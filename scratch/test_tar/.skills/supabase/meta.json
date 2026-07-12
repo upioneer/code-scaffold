@@ -1,0 +1,6 @@
+{
+  "label": "Supabase",
+  "description": "Supabase database and authentication integration",
+  "version": "2",
+  "target": ".skills/supabase"
+}

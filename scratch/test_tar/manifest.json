@@ -1,0 +1,340 @@
+{
+    "metadata": {
+        "version": "7.3.2",
+        "lastUpdated": "2026-06-21T13:40:00Z"
+    },
+    "env": {
+        "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY": "pk_test_placeholder",
+        "CLERK_SECRET_KEY": "sk_test_placeholder",
+        "NEXT_PUBLIC_CLERK_SIGN_IN_URL": "/sign-in",
+        "NEXT_PUBLIC_CLERK_SIGN_UP_URL": "/sign-up",
+        "UPSTASH_REDIS_REST_URL": "https://placeholder.upstash.io",
+        "UPSTASH_REDIS_REST_TOKEN": "token_placeholder",
+        "VERCEL_ORG_ID": "org_placeholder",
+        "VERCEL_PROJECT_ID": "prj_placeholder"
+    },
+    "apps": [
+        {
+            "id": "src",
+            "label": "Source Code (/src)",
+            "target": "src",
+            "method": "mkdir"
+        },
+        {
+            "id": "tests",
+            "label": "Test Suite (/tests)",
+            "target": "tests",
+            "method": "mkdir"
+        },
+        {
+            "id": "docs",
+            "label": "Documentation (/docs)",
+            "target": "docs",
+            "method": "mkdir"
+        }
+    ],
+    "artifacts": [
+        {
+            "id": "agent",
+            "label": "AGENT.md",
+            "target": "AGENT.md",
+            "method": "touch"
+        },
+        {
+            "id": "design",
+            "label": "DESIGN.md",
+            "target": "DESIGN.md",
+            "method": "touch"
+        },
+        {
+            "id": "license",
+            "label": "LICENSE.md",
+            "target": "LICENSE.md",
+            "method": "touch"
+        },
+        {
+            "id": "plan",
+            "label": "PLAN.md",
+            "target": "PLAN.md",
+            "method": "touch"
+        },
+        {
+            "id": "readme",
+            "label": "README.md",
+            "target": "README.md",
+            "method": "touch"
+        },
+        {
+            "id": "skills",
+            "label": "SKILLS.md",
+            "target": "SKILLS.md",
+            "method": "touch"
+        },
+        {
+            "id": "testing",
+            "label": "TESTING.md",
+            "target": "TESTING.md",
+            "method": "touch"
+        },
+        {
+            "id": "todo",
+            "label": "TODO.md",
+            "target": "TODO.md",
+            "method": "touch"
+        },
+        {
+            "id": "vercel",
+            "label": "vercel.json",
+            "target": "vercel.json",
+            "method": "copy"
+        },
+        {
+            "id": "deploy",
+            "label": "deploy.yml",
+            "target": ".github/workflows/deploy.yml",
+            "method": "copy"
+        },
+        {
+            "id": "env",
+            "label": "env.example",
+            "target": ".env.example",
+            "method": "copy"
+        },
+        {
+            "id": "middleware",
+            "label": "middleware.ts",
+            "target": "middleware.ts",
+            "method": "copy"
+        },
+        {
+            "id": "layout",
+            "label": "layout.tsx",
+            "target": "app/layout.tsx",
+            "method": "copy"
+        },
+        {
+            "id": "redis",
+            "label": "redis.ts",
+            "target": "lib/redis.ts",
+            "method": "copy"
+        },
+        {
+            "id": "ratelimit",
+            "label": "ratelimit.ts",
+            "target": "lib/ratelimit.ts",
+            "method": "copy"
+        }
+    ],
+    "skills": [
+        {
+            "id": "braille-animations",
+            "label": "Braille Animations",
+            "source": ".skills/braille-animations",
+            "target": ".skills/braille-animations",
+            "method": "copy"
+        },
+        {
+            "id": "excalidraw",
+            "label": "Excalidraw Diagrams",
+            "source": ".skills/excalidraw",
+            "target": ".skills/excalidraw",
+            "method": "copy"
+        },
+        {
+            "id": "firebase",
+            "label": "Firebase Management",
+            "source": ".skills/firebase",
+            "target": ".skills/firebase",
+            "method": "copy"
+        },
+        {
+            "id": "firecrawl",
+            "label": "Firecrawl Scraper",
+            "source": ".skills/firecrawl",
+            "target": ".skills/firecrawl",
+            "method": "copy"
+        },
+        {
+            "id": "github",
+            "label": "GitHub Automation",
+            "source": ".skills/github",
+            "target": ".skills/github",
+            "method": "copy"
+        },
+        {
+            "id": "hyperframes",
+            "label": "Hyperframes Video",
+            "source": ".skills/hyperframes",
+            "target": ".skills/hyperframes",
+            "method": "copy"
+        },
+        {
+            "id": "manim",
+            "label": "Manim Math Animations",
+            "source": ".skills/manim",
+            "target": ".skills/manim",
+            "method": "copy"
+        },
+        {
+            "id": "marp",
+            "label": "Marp Presentations",
+            "source": ".skills/marp",
+            "target": ".skills/marp",
+            "method": "copy"
+        },
+        {
+            "id": "mermaid",
+            "label": "Mermaid Diagrams",
+            "source": ".skills/mermaid/template.md",
+            "target": "SKILLS.md",
+            "method": "append"
+        },
+        {
+            "id": "node",
+            "label": "Node Development",
+            "source": ".skills/node",
+            "target": ".skills/node",
+            "method": "copy"
+        },
+        {
+            "id": "open-design",
+            "label": "Open Design Prototypes",
+            "source": ".skills/open-design",
+            "target": ".skills/open-design",
+            "method": "copy"
+        },
+        {
+            "id": "opencli",
+            "label": "OpenCLI Bridge",
+            "source": ".skills/opencli",
+            "target": ".skills/opencli",
+            "method": "copy"
+        },
+        {
+            "id": "p5js",
+            "label": "p5.js Creative Coding",
+            "source": ".skills/p5js",
+            "target": ".skills/p5js",
+            "method": "copy"
+        },
+        {
+            "id": "playcanvas-editor",
+            "label": "PlayCanvas Editor",
+            "source": ".skills/playcanvas-editor",
+            "target": ".skills/playcanvas-editor",
+            "method": "copy"
+        },
+        {
+            "id": "playcanvas-engine",
+            "label": "PlayCanvas Engine",
+            "source": ".skills/playcanvas-engine",
+            "target": ".skills/playcanvas-engine",
+            "method": "copy"
+        },
+        {
+            "id": "playcanvas-supersplat",
+            "label": "PlayCanvas SuperSplat",
+            "source": ".skills/playcanvas-supersplat",
+            "target": ".skills/playcanvas-supersplat",
+            "method": "copy"
+        },
+        {
+            "id": "playwright",
+            "label": "Playwright Automation",
+            "source": ".skills/playwright",
+            "target": ".skills/playwright",
+            "method": "copy"
+        },
+        {
+            "id": "ratatui",
+            "label": "Ratatui TUI Framework",
+            "source": ".skills/ratatui",
+            "target": ".skills/ratatui",
+            "method": "copy"
+        },
+        {
+            "id": "trackio",
+            "label": "Trackio ML Tracking",
+            "source": ".skills/trackio",
+            "target": ".skills/trackio",
+            "method": "copy"
+        },
+        {
+            "id": "tui-tools",
+            "label": "TUI Tools Architecture",
+            "source": ".skills/tui-tools",
+            "target": ".skills/tui-tools",
+            "method": "copy"
+        },
+        {
+            "id": "resend",
+            "label": "Resend Email Services",
+            "source": ".skills/resend",
+            "target": ".skills/resend",
+            "method": "copy"
+        },
+        {
+            "id": "seo-geo-aeo-auditor",
+            "label": "SEO GEO AEO Auditor",
+            "source": ".skills/seo-geo-aeo-auditor",
+            "target": ".skills/seo-geo-aeo-auditor",
+            "method": "copy"
+        },
+        {
+            "id": "supabase",
+            "label": "Supabase Management",
+            "source": ".skills/supabase/db",
+            "target": "src/db",
+            "method": "copy"
+        },
+        {
+            "id": "telegram",
+            "label": "Telegram Notifications",
+            "source": ".skills/telegram",
+            "target": ".skills/telegram",
+            "method": "copy"
+        },
+        {
+            "id": "website-deploy-linux",
+            "label": "Website Deploy Linux",
+            "source": ".skills/website-deploy-linux",
+            "target": ".skills/website-deploy-linux",
+            "method": "copy"
+        },
+        {
+            "id": "vercel-routine",
+            "label": "Vercel Deployment Routine",
+            "source": ".skills/vercel",
+            "target": ".skills/vercel",
+            "method": "copy"
+        },
+        {
+            "id": "clerk-perimeter",
+            "label": "Clerk Authentication Perimeter",
+            "source": ".skills/clerk",
+            "target": ".skills/clerk",
+            "method": "copy"
+        },
+        {
+            "id": "upstash-redis",
+            "label": "Upstash Redis Management",
+            "source": ".skills/upstash",
+            "target": ".skills/upstash",
+            "method": "copy"
+        },
+        {
+            "id": "privacy-policy",
+            "label": "Privacy Policy Generator",
+            "source": ".skills/privacy-policy",
+            "target": ".skills/privacy-policy",
+            "method": "copy"
+        },
+        {
+            "id": "mcp-generator",
+            "label": "MCP Generator",
+            "source": ".skills/mcp-generator",
+            "target": ".skills/mcp-generator",
+            "method": "copy"
+        }
+    ]
+}
