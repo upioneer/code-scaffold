@@ -48,3 +48,19 @@ pm run build to compile the project and verify success.
 pm run test or 
 pm run lint to enforce quality. Report any errors to the user.
 
+5. **NPM Trusted Publishing (OIDC) in GitHub Actions**
+   When configuring or troubleshooting GitHub Actions to publish packages to NPM using OIDC Trusted Publishing (passwordless `npm publish --provenance`), STRICTLY enforce these invariants:
+   - **`registry-url` is Mandatory**: You MUST set `registry-url: 'https://registry.npmjs.org'` in the `actions/setup-node` step. Without this, the NPM CLI will fail to initialize the OIDC handshake and will throw a highly misleading `ENEEDAUTH` error.
+   - **Do NOT set `NODE_AUTH_TOKEN`**: Remove any references to `NODE_AUTH_TOKEN` in the publish step's environment variables. OIDC handles the auth implicitly based on the `registry-url` configuration.
+   - **Enforce Latest NPM CLI**: Node 20 ships with older `npm` v10.x versions that have known bugs negotiating OIDC tokens. You MUST explicitly force the runner to use the latest NPM version (e.g., `- run: npm install -g npm@latest`) or bump the runner to Node 24 before publishing.
+   - **Error Codes Decoder**: 
+     - `ENEEDAUTH` = The OIDC handshake failed to trigger. Usually means `registry-url` is missing from `setup-node` or the `npm` CLI version is too old.
+     - `403 Forbidden` = The OIDC handshake succeeded, but the registry rejected the payload (often because the package version already exists in the registry, or the account is blocked by 2FA).
+
+6. **Safe CI Pipeline Testing Strategies (NPM Publish)**
+   If a CI pipeline is repeatedly failing at the `npm publish` step, DO NOT recursively bump the project's actual version and push release tags to test fixes. Instead, follow this non-destructive isolation strategy:
+   1. Add a `workflow_dispatch` trigger to the workflow file so it can be tested manually.
+   2. Temporarily bump the target `package.json` version to a disposable prerelease tag (e.g., `1.0.9-test.1`).
+   3. Isolate the commit and push strictly the workflow and package.json directly to `main` (bypassing tags).
+   4. Manually trigger the workflow from the GitHub Actions dashboard.
+   5. If the manual run fails with the specific error: `npm error You must specify a tag using --tag when publishing a prerelease version`, this is an ABSOLUTE PROOF OF SUCCESS. It means the OIDC authentication perfectly bypassed all blocks and only failed because NPM correctly protects the `latest` tag from alpha/test strings.

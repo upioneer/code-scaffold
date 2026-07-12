@@ -62,6 +62,12 @@ async fn main() -> Result<()> {
     let mut app = App::new(payload_dir);
 
     app.run(tui).await?;
+    if app.restart_requested {
+        if let Ok(exe) = std::env::current_exe() {
+            let args: Vec<String> = std::env::args().skip(1).collect();
+            let _ = std::process::Command::new(exe).args(args).spawn();
+        }
+    }
 
     Ok(())
 }

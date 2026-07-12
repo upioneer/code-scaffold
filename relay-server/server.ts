@@ -50,6 +50,15 @@ Deno.serve((req) => {
     }
     
     roomConns.add(socket);
+
+    // Keep connection alive on Deno Deploy (29s ping to reduce global activity)
+    const keepAlive = setInterval(() => {
+      if (socket.readyState === WebSocket.OPEN) {
+        socket.send(new Uint8Array(0)); // Empty binary frame as ping
+      }
+    }, 29000);
+
+    socket.addEventListener("close", () => clearInterval(keepAlive));
   };
 
   socket.onmessage = (e) => {
