@@ -1,6 +1,6 @@
 # Node
 
-**Version:** 3
+**Version:** 4
 **Target:** `.skills/node`
 
 ## Description
@@ -15,11 +15,12 @@ Bootstraps a Node.js runtime environment
 * **Dependency Management** : Execute package installations securely to add or update required project dependencies
 * **Artifact Compilation** : Run build pipelines to compile the project and rigorously verify the build output success state
 * **Quality Assurance Enforcement** : Execute robust test suites and strict linting pipelines to enforce code quality and explicitly report errors to the user
-
+* **NPM OIDC Provenance Architecture** : Configures and explicitly debugs GitHub Actions OIDC Trusted Publishing workflows resolving registry URL conflicts misleading token anomalies and robust manual CI test strategies
 ## Usage
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog
+* **v4** : Integrated NPM Trusted Publishing OIDC invariants and safe CI testing strategies
 * **v3** : Integrated aggressive Windows dev server port clearance protocols
 * **v2** : Expanded capability descriptions
 * **v1** : Core skill implementation

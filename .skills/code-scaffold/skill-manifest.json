@@ -1,6 +1,6 @@
 {
   "name": "code-scaffold-harness",
-  "version": "3",
+  "version": "4",
   "description": "Agent harness for headlessly deploying Code Scaffold assets.",
   "entryPoint": "./SKILL.md",
   "engines": {

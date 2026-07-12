@@ -23,6 +23,9 @@
 
 ## Immutable Constraints
 * **CRITICAL - EXPLICIT CONSENT FOR PUSHING:** NEVER execute a `git push` (or any command that modifies a remote repository) without the user's explicit, direct permission for that specific push action. You must ALWAYS pause execution, summarize what is about to be pushed, and ask the user for authorization. Do not assume consent based on previous instructions or context.
+* **CRITICAL - EXPLICIT CONSENT FOR VERSION BUMPING:** Before executing the `./bump_version.ps1` script or incrementing package versions, you MUST proactively prompt the user with a drafted changelog summary (bullet points) outlining exactly what changes are being bundled into the release. 
+  - **MANDATORY REASONING**: Your prompt MUST explicitly state your reasoning for the chosen version number increment (Major, Minor, or Patch) based on the semantic rules.
+  - You must wait for the user's explicit approval on the changelog and the version reasoning before proceeding with the bump.
 * Absolutely no emojis in the UI or generated code.
 * Do not use em dashes or hyphens in documentation artifacts. Use asterisks for all bulleted lists.
 * Always provide the full code file during iterations. Never provide isolated snippets.
