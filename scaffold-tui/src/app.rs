@@ -327,8 +327,21 @@ impl App {
                         }
                     } else {
                         self.header.agent_connected = Some(agent_name.to_string());
+
+                        let minutes = self.copilot_timer_input.parse::<u64>().unwrap_or(60);
+                        let tx_timer = self.tx.clone();
+                        tokio::spawn(async move {
+                            tokio::time::sleep(tokio::time::Duration::from_secs(minutes * 60))
+                                .await;
+                            let _ = tx_timer.send("AGENT_PAIRED:TIMEOUT".to_string());
+                        });
+
                         if let Some(session) = &mut self.agent_session {
                             session.status = "PAIRED".to_string();
+                            session.expires_at = Some(
+                                std::time::Instant::now()
+                                    + std::time::Duration::from_secs(minutes * 60),
+                            );
                             session
                                 .recent_activity
                                 .push(format!("Handshake complete. Client: {}", agent_name));
@@ -730,7 +743,17 @@ impl App {
                     let mut text = "Initializing remote agent broker...\n\n".to_string();
                     if let Some(session) = &self.agent_session {
                         if !session.pin.is_empty() {
-                            text.push_str(&format!("Provide this URI to your agent:\n> scaffold://{}@{}\n\nStatus: {}\n\n", session.pin, session.key, session.status));
+                            let uri = format!("scaffold://{}@{}", session.pin, session.key);
+                            text.push_str(&format!("Provide this connection string to your agent:\n> I am ready to pair. Here is my Scaffold Connect URI: {}. Please refer to the code-scaffold skill instructions you just installed to learn how to execute the connection.\n\n", uri));
+
+                            if self.header.agent_connected.is_none() {
+                                let qr_str = qrcode::QrCode::new(uri.as_bytes())
+                                    .unwrap()
+                                    .render::<qrcode::render::unicode::Dense1x2>()
+                                    .build();
+                                text.push_str(&format!("{}\n\n", qr_str));
+                            }
+                            text.push_str(&format!("Status: {}\n\n", session.status));
                         } else {
                             text.push_str(&format!("Status: {}\n\n", session.status));
                         }
@@ -959,10 +982,7 @@ impl App {
                                 key: session.key.clone(),
                                 status: "Connecting...".to_string(),
                                 recent_activity: vec!["Initializing ephemeral keys...".to_string()],
-                                expires_at: Some(
-                                    std::time::Instant::now()
-                                        + std::time::Duration::from_secs(minutes * 60),
-                                ),
+                                expires_at: None,
                             });
                             self.wizard_state = WizardState::AgentCopilot;
 
@@ -974,18 +994,6 @@ impl App {
 
                             let tx_clone = self.tx.clone();
                             tokio::spawn(async move {
-                                let (stop_tx, mut stop_rx) = tokio::sync::oneshot::channel();
-
-                                let tx_timer = tx_clone.clone();
-                                tokio::spawn(async move {
-                                    tokio::select! {
-                                        _ = tokio::time::sleep(tokio::time::Duration::from_secs(minutes * 60)) => {
-                                            let _ = tx_timer.send("AGENT_PAIRED:TIMEOUT".to_string());
-                                        }
-                                        _ = stop_rx => {}
-                                    }
-                                });
-
                                 tokio::select! {
                                     res = session_clone.connect(tx_clone.clone()) => {
                                         if let Err(e) = res {
@@ -996,7 +1004,6 @@ impl App {
                                         let _ = tx_clone.send("[CONNECTION_DROPPED]".to_string());
                                     }
                                 }
-                                let _ = stop_tx.send(());
                             });
                         }
                         _ => {
@@ -1649,55 +1656,12 @@ impl App {
                         match crate::prefs::can_rotate_keys() {
                             Ok(_) => {
                                 crate::prefs::log_key_rotation();
-                                let session =
-                                    crate::scaffold_connect::ScaffoldConnectSession::new_ephemeral(
-                                    );
-                                let session_clone = session.clone();
-                                let minutes = self.copilot_timer_input.parse::<u64>().unwrap_or(60);
-                                let new_expiry = Some(
-                                    std::time::Instant::now()
-                                        + std::time::Duration::from_secs(minutes * 60),
-                                );
-                                self.agent_session = Some(crate::app::AgentSession {
-                                    pin: session.pin.clone(),
-                                    key: session.key.clone(),
-                                    status: "Connecting...".to_string(),
-                                    recent_activity: vec!["Rotated ephemeral keys...".to_string()],
-                                    expires_at: new_expiry,
-                                });
-
                                 if let Some(old_tx) = self.cancel_tx.take() {
                                     let _ = old_tx.send(());
                                 }
-                                let (cancel_tx, cancel_rx) = tokio::sync::oneshot::channel::<()>();
-                                self.cancel_tx = Some(cancel_tx);
-
-                                let tx_clone = self.tx.clone();
-                                tokio::spawn(async move {
-                                    let (stop_tx, mut stop_rx) = tokio::sync::oneshot::channel();
-
-                                    let tx_timer = tx_clone.clone();
-                                    tokio::spawn(async move {
-                                        tokio::select! {
-                                            _ = tokio::time::sleep(tokio::time::Duration::from_secs(minutes * 60)) => {
-                                                let _ = tx_timer.send("AGENT_PAIRED:TIMEOUT".to_string());
-                                            }
-                                            _ = stop_rx => {}
-                                        }
-                                    });
-
-                                    tokio::select! {
-                                        res = session_clone.connect(tx_clone.clone()) => {
-                                            if let Err(e) = res {
-                                                let _ = tx_clone.send(format!("Scaffold Connect Error: {}", e));
-                                            }
-                                        }
-                                        _ = cancel_rx => {
-                                            let _ = tx_clone.send("[CONNECTION_DROPPED]".to_string());
-                                        }
-                                    }
-                                    let _ = stop_tx.send(());
-                                });
+                                self.agent_session = None;
+                                self.copilot_timer_input.clear();
+                                self.wizard_state = WizardState::AgentCopilotWelcome;
                             }
                             Err(msg) => {
                                 if let Some(session) = &mut self.agent_session {

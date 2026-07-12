@@ -6,7 +6,7 @@ Set FontSize 15
 Set Width 1200
 Set Height 800
 Set Padding 20
-Set Theme "Default"
+# Set Theme "Default"
 Set Framerate 60
 
 # Run the command
