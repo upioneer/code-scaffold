@@ -21,8 +21,15 @@ export async function installAdHocSkill(skillIdentifier, targetProjectDir) {
     await fs.rm(cloneDir, { recursive: true, force: true }).catch(() => {})
     
     const targetUrl = "https://github.com/" + author + "/code-scaffold.git"
-    execSync(`git clone --depth 1 --filter=blob:none --sparse ${targetUrl} "${cloneDir}"`, { stdio: "ignore" })
-    execSync(`git sparse-checkout set .skills/${skillName}`, { cwd: cloneDir, stdio: "ignore" })
+    try {
+      // Attempt advanced sparse clone for optimization
+      execSync(`git clone --depth 1 --filter=blob:none --sparse ${targetUrl} "${cloneDir}"`, { stdio: "pipe" })
+      execSync(`git sparse-checkout set .skills/${skillName}`, { cwd: cloneDir, stdio: "pipe" })
+    } catch (sparseError) {
+      // Fallback for older git versions that do not support --sparse or --filter
+      await fs.rm(cloneDir, { recursive: true, force: true }).catch(() => {})
+      execSync(`git clone --depth 1 ${targetUrl} "${cloneDir}"`, { stdio: "pipe" })
+    }
     
     await fs.rename(path.join(cloneDir, ".skills", skillName), temporaryTargetDir)
     await fs.rm(cloneDir, { recursive: true, force: true }).catch(() => {})
