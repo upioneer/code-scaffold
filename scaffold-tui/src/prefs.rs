@@ -141,7 +141,10 @@ pub fn can_rotate_keys() -> Result<(), String> {
         if let Some(last) = recent_rotations.last() {
             let elapsed = now.saturating_sub(*last);
             if elapsed < 60 {
-                return Err(format!("Rate limit: Wait {}s to rotate again.", 60 - elapsed));
+                return Err(format!(
+                    "Rate limit: Wait {}s to rotate again.",
+                    60 - elapsed
+                ));
             }
         }
     }
