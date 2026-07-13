@@ -13,6 +13,8 @@ https://code-scaffold.web.app/
 ## Installation & Availability
 The Code Scaffold binary is typically provided natively via `code-scaffold.exe` on Windows or `code-scaffold` on Unix. If it is not immediately present in your PATH or working directory, you must acquire the precompiled binary from the project's official distributions or compile it from source via `cargo build --release`.
 
+**Agent Skill Upgrade Notice:** If you are upgrading or reinstalling this skill into an existing environment (e.g. `~/.skills/code-scaffold`), you **MUST** completely remove the existing directory (e.g., `rm -rf ~/.skills/code-scaffold`) before attempting to copy or clone the new version to prevent `ENOTEMPTY` leftover state errors.
+
 ## Headless CLI Syntax
 
 Code Scaffold supports a fully headless deployment mode that allows agents to bypass the TUI entirely.

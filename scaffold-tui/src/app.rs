@@ -298,18 +298,17 @@ impl App {
                     continue;
                 }
                 if msg == "[UPDATE_COMPLETE]" {
-                    self.should_quit = true;
-                    self.restart_requested = true;
+                    self.wizard_state = WizardState::UpdateComplete;
+                    self.summary_pane.title = " Update Complete ".to_string();
+                    self.summary_pane.summary_text = "The application has successfully been updated!\n\nPlease manually exit and restart the CLI for the new version to take effect.\n\nPress [Enter] or [Esc] to exit.".to_string();
                     continue;
                 }
-                if msg == "[CONNECTION_DROPPED]" {
+                if msg == "[CLIENT_DISCONNECTED]" {
                     self.header.agent_connected = None;
                     if let Some(session) = &mut self.agent_session {
-                        session.status = "DISCONNECTED".to_string();
-                        session.pin = "".to_string();
-                        session.key = "".to_string();
+                        session.status = "LISTENING".to_string();
                         session.recent_activity.push(
-                            "Connection dropped by remote relay. Please re-pair.".to_string(),
+                            "Agent disconnected. Relay is keeping the room open for follow-up commands...".to_string(),
                         );
                     }
                     continue;
@@ -404,7 +403,7 @@ impl App {
                 let main_layout = Layout::default()
                     .direction(Direction::Vertical)
                     .constraints([
-                        Constraint::Length(3), // Header
+                        Constraint::Length(6), // Header
                         Constraint::Min(10),   // Main Body
                         Constraint::Length(11), // Summary Pane
                         Constraint::Length(3), // Footer
@@ -1001,7 +1000,7 @@ impl App {
                                         }
                                     }
                                     _ = cancel_rx => {
-                                        let _ = tx_clone.send("[CONNECTION_DROPPED]".to_string());
+                                        let _ = tx_clone.send("[CLIENT_DISCONNECTED]".to_string());
                                     }
                                 }
                             });
@@ -1219,10 +1218,10 @@ impl App {
                 WizardState::DeploymentTarget => {
                     self.wizard_state = WizardState::ConfirmExit;
                 }
-                WizardState::ConfirmExit
-                | WizardState::Executing
-                | WizardState::UpdateComplete
-                | WizardState::Complete => {
+                WizardState::ConfirmExit => {
+                    self.wizard_state = WizardState::DeploymentTarget;
+                }
+                WizardState::Executing | WizardState::UpdateComplete | WizardState::Complete => {
                     self.should_quit = true;
                 }
                 _ => {

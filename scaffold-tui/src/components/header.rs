@@ -39,33 +39,18 @@ impl Component for Header {
         theme: &Theme,
     ) -> Result<()> {
         let chunks = ratatui::layout::Layout::default()
-            .direction(ratatui::layout::Direction::Horizontal)
+            .direction(ratatui::layout::Direction::Vertical)
             .constraints([
                 ratatui::layout::Constraint::Percentage(50),
                 ratatui::layout::Constraint::Percentage(50),
             ])
             .split(area);
 
-        let mut left_banner = format!(" Code Scaffold TUI {} ", self.version);
-        if let Some(update) = &self.update_available {
-            left_banner.push_str(&format!(" [Update Available: v{} - Press U] ", update));
+        let mut top_banner = " ⚠️ Scaffold Connect is currently in alpha ⚠️ ".to_string();
+        if self.agent_connected.is_some() {
+            top_banner.push_str(" [🤖 Agent Connected - Press C] ");
         }
-        let left_text = Paragraph::new(left_banner)
-            .style(Style::default().fg(theme.text).bg(theme.bg))
-            .alignment(ratatui::layout::Alignment::Center)
-            .block(
-                Block::default()
-                    .borders(Borders::ALL)
-                    .border_style(Style::default().fg(theme.secondary).bg(theme.bg))
-                    .style(Style::default().bg(theme.bg)),
-            );
-        f.render_widget(left_text, chunks[0]);
-
-        let mut right_banner = " ⚠️ Scaffold Connect is currently in alpha ⚠️ ".to_string();
-        if let Some(agent) = &self.agent_connected {
-            right_banner.push_str(&format!(" [🤖 Agent Connected: {} - Press C] ", agent));
-        }
-        let right_text = Paragraph::new(right_banner)
+        let top_text = Paragraph::new(top_banner)
             .style(Style::default().fg(theme.text).bg(theme.bg))
             .alignment(ratatui::layout::Alignment::Center)
             .block(
@@ -74,7 +59,22 @@ impl Component for Header {
                     .border_style(Style::default().fg(theme.accent).bg(theme.bg))
                     .style(Style::default().bg(theme.bg)),
             );
-        f.render_widget(right_text, chunks[1]);
+        f.render_widget(top_text, chunks[0]);
+
+        let mut bottom_banner = format!(" Code Scaffold TUI {} ", self.version);
+        if let Some(update) = &self.update_available {
+            bottom_banner.push_str(&format!(" [Update Available: v{} - Press U] ", update));
+        }
+        let bottom_text = Paragraph::new(bottom_banner)
+            .style(Style::default().fg(theme.text).bg(theme.bg))
+            .alignment(ratatui::layout::Alignment::Center)
+            .block(
+                Block::default()
+                    .borders(Borders::ALL)
+                    .border_style(Style::default().fg(theme.secondary).bg(theme.bg))
+                    .style(Style::default().bg(theme.bg)),
+            );
+        f.render_widget(bottom_text, chunks[1]);
         Ok(())
     }
 }
