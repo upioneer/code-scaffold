@@ -46,44 +46,129 @@ impl ScaffoldConnectSession {
             "wss://code-scaffold-relay.upioneer.deno.net/room/{}",
             self.pin
         );
-        tx.send(format!(
-            "Establishing zero-trust Scaffold Connect bridge [Room: {}]...",
-            self.pin
-        ))?;
 
-        let (ws_stream, _) = connect_async(&relay_url).await?;
-        tx.send("Connection established. Waiting for remote agent...".to_string())?;
+        loop {
+            let _ = tx.send(format!(
+                "Establishing zero-trust Scaffold Connect bridge [Room: {}]...",
+                self.pin
+            ));
 
-        let (mut write, mut read) = ws_stream.split();
-        let key_bytes = BASE64.decode(&self.key)?;
-        let cipher = Aes256Gcm::new(Key::<Aes256Gcm>::from_slice(&key_bytes));
-
-        while let Some(msg) = read.next().await {
-            let msg = msg?;
-            if let Message::Binary(ciphertext) = msg {
-                if ciphertext.len() < 12 {
-                    continue; // Invalid payload
+            let ws_stream = match connect_async(&relay_url).await {
+                Ok((stream, _)) => stream,
+                Err(e) => {
+                    let _ = tx.send(format!(
+                        "Failed to connect to relay: {}. Retrying in 2s...",
+                        e
+                    ));
+                    tokio::time::sleep(std::time::Duration::from_secs(2)).await;
+                    continue;
                 }
-                let (nonce_bytes, enc_data) = ciphertext.split_at(12);
-                let nonce = Nonce::from_slice(nonce_bytes);
+            };
 
-                match cipher.decrypt(nonce, enc_data) {
-                    Ok(plaintext) => {
-                        if let Ok(json_str) = String::from_utf8(plaintext) {
-                            if let Ok(rpc) = serde_json::from_str::<RpcPayload>(&json_str) {
-                                if rpc.method.as_deref() == Some("initialize") {
-                                    if let Some(params) = rpc.params {
-                                        if let Some(client_info) = params.get("clientInfo") {
-                                            if let Some(name) =
-                                                client_info.get("name").and_then(|n| n.as_str())
+            let _ = tx.send("Connection established. Waiting for remote agent...".to_string());
+
+            let (mut write, mut read) = ws_stream.split();
+            let key_bytes = BASE64.decode(&self.key)?;
+            let cipher = Aes256Gcm::new(Key::<Aes256Gcm>::from_slice(&key_bytes));
+
+            while let Some(msg) = read.next().await {
+                let msg = match msg {
+                    Ok(m) => m,
+                    Err(_) => break, // Connection closed or error
+                };
+                if let Message::Binary(ciphertext) = msg {
+                    if ciphertext.len() < 12 {
+                        continue; // Invalid payload
+                    }
+                    let (nonce_bytes, enc_data) = ciphertext.split_at(12);
+                    let nonce = Nonce::from_slice(nonce_bytes);
+
+                    match cipher.decrypt(nonce, enc_data) {
+                        Ok(plaintext) => {
+                            if let Ok(json_str) = String::from_utf8(plaintext) {
+                                if let Ok(rpc) = serde_json::from_str::<RpcPayload>(&json_str) {
+                                    if rpc.method.as_deref() == Some("initialize") {
+                                        if let Some(params) = rpc.params {
+                                            if let Some(client_info) = params.get("clientInfo") {
+                                                if let Some(name) =
+                                                    client_info.get("name").and_then(|n| n.as_str())
+                                                {
+                                                    let _ =
+                                                        tx.send(format!("AGENT_PAIRED:{}", name));
+
+                                                    // Send handshake acknowledgment
+                                                    let res_payload = serde_json::json!({
+                                                        "jsonrpc": "2.0",
+                                                        "id": rpc.id,
+                                                        "result": { "status": "connected" }
+                                                    })
+                                                    .to_string();
+
+                                                    let mut rng = OsRng;
+                                                    let mut nonce_bytes = [0u8; 12];
+                                                    rng.fill_bytes(&mut nonce_bytes);
+                                                    let out_nonce = Nonce::from_slice(&nonce_bytes);
+
+                                                    if let Ok(encrypted) = cipher
+                                                        .encrypt(out_nonce, res_payload.as_bytes())
+                                                    {
+                                                        let mut final_payload =
+                                                            nonce_bytes.to_vec();
+                                                        final_payload.extend(encrypted);
+                                                        use futures_util::SinkExt;
+                                                        let _ = write
+                                                            .send(Message::Binary(
+                                                                final_payload.into(),
+                                                            ))
+                                                            .await;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    } else if rpc.method.as_deref() == Some("execute_command") {
+                                        if let Some(params) = rpc.params {
+                                            if let Some(cmd) =
+                                                params.get("command").and_then(|c| c.as_str())
                                             {
-                                                tx.send(format!("AGENT_PAIRED:{}", name))?;
+                                                let _ =
+                                                    tx.send(format!("⚡ Agent executing: {}", cmd));
 
-                                                // Send handshake acknowledgment
+                                                // Execute command natively via pwsh instead of cmd so PowerShell aliases work
+                                                let output = std::process::Command::new("pwsh")
+                                                    .args(&["-Command", cmd])
+                                                    .output()
+                                                    .or_else(|_| {
+                                                        // Fallback to powershell if pwsh is missing
+                                                        std::process::Command::new("powershell")
+                                                            .args(&["-Command", cmd])
+                                                            .output()
+                                                    });
+
+                                                let result = match output {
+                                                    Ok(out) => {
+                                                        let mut s =
+                                                            String::from_utf8_lossy(&out.stdout)
+                                                                .to_string();
+                                                        if !out.stderr.is_empty() {
+                                                            s.push_str("\nSTDERR:\n");
+                                                            s.push_str(&String::from_utf8_lossy(
+                                                                &out.stderr,
+                                                            ));
+                                                        }
+                                                        s
+                                                    }
+                                                    Err(e) => format!("Execution Failed: {}", e),
+                                                };
+
+                                                // Echo the output directly back into the user's TUI so they can see what the agent sees
+                                                let _ =
+                                                    tx.send(format!("Output: {}", result.trim()));
+
+                                                // Encrypt and send result back to agent
                                                 let res_payload = serde_json::json!({
                                                     "jsonrpc": "2.0",
                                                     "id": rpc.id,
-                                                    "result": { "status": "connected" }
+                                                    "result": result
                                                 })
                                                 .to_string();
 
@@ -104,77 +189,23 @@ impl ScaffoldConnectSession {
                                                 }
                                             }
                                         }
+                                    } else {
+                                        let _ = tx.send(format!("Received RPC: {:?}", rpc.method));
                                     }
-                                } else if rpc.method.as_deref() == Some("execute_command") {
-                                    if let Some(params) = rpc.params {
-                                        if let Some(cmd) =
-                                            params.get("command").and_then(|c| c.as_str())
-                                        {
-                                            tx.send(format!("⚡ Agent executing: {}", cmd))?;
-
-                                            // Execute command natively
-                                            let output = std::process::Command::new("cmd")
-                                                .args(&["/C", cmd])
-                                                .output();
-
-                                            let result = match output {
-                                                Ok(out) => {
-                                                    let mut s =
-                                                        String::from_utf8_lossy(&out.stdout)
-                                                            .to_string();
-                                                    if !out.stderr.is_empty() {
-                                                        s.push_str("\nSTDERR:\n");
-                                                        s.push_str(&String::from_utf8_lossy(
-                                                            &out.stderr,
-                                                        ));
-                                                    }
-                                                    s
-                                                }
-                                                Err(e) => format!("Execution Failed: {}", e),
-                                            };
-
-                                            // Echo the output directly back into the user's TUI so they can see what the agent sees
-                                            tx.send(format!("Output: {}", result.trim()))?;
-
-                                            // Encrypt and send result back to agent
-                                            let res_payload = serde_json::json!({
-                                                "jsonrpc": "2.0",
-                                                "id": rpc.id,
-                                                "result": result
-                                            })
-                                            .to_string();
-
-                                            let mut rng = OsRng;
-                                            let mut nonce_bytes = [0u8; 12];
-                                            rng.fill_bytes(&mut nonce_bytes);
-                                            let out_nonce = Nonce::from_slice(&nonce_bytes);
-
-                                            if let Ok(encrypted) =
-                                                cipher.encrypt(out_nonce, res_payload.as_bytes())
-                                            {
-                                                let mut final_payload = nonce_bytes.to_vec();
-                                                final_payload.extend(encrypted);
-                                                use futures_util::SinkExt;
-                                                let _ = write
-                                                    .send(Message::Binary(final_payload.into()))
-                                                    .await;
-                                            }
-                                        }
-                                    }
-                                } else {
-                                    tx.send(format!("Received RPC: {:?}", rpc.method))?;
                                 }
                             }
                         }
-                    }
-                    Err(_) => {
-                        tx.send("Failed to decrypt incoming payload. Dropping...".to_string())?;
+                        Err(_) => {
+                            let _ = tx.send(
+                                "Failed to decrypt incoming payload. Dropping...".to_string(),
+                            );
+                        }
                     }
                 }
             }
-        }
 
-        let _ = tx.send("[CONNECTION_DROPPED]".to_string());
-        Ok(())
+            let _ = tx.send("[CLIENT_DISCONNECTED]".to_string());
+            tokio::time::sleep(std::time::Duration::from_secs(1)).await;
+        }
     }
 }
