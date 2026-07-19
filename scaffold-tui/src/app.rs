@@ -313,38 +313,29 @@ impl App {
                     }
                     continue;
                 }
+                if msg == "SESSION_TIMEOUT" {
+                    if let Some(old_tx) = self.cancel_tx.take() {
+                        let _ = old_tx.send(());
+                    }
+                    self.header.agent_connected = None;
+                    if let Some(session) = &mut self.agent_session {
+                        session.status = "EXPIRED".to_string();
+                        session.pin = "".to_string();
+                        session.key = "".to_string();
+                        session.recent_activity.push(
+                            "10-minute Alpha limit reached. Session expired. Please re-pair."
+                                .to_string(),
+                        );
+                    }
+                    continue;
+                }
                 if let Some(agent_name) = msg.strip_prefix("AGENT_PAIRED:") {
-                    if agent_name == "TIMEOUT" {
-                        self.header.agent_connected = None;
-                        if let Some(session) = &mut self.agent_session {
-                            session.status = "EXPIRED".to_string();
-                            session.pin = "".to_string();
-                            session.key = "".to_string();
-                            session
-                                .recent_activity
-                                .push("Session expired. Please re-pair.".to_string());
-                        }
-                    } else {
-                        self.header.agent_connected = Some(agent_name.to_string());
-
-                        let minutes = self.copilot_timer_input.parse::<u64>().unwrap_or(60);
-                        let tx_timer = self.tx.clone();
-                        tokio::spawn(async move {
-                            tokio::time::sleep(tokio::time::Duration::from_secs(minutes * 60))
-                                .await;
-                            let _ = tx_timer.send("AGENT_PAIRED:TIMEOUT".to_string());
-                        });
-
-                        if let Some(session) = &mut self.agent_session {
-                            session.status = "PAIRED".to_string();
-                            session.expires_at = Some(
-                                std::time::Instant::now()
-                                    + std::time::Duration::from_secs(minutes * 60),
-                            );
-                            session
-                                .recent_activity
-                                .push(format!("Handshake complete. Client: {}", agent_name));
-                        }
+                    self.header.agent_connected = Some(agent_name.to_string());
+                    if let Some(session) = &mut self.agent_session {
+                        session.status = "PAIRED".to_string();
+                        session
+                            .recent_activity
+                            .push(format!("Handshake complete. Client: {}", agent_name));
                     }
                     continue;
                 }
@@ -715,14 +706,7 @@ impl App {
                     f.render_widget(ratatui::widgets::Clear, area);
                     f.render_widget(popup_block, area);
                 } else if self.wizard_state == WizardState::AgentCopilotTimerSelection {
-                    let mut text = "Enter session duration in minutes (1 - 480):\n\n".to_string();
-                    text.push_str(&format!("> {}\u{2588}\n\n", self.copilot_timer_input));
-
-                    if !self.copilot_timer_error.is_empty() {
-                        text.push_str(&format!("[ERROR]: {}\n\n", self.copilot_timer_error));
-                    }
-
-                    text.push_str("Press [Enter] to start the room, or [Esc] to cancel.");
+                    let text = "Scaffold Connect is currently in Alpha.\n\nTo prevent excessive allotment usage on the free tier, a hard cap of 10 minutes per session is enforced.\n\nPress [Enter] to start the 10-minute session, or [Esc] to cancel.";
 
                     let popup_block = ratatui::widgets::Paragraph::new(text)
                         .wrap(ratatui::widgets::Wrap { trim: false })
@@ -945,71 +929,45 @@ impl App {
         }
         if self.wizard_state == WizardState::AgentCopilotTimerSelection {
             match action {
-                Action::Char(c) => {
-                    if !self.copilot_timer_error.is_empty() {
-                        self.copilot_timer_error.clear();
-                    }
-                    if c.is_ascii_digit() && self.copilot_timer_input.len() < 5 {
-                        self.copilot_timer_input.push(c);
-                    }
-                }
-                Action::Backspace => {
-                    if !self.copilot_timer_error.is_empty() {
-                        self.copilot_timer_error.clear();
-                    }
-                    self.copilot_timer_input.pop();
-                }
                 Action::Quit => {
                     self.wizard_state = WizardState::Welcome;
-                    self.copilot_timer_error.clear();
-                    self.copilot_timer_input = "60".to_string();
                 }
                 Action::Enter => {
-                    if !self.copilot_timer_error.is_empty() {
-                        self.copilot_timer_error.clear();
-                        return Ok(());
+                    let session = crate::scaffold_connect::ScaffoldConnectSession::new_ephemeral();
+                    let session_clone = session.clone();
+                    self.agent_session = Some(crate::app::AgentSession {
+                        pin: session.pin.clone(),
+                        key: session.key.clone(),
+                        status: "Connecting...".to_string(),
+                        recent_activity: vec!["Initializing ephemeral keys...".to_string()],
+                        expires_at: None,
+                    });
+                    self.wizard_state = WizardState::AgentCopilot;
+
+                    if let Some(old_tx) = self.cancel_tx.take() {
+                        let _ = old_tx.send(());
                     }
+                    let (cancel_tx, cancel_rx) = tokio::sync::oneshot::channel::<()>();
+                    self.cancel_tx = Some(cancel_tx);
 
-                    let val: Result<u64, _> = self.copilot_timer_input.parse();
-                    match val {
-                        Ok(minutes) if (1..=480).contains(&minutes) => {
-                            let session =
-                                crate::scaffold_connect::ScaffoldConnectSession::new_ephemeral();
-                            let session_clone = session.clone();
-                            self.agent_session = Some(crate::app::AgentSession {
-                                pin: session.pin.clone(),
-                                key: session.key.clone(),
-                                status: "Connecting...".to_string(),
-                                recent_activity: vec!["Initializing ephemeral keys...".to_string()],
-                                expires_at: None,
-                            });
-                            self.wizard_state = WizardState::AgentCopilot;
-
-                            if let Some(old_tx) = self.cancel_tx.take() {
-                                let _ = old_tx.send(());
-                            }
-                            let (cancel_tx, cancel_rx) = tokio::sync::oneshot::channel::<()>();
-                            self.cancel_tx = Some(cancel_tx);
-
-                            let tx_clone = self.tx.clone();
-                            tokio::spawn(async move {
-                                tokio::select! {
-                                    res = session_clone.connect(tx_clone.clone()) => {
-                                        if let Err(e) = res {
-                                            let _ = tx_clone.send(format!("Scaffold Connect Error: {}", e));
-                                        }
-                                    }
-                                    _ = cancel_rx => {
-                                        let _ = tx_clone.send("[CLIENT_DISCONNECTED]".to_string());
-                                    }
+                    let tx_clone = self.tx.clone();
+                    tokio::spawn(async move {
+                        tokio::select! {
+                            res = session_clone.connect(tx_clone.clone()) => {
+                                if let Err(e) = res {
+                                    let _ = tx_clone.send(format!("Scaffold Connect Error: {}", e));
                                 }
-                            });
+                            }
+                            _ = cancel_rx => {
+                                let _ = tx_clone.send("[CLIENT_DISCONNECTED]".to_string());
+                            }
                         }
-                        _ => {
-                            self.copilot_timer_error =
-                                "Must be a valid number between 1 and 480.".to_string();
-                        }
-                    }
+                    });
+                    let tx_timer = self.tx.clone();
+                    tokio::spawn(async move {
+                        tokio::time::sleep(tokio::time::Duration::from_secs(10 * 60)).await;
+                        let _ = tx_timer.send("SESSION_TIMEOUT".to_string());
+                    });
                 }
                 _ => {}
             }
