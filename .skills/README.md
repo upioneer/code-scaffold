@@ -7,6 +7,7 @@ This directory contains complex code payloads (skills) that the Code Scaffold en
 
 | Label | Description | Version | Target Path |
 | :--- | :--- | :--- | :--- |
+| **A2UI** | Agent-to-User Interface (A2UI) protocol implementation and client renderer scaffolding. | v1 | `.skills/a2ui` |
 | **Ansible** | Infrastructure automation, configuration management, and application deployment orchestration using Ansible. | v2 | `.skills/ansible` |
 | **Braille Animations** | Create and manage unicode braille animations and spinners for CLIs and web apps. | v2 | `.skills/braille-animations` |
 | **Clerk Authentication Perimeter** | Authentication perimeter and identity management using Clerk. | v2 | `.skills/clerk` |
@@ -43,6 +44,7 @@ This directory contains complex code payloads (skills) that the Code Scaffold en
 | **Supabase** | Supabase database and authentication integration | v2 | `.skills/supabase` |
 | **Telegram** | Telegram Bot API interactions | v2 | `.skills/telegram` |
 | **Terraform** | Infrastructure as Code (IaC) provisioning and state management using Terraform or OpenTofu. | v2 | `.skills/terraform` |
+| **tldraw** | Transforms tldraw into an advanced spatial computing engine. Orchestrates cinematic scrollytelling, live-mutating dashboards, AI cursors, and Matter.js physics integrations. | v1 | `.skills/tldraw` |
 | **Trackio ML Tracking** | Integration with Trackio for ML experiment tracking, dashboard deployments, and Hugging Face Spaces sync. | v2 | `.skills/trackio` |
 | **TUI Tools** | Architectural playbook and tooling (including VHS integration) for building robust, instant-on, and visually stunning modern terminal splash screens and integrations. | v4 | `.skills/tui-tools` |
 | **Upstash Redis Management** | Serverless Redis management and rate limiting using Upstash. | v2 | `.skills/upstash` |
