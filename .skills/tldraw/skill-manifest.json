@@ -1,0 +1,13 @@
+{
+  "name": "tldraw-skill",
+  "version": "1",
+  "description": "Transforms tldraw into an advanced spatial computing engine. Beyond whiteboarding, this skill orchestrates cinematic scrollytelling, live-mutating data dashboards, multiplayer AI cursors, and Matter.js physics integrations for hyper-creative web experiences.",
+  "entryPoint": "./SKILL.md",
+  "engines": {
+    "code-scaffold": ">=1.0.0"
+  },
+  "requiredPermissions": [
+    "fs:read",
+    "fs:write"
+  ]
+}
