@@ -1,0 +1,14 @@
+{
+  "name": "quarto-skill",
+  "version": "1",
+  "description": "Scientific and technical publishing system for dynamically generating books, websites, dashboards, and presentations using Python, R, Julia, and Observable JS.",
+  "entryPoint": "./SKILL.md",
+  "engines": {
+    "code-scaffold": ">=7.0.0"
+  },
+  "requiredPermissions": [
+    "fs:read",
+    "fs:write",
+    "sys:exec"
+  ]
+}

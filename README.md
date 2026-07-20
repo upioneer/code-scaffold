@@ -74,3 +74,14 @@ Run the native executable from your terminal (e.g., on Windows):
 ## Agent Skills Library
 
 Code Scaffold features a rapidly growing library of specialized AI skills. For a complete list of available payloads, detailed descriptions, and their target deployment paths, please refer to the **[Agent Skills Library](.skills/README.md)**.
+
+## The SkillForge Synergy Protocol
+
+Behind the scenes, Code Scaffold's ecosystem is maintained by the **SkillForge Protocol**—an autonomous R&D maintenance loop. While primarily a developer-side administrative feature, it guarantees that the `.skills` library remains in a state of constant forward progression and extreme rigor.
+
+* **Market Pulse Check:** Autonomously audits existing skills against live OEM documentation and market trends, updating legacy templates to modern standards.
+* **Cross-Skill Synthesis:** Recursively maps the `.skills` directory to build a topological capability matrix, identifying overlapping domains to dynamically construct new integration templates (e.g., bridging `tldraw` spatial computing with `a2ui` declarative components).
+* **Strict Payload Incubation:** Enforces a rigid pipeline for net-new skills, ensuring AI-specific value adds (like headless bypasses or zero-config CI/CD pipelines) are baked in alongside the mandatory Code Scaffold folder architectures.
+* **Visual Topology Rendering:** Actively leverages internal presentation and diagramming skills (such as `tldraw`, `Manim`, `Marp`, and `Mermaid`) to programmatically render architectural diagrams and dependency graphs that illustrate the growing synergy between different modules.
+
+For detailed execution instructions and agent prompt templates, refer to the **[SkillForge Protocol Blueprint](project_details/skillforge/PROTOCOL.md)**.

@@ -33,6 +33,7 @@ This directory contains complex code payloads (skills) that the Code Scaffold en
 | **Playwright** | Browser automation and end to end testing with Playwright | v2 | `.skills/playwright` |
 | **Privacy Policy Generator** | Generates a customizable privacy policy tailored to the project (website/app) with optional Google Analytics integration. | v5 | `.skills/privacy-policy` |
 | **Proxmox** | Proxmox VE LXC toolbox for building reusable templates, baseline app deployments, and SSH hardening. | v2 | `.skills/proxmox` |
+| **Quarto Scientific Publishing** | Scientific and technical publishing system for dynamically generating books, websites, dashboards, and presentations. | v1 | `.skills/quarto` |
 | **Ratatui TUI Framework** | Build Terminal User Interfaces (TUI) using Ratatui in Rust. | v4 | `.skills/ratatui` |
 | **Resend** | Sends emails using the Resend API | v2 | `.skills/resend` |
 | **Reveal.js** | Comprehensive toolkit and knowledge base for scaffolding, configuring, and exporting Reveal.js presentations. | v2 | `.skills/revealjs` |
