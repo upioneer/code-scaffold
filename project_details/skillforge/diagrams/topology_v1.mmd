@@ -1,0 +1,49 @@
+graph TD
+    %% Core Infrastructure
+    A["Code Scaffold Engine"] --> B("Payload Library")
+    B --> C{"Skill Domains"}
+
+    %% Domains
+    C --> D["Web Automation"]
+    C --> E["Data & Databases"]
+    C --> F["Publishing & UI"]
+    C --> G["Infrastructure & DevOps"]
+
+    %% Web Automation
+    D --> |"Stealth Bypass"| SBM["Stealth Browser MCP"]
+    D --> |"E2E Testing"| PW["Playwright"]
+    D --> |"Data Extraction"| FC["Firecrawl"]
+    D --> |"CLI-to-Web"| OC["OpenCLI"]
+
+    %% Data & Databases
+    E --> |"Postgres Auth/DB"| SUP["Supabase"]
+    E --> |"Firebase BaaS"| FB["Firebase"]
+    E --> |"Serverless Cache"| UP["Upstash"]
+    E --> |"Tracking"| TR["Trackio ML"]
+
+    %% Publishing & UI
+    F --> |"Interactive Canvases"| TL["tldraw"]
+    F --> |"Declarative UI JSON"| A2UI["A2UI"]
+    F --> |"Scientific Docs"| QRT["Quarto"]
+    F --> |"Presentation"| REV["Reveal.js"]
+    F --> |"Presentation"| SL["Slidev"]
+    F --> |"Visual Dev"| PC["PlayCanvas"]
+
+    %% Infrastructure & DevOps
+    G --> |"Config Mgmt"| ANS["Ansible"]
+    G --> |"IaC"| TF["Terraform"]
+    G --> |"Containers"| PX["Proxmox"]
+    G --> |"GitOps"| GH["GitHub"]
+    G --> |"Deploy SPA"| WDL["Website Deploy Linux"]
+
+    %% Cross-Skill Synergies (The Magic)
+    PW -.->|"Validates UI JSON"| A2UI
+    TL -.->|"Renders 2D Canvas Physics for"| PC
+    SUP -.->|"Feeds Data Pipelines to"| QRT
+    GH -.->|"Triggers CI Pipelines for"| WDL
+    FC -.->|"Extracts Context for"| SBM
+    A2UI -.->|"Injects Agent UI into"| TL
+
+    style A fill:#2e3440,stroke:#88c0d0,stroke-width:2px,color:#eceff4
+    style B fill:#3b4252,stroke:#88c0d0,stroke-width:2px,color:#eceff4
+    style C fill:#434c5e,stroke:#8fbcbb,stroke-width:2px,color:#eceff4
