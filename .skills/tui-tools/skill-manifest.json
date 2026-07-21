@@ -1,6 +1,6 @@
 {
   "name": "tui-tools",
-  "version": "2",
+  "version": "5",
   "description": "Architectural playbook and tooling (including VHS integration) for building robust, instant-on, and visually stunning modern terminal splash screens and integrations.",
   "entryPoint": "./SKILL.md",
   "engines": {},

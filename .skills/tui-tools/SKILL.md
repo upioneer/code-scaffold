@@ -1,7 +1,7 @@
 ---
 name: TUI Tools
 description: Architectural playbook and tooling (including VHS integration) for building robust, instant-on, and visually stunning modern terminal splash screens and integrations.
-version: 4
+version: 5
 ---
 
 # TUI Tools Architectural Playbook
@@ -19,7 +19,10 @@ The biggest secret to a high-quality splash screen isn't the text art: it's the 
 Modern TUI text art rarely uses standard keyboard characters. It uses specific Unicode blocks and True Color (24-bit) ANSI escape sequences.
 
 * **Use Block Elements**: Instead of `/` and `\`, use Unicode half-blocks (`▀`, `▄`, `█`) to double your vertical resolution. Tools like Chafa or image-to-ANSI converters can turn standard PNG logos into high-resolution terminal blocks.
-* **Typography**: For large text, use FIGlet or TOIlet generators with modern fonts like "ANSI Shadow" or "Slant".
+* **Typography**: For large text, use FIGlet or TOIlet generators with modern fonts like "ANSI Shadow" or "Slant". 
+  * **ANSI Shadow Alignment Anomalies**: The ANSI Shadow font utilizes leading spaces to simulate 3D rounded corners and stems, which often causes the text block to appear misaligned or indented in a TUI layout. When generating logos with this font, you MUST explicitly parse and correct the multi-line string array to achieve a true flush-left aesthetic (see `references/alphabet_ansi_shadow.md` for a complete visual guide):
+    * **Rounded Top-Left (A, C, G, O, Q)**: These characters generate a single leading space on Line 1. You must strip this leading space from the top row so it aligns flush left with the rest of the body.
+    * **Centered Stems (T)**: The top crossbar is flush left, but the stem is indented. You must append a leading space to all rows *beneath* the top row (Lines 2-6) so the stem physically shifts right and aligns correctly with the crossbar.
 * **Gradients and Shading**: Apply gradient text rendering. Instead of flat 16-color palettes, interpolate standard hex colors across the characters using true color escape codes (e.g., `\x1b[38;2;R;G;Bm`).
 
 ## 3. Dynamic Banners (The Hermes Layout)
@@ -84,3 +87,6 @@ Once the static dependencies are configured, execute the tape by explicitly inje
 $cmd = 'export PATH="/usr/local/bin:$PATH"; vhs project_details/assets/demo.tape'
 wsl bash -c $cmd
 ```
+
+## Changelog
+* **v5** : Added strict aesthetic alignment instructions for generating ANSI Shadow font logos natively within TUI layouts.
