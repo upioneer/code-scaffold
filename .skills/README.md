@@ -11,6 +11,7 @@ This directory contains complex code payloads (skills) that the Code Scaffold en
 | **Ansible** | Infrastructure automation, configuration management, and application deployment orchestration using Ansible. | v2 | `.skills/ansible` |
 | **Braille Animations** | Create and manage unicode braille animations and spinners for CLIs and web apps. | v2 | `.skills/braille-animations` |
 | **Clerk Authentication Perimeter** | Authentication perimeter and identity management using Clerk. | v2 | `.skills/clerk` |
+| **Codebase Memory MCP** | High-performance code intelligence MCP server that indexes codebases into a persistent knowledge graph. | v1 | `.skills/codebase-memory-mcp` |
 | **Code Scaffold Harness** | Agent harness instructions for interacting with the Code Scaffold CLI headlessly. | v2 | `.skills/code-scaffold` |
 | **CyberSecurity Toolkit** | Comprehensive cybersecurity arsenal integrating MITRE/NIST framework methodologies and NVIDIA SkillSpector vulnerability scanning. | v5 | `.skills/cybersecurity-toolkit` |
 | **Excalidraw** | Renders and embeds Excalidraw whiteboards | v2 | `.skills/excalidraw` |
@@ -24,6 +25,7 @@ This directory contains complex code payloads (skills) that the Code Scaffold en
 | **Marp** | Generates Marp presentation slides from Markdown | v2 | `.skills/marp` |
 | **Mermaid** | Mermaid diagram creation and rendering | v2 | `.skills/mermaid` |
 | **Node** | Bootstraps a Node.js runtime environment | v4 | `.skills/node` |
+| **OfficeCLI** | Office suite purpose-built for AI agents to read, edit, and automate Word, Excel, and PowerPoint files. | v1 | `.skills/officecli` |
 | **Open Design Prototypes** | Create production grade UI design prototypes using the open source Open Design system | v2 | `.skills/open-design` |
 | **OpenCLI** | Bridge websites and the CLI for structured data extraction and browser automation | v2 | `.skills/opencli` |
 | **p5.js Creative Coding** | Creative coding and visual animations using the p5.js library. | v2 | `.skills/p5js` |

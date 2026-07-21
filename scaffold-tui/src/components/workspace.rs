@@ -15,6 +15,7 @@ pub struct WorkspaceItem {
     pub version: Option<String>,
     pub exists_in_target: bool,
     pub target_version: Option<String>,
+    pub logo: Option<Vec<String>>,
 }
 
 pub struct Workspace {
@@ -35,7 +36,7 @@ impl Workspace {
             description: Some("Press Enter to launch the target directory browser. The selected directory will become the root folder where all project assets are initialized.".into()),
             version: None,
                     exists_in_target: false,
-                    target_version: None,
+                    target_version: None, logo: None,
         });
 
         items.extend(vec![
@@ -46,7 +47,7 @@ impl Workspace {
                 description: Some("A versatile, unopinionated agent ready for general-purpose programming, debugging, and software architecture tasks without specific domain constraints.".into()),
                 version: None,
                     exists_in_target: false,
-                    target_version: None,
+                    target_version: None, logo: None,
             },
             WorkspaceItem {
                 label: "AI Systems Engineer".into(),
@@ -55,7 +56,7 @@ impl Workspace {
                 description: Some("Specialized in LLMs (hosted/local), multimodal generation (ComfyUI), and AI APIs (Claude, Gemini, Grok). Expert in AI CLI tools, OpenRouter, and advanced RAG/Agentic frameworks (LangGraph, PixelRAG, Dify).".into()),
                 version: None,
                     exists_in_target: false,
-                    target_version: None,
+                    target_version: None, logo: None,
             },
             WorkspaceItem {
                 label: "Cloud & DevOps Architect".into(),
@@ -64,7 +65,7 @@ impl Workspace {
                 description: Some("Specialized in infrastructure-as-code (Terraform, CloudFormation), CI/CD pipeline automation (GitHub Actions), and provisioning robust cloud environments on AWS, Azure, or GCP.".into()),
                 version: None,
                     exists_in_target: false,
-                    target_version: None,
+                    target_version: None, logo: None,
             },
             WorkspaceItem {
                 label: "Containerization (Docker/K8s)".into(),
@@ -73,7 +74,7 @@ impl Workspace {
                 description: Some("Focused strictly on container ecosystems. Excels at writing Dockerfiles, optimizing multi-stage image builds, orchestrating docker-compose, and building Kubernetes manifests.".into()),
                 version: None,
                     exists_in_target: false,
-                    target_version: None,
+                    target_version: None, logo: None,
             },
             WorkspaceItem {
                 label: "Data Scientist / ML".into(),
@@ -82,7 +83,7 @@ impl Workspace {
                 description: Some("Specialized in the Python data ecosystem (Pandas, PyTorch, TensorFlow). Highly effective at data wrangling, model training, Jupyter notebooks, and statistical analysis.".into()),
                 version: None,
                     exists_in_target: false,
-                    target_version: None,
+                    target_version: None, logo: None,
             },
             WorkspaceItem {
                 label: "DBA".into(),
@@ -91,7 +92,7 @@ impl Workspace {
                 description: Some("Database Administrator focused on SQL/NoSQL schema design, query optimization, indexing strategies, and database migration safety.".into()),
                 version: None,
                     exists_in_target: false,
-                    target_version: None,
+                    target_version: None, logo: None,
             },
             WorkspaceItem {
                 label: "Embedded / IoT".into(),
@@ -100,7 +101,7 @@ impl Workspace {
                 description: Some("Focused on strict memory management and hardware interactions (C, C++, bare-metal Rust). Specialized in microcontrollers, RTOS, and highly constrained computational environments.".into()),
                 version: None,
                     exists_in_target: false,
-                    target_version: None,
+                    target_version: None, logo: None,
             },
             WorkspaceItem {
                 label: "Game Developer".into(),
@@ -109,7 +110,7 @@ impl Workspace {
                 description: Some("Tuned for physics engines, 3D rendering pipelines, game loops, and state machines within environments like Unity (C#) or Unreal Engine (C++).".into()),
                 version: None,
                     exists_in_target: false,
-                    target_version: None,
+                    target_version: None, logo: None,
             },
             WorkspaceItem {
                 label: "Mobile (iOS/And)".into(),
@@ -118,7 +119,7 @@ impl Workspace {
                 description: Some("Expert in mobile app development, including iOS (Swift) and Android (Kotlin) as well as cross-platform frameworks like React Native and Flutter.".into()),
                 version: None,
                     exists_in_target: false,
-                    target_version: None,
+                    target_version: None, logo: None,
             },
             WorkspaceItem {
                 label: "Security Analyst".into(),
@@ -127,7 +128,7 @@ impl Workspace {
                 description: Some("An auditor-style agent focused on network security, cryptographic protocols, vulnerability scanning, and hardening systems against modern exploit techniques.".into()),
                 version: None,
                     exists_in_target: false,
-                    target_version: None,
+                    target_version: None, logo: None,
             },
             WorkspaceItem {
                 label: "Systems Scripting".into(),
@@ -136,7 +137,7 @@ impl Workspace {
                 description: Some("Aimed at low-level OS tasks, bash/powershell scripting, automation, system performance tuning, and CLI tool development.".into()),
                 version: None,
                     exists_in_target: false,
-                    target_version: None,
+                    target_version: None, logo: None,
             },
             WorkspaceItem {
                 label: "Web Dev".into(),
@@ -145,7 +146,7 @@ impl Workspace {
                 description: Some("Specialized in modern web technologies (React, Vue, Node.js, HTML/CSS) focusing on responsive design, SEO best practices, and dynamic web application aesthetics. MUST strictly enforce security best practices: implement appropriate rate limiting, securely hash passwords, and protect against common attacks.".into()),
                 version: None,
                     exists_in_target: false,
-                    target_version: None,
+                    target_version: None, logo: None,
             },
         ]);
 
@@ -209,6 +210,7 @@ impl Workspace {
                         version: None,
                         exists_in_target: false,
                         target_version: None,
+                        logo: None,
                     });
                 }
             }
@@ -221,6 +223,7 @@ impl Workspace {
                 version: None,
                 exists_in_target: false,
                 target_version: None,
+                logo: None,
             });
         }
 
@@ -245,6 +248,7 @@ impl Workspace {
                     version: None,
                     exists_in_target: false,
                     target_version: None,
+                    logo: None,
                 });
                 for name in lic_names {
                     items.push(WorkspaceItem {
@@ -255,6 +259,7 @@ impl Workspace {
                         version: None,
                         exists_in_target: false,
                         target_version: None,
+                        logo: None,
                     });
                 }
             }
@@ -288,6 +293,7 @@ impl Workspace {
                         version: None,
                         exists_in_target: false,
                         target_version: None,
+                        logo: None,
                     });
                 }
             }
@@ -302,7 +308,7 @@ impl Workspace {
             description: Some("Import a custom agent skill from an approved repository, URL, or CLI install command (e.g., npx/git clone/uvx).\n\nApproved Platforms:\n- agentskill.sh\n- agentskills.io\n- github.com\n- mcpservers.org\n- microsoft.github.io/skills\n- skills.sh\n- skillsmp.com".into()),
             version: None,
             exists_in_target: false,
-            target_version: None,
+            target_version: None, logo: None,
         });
 
         for custom_skill_url in crate::prefs::load_custom_skills() {
@@ -325,6 +331,7 @@ impl Workspace {
                 version: None,
                 exists_in_target: false,
                 target_version: None,
+                logo: None,
             });
         }
 
@@ -347,6 +354,7 @@ impl Workspace {
                 for name in skill_names {
                     let mut desc = None;
                     let mut vers = None;
+                    let mut logo = None;
                     let meta_path = skills_dir.join(&name).join("meta.json");
                     if let Ok(content) = std::fs::read_to_string(&meta_path) {
                         if let Ok(json) = serde_json::from_str::<serde_json::Value>(&content) {
@@ -356,6 +364,17 @@ impl Workspace {
                             }
                             if let Some(vers_str) = json.get("version").and_then(|v| v.as_str()) {
                                 vers = Some(vers_str.to_string());
+                            }
+                            if let Some(logo_arr) = json.get("logo").and_then(|v| v.as_array()) {
+                                let mut lines = Vec::new();
+                                for l in logo_arr {
+                                    if let Some(l_str) = l.as_str() {
+                                        lines.push(l_str.to_string());
+                                    }
+                                }
+                                if !lines.is_empty() {
+                                    logo = Some(lines);
+                                }
                             }
                         }
                     }
@@ -367,6 +386,7 @@ impl Workspace {
                         version: vers,
                         exists_in_target: false,
                         target_version: None,
+                        logo,
                     });
                 }
             } else {
@@ -378,6 +398,7 @@ impl Workspace {
                     version: None,
                     exists_in_target: false,
                     target_version: None,
+                    logo: None,
                 });
             }
         } else {
@@ -389,6 +410,7 @@ impl Workspace {
                 version: None,
                 exists_in_target: false,
                 target_version: None,
+                logo: None,
             });
         }
 
@@ -442,6 +464,15 @@ impl Workspace {
         }
         let actual_idx = visible.get(self.selected_idx)?;
         self.items[*actual_idx].version.as_deref()
+    }
+
+    pub fn selected_logo(&self) -> Option<&Vec<String>> {
+        let visible = self.visible_indices();
+        if visible.is_empty() {
+            return None;
+        }
+        let actual_idx = visible.get(self.selected_idx)?;
+        self.items[*actual_idx].logo.as_ref()
     }
 
     pub fn detect_installed(&mut self, target_folder: &str) {

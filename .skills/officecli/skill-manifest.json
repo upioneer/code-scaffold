@@ -1,0 +1,13 @@
+{
+  "name": "officecli",
+  "version": "1",
+  "description": "Office suite purpose-built for AI agents to read, edit, and automate Word, Excel, and PowerPoint files.",
+  "entryPoint": "./SKILL.md",
+  "engines": {},
+  "requiredPermissions": [
+    "fs:read",
+    "fs:write",
+    "net:connect",
+    "cli:execute"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "name": "codebase-memory-mcp",
+  "version": "1",
+  "description": "High-performance code intelligence MCP server that indexes codebases into a persistent knowledge graph.",
+  "entryPoint": "./SKILL.md",
+  "engines": {},
+  "requiredPermissions": [
+    "fs:read",
+    "fs:write",
+    "net:connect",
+    "cli:execute"
+  ]
+}

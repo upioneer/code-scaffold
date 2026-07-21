@@ -1,6 +1,14 @@
 {
   "label": "TUI Tools",
   "description": "Architectural playbook and tooling (including VHS integration) for building robust, instant-on, and visually stunning modern terminal splash screens and integrations.",
-  "version": "4",
-  "target": ".skills/tui-tools"
+  "version": "5",
+  "target": ".skills/tui-tools",
+  "logo": [
+    "████████╗██╗   ██╗██╗    ████████╗ ██████╗  ██████╗ ██╗     ███████╗ ",
+    " ╚══██╔══╝██║   ██║██║    ╚══██╔══╝██╔═══██╗██╔═══██╗██║     ██╔════╝",
+    "    ██║   ██║   ██║██║       ██║   ██║   ██║██║   ██║██║     ███████╗",
+    "    ██║   ██║   ██║██║       ██║   ██║   ██║██║   ██║██║     ╚════██║",
+    "    ██║   ╚██████╔╝██║       ██║   ╚██████╔╝╚██████╔╝███████╗███████║",
+    "    ╚═╝    ╚═════╝ ╚═╝       ╚═╝    ╚═════╝  ╚═════╝ ╚══════╝╚══════╝"
+  ]
 }

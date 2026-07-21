@@ -7,7 +7,7 @@
 
 Code Scaffold is a modular, robust, and highly visual native TUI provisioning engine. It is designed to bootstrap new development projects with predefined directory structures, architectural templates, and complex skill payloads, all driven by a high-fidelity Terminal User Interface.
 
-![Code Scaffold Screenshot 1](project_details/history/v7.4.1/demo.gif)
+![Code Scaffold Screenshot 1](project_details/history/v7.8.0/demo.gif)
 
 ## Compatibility & Integration
 
@@ -32,7 +32,7 @@ Code Scaffold is officially compatible with the Agent Client Protocol (ACP). Thi
 * **Automated Baseline Documentation**: Automatically generates a structured `README.md` in the target directory, dynamically titled with the project's folder name, to provide a consistent starting point for all scaffolded projects.
 * **Immutable Version History**: Adheres to a strict versioning protocol, maintaining snapshots of every significant deployment cycle in `project_details\history`.
 
-![Code Scaffold Screenshot 2](project_details/history/v7.4.1/demo_splash.png)
+![Code Scaffold Screenshot 2](project_details/history/v7.8.0/demo_splash.png)
 
 ## Architecture Overview
 
@@ -77,7 +77,7 @@ Code Scaffold features a rapidly growing library of specialized AI skills. For a
 
 ## The SkillForge Synergy Protocol
 
-Behind the scenes, Code Scaffold's ecosystem is maintained by the **SkillForge Protocol**—an autonomous R&D maintenance loop. While primarily a developer-side administrative feature, it guarantees that the `.skills` library remains in a state of constant forward progression and extreme rigor.
+Behind the scenes, Code Scaffold's ecosystem is maintained by the **SkillForge Protocol**: an autonomous R&D maintenance loop. While primarily a developer-side administrative feature, it guarantees that the `.skills` library remains in a state of constant forward progression and extreme rigor.
 
 * **Market Pulse Check:** Autonomously audits existing skills against live OEM documentation and market trends, updating legacy templates to modern standards.
 * **Cross-Skill Synthesis:** Recursively maps the `.skills` directory to build a topological capability matrix, identifying overlapping domains to dynamically construct new integration templates (e.g., bridging `tldraw` spatial computing with `a2ui` declarative components).

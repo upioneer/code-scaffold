@@ -60,6 +60,7 @@ fn main() {
             println!("cargo:rustc-env=GIT_VERSION={}", git_version);
         }
     }
-    // Also trigger rebuild if HEAD changes
+    // Also trigger rebuild if HEAD or index changes to catch dirty states
     println!("cargo:rerun-if-changed=../.git/HEAD");
+    println!("cargo:rerun-if-changed=../.git/index");
 }

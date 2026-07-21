@@ -46,6 +46,7 @@ pub struct DescriptionPane {
     pub current_label: String,
     pub current_desc: String,
     pub current_version: String,
+    pub current_logo: Option<Vec<String>>,
     qr_lines: Vec<String>,
     pub show_qr: bool,
 }
@@ -57,15 +58,23 @@ impl DescriptionPane {
             current_label: String::new(),
             current_desc: String::new(),
             current_version: String::new(),
+            current_logo: None,
             qr_lines,
             show_qr: false,
         }
     }
 
-    pub fn set_selected_label(&mut self, label: &str, desc: &str, version: &str) {
+    pub fn set_selected_label(
+        &mut self,
+        label: &str,
+        desc: &str,
+        version: &str,
+        logo: Option<Vec<String>>,
+    ) {
         self.current_label = label.to_string();
         self.current_desc = desc.to_string();
         self.current_version = version.to_string();
+        self.current_logo = logo;
     }
 }
 
@@ -149,6 +158,20 @@ impl Component for DescriptionPane {
         };
 
         let mut desc_lines: Vec<Line> = vec![title_line, Line::from("")];
+
+        if let Some(logo) = &self.current_logo {
+            let max_width = logo.iter().map(|l| l.chars().count()).max().unwrap_or(0);
+            if inner.width as usize >= max_width {
+                for line in logo {
+                    desc_lines.push(Line::from(Span::styled(
+                        line.to_string(),
+                        Style::default().fg(theme.primary),
+                    )));
+                }
+                desc_lines.push(Line::from(""));
+            }
+        }
+
         // Preserve explicit newlines, let ratatui handle word-wrapping natively
         for line in desc_text.lines() {
             desc_lines.push(Line::from(Span::styled(
