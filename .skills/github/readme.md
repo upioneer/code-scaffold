@@ -14,7 +14,7 @@ GitHub push workflow with .env based identity configuration; merges github.md in
 * Validates aesthetic repository presentation by demanding rich metadata badges in the root `README.md`.
 * Executes safe authentication and push procedures while wrapping the operation in background subagent polling.
 * Generates versioned, immutable documentation walkthroughs with screenshot capabilities for every successful push cycle.
-* Enforces strict UI documentation protocols and semantic versioning structures across the `project_details/history/` directory.
+* Enforces strict UI documentation protocols and semantic versioning structures across the `project_details/changelog/` directory.
 
 ## Usage
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
