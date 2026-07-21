@@ -6,13 +6,14 @@ Set FontSize 15
 Set Width 1200
 Set Height 800
 Set Padding 20
-# Set Theme "Default"
 Set Framerate 60
 
-# Run the command
-Type "scaffold-tui/target/debug/code-scaffold.exe"
+Hide
+Type "cd scaffold-tui && clear"
 Enter
-Sleep 1s
+Show
+Type "./target/debug/code-scaffold"
+Enter
 
 # Wait for the welcome splash screen
 Sleep 4s

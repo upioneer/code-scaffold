@@ -17,3 +17,9 @@ This release addresses significant TUI rendering artifact bugs (scrolling anomal
 * **New Skill - Codebase Memory MCP (v1):** Executed the SkillForge Protocol to incubate the `codebase-memory-mcp` skill, delivering a lightning-fast native graph intelligence server explicitly optimized for headless AI indexing and structural querying.
 * **New Skill - OfficeCLI (v1):** Executed the SkillForge Protocol to incubate the `officecli` skill, allowing AI agents to seamlessly generate, interrogate, and modify Word, Excel, and PowerPoint documents headlessly.
 * **Skill Topology Updates:** Automatically rendered and published a new Mermaid dependency graph (`topology_v2.svg`) reflecting the integration of the two new skills into the ecosystem.
+
+## Versioning Rationale
+
+**Minor Bump (v7.6.0 -> v7.8.0)**
+*Note: The version `v7.7.0` was intentionally skipped.* 
+The inclusion of two entirely new skills (`Codebase Memory MCP` and `OfficeCLI`) via the SkillForge Protocol represent significant feature additions to the ecosystem, which explicitly dictates a Minor `+0.1.0` bump based on the strict Semantic Versioning project rules. Because multiple distinct feature branches (the TUI rendering rewrite and the two new skills) were merged simultaneously in this deployment payload, the version was cumulatively bumped past the `v7.7.0` marker directly to `v7.8.0` to account for the bundled magnitude of these changes.
