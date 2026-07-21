@@ -96,7 +96,7 @@ Do **not** create or update a `github.md` file — all GitHub configuration now 
 
 ## Step 9: Generate Versioned Walkthrough
 
-* Update the `[PROJECT_ROOT]\project_details\history\[VERSION]` directory on each deployment cycle using standard semantic versioning (Major.Minor.Bugfix, e.g., v1.1.0).
+* Update the `[PROJECT_ROOT]\project_details\changelog\[VERSION]` directory on each deployment cycle using standard semantic versioning (Major.Minor.Bugfix, e.g., v1.1.0).
 * Include screenshots where possible to document UI changes.
 * Never modify or overwrite existing version documentation once established.
 * Ensure each significant deployment cycle results in a new immutable artifact folder.

@@ -7,7 +7,7 @@
 
 Code Scaffold is a modular, robust, and highly visual native TUI provisioning engine. It is designed to bootstrap new development projects with predefined directory structures, architectural templates, and complex skill payloads, all driven by a high-fidelity Terminal User Interface.
 
-![Code Scaffold Screenshot 1](project_details/history/v7.8.0/demo.gif)
+![Code Scaffold Screenshot 1](project_details/changelog/v7.8.0/demo.gif)
 
 ## Compatibility & Integration
 
@@ -30,9 +30,9 @@ Code Scaffold is officially compatible with the Agent Client Protocol (ACP). Thi
 * **Dynamic Payload Library**: Easily extensible. By placing a new folder with a `meta.json` inside the `.skills` directory, the engine will automatically discover it and present it as an option in the UI.
 * **Secure Provisioning**: Automatically generates a stringent `.gitignore` for standard security policies, and in production mode, the engine acts as a self-destructing bootstrapper.
 * **Automated Baseline Documentation**: Automatically generates a structured `README.md` in the target directory, dynamically titled with the project's folder name, to provide a consistent starting point for all scaffolded projects.
-* **Immutable Version History**: Adheres to a strict versioning protocol, maintaining snapshots of every significant deployment cycle in `project_details\history`.
+* **Immutable Version History**: Adheres to a strict versioning protocol, maintaining snapshots of every significant deployment cycle in `project_details\changelog`.
 
-![Code Scaffold Screenshot 2](project_details/history/v7.8.0/demo_splash.png)
+![Code Scaffold Screenshot 2](project_details/changelog/v7.8.0/demo_splash.png)
 
 ## Architecture Overview
 
@@ -47,6 +47,22 @@ The system operates on a dual-layer architecture:
   "version": "1.0.0",
   "target": "The exact relative path where this payload should be deployed e.g. .skills/supabase"
 }
+```
+
+### Application Structure
+
+```text
+code-scaffold/
+├── .agents/
+├── .skills/
+├── .templates/
+├── project_details/
+│   ├── assets/
+│   ├── changelog/
+│   ├── playbooks/
+│   └── proof/
+├── relay-server/
+└── scaffold-tui/
 ```
 
 ## Usage

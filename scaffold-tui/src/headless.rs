@@ -143,7 +143,9 @@ pub async fn run_headless(
     let required_dirs = [
         "project_details",
         "project_details/assets",
-        "project_details/history",
+        "project_details/changelog",
+        "project_details/playbooks",
+        "project_details/proof",
     ];
     for d in required_dirs {
         let target_path = std::path::PathBuf::from(&target).join(d);

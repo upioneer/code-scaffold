@@ -1,8 +1,16 @@
 $ErrorActionPreference = "Stop"
 
-Write-Host "Verifying Markdown Image Links in project_details/history..." -ForegroundColor Cyan
+# Ensure script runs from the repository root
+$repoRoot = (git rev-parse --show-toplevel)
+if (-not $repoRoot) {
+    Write-Host "Error: Not a git repository." -ForegroundColor Red
+    exit 1
+}
+Set-Location $repoRoot
 
-$latestHistory = Get-ChildItem -Path "project_details\history" -Directory | Sort-Object Name -Descending | Select-Object -First 1
+Write-Host "Verifying Markdown Image Links in project_details/changelog..." -ForegroundColor Cyan
+
+$latestHistory = Get-ChildItem -Path "project_details\changelog" -Directory | Sort-Object Name -Descending | Select-Object -First 1
 $mdFiles = @(Get-Item "README.md") + @(Get-ChildItem -Path $latestHistory.FullName -Filter "*.md" -Recurse)
 
 $brokenLinks = 0

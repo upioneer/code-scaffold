@@ -25,7 +25,7 @@ fn main() {
     let out_dir = std::env::var("OUT_DIR").unwrap();
     let dest_path = std::path::Path::new(&out_dir).join("changelog.txt");
 
-    let changelog_path = format!("../project_details/history/v{}/readme.md", version);
+    let changelog_path = format!("../project_details/changelog/v{}/readme.md", version);
     let mut changelog_text = format!("What's new in v{}:\n", version);
     if let Ok(content) = std::fs::read_to_string(&changelog_path) {
         for line in content.lines() {

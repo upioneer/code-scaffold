@@ -56,7 +56,7 @@ Test the deployed environment or check the output of the terminal command or Fir
 After a successful deployment, automatically update firebase.md (or create it if it does not exist) with any new or confirmed project configuration details, URLs, or parameters so it is available for future automated deployments.
 
 6. **Generate Versioned Walkthrough**
-* You MUST update the `[PROJECT_ROOT]\project_details\history\[VERSION]` directory on each iteration of the app using standard semantic versioning (Major.Minor.Bugfix, e.g., v1.1.0).
+* You MUST update the `[PROJECT_ROOT]\project_details\changelog\[VERSION]` directory on each iteration of the app using standard semantic versioning (Major.Minor.Bugfix, e.g., v1.1.0).
 * Ensure that walkthrough documentation includes screenshots where possible, especially to document UI changes.
 * Never modify or overwrite existing version documentation once established
 * Ensure each significant deployment cycle results in a new immutable artifact folder

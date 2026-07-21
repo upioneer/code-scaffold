@@ -11,3 +11,7 @@ Thumbs.db
 /.gemini
 /plan.md
 scaffold-tui/target/
+
+!project_details/changelog/
+!project_details/playbooks/
+!project_details/proof/

@@ -8,3 +8,7 @@ target/
 # Code Scaffold Project Details (Local Context)
 project_details/*.md
 !project_details/readme.md
+
+!project_details/changelog/
+!project_details/playbooks/
+!project_details/proof/
