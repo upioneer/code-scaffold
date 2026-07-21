@@ -2,5 +2,13 @@
   "label": "GitHub",
   "description": "GitHub push workflow with .env-based identity configuration; merges github.md into the skill",
   "version": "5",
-  "target": ".skills/github"
+  "target": ".skills/github",
+  "logo": [
+    "██████╗ ██╗████████╗██╗  ██╗██╗   ██╗██████╗ ",
+    "██╔════╝ ██║╚══██╔══╝██║  ██║██║   ██║██╔══██╗",
+    "██║  ███╗██║   ██║   ███████║██║   ██║██████╔╝",
+    "██║   ██║██║   ██║   ██╔══██║██║   ██║██╔══██╗",
+    "╚██████╔╝██║   ██║   ██║  ██║╚██████╔╝██████╔╝",
+    " ╚═════╝ ╚═╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚═════╝"
+  ]
 }

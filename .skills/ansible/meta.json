@@ -2,5 +2,13 @@
   "label": "Ansible",
   "description": "Infrastructure automation, configuration management, and application deployment orchestration using Ansible.",
   "version": "2",
-  "target": ".skills/ansible"
+  "target": ".skills/ansible",
+  "logo": [
+    "█████╗ ███╗   ██╗███████╗██╗██████╗ ██╗     ███████╗ ",
+    "██╔══██╗████╗  ██║██╔════╝██║██╔══██╗██║     ██╔════╝",
+    "███████║██╔██╗ ██║███████╗██║██████╔╝██║     █████╗",
+    "██╔══██║██║╚██╗██║╚════██║██║██╔══██╗██║     ██╔══╝",
+    "██║  ██║██║ ╚████║███████║██║██████╔╝███████╗███████╗",
+    "╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝╚═╝╚═════╝ ╚══════╝╚══════╝"
+  ]
 }

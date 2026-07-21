@@ -372,10 +372,12 @@ impl App {
                 .unwrap_or("")
                 .to_string();
             let selected_version = self.workspace.selected_version().unwrap_or("").to_string();
+            let selected_logo = self.workspace.selected_logo().cloned();
             self.description_pane.set_selected_label(
                 &selected_label,
                 &selected_desc,
                 &selected_version,
+                selected_logo,
             );
             self.description_pane.show_qr = self.wizard_state == WizardState::Executing;
 
@@ -383,10 +385,12 @@ impl App {
                 let size = f.size();
 
                 f.render_widget(
-                    ratatui::widgets::Block::default().style(
-                        ratatui::style::Style::default()
-                            .bg(self.theme.bg)
-                            .fg(self.theme.text),
+                    ratatui::widgets::Paragraph::new("").block(
+                        ratatui::widgets::Block::default().style(
+                            ratatui::style::Style::default()
+                                .bg(self.theme.bg)
+                                .fg(self.theme.text),
+                        ),
                     ),
                     size,
                 );
@@ -404,9 +408,11 @@ impl App {
                 let body_layout = Layout::default()
                     .direction(Direction::Horizontal)
                     .constraints([
-                        Constraint::Percentage(25), // Nav Tree
-                        Constraint::Percentage(45), // Workspace
-                        Constraint::Percentage(30), // Description Pane
+                        Constraint::Percentage(24), // Nav Tree
+                        Constraint::Length(1),      // Spacer
+                        Constraint::Percentage(30), // Workspace
+                        Constraint::Length(1),      // Spacer
+                        Constraint::Percentage(45), // Description Pane
                     ])
                     .split(main_layout[1]);
 
@@ -419,13 +425,13 @@ impl App {
                 );
                 let _ = self.workspace.draw(
                     f,
-                    body_layout[1],
+                    body_layout[2],
                     self.active_block == ActiveBlock::Workspace,
                     &self.theme,
                 );
                 let _ = self
                     .description_pane
-                    .draw(f, body_layout[2], false, &self.theme);
+                    .draw(f, body_layout[4], false, &self.theme);
                 let _ = self.summary_pane.draw(
                     f,
                     main_layout[2],
@@ -910,6 +916,7 @@ impl App {
                                 version: None,
                                 exists_in_target: false,
                                 target_version: None,
+                                logo: None,
                             });
                         crate::prefs::add_custom_skill(input);
                         self.wizard_state = WizardState::Skills;
@@ -1525,6 +1532,9 @@ impl App {
                     _ => {}
                 }
                 self.update_summary();
+            }
+            Action::Char(c) if self.wizard_state == WizardState::Skills && c != 'D' && c != ' ' => {
+                let _ = self.workspace.update(Action::Char(c))?;
             }
             Action::Char('t') | Action::Char('T') => {
                 self.theme_idx = self.theme_idx.wrapping_add(1);

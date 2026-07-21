@@ -2,5 +2,13 @@
   "label": "A2UI",
   "description": "Agent-to-User Interface (A2UI) protocol implementation and client renderer scaffolding.",
   "version": "1",
-  "target": ".skills/a2ui"
+  "target": ".skills/a2ui",
+  "logo": [
+    "█████╗ ██████╗ ██╗   ██╗██╗ ",
+    "██╔══██╗╚════██╗██║   ██║██║",
+    "███████║ █████╔╝██║   ██║██║",
+    "██╔══██║██╔═══╝ ██║   ██║██║",
+    "██║  ██║███████╗╚██████╔╝██║",
+    "╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═╝"
+  ]
 }
