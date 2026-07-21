@@ -3,6 +3,14 @@ param(
     [string]$NewVersion
 )
 
+# Ensure script runs from the repository root
+$repoRoot = (git rev-parse --show-toplevel)
+if (-not $repoRoot) {
+    Write-Host "Error: Not a git repository." -ForegroundColor Red
+    exit 1
+}
+Set-Location $repoRoot
+
 if ($NewVersion -notmatch "^\d+\.\d+\.\d+$") {
     Write-Host "Error: Version must match x.y.z format." -ForegroundColor Red
     exit 1
@@ -43,7 +51,7 @@ Set-Location ..
 
 # 5. Automate TUI Capture (VHS)
 $TapePath = "project_details/assets/demo.tape"
-$HistoryDir = "project_details\history\v$NewVersion"
+$ChangelogDir = "project_details\changelog\v$NewVersion"
 if (Test-Path $TapePath) {
     $vhsCommand = $null
     $isWin = $IsWindows -or ($PSVersionTable.Platform -match 'Win') -or ($env:OS -match 'Windows')
@@ -67,19 +75,19 @@ if (Test-Path $TapePath) {
     if ($vhsCommand) {
         Invoke-Expression $vhsCommand
         
-        # Ensure history directory exists
-        if (-not (Test-Path $HistoryDir)) {
-            New-Item -ItemType Directory -Force -Path $HistoryDir | Out-Null
+        # Ensure changelog directory exists
+        if (-not (Test-Path $ChangelogDir)) {
+            New-Item -ItemType Directory -Force -Path $ChangelogDir | Out-Null
         }
         
         # Move generated assets
-        if (Test-Path demo.gif) { Move-Item -Force demo.gif "$HistoryDir\demo.gif" }
-        if (Test-Path demo.png) { Move-Item -Force demo.png "$HistoryDir\demo.png" }
-        if (Test-Path demo_splash.png) { Move-Item -Force demo_splash.png "$HistoryDir\demo_splash.png" }
-        if (Test-Path demo_main.png) { Move-Item -Force demo_main.png "$HistoryDir\demo_main.png" }
-        if (Test-Path demo_final.png) { Move-Item -Force demo_final.png "$HistoryDir\demo_final.png" }
+        if (Test-Path demo.gif) { Move-Item -Force demo.gif "$ChangelogDir\demo.gif" }
+        if (Test-Path demo.png) { Move-Item -Force demo.png "$ChangelogDir\demo.png" }
+        if (Test-Path demo_splash.png) { Move-Item -Force demo_splash.png "$ChangelogDir\demo_splash.png" }
+        if (Test-Path demo_main.png) { Move-Item -Force demo_main.png "$ChangelogDir\demo_main.png" }
+        if (Test-Path demo_final.png) { Move-Item -Force demo_final.png "$ChangelogDir\demo_final.png" }
         
-        Write-Host "VHS capture complete! Assets moved to $HistoryDir" -ForegroundColor Green
+        Write-Host "VHS capture complete! Assets moved to $ChangelogDir" -ForegroundColor Green
     } else {
         if ($isWin) {
             Write-Host "Notice: 'vhs' not found natively or in WSL. Skipping TUI capture." -ForegroundColor Yellow
@@ -89,4 +97,4 @@ if (Test-Path $TapePath) {
     }
 }
 
-Write-Host "Version bump complete! Do not forget to create $HistoryDir\readme.md before committing." -ForegroundColor Yellow
+Write-Host "Version bump complete! Do not forget to create $ChangelogDir\readme.md before committing." -ForegroundColor Yellow
