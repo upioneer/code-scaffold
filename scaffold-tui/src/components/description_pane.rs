@@ -43,6 +43,23 @@ fn render_qr_lines(url: &str) -> Vec<String> {
     rendered.lines().map(|l| l.to_string()).collect()
 }
 
+#[derive(PartialEq)]
+enum GlyphType {
+    Whitespace,
+    Solid,
+    Outline,
+}
+
+fn get_glyph_type(c: char) -> GlyphType {
+    if c.is_whitespace() {
+        GlyphType::Whitespace
+    } else if c == '█' || c == '▄' || c == '▀' || c == '▌' || c == '▐' {
+        GlyphType::Solid
+    } else {
+        GlyphType::Outline
+    }
+}
+
 pub struct DescriptionPane {
     pub current_label: String,
     pub current_desc: String,
@@ -151,41 +168,35 @@ impl Component for DescriptionPane {
 
                 let mut spans = Vec::new();
                 let mut current_text = String::new();
-                let mut current_is_block = false;
+                let mut current_glyph_type = GlyphType::Whitespace;
 
                 for c in line.chars() {
-                    // Treat any non-space character as a 'block' glyph so that
-                    // box-drawing characters (╔ ═ ╗ ║ ╚ ╝ etc.) get the same
-                    // accent color as solid-block chars (█), eliminating the
-                    // dim-band artifact on logos that use box-drawing art.
-                    let is_block = !c.is_whitespace();
+                    let g_type = get_glyph_type(c);
                     if spans.is_empty() && current_text.is_empty() {
-                        current_is_block = is_block;
+                        current_glyph_type = get_glyph_type(c);
                     }
 
-                    if is_block == current_is_block {
+                    if g_type == current_glyph_type {
                         current_text.push(c);
                     } else {
-                        let style = if current_is_block {
-                            Style::default()
+                        let style = match current_glyph_type {
+                            GlyphType::Solid => Style::default()
                                 .fg(theme.accent)
-                                .add_modifier(Modifier::BOLD)
-                        } else {
-                            Style::default().fg(theme.secondary)
+                                .add_modifier(Modifier::BOLD),
+                            _ => Style::default().fg(theme.secondary),
                         };
                         spans.push(Span::styled(current_text, style));
                         current_text = String::from(c);
-                        current_is_block = is_block;
+                        current_glyph_type = g_type;
                     }
                 }
 
                 if !current_text.is_empty() {
-                    let style = if current_is_block {
-                        Style::default()
+                    let style = match current_glyph_type {
+                        GlyphType::Solid => Style::default()
                             .fg(theme.accent)
-                            .add_modifier(Modifier::BOLD)
-                    } else {
-                        Style::default().fg(theme.secondary)
+                            .add_modifier(Modifier::BOLD),
+                        _ => Style::default().fg(theme.secondary),
                     };
                     spans.push(Span::styled(current_text, style));
                 }
@@ -296,6 +307,16 @@ impl Component for DescriptionPane {
                         v_str,
                         Style::default().fg(theme.secondary),
                     )));
+                }
+
+                if !self.current_desc.is_empty() {
+                    let desc_wrapped = wrap_text(&self.current_desc, eff_width);
+                    for wrapped_line in desc_wrapped {
+                        desc_lines.push(Line::from(Span::styled(
+                            wrapped_line,
+                            Style::default().fg(theme.text),
+                        )));
+                    }
                 }
             }
 

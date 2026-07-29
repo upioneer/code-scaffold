@@ -58,9 +58,16 @@ if (Test-Path $TapePath) {
 
     if ($isWin) {
         if (Get-Command wsl -ErrorAction SilentlyContinue) {
-            $wslPath = wsl wslpath -u "$($PWD.Path)"
+            $wslPath = (wsl wslpath -u "$($PWD.Path)").Trim()
             $wslTapePath = $TapePath -replace '\\', '/'
-            $vhsCommand = "wsl bash -c `"export PATH='/usr/local/bin:`$PATH'; cd '$wslPath' && vhs '$wslTapePath'`""
+            $script = @"
+export PATH=`"/usr/local/bin:`$PATH`"
+cd '$wslPath'
+vhs '$wslTapePath'
+"@
+            $script = $script -replace "`r`n", "`n"
+            [IO.File]::WriteAllText("$PWD/run_vhs.sh", $script)
+            $vhsCommand = "wsl bash run_vhs.sh; rm run_vhs.sh"
             Write-Host "Running VHS via WSL (headless-safe)..." -ForegroundColor Cyan
         } elseif (Get-Command vhs -ErrorAction SilentlyContinue) {
             $vhsCommand = "vhs $TapePath"
