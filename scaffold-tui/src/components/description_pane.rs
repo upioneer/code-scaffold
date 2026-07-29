@@ -1,4 +1,5 @@
 use crate::action::Action;
+use crate::components::nav_tree::Category;
 use crate::components::Component;
 use crate::theme::Theme;
 use anyhow::Result;
@@ -47,6 +48,7 @@ pub struct DescriptionPane {
     pub current_desc: String,
     pub current_version: String,
     pub current_logo: Option<Vec<String>>,
+    pub current_category: Option<Category>,
     qr_lines: Vec<String>,
     pub show_qr: bool,
 }
@@ -59,6 +61,7 @@ impl DescriptionPane {
             current_desc: String::new(),
             current_version: String::new(),
             current_logo: None,
+            current_category: None,
             qr_lines,
             show_qr: false,
         }
@@ -70,11 +73,13 @@ impl DescriptionPane {
         desc: &str,
         version: &str,
         logo: Option<Vec<String>>,
+        category: Option<Category>,
     ) {
         self.current_label = label.to_string();
         self.current_desc = desc.to_string();
         self.current_version = version.to_string();
         self.current_logo = logo;
+        self.current_category = category;
     }
 }
 
@@ -120,69 +125,232 @@ impl Component for DescriptionPane {
             .split(inner);
 
         // ── Description ──────────────────────────────────────────────
+        // desc_text is ONLY used by section 3 (static fallback docs).
+        // When current_desc is already populated (shown in section 2),
+        // leave desc_text empty so section 3 doesn't duplicate the content.
         let desc_text = if !self.current_desc.is_empty() {
-            self.current_desc.as_str()
+            ""
         } else if self.current_label.is_empty() {
             item_description("")
         } else {
             item_description(&self.current_label)
         };
 
-        let title_line = if !self.current_label.is_empty() {
-            if !self.current_version.is_empty() {
-                Line::from(vec![
-                    Span::styled(
-                        format!("▸ {} ", self.current_label),
+        let mut desc_lines: Vec<Line> = vec![];
+
+        // 1. Logo as the TOPMOST item in the pane with 2-tone 3D color styling
+        if let Some(logo) = &self.current_logo {
+            for line in logo {
+                // Purely-whitespace lines render as a blank separator to avoid
+                // the "phantom band" artifact caused by the span splitter coloring
+                // invisible space characters with a background tint.
+                if line.trim().is_empty() {
+                    desc_lines.push(Line::from(""));
+                    continue;
+                }
+
+                let mut spans = Vec::new();
+                let mut current_text = String::new();
+                let mut current_is_block = false;
+
+                for c in line.chars() {
+                    // Treat any non-space character as a 'block' glyph so that
+                    // box-drawing characters (╔ ═ ╗ ║ ╚ ╝ etc.) get the same
+                    // accent color as solid-block chars (█), eliminating the
+                    // dim-band artifact on logos that use box-drawing art.
+                    let is_block = !c.is_whitespace();
+                    if spans.is_empty() && current_text.is_empty() {
+                        current_is_block = is_block;
+                    }
+
+                    if is_block == current_is_block {
+                        current_text.push(c);
+                    } else {
+                        let style = if current_is_block {
+                            Style::default()
+                                .fg(theme.accent)
+                                .add_modifier(Modifier::BOLD)
+                        } else {
+                            Style::default().fg(theme.secondary)
+                        };
+                        spans.push(Span::styled(current_text, style));
+                        current_text = String::from(c);
+                        current_is_block = is_block;
+                    }
+                }
+
+                if !current_text.is_empty() {
+                    let style = if current_is_block {
+                        Style::default()
+                            .fg(theme.accent)
+                            .add_modifier(Modifier::BOLD)
+                    } else {
+                        Style::default().fg(theme.secondary)
+                    };
+                    spans.push(Span::styled(current_text, style));
+                }
+
+                desc_lines.push(Line::from(spans));
+            }
+            desc_lines.push(Line::from(""));
+        }
+
+        // 2. Standardized metadata underneath
+        // Only show "Skill:" / "Version:" / "Desc:" prefixed labels for skill items.
+        // For all other categories (personas, artifacts, licenses, etc.) render
+        // the label and description without the skills-specific field prefixes.
+        let is_skill_category = matches!(self.current_category, Some(Category::AgentSkills));
+
+        if !self.current_label.is_empty() {
+            let avail_width = (sections[0].width as usize).saturating_sub(13);
+            let eff_width = if avail_width < 15 { 15 } else { avail_width };
+
+            if is_skill_category {
+                let label_wrapped = wrap_text(&self.current_label, eff_width);
+                for (i, wrapped_line) in label_wrapped.into_iter().enumerate() {
+                    if i == 0 {
+                        desc_lines.push(Line::from(vec![
+                            Span::styled(
+                                "    Skill: ",
+                                Style::default()
+                                    .fg(theme.secondary)
+                                    .add_modifier(Modifier::BOLD),
+                            ),
+                            Span::styled(
+                                wrapped_line,
+                                Style::default()
+                                    .fg(theme.accent)
+                                    .add_modifier(Modifier::BOLD),
+                            ),
+                        ]));
+                    } else {
+                        desc_lines.push(Line::from(vec![
+                            Span::styled("           ", Style::default()),
+                            Span::styled(
+                                wrapped_line,
+                                Style::default()
+                                    .fg(theme.accent)
+                                    .add_modifier(Modifier::BOLD),
+                            ),
+                        ]));
+                    }
+                }
+
+                if !self.current_version.is_empty() {
+                    let v_str = if self.current_version.starts_with('v') {
+                        self.current_version.clone()
+                    } else {
+                        format!("v{}", self.current_version)
+                    };
+                    desc_lines.push(Line::from(vec![
+                        Span::styled(
+                            "  Version: ",
+                            Style::default()
+                                .fg(theme.secondary)
+                                .add_modifier(Modifier::BOLD),
+                        ),
+                        Span::styled(v_str, Style::default().fg(theme.secondary)),
+                    ]));
+                }
+
+                if !self.current_desc.is_empty() {
+                    let desc_wrapped = wrap_text(&self.current_desc, eff_width);
+                    for (i, wrapped_line) in desc_wrapped.into_iter().enumerate() {
+                        if i == 0 {
+                            desc_lines.push(Line::from(vec![
+                                Span::styled(
+                                    "     Desc: ",
+                                    Style::default()
+                                        .fg(theme.secondary)
+                                        .add_modifier(Modifier::BOLD),
+                                ),
+                                Span::styled(wrapped_line, Style::default().fg(theme.text)),
+                            ]));
+                        } else {
+                            desc_lines.push(Line::from(vec![
+                                Span::styled("           ", Style::default()),
+                                Span::styled(wrapped_line, Style::default().fg(theme.text)),
+                            ]));
+                        }
+                    }
+                }
+            } else {
+                // Non-skill items: render label as a styled header, no prefix labels
+                let label_wrapped = wrap_text(&self.current_label, eff_width);
+                for wrapped_line in label_wrapped {
+                    desc_lines.push(Line::from(Span::styled(
+                        wrapped_line,
                         Style::default()
                             .fg(theme.accent)
                             .add_modifier(Modifier::BOLD),
-                    ),
-                    Span::styled(
-                        format!("v{}", self.current_version),
-                        Style::default().fg(theme.secondary),
-                    ),
-                ])
-            } else {
-                Line::from(vec![Span::styled(
-                    format!("▸ {}", self.current_label),
-                    Style::default()
-                        .fg(theme.accent)
-                        .add_modifier(Modifier::BOLD),
-                )])
-            }
-        } else {
-            Line::from(Span::styled(
-                "▸ Deployment Config",
-                Style::default().fg(theme.secondary),
-            ))
-        };
-
-        let mut desc_lines: Vec<Line> = vec![title_line, Line::from("")];
-
-        if let Some(logo) = &self.current_logo {
-            let max_width = logo.iter().map(|l| l.chars().count()).max().unwrap_or(0);
-            if inner.width as usize >= max_width {
-                for line in logo {
-                    desc_lines.push(Line::from(Span::styled(
-                        line.to_string(),
-                        Style::default().fg(theme.primary),
                     )));
                 }
-                desc_lines.push(Line::from(""));
+
+                if !self.current_version.is_empty() {
+                    let v_str = if self.current_version.starts_with('v') {
+                        self.current_version.clone()
+                    } else {
+                        format!("v{}", self.current_version)
+                    };
+                    desc_lines.push(Line::from(Span::styled(
+                        v_str,
+                        Style::default().fg(theme.secondary),
+                    )));
+                }
+            }
+
+            desc_lines.push(Line::from(""));
+        }
+
+        // 3. Additional documentation / Use Cases underneath
+        if !desc_text.is_empty() {
+            let avail_width = (sections[0].width as usize).saturating_sub(4);
+            let eff_width = if avail_width < 15 { 15 } else { avail_width };
+
+            for line in desc_text.lines() {
+                if !self.current_desc.is_empty() && line.trim() == self.current_desc.trim() {
+                    continue;
+                }
+
+                let trimmed = line.trim_start();
+                let is_bullet = trimmed.starts_with('*') || trimmed.starts_with('-');
+                let is_header = line.trim_end().ends_with(':');
+
+                if is_header {
+                    desc_lines.push(Line::from(Span::styled(
+                        line.to_string(),
+                        Style::default()
+                            .fg(theme.primary)
+                            .add_modifier(Modifier::BOLD),
+                    )));
+                } else if is_bullet {
+                    let wrapped = wrap_text(line, eff_width);
+                    for (i, w_line) in wrapped.into_iter().enumerate() {
+                        if i == 0 {
+                            desc_lines.push(Line::from(Span::styled(
+                                w_line,
+                                Style::default().fg(theme.text),
+                            )));
+                        } else {
+                            desc_lines.push(Line::from(Span::styled(
+                                format!("  {}", w_line),
+                                Style::default().fg(theme.text),
+                            )));
+                        }
+                    }
+                } else {
+                    let wrapped = wrap_text(line, eff_width);
+                    for w_line in wrapped {
+                        desc_lines.push(Line::from(Span::styled(
+                            w_line,
+                            Style::default().fg(theme.text),
+                        )));
+                    }
+                }
             }
         }
 
-        // Preserve explicit newlines, let ratatui handle word-wrapping natively
-        for line in desc_text.lines() {
-            desc_lines.push(Line::from(Span::styled(
-                line.to_string(),
-                Style::default().fg(theme.text),
-            )));
-        }
-
-        let desc_para = Paragraph::new(desc_lines)
-            .wrap(Wrap { trim: true })
-            .style(Style::default().bg(theme.bg));
+        let desc_para = Paragraph::new(desc_lines).style(Style::default().bg(theme.bg));
         f.render_widget(desc_para, sections[0]);
 
         // ── QR label ─────────────────────────────────────────────────
@@ -216,4 +384,34 @@ impl Component for DescriptionPane {
 
         Ok(())
     }
+}
+
+fn wrap_text(text: &str, max_width: usize) -> Vec<String> {
+    if max_width == 0 {
+        return vec![text.to_string()];
+    }
+    let mut lines = Vec::new();
+    for paragraph in text.lines() {
+        let words: Vec<&str> = paragraph.split_whitespace().collect();
+        if words.is_empty() {
+            lines.push(String::new());
+            continue;
+        }
+        let mut current_line = String::new();
+        for word in words {
+            if current_line.is_empty() {
+                current_line.push_str(word);
+            } else if current_line.chars().count() + 1 + word.chars().count() <= max_width {
+                current_line.push(' ');
+                current_line.push_str(word);
+            } else {
+                lines.push(current_line);
+                current_line = word.to_string();
+            }
+        }
+        if !current_line.is_empty() {
+            lines.push(current_line);
+        }
+    }
+    lines
 }

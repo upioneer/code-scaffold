@@ -19,10 +19,16 @@ The biggest secret to a high-quality splash screen isn't the text art: it's the 
 Modern TUI text art rarely uses standard keyboard characters. It uses specific Unicode blocks and True Color (24-bit) ANSI escape sequences.
 
 * **Use Block Elements**: Instead of `/` and `\`, use Unicode half-blocks (`▀`, `▄`, `█`) to double your vertical resolution. Tools like Chafa or image-to-ANSI converters can turn standard PNG logos into high-resolution terminal blocks.
-* **Typography**: For large text, use FIGlet or TOIlet generators with modern fonts like "ANSI Shadow" or "Slant". 
-  * **ANSI Shadow Alignment Anomalies**: The ANSI Shadow font utilizes leading spaces to simulate 3D rounded corners and stems, which often causes the text block to appear misaligned or indented in a TUI layout. When generating logos with this font, you MUST explicitly parse and correct the multi-line string array to achieve a true flush-left aesthetic (see `references/alphabet_ansi_shadow.md` for a complete visual guide):
-    * **Rounded Top-Left (A, C, G, O, Q)**: These characters generate a single leading space on Line 1. You must strip this leading space from the top row so it aligns flush left with the rest of the body.
-    * **Centered Stems (T)**: The top crossbar is flush left, but the stem is indented. You must append a leading space to all rows *beneath* the top row (Lines 2-6) so the stem physically shifts right and aligns correctly with the crossbar.
+  * **Typography**: For large text, use FIGlet or TOIlet generators with modern fonts like "ANSI Shadow" or "Slant".
+  * **FIGlet ANSI Shadow Character & Frame Spacing Rules**:
+    * **Preserve Native Geometry (DO NOT STRIP OR SHIFT)**: The "ANSI Shadow" font uses native leading spaces to simulate 3D beveling and kerning for letters like A, C, G, O, Q, and T (e.g. ` █████╗` on Line 0 over `██╔══██╗` on Line 1). You MUST NOT strip, trim, or shift any native leading or trailing spaces from individual lines. Doing so corrupts the character's geometry and breaks letter alignment.
+    * **Equal Length Normalization (`padEnd`)**: Every line in the logo array MUST be padded to the maximum content width (`maxLen`) using trailing spaces (`line.padEnd(maxLen, ' ')`). This converts the multi-line string array into a single, cohesive rectangular bounding box so that TUI layout engines (like Ratatui) render and center the logo cleanly without skewing lines.
+    * **Uniform Outer Frame Margins**: To prevent the ASCII art from touching or clipping against the TUI pane borders (`│`), prepend a 2-character leading margin (`'  '`) and append a 2-character trailing margin (`'  '`) to every line in the array.
+    * **Standardized Replication Formula (for all AI Agents)**:
+      ```javascript
+      const maxLen = Math.max(...lines.map(l => l.length));
+      const formatted = lines.map(line => '  ' + line.padEnd(maxLen, ' ') + '  ');
+      ```
 * **Gradients and Shading**: Apply gradient text rendering. Instead of flat 16-color palettes, interpolate standard hex colors across the characters using true color escape codes (e.g., `\x1b[38;2;R;G;Bm`).
 
 ## 3. Dynamic Banners (The Hermes Layout)

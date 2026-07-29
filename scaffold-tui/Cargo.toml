@@ -1,6 +1,6 @@
 [package]
 name = "scaffold-tui"
-version = "7.8.0"
+version = "7.9.0"
 edition = "2021"
 
 [dependencies]
@@ -31,3 +31,6 @@ winres = "0.1.12"
 [[bin]]
 name = "code-scaffold"
 path = "src/main.rs"
+
+[dev-dependencies]
+regex = "1.13.1"

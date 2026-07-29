@@ -30,8 +30,42 @@ impl Component for Footer {
             " [Tab] Focus | [Up/Down] Navigate | [T] Theme ({}) | [Esc] Quit ",
             theme.name
         );
-        let text = Paragraph::new(text_content)
-            .style(Style::default().fg(theme.primary).bg(theme.bg))
+
+        let mut spans = Vec::new();
+        let mut remaining = text_content.as_str();
+
+        while let Some(start_idx) = remaining.find('[') {
+            if let Some(end_idx) = remaining[start_idx..].find(']') {
+                let full_end = start_idx + end_idx + 1;
+
+                if start_idx > 0 {
+                    spans.push(ratatui::text::Span::styled(
+                        remaining[..start_idx].to_string(),
+                        Style::default().fg(theme.primary),
+                    ));
+                }
+
+                spans.push(ratatui::text::Span::styled(
+                    remaining[start_idx..full_end].to_string(),
+                    Style::default()
+                        .fg(theme.accent)
+                        .add_modifier(ratatui::style::Modifier::BOLD),
+                ));
+
+                remaining = &remaining[full_end..];
+            } else {
+                break;
+            }
+        }
+
+        if !remaining.is_empty() {
+            spans.push(ratatui::text::Span::styled(
+                remaining.to_string(),
+                Style::default().fg(theme.primary),
+            ));
+        }
+
+        let text = Paragraph::new(ratatui::text::Line::from(spans))
             .alignment(ratatui::layout::Alignment::Center)
             .block(
                 Block::default()

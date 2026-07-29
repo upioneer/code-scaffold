@@ -50,3 +50,29 @@ Allow an external remote agent (like Hermes/OpenClaw running on Proxmox LXC/VPS)
 * **Strict Sandboxing**: The local MCP server must ruthlessly refuse any path traversal outside the initialized working directory (e.g., blocking `../../etc/passwd` or `~/.aws`).
 * **Human-in-the-Loop (HITL)**: All file reads can be continuous and silent. However, any disk write, code commit, or shell script execution MUST trigger an explicit `[Y/N]` prompt in the local CLI.
 * **State Reversion**: Buffer agent file modifications locally to allow the user to view a diff and approve the patch before the agent can silently overwrite functional code.
+
+
+# Project Tasks
+* [ ] Update "SCAFFOLD" in the splash screen to Terminal UI (TUI) design, specifically utilizing Braille Patterns (Unicode block U+2800 to U+28FF) for high-density graphics and ASCII Art for the large headers. Replace current ASCII art with "braille animations" 
+* [x] Implement graceful auto-updates for the frontend CLI binary (prompt user when new version is available)
+* [ ] "Open Code-Scaffold in new tab" integration for VS Code/Antigravity (similar to OpenCode or Claude Code) for QoL enhancement.
+* [ ] Add a specific modal guiding users to take advantage of the agentic workflow/agent harness capabilities. Point users to the `code-scaffold` skill (e.g. "Press [Shift+A] for Agent instructions").
+* [ ] Re-implement QR code in Summary Pane linking to project website (code-scaffold.web.app).
+* [x] Integrate `vhs` (Charmbracelet) into the `bump_version.ps1` script to automatically generate high-quality GIF/PNG screenshots for the `project_details/history` docs going forward.
+## Completed
+* [x] **Profile-Specific Testing Suites**: Dynamically provisions tailored verification harnesses (web-dev, database, systems-auto) with async pre-flight checks and auto-pairing UI toggles (v3.6.0).
+* [x] **Braille Animations Skill**: Integrated `unicode-animations` library, created `braille_helper.js` utility, and synced to GitHub (v3.0.0).
+* [x] **p5.js Skill**: Added boilerplate and API reference for creative coding (v3.1.0).
+* [x] **Manim Skill**: Added Python template and CLI reference for mathematical animations (v3.1.0).
+
+## Pending Deployment
+* [x] Splash screen on launch
+* [~] ~~"Enter" to toggle between primary and secondary panes (Canceled: Using Tab / Shift+Tab standard)~~
+* [x] "Space" to toggle selections
+* [x] remove "Left" and "Right" navigation hints in the nav bar. no longer necessary
+* [x] Method/hotkey for user to change themes
+* [x] Add "Privacy Statement" to web dev agent.md
+* [x] add Ratatui skill (https://ratatui.rs/ https://docs.rs/ratatui/ https://ratatui.rs/tutorials/)
+* [x] Ctrl+X = "Deploy Selected"
+* [x] Potential easier onboarding with a guided flow from artifacts > skills > licensing and so on. Keystrokes to go back, but space+enter to accomplish the entire deployment would be key
+* [x] Include appropriate rate limiting when the web dev agent persona is selected. we need to beef up the agent.md specific to this role to ensure the website is safe from common attacks, hash passwords where necessary and so on. best practices should be injected here

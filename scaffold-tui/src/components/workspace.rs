@@ -193,6 +193,7 @@ impl Workspace {
                         "middleware.ts" => Some("Next.js Edge Middleware for handling authentication routing and request manipulation.".to_string()),
                         "plan.md" => Some("Strategic project roadmap, milestone tracking, and task decomposition.".to_string()),
                         "ratelimit.ts" => Some("Upstash Redis-based rate limiting logic to protect API endpoints.".to_string()),
+                        "readme.md" => Some("Project entry-point document pre-populated with Code Scaffold branding, tech stack table, setup instructions, project structure map, and script reference. Deployed to the project root as README.md.".to_string()),
                         "redis.ts" => Some("Upstash Redis client initialization and connection handling.".to_string()),
                         "skills.md" => Some("Registry of custom AI agent skills and their associated capabilities.".to_string()),
                         "testing.md" => Some("Quality assurance guidelines, test coverage requirements, and Playwright automation steps.".to_string()),
@@ -204,7 +205,8 @@ impl Workspace {
 
                     items.push(WorkspaceItem {
                         label: name.clone(),
-                        selected: name.to_lowercase() == "agent.md",
+                        selected: name.to_lowercase() == "agent.md"
+                            || name.to_lowercase() == "readme.md",
                         category: Category::Artifacts,
                         description,
                         version: None,
@@ -244,18 +246,51 @@ impl Workspace {
                     label: "None".into(),
                     selected: false,
                     category: Category::License,
-                    description: Some("Do not include an open-source license template".into()),
+                    description: Some("No license file will be written to the project. All default copyright laws apply — the code is implicitly \"All Rights Reserved\" until a license is chosen.\n\nTypical Use Cases:\n* Early-stage private projects not yet ready for public licensing\n* Internal tooling never intended for distribution\n* Projects pending legal review before going public".into()),
                     version: None,
                     exists_in_target: false,
                     target_version: None,
                     logo: None,
                 });
                 for name in lic_names {
+                    let description = match name.as_str() {
+                        "All Rights Reserved" => Some(
+                            "Full copyright protection with NO permissions granted. The copyright holder retains all exclusive rights — redistribution, modification, sublicensing, and commercial use are all prohibited without express written consent.\n\nTypical Use Cases:\n* Commercial SaaS products or proprietary desktop software\n* Paid plugins, themes, or tools with restricted distribution\n* Internal enterprise codebases not intended for external sharing\n* Pre-launch projects protecting IP before a public release strategy is decided".to_string()
+                        ),
+                        "MIT License" => Some(
+                            "A short, permissive license with minimal restrictions. Anyone can use, copy, modify, merge, publish, distribute, sublicense, and/or sell the software — provided the copyright notice is retained.\n\nTypical Use Cases:\n* Open-source libraries and frameworks intended for maximum adoption\n* Developer tools, CLIs, and utilities where contribution is encouraged\n* Academic and research projects intended to be widely built upon\n* Any project where your goal is maximum permissiveness and simplicity".to_string()
+                        ),
+                        "Apache 2.0" => Some(
+                            "Permissive like MIT but adds explicit patent grants and protections. Contributors grant users a license to any patents they hold that cover their contributions, and the license protects downstream users from patent litigation.\n\nTypical Use Cases:\n* Enterprise-grade open-source projects where patent protection matters\n* SDKs, APIs, and libraries used in corporate environments\n* Projects with contributors from large tech companies (e.g., Google, Apache Foundation)\n* Situations where you want permissiveness but also explicit legal patent clarity".to_string()
+                        ),
+                        "GPL v3" => Some(
+                            "A strong \"copyleft\" license. Any software that incorporates GPL-licensed code must also be distributed under GPL v3 with full source code available. Prevents proprietary forks.\n\nTypical Use Cases:\n* Tools and utilities where you want all derivative works to remain open source\n* Community-driven projects opposing proprietary lock-in\n* Software where preserving freedom for all downstream users is a priority\n* Alternatives to commercial software (e.g., OS tools, editors, compilers)".to_string()
+                        ),
+                        "LGPL v3" => Some(
+                            "A \"weak copyleft\" license designed for libraries. Applications that merely link to an LGPL library do NOT need to be open-sourced. Only modifications to the LGPL library itself must remain open.\n\nTypical Use Cases:\n* Open-source libraries intended for use in both open and proprietary applications\n* Shared utility packages where you want adoption without forcing copyleft on consumers\n* GUI toolkits, database drivers, or parsing libraries used across ecosystems\n* Middleware or SDKs that bridge open-source and commercial worlds".to_string()
+                        ),
+                        "AGPL v3" => Some(
+                            "The strongest copyleft license — extends GPL v3 to cover network use. If you run AGPL software as a web service, you MUST provide the modified source code to all users who interact with it over a network.\n\nTypical Use Cases:\n* Server-side web applications and SaaS platforms you want to keep open\n* Databases, analytics engines, or collaboration tools (e.g., Nextcloud-style apps)\n* Projects explicitly countering the \"SaaS loophole\" in GPL\n* Situations where you want any hosted fork to be publicly open-sourced".to_string()
+                        ),
+                        "BSD 2-Clause" => Some(
+                            "A minimal permissive license requiring only copyright notice and source redistribution disclaimer. Similar to MIT but slightly more explicit about source vs. binary redistribution.\n\nTypical Use Cases:\n* Academic and university research software\n* Low-overhead open-source utilities and system tools\n* Projects where MIT-level permissiveness is wanted with BSD's explicit binary clause\n* Legacy compatibility with BSD-lineage ecosystems (FreeBSD, OpenBSD)".to_string()
+                        ),
+                        "BSD 3-Clause" => Some(
+                            "Extends BSD 2-Clause with a non-endorsement clause — no one may use the project's name or contributors' names to promote derived works without permission.\n\nTypical Use Cases:\n* Projects where preventing unauthorized brand endorsements is important\n* Software distributed by organizations that want to protect their reputation\n* Academic institutions, research labs, and standards bodies\n* A step above BSD 2-Clause when name/brand protection matters".to_string()
+                        ),
+                        "Mozilla Public License 2.0" => Some(
+                            "A file-level copyleft license. Individual files under MPL must remain open-source, but they can be combined with proprietary code in larger projects. A pragmatic middle ground between MIT and GPL.\n\nTypical Use Cases:\n* Projects that want copyleft on their core files but allow proprietary integration\n* Browser extensions, plugins, or components used in larger commercial applications\n* Situations where you want to encourage open contributions to specific modules\n* Teams that need compatibility with both GPL and proprietary code in one codebase".to_string()
+                        ),
+                        "The Unlicense" => Some(
+                            "Releases the software into the public domain with no restrictions whatsoever. No attribution required. Anyone can use it for any purpose, modify it freely, and relicense it under any terms.\n\nTypical Use Cases:\n* Code snippets, boilerplates, and templates you truly want to be unrestricted\n* Public domain contributions to knowledge commons or educational resources\n* Trivial utilities where any licensing overhead feels unnecessary\n* Situations where maximum freedom — including the right to relicense — is the goal".to_string()
+                        ),
+                        _ => None,
+                    };
                     items.push(WorkspaceItem {
                         label: name,
                         selected: false,
                         category: Category::License,
-                        description: None,
+                        description,
                         version: None,
                         exists_in_target: false,
                         target_version: None,
@@ -305,10 +340,11 @@ impl Workspace {
             label: "[+] Bring Your Own Skill (BYOS)".into(),
             selected: false,
             category: Category::AgentSkills,
-            description: Some("Import a custom agent skill from an approved repository, URL, or CLI install command (e.g., npx/git clone/uvx).\n\nApproved Platforms:\n- agentskill.sh\n- agentskills.io\n- github.com\n- mcpservers.org\n- microsoft.github.io/skills\n- skills.sh\n- skillsmp.com".into()),
+            description: Some("Approved Platforms:\n- agentskill.sh\n- agentskills.io\n- github.com\n- mcpservers.org\n- microsoft.github.io/skills\n- skills.sh\n- skillsmp.com".into()),
             version: None,
             exists_in_target: false,
-            target_version: None, logo: None,
+            target_version: None,
+            logo: None,
         });
 
         for custom_skill_url in crate::prefs::load_custom_skills() {

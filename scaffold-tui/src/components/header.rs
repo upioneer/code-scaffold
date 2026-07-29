@@ -46,9 +46,9 @@ impl Component for Header {
             ])
             .split(area);
 
-        let mut top_banner = " ⚠️ Scaffold Connect is currently in alpha ⚠️ ".to_string();
+        let mut top_banner = " [!] Scaffold Connect is currently in alpha [!] ".to_string();
         if self.agent_connected.is_some() {
-            top_banner.push_str(" [🤖 Agent Connected - Press C] ");
+            top_banner.push_str(" [*] Agent Connected - Press C ");
         }
         let top_text = Paragraph::new(top_banner)
             .style(Style::default().fg(theme.text).bg(theme.bg))

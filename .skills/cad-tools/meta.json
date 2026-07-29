@@ -1,0 +1,20 @@
+{
+  "label": "CAD Tools",
+  "description": "Comprehensive CAD/CAM engineering skill — parametric 3D modeling (build123d/OpenCASCADE), multi-format export (STEP/STL/DXF/3MF/glTF), Zoo.dev AI generation, desktop COM automation (AutoCAD/ZWCAD), and manufacturing validation.",
+  "version": "1",
+  "target": ".skills/cad-tools",
+  "logo": [
+    "   ██████╗ █████╗ ██████╗                      ",
+    "  ██╔════╝██╔══██╗██╔══██╗                     ",
+    "  ██║     ███████║██║  ██║                     ",
+    "  ██║     ██╔══██║██║  ██║                     ",
+    "  ╚██████╗██║  ██║██████╔╝                     ",
+    "   ╚═════╝╚═╝  ╚═╝╚═════╝                      ",
+    "  ████████╗ ██████╗  ██████╗ ██╗     ███████╗  ",
+    "  ╚══██╔══╝██╔═══██╗██╔═══██╗██║     ██╔════╝  ",
+    "     ██║   ██║   ██║██║   ██║██║     ███████╗  ",
+    "     ██║   ██║   ██║██║   ██║██║     ╚════██║  ",
+    "     ██║   ╚██████╔╝╚██████╔╝███████╗███████║  ",
+    "     ╚═╝    ╚═════╝  ╚═════╝ ╚══════╝╚══════╝  "
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "name": "cad-tools",
+  "version": "1",
+  "description": "Comprehensive CAD/CAM engineering skill — parametric 3D modeling (build123d/OpenCASCADE), multi-format export (STEP/STL/DXF/3MF/glTF), Zoo.dev AI generation, desktop COM automation (AutoCAD/ZWCAD), and manufacturing validation.",
+  "entryPoint": "./SKILL.md",
+  "engines": {
+    "python": ">=3.10",
+    "node": ">=18"
+  },
+  "requiredPermissions": [
+    "fs:read",
+    "fs:write",
+    "net:connect",
+    "process:spawn"
+  ]
+}

@@ -10,6 +10,7 @@ This directory contains complex code payloads (skills) that the Code Scaffold en
 | **A2UI** | Agent-to-User Interface (A2UI) protocol implementation and client renderer scaffolding. | v1 | `.skills/a2ui` |
 | **Ansible** | Infrastructure automation, configuration management, and application deployment orchestration using Ansible. | v2 | `.skills/ansible` |
 | **Braille Animations** | Create and manage unicode braille animations and spinners for CLIs and web apps. | v2 | `.skills/braille-animations` |
+| **CAD Tools** | Comprehensive CAD/CAM engineering skill covering parametric 3D modeling (build123d/OpenCASCADE), multi-format export (STEP/STL/DXF/3MF/glTF), Zoo.dev AI generation, desktop COM automation (AutoCAD/ZWCAD), and manufacturing validation. | v1 | `.skills/cad-tools` |
 | **Clerk Authentication Perimeter** | Authentication perimeter and identity management using Clerk. | v2 | `.skills/clerk` |
 | **Codebase Memory MCP** | High-performance code intelligence MCP server that indexes codebases into a persistent knowledge graph. | v1 | `.skills/codebase-memory-mcp` |
 | **Code Scaffold Harness** | Agent harness instructions for interacting with the Code Scaffold CLI headlessly. | v2 | `.skills/code-scaffold` |
@@ -49,7 +50,7 @@ This directory contains complex code payloads (skills) that the Code Scaffold en
 | **Terraform** | Infrastructure as Code (IaC) provisioning and state management using Terraform or OpenTofu. | v2 | `.skills/terraform` |
 | **tldraw** | Transforms tldraw into an advanced spatial computing engine. Orchestrates cinematic scrollytelling, live-mutating dashboards, AI cursors, and Matter.js physics integrations. | v1 | `.skills/tldraw` |
 | **Trackio ML Tracking** | Integration with Trackio for ML experiment tracking, dashboard deployments, and Hugging Face Spaces sync. | v2 | `.skills/trackio` |
-| **TUI Tools** | Architectural playbook and tooling (including VHS integration) for building robust, instant-on, and visually stunning modern terminal splash screens and integrations. | v4 | `.skills/tui-tools` |
+| **TUI Tools** | Architectural playbook and tooling (including VHS integration) for building robust, instant-on, and visually stunning modern terminal splash screens and integrations. | v6 | `.skills/tui-tools` |
 | **Upstash Redis Management** | Serverless Redis management and rate limiting using Upstash. | v2 | `.skills/upstash` |
 | **Vercel Deployment Routine** | Configuration and deployment routines for Vercel hosting. | v2 | `.skills/vercel` |
 | **Website Deploy Linux** | Enterprise Linux Deployment Agent for deploying static sites and SPAs to Nginx locally or remotely via PuTTY CLI (plink/pscp) or SSH, featuring upfront architectural prompting, automatic .env setups, reference scripts, and non destructive folder structures | v6 | `.skills/website-deploy-linux` |

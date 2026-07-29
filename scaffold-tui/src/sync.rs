@@ -2,24 +2,21 @@ use anyhow::Result;
 use std::io::Read;
 
 pub async fn sync_payload() -> Result<std::path::PathBuf> {
-    // 1. Determine if we are in local dev mode.
+    // 1. Determine if we are in local dev mode or debug build.
+    let env_override = std::env::var("SCAFFOLD_ENV")
+        .unwrap_or_default()
+        .to_lowercase();
+    let is_dev_build =
+        cfg!(debug_assertions) || env_override == "development" || env_override == "dev";
+
     let mut current_dir = std::env::current_dir().unwrap_or_default();
-    let mut is_local_dev = false;
-    let mut dev_path = std::path::PathBuf::new();
+    let mut dev_path = None;
 
     loop {
         let t_cand = current_dir.join(".templates");
         let s_cand = current_dir.join(".skills");
-        let l_cand = current_dir.join(".licenses");
-        if t_cand.exists()
-            && t_cand.is_dir()
-            && s_cand.exists()
-            && s_cand.is_dir()
-            && l_cand.exists()
-            && l_cand.is_dir()
-        {
-            is_local_dev = true;
-            dev_path = current_dir.clone();
+        if t_cand.exists() && t_cand.is_dir() && s_cand.exists() && s_cand.is_dir() {
+            dev_path = Some(current_dir.clone());
             break;
         }
         if !current_dir.pop() {
@@ -27,8 +24,12 @@ pub async fn sync_payload() -> Result<std::path::PathBuf> {
         }
     }
 
-    if is_local_dev {
-        return Ok(dev_path);
+    // In local development or debug builds, ALWAYS enforce local workspace payload loading.
+    // Never attempt remote sync over local workspace files during dev/testing.
+    if is_dev_build || dev_path.is_some() {
+        if let Some(path) = dev_path {
+            return Ok(path);
+        }
     }
 
     // 2. Standalone mode. Sync payload to ProjectDirs.

@@ -373,27 +373,18 @@ impl App {
                 .to_string();
             let selected_version = self.workspace.selected_version().unwrap_or("").to_string();
             let selected_logo = self.workspace.selected_logo().cloned();
+            let selected_category = Some(self.workspace.current_category.clone());
             self.description_pane.set_selected_label(
                 &selected_label,
                 &selected_desc,
                 &selected_version,
                 selected_logo,
+                selected_category,
             );
             self.description_pane.show_qr = self.wizard_state == WizardState::Executing;
 
             tui.terminal.draw(|f| {
                 let size = f.size();
-
-                f.render_widget(
-                    ratatui::widgets::Paragraph::new("").block(
-                        ratatui::widgets::Block::default().style(
-                            ratatui::style::Style::default()
-                                .bg(self.theme.bg)
-                                .fg(self.theme.text),
-                        ),
-                    ),
-                    size,
-                );
 
                 let main_layout = Layout::default()
                     .direction(Direction::Vertical)
@@ -408,11 +399,11 @@ impl App {
                 let body_layout = Layout::default()
                     .direction(Direction::Horizontal)
                     .constraints([
-                        Constraint::Percentage(24), // Nav Tree
+                        Constraint::Percentage(25), // Nav Tree
                         Constraint::Length(1),      // Spacer
-                        Constraint::Percentage(30), // Workspace
+                        Constraint::Percentage(25), // Workspace
                         Constraint::Length(1),      // Spacer
-                        Constraint::Percentage(45), // Description Pane
+                        Constraint::Min(0),         // Description Pane (fill remaining)
                     ])
                     .split(main_layout[1]);
 
@@ -612,7 +603,8 @@ impl App {
                     );
                 } else if self.wizard_state == WizardState::CustomSkillInput {
                     let text = format!("Please enter a valid approved platform URL or CLI install command (e.g. npx/git clone):\n\n> {}\u{2588}\n\nPress [Enter] to submit, or [Esc] to cancel.", self.custom_skill_input);
-                    let popup_block = ratatui::widgets::Paragraph::new(text)
+                    let lines = Self::format_highlighted_lines(&text, &self.theme);
+                    let popup_block = ratatui::widgets::Paragraph::new(lines)
                         .wrap(ratatui::widgets::Wrap { trim: false })
                         .block(
                             ratatui::widgets::Block::default()
@@ -675,7 +667,8 @@ impl App {
                     let link_hint = "\n\nNeed inspiration? Visit: schemecolor.com/palettes";
 
                     let text = format!("{}\n\n{}: > {}\u{2588}{}{}{}\n\nPress [Enter] to submit, or [Esc] to cancel.", prompt, input_prefix, self.theme_input_buffer, error_msg, tab_hint, link_hint);
-                    let popup_block = ratatui::widgets::Paragraph::new(text)
+                    let lines = Self::format_highlighted_lines(&text, &self.theme);
+                    let popup_block = ratatui::widgets::Paragraph::new(lines)
                         .wrap(ratatui::widgets::Wrap { trim: false })
                         .block(
                             ratatui::widgets::Block::default()
@@ -713,8 +706,9 @@ impl App {
                     f.render_widget(popup_block, area);
                 } else if self.wizard_state == WizardState::AgentCopilotTimerSelection {
                     let text = "Scaffold Connect is currently in Alpha.\n\nTo prevent excessive allotment usage on the free tier, a hard cap of 10 minutes per session is enforced.\n\nPress [Enter] to start the 10-minute session, or [Esc] to cancel.";
+                    let lines = Self::format_highlighted_lines(text, &self.theme);
 
-                    let popup_block = ratatui::widgets::Paragraph::new(text)
+                    let popup_block = ratatui::widgets::Paragraph::new(lines)
                         .wrap(ratatui::widgets::Wrap { trim: false })
                         .block(
                             ratatui::widgets::Block::default()
@@ -790,7 +784,8 @@ impl App {
                     f.render_widget(popup_block, area);
                 } else if self.wizard_state == WizardState::ConfirmExit {
                     let text = "Are you sure you want to exit Code Scaffold?\n\nPress [Enter] or [Y] to exit.\nPress [Esc] or [N] to cancel.";
-                    let popup_block = ratatui::widgets::Paragraph::new(text)
+                    let lines = Self::format_highlighted_lines(text, &self.theme);
+                    let popup_block = ratatui::widgets::Paragraph::new(lines)
                         .wrap(ratatui::widgets::Wrap { trim: false })
                         .alignment(ratatui::layout::Alignment::Center)
                         .block(
@@ -854,6 +849,51 @@ impl App {
                 Constraint::Percentage((100 - percent_x) / 2),
             ])
             .split(popup_layout[1])[1]
+    }
+
+    fn format_highlighted_lines<'a>(
+        text: &'a str,
+        theme: &crate::theme::Theme,
+    ) -> Vec<ratatui::text::Line<'a>> {
+        let mut lines = Vec::new();
+        for line_str in text.lines() {
+            let mut spans = Vec::new();
+            let mut remaining = line_str;
+
+            while let Some(start_idx) = remaining.find('[') {
+                if let Some(end_idx) = remaining[start_idx..].find(']') {
+                    let full_end = start_idx + end_idx + 1;
+
+                    if start_idx > 0 {
+                        spans.push(ratatui::text::Span::styled(
+                            remaining[..start_idx].to_string(),
+                            ratatui::style::Style::default().fg(theme.text),
+                        ));
+                    }
+
+                    spans.push(ratatui::text::Span::styled(
+                        remaining[start_idx..full_end].to_string(),
+                        ratatui::style::Style::default()
+                            .fg(theme.accent)
+                            .add_modifier(ratatui::style::Modifier::BOLD),
+                    ));
+
+                    remaining = &remaining[full_end..];
+                } else {
+                    break;
+                }
+            }
+
+            if !remaining.is_empty() {
+                spans.push(ratatui::text::Span::styled(
+                    remaining.to_string(),
+                    ratatui::style::Style::default().fg(theme.text),
+                ));
+            }
+
+            lines.push(ratatui::text::Line::from(spans));
+        }
+        lines
     }
 
     pub fn update(&mut self, action: Action) -> Result<()> {
@@ -1172,8 +1212,14 @@ impl App {
         match action {
             Action::Tick => {
                 self.splash_tick_count = self.splash_tick_count.wrapping_add(1);
-                if self.splash_tick_count % 5 == 0 {
+                if self.splash_tick_count % 2 == 0 {
+                    let prev_idx = self.splash_frame_idx;
                     self.splash_frame_idx = (self.splash_frame_idx + 1) % BRAILLE_FRAMES.len();
+                    // Advance the braille color exactly once per complete cycle (when frame wraps to 0).
+                    if prev_idx == BRAILLE_FRAMES.len() - 1 {
+                        self.summary_pane.braille_color_idx =
+                            self.summary_pane.braille_color_idx.wrapping_add(1);
+                    }
                     if self.wizard_state == WizardState::DeploymentTarget {
                         self.update_summary();
                     }
@@ -1931,5 +1977,105 @@ impl App {
             }
         }
         Ok(())
+    }
+}
+
+#[cfg(test)]
+mod visual_artifacts_tests {
+    use super::*;
+    use crate::action::Action;
+    use ratatui::backend::TestBackend;
+    use ratatui::Terminal;
+    use std::path::PathBuf;
+
+    #[tokio::test]
+    async fn test_human_movements_no_artifacts() {
+        let mut terminal = Terminal::new(TestBackend::new(120, 40)).unwrap();
+        let mut app = App::new(PathBuf::from("../.skills"));
+        app.wizard_state = WizardState::Executing;
+
+        for _ in 0..5 {
+            app.update(Action::Down).unwrap();
+            terminal
+                .draw(|f| {
+                    let size = f.size();
+                    let ml = ratatui::layout::Layout::default()
+                        .direction(ratatui::layout::Direction::Vertical)
+                        .constraints([
+                            ratatui::layout::Constraint::Length(6),
+                            ratatui::layout::Constraint::Min(10),
+                            ratatui::layout::Constraint::Length(11),
+                            ratatui::layout::Constraint::Length(3),
+                        ])
+                        .split(size);
+                    let bl = ratatui::layout::Layout::default()
+                        .direction(ratatui::layout::Direction::Horizontal)
+                        .constraints([
+                            ratatui::layout::Constraint::Percentage(24),
+                            ratatui::layout::Constraint::Length(1),
+                            ratatui::layout::Constraint::Percentage(30),
+                            ratatui::layout::Constraint::Length(1),
+                            ratatui::layout::Constraint::Percentage(45),
+                        ])
+                        .split(ml[1]);
+                    let _ = app.nav_tree.draw(
+                        f,
+                        bl[0],
+                        app.active_block == ActiveBlock::NavTree,
+                        &app.theme,
+                    );
+                    let _ = app.workspace.draw(
+                        f,
+                        bl[2],
+                        app.active_block == ActiveBlock::Workspace,
+                        &app.theme,
+                    );
+                })
+                .unwrap();
+        }
+
+        app.update(Action::Tab).unwrap();
+        for _ in 0..10 {
+            app.update(Action::Down).unwrap();
+            terminal
+                .draw(|f| {
+                    let size = f.size();
+                    let ml = ratatui::layout::Layout::default()
+                        .direction(ratatui::layout::Direction::Vertical)
+                        .constraints([
+                            ratatui::layout::Constraint::Length(6),
+                            ratatui::layout::Constraint::Min(10),
+                            ratatui::layout::Constraint::Length(11),
+                            ratatui::layout::Constraint::Length(3),
+                        ])
+                        .split(size);
+                    let bl = ratatui::layout::Layout::default()
+                        .direction(ratatui::layout::Direction::Horizontal)
+                        .constraints([
+                            ratatui::layout::Constraint::Percentage(24),
+                            ratatui::layout::Constraint::Length(1),
+                            ratatui::layout::Constraint::Percentage(30),
+                            ratatui::layout::Constraint::Length(1),
+                            ratatui::layout::Constraint::Percentage(45),
+                        ])
+                        .split(ml[1]);
+                    let _ = app.nav_tree.draw(
+                        f,
+                        bl[0],
+                        app.active_block == ActiveBlock::NavTree,
+                        &app.theme,
+                    );
+                    let _ = app.workspace.draw(
+                        f,
+                        bl[2],
+                        app.active_block == ActiveBlock::Workspace,
+                        &app.theme,
+                    );
+                })
+                .unwrap();
+        }
+
+        let buffer = terminal.backend().buffer();
+        assert_eq!(app.active_block, ActiveBlock::Workspace);
     }
 }
