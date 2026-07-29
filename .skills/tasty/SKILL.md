@@ -1,7 +1,7 @@
 ---
 name: Tasty
-description: Code Scaffold's bespoke anti-slop frontend styling engine for premium landing pages and portfolios.
-version: 1
+description: Code Scaffold's bespoke anti-slop frontend styling engine and command vocabulary for premium design iteration.
+version: 2
 ---
 
 # Tasty: Code Scaffold's Native Anti-Slop Engine
@@ -24,7 +24,23 @@ If the user does not specify, infer the trajectory from the project's purpose:
 
 ---
 
-## 2. The Three Cognitive Dials
+## 2. The Tasty Command Vocabulary
+
+Emulate the precision of advanced design harnesses by recognizing and applying these direct commands during the iteration process:
+
+* `/tasty init` : Scaffolds the environment. Generates a `PRODUCT.md` and `DESIGN.md` in the workspace to lock in the brand, voice, component rules, and anti-references for all future prompts.
+* `/tasty polish` : The final pass. Aligns the codebase strictly with the design system, removing stray styles and finalizing the UI.
+* `/tasty critique` : UX design review mode. Analyze hierarchy, clarity, and emotional resonance. Do not write code—just critique.
+* `/tasty audit` : Run technical quality checks (accessibility, performance, responsiveness, and contrast ratios).
+* `/tasty distill` : Strip the UI to its absolute essence. Remove unnecessary visual noise and redundant nested containers.
+* `/tasty bolder` : Amplify boring designs. Increase contrast, typography size, or layout asymmetry to make it punchier.
+* `/tasty quieter` : Tone down overly bold designs. Introduce more negative space and subtle typography.
+* `/tasty animate` : Add purposeful, high-performance motion (e.g., Framer Motion staggered entrances, scroll reveals).
+* `/tasty clarify` : Improve unclear or "AI-sounding" UX copy.
+
+---
+
+## 3. The Three Cognitive Dials
 
 You must internally calibrate the following three dials to prevent generic rendering:
 
@@ -39,27 +55,22 @@ You must internally calibrate the following three dials to prevent generic rende
 
 ### Dial 3: Motion Intensity (1 to 10)
 * **Low (1-3):** Static pages. Only subtle hover state opacities.
-* **High (8-10):** Cinematic. Scrollytelling reveals, Framer Motion staggered entrances, heavy layout transitions, parallax. (Requires `prefers-reduced-motion` compliance).
+* **High (8-10):** Cinematic. Scrollytelling reveals, staggered entrances, heavy layout transitions, parallax. (Requires `prefers-reduced-motion` compliance).
 
 ---
 
-## 3. The Anti-Slop Manifesto (STRICT BANS)
+## 4. The Anti-Slop Manifesto (STRICT BANS)
 
 You are explicitly forbidden from generating the following "AI Tells":
 
-1. **The "Lila" Rule (No Purple Slop):** Do NOT default to generic purple/blue `#8b5cf6` gradients in backgrounds, buttons, or text unless explicitly defined by the brand's primary color palette.
-2. **Fake Precision Numbers:** Do not use `24,591` or `99.9%` in hero sections. Use realistic placeholder copy or explicit `[METRIC_WIDGET_TBD]` brackets.
-3. **Pure Black Drop Shadows:** Never use `box-shadow: 0 4px 6px rgba(0,0,0,0.5)`. Shadows must be tinted with the background's lowest luminance hue and stacked using multi-layered CSS for realism.
-4. **The "Bento Box" Crutch:** Do not default every feature section to a 3-column CSS Grid of rounded cards. Innovate your layouts. Use bento boxes *only* when displaying genuinely disparate, widget-style data.
-5. **Mixed-Font Emphasis:** Do not italicize a single word in a headline with a different serif font unless you are executing a strict "Editorial" aesthetic trajectory.
-
----
-
-## 4. Component-Level Discipline
-
-* **Typography Architecture:** Restrict your font-family usage. Use max 2 typefaces. One for display/headers, one for body. Implement strict rem-based typography scales (e.g., `1.125rem`, `1.5rem`, `2rem`, `3rem`, `4.5rem`). Cap `line-height` tighter on large headers (1.0 to 1.1) and looser on body text (1.5 to 1.6).
-* **Hero Section Constraints:** Cap the `max-width` of hero text. Do not let `h1` or `<p>` tags stretch across the entire viewport. Keep line lengths between 45 and 75 characters (`max-w-2xl` in Tailwind).
-* **Intelligent Navbars:** Ensure navbars do not wrap terribly on mid-size screens. Implement mobile hamburger menus or hide tertiary links cleanly.
+1. **The Font Ban:** Do not use overused fonts like Arial, Inter, or basic system defaults unless explicitly requested. Push for highly curated, geometric, or editorial typefaces.
+2. **The "Lila" Rule (No Purple Slop):** Do NOT default to generic purple/blue `#8b5cf6` gradients in backgrounds, buttons, or text unless explicitly defined by the brand.
+3. **No Gray on Color:** Never place gray text on a colored background. It destroys contrast and looks fundamentally generated.
+4. **No Pure Black or Pure Gray:** Never use pure `#000000` or neutral grays (e.g., `#888888`). Always tint grays and shadows with the background's lowest luminance hue to achieve physical realism.
+5. **No Bounce Easing:** Do not use bouncy or elastic easing functions. They feel cheap and dated. Use crisp, purposeful easing curves (e.g., `cubic-bezier(0.16, 1, 0.3, 1)`).
+6. **The "Bento Box" Crutch:** Do not default every feature section to a 3-column CSS Grid of rounded cards, and NEVER nest cards inside of cards. Innovate your layouts.
+7. **Fake Precision Numbers:** Do not use `24,591` or `99.9%` in hero sections. Use realistic placeholder copy or explicit `[METRIC_WIDGET]` brackets.
+8. **Mixed-Font Emphasis:** Do not italicize a single word in a headline with a different serif font unless you are executing a strict "Editorial" aesthetic trajectory.
 
 ---
 
