@@ -1,0 +1,13 @@
+{
+  "name": "tasty",
+  "version": "1",
+  "description": "Code Scaffold's bespoke anti-slop frontend styling engine.",
+  "entryPoint": "./SKILL.md",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "requiredPermissions": [
+    "fs:read",
+    "fs:write"
+  ]
+}
