@@ -26,24 +26,29 @@ engineering companion for technical projects.
 User Prompt
     │
     ▼
-┌─────────────────────────────────────────────────┐
-│              CAD Tools Skill Router              │
-│                                                 │
-│  ┌──────────────┐  ┌──────────────────────────┐ │
-│  │  Code-as-CAD │  │   Cloud Generative CAD   │ │
-│  │  (build123d) │  │   (Zoo.dev / KittyCAD)   │ │
-│  └──────┬───────┘  └───────────┬──────────────┘ │
-│         │                      │                │
-│  ┌──────▼───────┐  ┌───────────▼──────────────┐ │
-│  │  Local OCCT  │  │  Desktop COM Automation  │ │
-│  │  B-Rep Kernel│  │  (AutoCAD / ZWCAD / GS)  │ │
-│  └──────┬───────┘  └──────────────────────────┘ │
-│         │                                       │
-│  ┌──────▼──────────────────────────────────────┐│
-│  │         Format Conversion Layer             ││
-│  │   STEP ↔ STL ↔ DXF ↔ 3MF ↔ glTF ↔ OBJ    ││
-│  └──────────────────────────────────────────────┘│
-└─────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────┐
+│               CAD Tools Skill Router                   │
+│                                                        │
+│  ┌──────────────┐  ┌──────────────────────────┐        │
+│  │  Code-as-CAD │  │   Cloud Generative CAD   │        │
+│  │  (build123d) │  │   (Zoo.dev / KittyCAD)   │        │
+│  └──────┬───────┘  └───────────┬──────────────┘        │
+│         │                      │                       │
+│  ┌──────▼───────┐  ┌───────────▼──────────────┐        │
+│  │  Local OCCT  │  │  Desktop COM Automation  │        │
+│  │  B-Rep Kernel│  │  (AutoCAD / ZWCAD / GS)  │        │
+│  └──────┬───────┘  └──────────────────────────┘        │
+│         │                                              │
+│  ┌──────▼──────────────────────────────────────┐       │
+│  │         JSON Interoperability Engine        │       │
+│  │   (Cross-platform Parametric JSON Schema)   │       │
+│  └──────┬──────────────────────────────────────┘       │
+│         │                                              │
+│  ┌──────▼──────────────────────────────────────┐       │
+│  │           Format Conversion Layer           │       │
+│  │   STEP ↔ STL ↔ DXF ↔ 3MF ↔ glTF ↔ OBJ       │       │
+│  └─────────────────────────────────────────────┘       │
+└────────────────────────────────────────────────────────┘
     │
     ▼
  Deliverable: STEP + STL + DXF + Renders + BOM
@@ -202,6 +207,60 @@ import trimesh
 mesh = trimesh.load("cad/output/<model>.stl")
 mesh.export("cad/output/<model>.glb")
 ```
+
+---
+
+## JSON-to-CAD Interoperability (GhostPoly-inspired)
+
+To ensure seamless interoperability between different frontends (like web CAD interfaces) and the local B-Rep kernel, the agent can use a cross-platform structured JSON schema.
+
+### The JSON Parametric Schema
+
+This schema abstracts complex python code into an agnostic representation that can be ported or stored in a database.
+
+```json
+{
+  "version": "1.0",
+  "parameters": {
+    "width": 50,
+    "depth": 30,
+    "height": 20
+  },
+  "operations": [
+    {
+      "id": "base",
+      "type": "box",
+      "width": "width",
+      "depth": "depth",
+      "height": "height"
+    },
+    {
+      "id": "hole",
+      "type": "cylinder",
+      "radius": 3.2,
+      "height": "height",
+      "position": [10, 10, 0]
+    },
+    {
+      "id": "final",
+      "type": "boolean",
+      "operation": "subtract",
+      "tool": "hole",
+      "target": "base"
+    }
+  ]
+}
+```
+
+### JSON Execution Engine
+
+A local script `scripts/json_engine.py` is provided to compile this JSON into a `build123d` model and export it.
+
+```bash
+python .skills/cad-tools/scripts/json_engine.py model_spec.json --export output.step
+```
+
+Agents should use this engine when passing geometric specifications to or from external services and UIs that cannot natively execute Python code.
 
 ---
 
@@ -645,3 +704,4 @@ The following prompt patterns activate this skill effectively:
 ## Changelog
 
 - **v1**: Initial release. Covers build123d parametric modeling, Zoo.dev API integration, Windows COM desktop CAD automation (AutoCAD/ZWCAD/GstarCAD), multi-format export pipeline (STEP/STL/DXF/3MF/glTF), off-screen VTK rendering, trimesh manufacturing validation, BOM management, and project structure conventions.
+- **v2**: Added JSON-to-CAD interoperability engine (GhostPoly-inspired) for translating parametric JSON schemas directly to build123d B-Rep solids, ensuring cross-platform agent UI/database integration.

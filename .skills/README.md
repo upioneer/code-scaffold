@@ -20,6 +20,7 @@ This directory contains complex code payloads (skills) that the Code Scaffold en
 | **Firecrawl Scraper** | Crawl and scrape websites to clean markdown or structured data with Firecrawl API & CLI | v2 | `.skills/firecrawl` |
 | **GitHub** | GitHub push workflow with .env based identity configuration; merges github.md into the skill | v5 | `.skills/github` |
 | **Hyperframes** | Video rendering framework for AI agents to create videos using HTML, CSS, and JS. | v2 | `.skills/hyperframes` |
+| **Kinetic Canvas** | Ultra-fast, zero-dependency WebGL shaders and interactive HTML canvases wrapped as native React components. | v2 | `.skills/kinetic-canvas` |
 | **MCP Generator** | Assists with creating new custom Model Context Protocol (MCP) servers, clients, and apps using official SDKs and best practices. | v3 | `.skills/mcp-generator` |
 | **Manim Math Animations** | Mathematical animations using the Manim library. | v2 | `.skills/manim` |
 | **Markmap** | Interactive hierarchical mindmaps derived directly from standard markdown syntax. | v1 | `.skills/markmap` |
