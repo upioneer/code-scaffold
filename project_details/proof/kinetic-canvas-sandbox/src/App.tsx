@@ -82,7 +82,7 @@ export default function App() {
             <div className="bg-slate-900 border border-slate-800 p-6 rounded-xl w-full text-left">
               <p className="text-slate-300 font-medium mb-4">To experience the full interactive 3D simulation, download the skill locally via the CLI:</p>
               <code className="bg-black border border-slate-800 text-cyan-400 px-4 py-3 rounded-lg block font-mono text-sm">
-                agy install kinetic-canvas
+                npx @code-scaffold/skills install kinetic-canvas
               </code>
             </div>
           </div>
