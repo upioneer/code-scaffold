@@ -32,7 +32,11 @@ When generating a *new* skill, agents MUST strictly follow this pipeline without
    - Provision a strictly validated `meta.json`.
    - Provision an ad-hoc distribution `skill-manifest.json`.
    - Generate a `readme.md` strictly following the unified Code Scaffold typographic rules (NO en/em dashes, NO hyphens as punctuation).
-4. **Payload Crafting:** Write a deep, technically advanced `SKILL.md` that serves as the cognitive blueprint for future agents.
+4. **Sandbox & Demo Generation:**
+   - You MUST generate a live interactive sandbox or "demo" page for the skill in `project_details/proof/<skill-name>-sandbox`.
+   - The sandbox must comply strictly with the constraints defined in `project_details/sandbox-architecure.md` (e.g., single-file bundle via Vite, relative paths, dark mode presentation, heavy asset fallbacks).
+   - Once the sandbox is built and verified, deploy it to `.skills/<skill-name>/sandbox/index.html` using the provided playbook script `project_details/playbooks/build_sandbox.ps1 <skill-name>`.
+5. **Payload Crafting:** Write a deep, technically advanced `SKILL.md` that serves as the cognitive blueprint for future agents.
 
 ## Execution Templates
 
