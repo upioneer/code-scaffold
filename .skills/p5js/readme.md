@@ -1,6 +1,6 @@
 # p5.js Creative Coding
 
-**Version:** 2
+**Version:** 3
 **Target:** `.skills/p5js`
 
 ## Description
@@ -17,5 +17,6 @@ Creative coding and visual animations using the p5.js library.
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog
+* **v3** : Deployed custom interactive visual sandbox
 * **v2** : Expanded capability descriptions
 * **v1** : Add p5js and manim skills and bump version to v3.1.0

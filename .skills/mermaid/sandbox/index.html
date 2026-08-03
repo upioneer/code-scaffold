@@ -3,111 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mermaid - Sandbox</title>
+    <title>Mermaid Diagram - Sandbox</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'dark', fontFamily: 'ui-sans-serif, system-ui' });
+    </script>
     <style>
         body { margin: 0; padding: 0; width: 100vw; min-height: 100vh; overflow-x: hidden; background-color: #020617; color: #f8fafc; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
         .glass-panel { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(34, 211, 238, 0.2); }
-        .ascii-logo { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; white-space: pre; line-height: 1.2; font-size: 0.6rem; }
-        @media (min-width: 768px) { .ascii-logo { font-size: 0.8rem; } }
         .grid-bg { background-image: radial-gradient(rgba(34, 211, 238, 0.1) 1px, transparent 1px); background-size: 30px 30px; }
-        
-        /* Pulse Animation for Terminal Cursor */
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
         .cursor { display: inline-block; width: 8px; height: 1.2em; background-color: #22d3ee; vertical-align: text-bottom; animation: blink 1s step-end infinite; }
     </style>
 </head>
 <body class="grid-bg relative antialiased selection:bg-cyan-500/30">
     
-    <!-- Background Glow -->
     <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-cyan-600/10 rounded-full blur-[150px] pointer-events-none"></div>
 
-    <!-- Sticky Header -->
     <header class="sticky top-0 z-50 glass-panel border-x-0 border-t-0 border-b-slate-800/80 px-6 py-4">
         <div class="max-w-6xl mx-auto flex items-center justify-between">
             <div class="flex items-center gap-3">
                 <div class="w-8 h-8 rounded bg-cyan-500/20 flex items-center justify-center border border-cyan-500/50 text-cyan-400 font-bold">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
                 </div>
-                <h1 class="text-xl font-black uppercase tracking-widest text-white">Mermaid</h1>
+                <h1 class="text-xl font-black uppercase tracking-widest text-white">Mermaid Diagram</h1>
             </div>
-            <span class="px-3 py-1 bg-cyan-500/10 text-cyan-400 text-xs font-bold rounded-full border border-cyan-500/30 uppercase tracking-widest hidden sm:inline-block">v2</span>
+            <code class="px-3 py-1.5 bg-cyan-950/50 text-cyan-400 text-xs font-mono rounded-full border border-cyan-900 hidden sm:inline-block">npx @code-scaffold/skills install mermaid</code>
         </div>
     </header>
 
-    <main class="max-w-6xl mx-auto px-6 py-12 relative z-10 space-y-16">
+    <main class="max-w-6xl mx-auto px-6 py-12 relative z-10 space-y-12">
         
-        <!-- Hero Section -->
-        <section id="hero" class="text-center max-w-4xl mx-auto space-y-8">
-            <div id="logo-container" class="p-6 bg-slate-950 rounded-xl border border-slate-800 shadow-inner w-full overflow-x-auto text-cyan-400 ascii-logo text-left flex justify-center mx-auto opacity-0 translate-y-8">
-  ███╗   ███╗███████╗██████╗ ███╗   ███╗ █████╗ ██╗██████╗   
-  ████╗ ████║██╔════╝██╔══██╗████╗ ████║██╔══██╗██║██╔══██╗  
-  ██╔████╔██║█████╗  ██████╔╝██╔████╔██║███████║██║██║  ██║  
-  ██║╚██╔╝██║██╔══╝  ██╔══██╗██║╚██╔╝██║██╔══██║██║██║  ██║  
-  ██║ ╚═╝ ██║███████╗██║  ██║██║ ╚═╝ ██║██║  ██║██║██████╔╝  
-  ╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝╚═╝  ╚═╝╚═╝╚═════╝   
-            </div>
-            
-            <p id="desc" class="text-lg md:text-xl text-slate-400 leading-relaxed opacity-0 translate-y-4">
-                Mermaid diagram creation and rendering
+        <section id="hero" class="text-center max-w-4xl mx-auto space-y-6 opacity-0 translate-y-8">
+            <h2 class="text-4xl md:text-5xl font-black text-white leading-tight">
+                Live Diagram <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Rendering</span>
+            </h2>
+            <p class="text-lg md:text-xl text-slate-400 leading-relaxed">
+                This skill enables agents to generate structural architecture diagrams using Mermaid JS.
             </p>
         </section>
 
-        <!-- Context & Details -->
-        <section id="context" class="grid md:grid-cols-2 gap-8 opacity-0 translate-y-8">
+        <section id="demo" class="grid md:grid-cols-2 gap-8 opacity-0 translate-y-8">
             
-            <div class="glass-panel p-8 rounded-2xl flex flex-col gap-4">
-                <div class="flex items-center gap-3 border-b border-slate-800/50 pb-4">
-                    <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
-                    <h3 class="text-xl font-bold text-white tracking-wide">Skill Context</h3>
+            <div class="glass-panel p-6 rounded-2xl border border-slate-800 shadow-2xl flex flex-col h-full">
+                <div class="flex items-center justify-between border-b border-slate-800/50 pb-4 mb-4">
+                    <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                        <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                        Markdown Syntax
+                    </h3>
                 </div>
-                <p class="text-slate-400 leading-relaxed">
-                    This sandbox provides a high-fidelity presentation layer for the <strong class="text-slate-200">mermaid</strong> skill. Whether this is an interactive GUI skill or a headless CI/CD backend integration, the Code Scaffold runtime seamlessly provisions its exact structural constraints directly into your workspace.
-                </p>
+                <pre class="bg-slate-950 p-4 rounded-xl font-mono text-sm text-cyan-300 overflow-auto flex-1">
+graph TD
+    A[Client Request] --> B(API Gateway)
+    B --> C{Load Balancer}
+    C -->|Node 1| D[App Server 1]
+    C -->|Node 2| E[App Server 2]
+    D --> F[(Primary Database)]
+    E --> F
+    F -.-> G[(Read Replica)]
+                </pre>
             </div>
 
-            <div class="glass-panel p-8 rounded-2xl flex flex-col gap-4">
-                <div class="flex items-center gap-3 border-b border-slate-800/50 pb-4">
-                    <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                    <h3 class="text-xl font-bold text-white tracking-wide">CLI Deployment</h3>
-                </div>
-                <p class="text-slate-400 leading-relaxed mb-2">
-                    To inject this specialized knowledge graph and scaffolding payload directly into your project architecture, run the following command in your terminal:
-                </p>
-                <div class="relative flex items-center bg-slate-950 border border-slate-800 rounded-lg p-4 shadow-xl group cursor-pointer overflow-hidden">
-                    <div class="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg blur opacity-20 group-hover:opacity-40 transition duration-500"></div>
-                    <code class="relative text-cyan-400 font-mono text-sm md:text-base text-left w-full">agy install mermaid<span class="cursor"></span></code>
+            <div class="glass-panel p-6 rounded-2xl border border-slate-800 shadow-2xl flex flex-col items-center justify-center bg-slate-900/50 h-full min-h-[400px]">
+                <div class="mermaid">
+                    graph TD
+                        A[Client Request] --> B(API Gateway)
+                        B --> C{Load Balancer}
+                        C -->|Node 1| D[App Server 1]
+                        C -->|Node 2| E[App Server 2]
+                        D --> F[(Primary Database)]
+                        E --> F
+                        F -.-> G[(Read Replica)]
                 </div>
             </div>
 
         </section>
-        
-        <div id="footer-spacer" class="h-12"></div>
+
     </main>
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const tl = gsap.timeline();
-            
-            tl.to("#logo-container", {
-                y: 0,
-                opacity: 1,
-                duration: 0.8,
-                ease: "back.out(1.4)"
-            })
-            .to("#desc", {
-                y: 0,
-                opacity: 1,
-                duration: 0.6,
-                ease: "power3.out"
-            }, "-=0.5")
-            .to("#context", {
-                y: 0,
-                opacity: 1,
-                duration: 0.8,
-                ease: "power3.out"
-            }, "-=0.4");
+            tl.to("#hero", { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" })
+              .to("#demo", { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" }, "-=0.4");
         });
     </script>
 </body>

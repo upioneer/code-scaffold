@@ -1,6 +1,6 @@
 # Excalidraw
 
-**Version:** 2
+**Version:** 3
 **Target:** `.skills/excalidraw`
 
 ## Description
@@ -19,5 +19,6 @@ Renders and embeds Excalidraw whiteboards
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog
+* **v3** : Deployed custom interactive visual sandbox
 * **v2** : Expanded capability descriptions
 * **v1** : Core skill implementation

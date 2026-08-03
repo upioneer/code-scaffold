@@ -1,6 +1,6 @@
 {
   "name": "code_scaffold_p5js_skill",
-  "version": "2",
+  "version": "3",
   "description": "Creative coding and visual animations using the p5.js library.",
   "entryPoint": "./SKILL.md",
   "engines": {
