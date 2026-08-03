@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upstash Redis Management - Sandbox</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        body { margin: 0; padding: 0; width: 100vw; height: 100vh; overflow: auto; background-color: #020617; color: #f8fafc; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+        .glass-panel { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(34, 211, 238, 0.2); }
+        .ascii-logo { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; white-space: pre; line-height: 1.2; font-size: 0.6rem; }
+        @media (min-width: 768px) { .ascii-logo { font-size: 0.8rem; } }
+        .grid-bg { background-image: radial-gradient(rgba(34, 211, 238, 0.15) 1px, transparent 1px); background-size: 30px 30px; }
+        
+        /* Pulse Animation for Terminal Cursor */
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        .cursor { display: inline-block; width: 8px; height: 1.2em; background-color: #22d3ee; vertical-align: text-bottom; animation: blink 1s step-end infinite; }
+    </style>
+</head>
+<body class="grid-bg relative flex flex-col items-center justify-center p-6">
+    
+    <!-- Background Glow -->
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-cyan-600/20 rounded-full blur-[120px] pointer-events-none"></div>
+
+    <div id="card" class="glass-panel w-full max-w-4xl rounded-2xl shadow-2xl overflow-hidden opacity-0 scale-95 relative z-10">
+        
+        <!-- Mac-style Header -->
+        <div class="bg-slate-900/80 px-4 py-3 border-b border-slate-800 flex items-center gap-2">
+            <div class="w-3 h-3 rounded-full bg-rose-500"></div>
+            <div class="w-3 h-3 rounded-full bg-amber-500"></div>
+            <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
+            <div class="ml-4 text-xs font-mono text-slate-400">code-scaffold / upstash</div>
+        </div>
+
+        <div class="p-8 md:p-12 flex flex-col items-center text-center">
+            
+            <!-- ASCII Logo Display -->
+            <div id="logo-container" class="mb-8 p-6 bg-slate-950 rounded-xl border border-slate-800 shadow-inner w-full overflow-x-auto text-cyan-400 ascii-logo text-left flex justify-center">
+  ██╗   ██╗██████╗ ███████╗████████╗ █████╗ ███████╗██╗  ██╗                                    
+  ██║   ██║██╔══██╗██╔════╝╚══██╔══╝██╔══██╗██╔════╝██║  ██║                                    
+  ██║   ██║██████╔╝███████╗   ██║   ███████║███████╗███████║                                    
+  ██║   ██║██╔═══╝ ╚════██║   ██║   ██╔══██║╚════██║██╔══██║                                    
+  ╚██████╔╝██║     ███████║   ██║   ██║  ██║███████║██║  ██║                                    
+   ╚═════╝ ╚═╝     ╚══════╝   ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝                                    
+  ██████╗ ███████╗██████╗ ██╗███████╗                                                           
+  ██╔══██╗██╔════╝██╔══██╗██║██╔════╝                                                           
+  ██████╔╝█████╗  ██║  ██║██║███████╗                                                           
+  ██╔══██╗██╔══╝  ██║  ██║██║╚════██║                                                           
+  ██║  ██║███████╗██████╔╝██║███████║                                                           
+  ╚═╝  ╚═╝╚══════╝╚═════╝ ╚═╝╚══════╝                                                           
+  ███╗   ███╗ █████╗ ███╗   ██╗ █████╗  ██████╗ ███████╗███╗   ███╗███████╗███╗   ██╗████████╗  
+  ████╗ ████║██╔══██╗████╗  ██║██╔══██╗██╔════╝ ██╔════╝████╗ ████║██╔════╝████╗  ██║╚══██╔══╝  
+  ██╔████╔██║███████║██╔██╗ ██║███████║██║  ███╗█████╗  ██╔████╔██║█████╗  ██╔██╗ ██║   ██║     
+  ██║╚██╔╝██║██╔══██║██║╚██╗██║██╔══██║██║   ██║██╔══╝  ██║╚██╔╝██║██╔══╝  ██║╚██╗██║   ██║     
+  ██║ ╚═╝ ██║██║  ██║██║ ╚████║██║  ██║╚██████╔╝███████╗██║ ╚═╝ ██║███████╗██║ ╚████║   ██║     
+  ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═══╝   ╚═╝     
+            </div>
+
+            <!-- Title & Badge -->
+            <div class="flex items-center justify-center gap-3 mb-6 flex-wrap">
+                <h1 class="text-3xl md:text-5xl font-black tracking-tight text-white uppercase">Upstash Redis Management</h1>
+                <span class="px-3 py-1 bg-cyan-500/20 text-cyan-300 text-xs font-bold rounded-full border border-cyan-500/30 uppercase tracking-widest">v2</span>
+            </div>
+
+            <!-- Description -->
+            <p class="text-slate-400 text-lg md:text-xl max-w-2xl leading-relaxed mb-10">
+                Serverless Redis management and rate limiting using Upstash.
+            </p>
+
+            <!-- Call to Action (CLI Command) -->
+            <div class="w-full max-w-lg relative group">
+                <div class="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg blur opacity-30 group-hover:opacity-60 transition duration-1000 group-hover:duration-200"></div>
+                <div class="relative flex items-center bg-slate-950 border border-slate-800 rounded-lg p-4 shadow-xl">
+                    <svg class="w-5 h-5 text-slate-500 mr-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    <code class="text-cyan-400 font-mono text-sm md:text-base text-left flex-1 break-all">agy install upstash<span class="cursor"></span></code>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // GSAP Intro Animations
+        document.addEventListener("DOMContentLoaded", () => {
+            const tl = gsap.timeline();
+            
+            tl.to("#card", {
+                opacity: 1,
+                scale: 1,
+                duration: 1.2,
+                ease: "expo.out"
+            })
+            .from("#logo-container", {
+                y: 30,
+                opacity: 0,
+                duration: 0.8,
+                ease: "back.out(1.7)"
+            }, "-=0.8")
+            .from("h1, span", {
+                y: 20,
+                opacity: 0,
+                duration: 0.6,
+                stagger: 0.1,
+                ease: "power3.out"
+            }, "-=0.6")
+            .from("p", {
+                y: 20,
+                opacity: 0,
+                duration: 0.6,
+                ease: "power3.out"
+            }, "-=0.4")
+            .from(".group", {
+                y: 20,
+                opacity: 0,
+                duration: 0.6,
+                ease: "power3.out"
+            }, "-=0.4");
+        });
+    </script>
+</body>
+</html>

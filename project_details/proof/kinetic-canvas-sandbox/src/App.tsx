@@ -90,7 +90,7 @@ export default function App() {
           <div className="absolute inset-0 w-full h-full" key={activeShader?.id}>
             {activeShader?.component({ style: { width: '100%', height: '100%' } })}
             <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
-              <h2 className="text-6xl md:text-8xl font-black uppercase tracking-widest text-white mix-blend-difference drop-shadow-lg select-none opacity-50">
+              <h2 className="text-left text-6xl md:text-8xl font-black uppercase tracking-widest text-white mix-blend-difference drop-shadow-lg select-none opacity-50">
                 {activeShader?.name}
               </h2>
             </div>
