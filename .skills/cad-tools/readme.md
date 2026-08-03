@@ -1,6 +1,6 @@
 # CAD Tools
 
-**Version:** 1
+**Version:** 2
 **Target:** `.skills/cad-tools`
 
 ## Description
@@ -10,6 +10,7 @@ A comprehensive CAD/CAM engineering skill that equips AI agents with the full de
 ## Capabilities & Use Cases
 
 * **Code-as-CAD Parametric Modeling** using `build123d` (Python) and the OpenCASCADE geometric kernel: agents write version-controlled, fully parametric Python scripts instead of generating opaque binary files, enabling exact edits, diffs, and reproducible compilation
+* **JSON-to-CAD Interoperability Engine:** Translates GhostPoly-inspired JSON schemas directly into B-Rep solid geometry for cross-platform and web UI database integrations
 * **Solid B-Rep geometry generation** producing engineering-grade STEP files from natural language or structured specs, with support for shells, fillets, chamfers, Boolean operations, and named-parameter architectures
 * **Multi-Format Export Pipeline:** STEP (engineering), STL (FDM/SLA printing), DXF (CNC/laser cutting), 3MF (modern print format), glTF/GLB (web/AR visualization), OBJ (legacy mesh interchange), DWG (AutoCAD native)
 * **Zoo.dev / KittyCAD Cloud AI Generation:** Submit natural language prompts to the Zoo REST API to generate STEP + KCL parametric code from cloud GPU-accelerated ML models; poll async job status and decode base64-encoded output files
@@ -29,6 +30,7 @@ A comprehensive CAD/CAM engineering skill that equips AI agents with the full de
 
 Activate this skill for any task involving:
 - Designing 3D enclosures, brackets, mechanical parts, or assemblies
+- Translating JSON geometric schemas into compiled CAD files
 - Converting CAD files between engineering formats
 - Generating AI-driven 3D geometry from natural language descriptions
 - Automating drawing workflows in AutoCAD/ZWCAD via COM
@@ -39,3 +41,4 @@ Activate this skill for any task involving:
 ## Changelog
 
 * **v1** : Initial release covering build123d parametric modeling, Zoo.dev cloud API (text-to-CAD, format conversion, mass properties), Windows COM desktop automation (AutoCAD/ZWCAD/GstarCAD), VTK off-screen rendering, trimesh validation, CNC machinability checks, BOM management, and project structure conventions.
+* **v2** : Added JSON-to-CAD interoperability engine.
