@@ -45,7 +45,7 @@ export default function App() {
             <h1 className="text-xl font-black uppercase tracking-widest text-white">Braille Animations</h1>
           </div>
           <code className="text-xs font-mono text-cyan-400 bg-cyan-950/50 px-3 py-1.5 rounded-full border border-cyan-900">
-            agy install braille-animations
+            npx @code-scaffold/skills install braille-animations
           </code>
         </div>
       </div>
