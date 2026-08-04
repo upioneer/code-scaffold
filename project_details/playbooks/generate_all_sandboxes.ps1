@@ -25,6 +25,10 @@ $htmlTemplate = @"
         .ascii-logo { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; white-space: pre; line-height: 1.2; font-size: 0.6rem; }
         @media (min-width: 768px) { .ascii-logo { font-size: 0.8rem; } }
         .grid-bg { background-image: radial-gradient(rgba(34, 211, 238, 0.1) 1px, transparent 1px); background-size: 30px 30px; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
         
         /* Pulse Animation for Terminal Cursor */
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
@@ -167,8 +171,8 @@ foreach ($skill in $skills) {
     $skip = $false
     if (Test-Path $sandboxFile) {
         $existing = Get-Content -Raw -Path $sandboxFile
-        if ($existing -match "vite-plugin-singlefile" -or $existing -match "root") {
-            Write-Host "Skipping $($skill.Name) as it appears to have a custom Vite sandbox." -ForegroundColor Yellow
+        if ($existing -match "vite-plugin-singlefile" -or $existing -match "root" -or $existing -match "excalidraw.com" -or $existing -match "mermaid.esm" -or $existing -match "p5.js") {
+            Write-Host "Skipping $($skill.Name) as it appears to have a custom sandbox." -ForegroundColor Yellow
             $skip = $true
         }
     }
