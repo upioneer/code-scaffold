@@ -466,10 +466,8 @@ impl App {
                     };
 
                     let mut text_lines = Vec::new();
-                    // Optional top padding
                     text_lines.push(ratatui::text::Line::from(""));
 
-                    // Extract the current theme's primary and accent colors safely
                     let c1 = self.theme.primary;
                     let mut c2 = self.theme.accent;
 
@@ -484,18 +482,33 @@ impl App {
                     let (r2, g2, b2) = if let ratatui::style::Color::Rgb(r, g, b) = c2 { (r as f32, g as f32, b as f32) } else { (200.0, 200.0, 200.0) };
 
                     let logo = logo.trim_start_matches('\n');
-                    for line in logo.lines() {
+                    let tick = self.splash_tick_count;
+                    let height = logo.lines().count();
+                    
+                    for (i, line) in logo.lines().enumerate() {
                         if line.is_empty() {
                             text_lines.push(ratatui::text::Line::from(""));
                             continue;
                         }
                         let mut spans = Vec::new();
                         let len = line.chars().count();
-                        for (j, ch) in line.chars().enumerate() {
+                        for (j, mut ch) in line.chars().enumerate() {
                             let ratio = if len > 1 { j as f32 / (len - 1) as f32 } else { 0.0 };
                             let r = (r1 * (1.0 - ratio) + r2 * ratio) as u8;
                             let g = (g1 * (1.0 - ratio) + g2 * ratio) as u8;
                             let b = (b1 * (1.0 - ratio) + b2 * ratio) as u8;
+                            
+                            // Procedural Hologram Assembly Effect
+                            // Delay rendering of characters from top-left to bottom-right
+                            let char_delay = (i * 2 + (j / 4)) as usize;
+                            if tick < char_delay {
+                                ch = ' ';
+                            } else if tick < char_delay + 8 && ch != ' ' {
+                                // Glitch phase: render random braille dots
+                                let noise = ((i * j * tick) % 255) as u32;
+                                ch = char::from_u32(0x2800 + noise).unwrap_or(' ');
+                            }
+                            
                             spans.push(ratatui::text::Span::styled(ch.to_string(), ratatui::style::Style::default().fg(ratatui::style::Color::Rgb(r, g, b))));
                         }
                         text_lines.push(ratatui::text::Line::from(spans));
