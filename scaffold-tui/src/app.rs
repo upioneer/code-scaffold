@@ -253,8 +253,8 @@ impl App {
                     )
                 }
                 WizardState::Artifacts => (" Step 2: Core Artifacts ", "Use [Up/Down] to navigate and [Space] to toggle files.\nPress [Enter] or [Tab] when ready to proceed.\nPress [Shift+Tab] to go back.".to_string()),
-                WizardState::AgentPersona => (" Step 3: Agent Persona ", "Select the primary focus for the Agent. This will tailor testing guidelines and instructions.\nPress [Enter] or [Tab] to proceed to Contributing Template.\nPress [Shift+Tab] to go back.".to_string()),
-                WizardState::ContributingTemplate => (" Step 4: Contributing Template ", "Select an open-source or proprietary PR contribution policy.\nPress [Enter] or [Tab] to proceed to Skills.\nPress [Shift+Tab] to go back.".to_string()),
+                WizardState::AgentPersona => (" Step 3: Agent Persona (Conditional) ", "Select the primary focus for the Agent. This will tailor testing guidelines and instructions.\nPress [Enter] or [Tab] to proceed to Contributing Template.\nPress [Shift+Tab] to go back.".to_string()),
+                WizardState::ContributingTemplate => (" Step 4: Contributing Template (Conditional) ", "Select an open-source or proprietary PR contribution policy.\nPress [Enter] or [Tab] to proceed to Skills.\nPress [Shift+Tab] to go back.".to_string()),
                 WizardState::Skills => {
                     let mut text = "Select the domain skills you need. Notice how GitHub and Firebase toggle their companion artifacts!\nPress [Enter] or [Tab] to proceed to Licensing.\nPress [Shift+Tab] to go back.".to_string();
                     if let Some(idx) = self.workspace.state.selected() {
@@ -266,9 +266,9 @@ impl App {
                             }
                         }
                     }
-                    (" Step 5: Agent Skills ", text)
+                    (" Step 5: Agent Skills (Conditional) ", text)
                 }
-                WizardState::License => (" Step 6: Licensing ", "Choose an open-source license.\nPress [Enter] or [Tab] to complete the wizard.\nPress [Shift+Tab] to go back.".to_string()),
+                WizardState::License => (" Step 6: Licensing (Conditional) ", "Choose an open-source license.\nPress [Enter] or [Tab] to complete the wizard.\nPress [Shift+Tab] to go back.".to_string()),
                 _ => ("", "".to_string()),
             };
             self.summary_pane.title = title.to_string();
@@ -1654,6 +1654,7 @@ impl App {
                     && self.wizard_state != WizardState::ThemeAccentInput
                 {
                     self.wizard_state = WizardState::Welcome;
+                    self.splash_tick_count = 0;
                 }
             }
             Action::Char('f') | Action::Char('F') => {

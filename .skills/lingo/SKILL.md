@@ -1,7 +1,7 @@
 ---
 name: Lingo
 description: Deterministic shorthand glossary that maps user lingo, acronyms, and abbreviations to their full meanings for faster, unambiguous communication.
-version: 2
+version: 4
 ---
 
 # Lingo: Shorthand Decoder & Communication Accelerator
@@ -10,8 +10,10 @@ This skill serves as a deterministic glossary for interpreting shorthand, acrony
 
 ## Agent Directives
 
-1. **Passive Decoding**: When the user's message contains any term from the glossary below, silently expand it to its full meaning in your internal reasoning. Do NOT echo back the expansion to the user or ask for clarification on recognized terms.
-2. **Context-Aware Resolution**: Some abbreviations have multiple meanings depending on context (e.g., `rc` can mean "release candidate" or "run commands file", `fb` can mean "Firebase" or "Facebook"). Use surrounding context to select the correct expansion. If genuinely ambiguous, ask the user.
+1. **Initialization Prompt**: Immediately upon loading this skill or starting a new conversation, you MUST explicitly prompt the user: *"Would you like Lingo to apply only to your inputs (Input-Only Mode), or to both our inputs and my outputs (Bidirectional Mode)?"* Wait for their preference before proceeding.
+2. **Bidirectional Mode**: If the user selects Bidirectional Mode, you MUST aggressively use the shorthand terms from the glossary in your own responses to compress token count and speed up delivery. (e.g., instead of "I definitely recommend a database for the backend", say "I def recommend a db for the be").
+3. **Passive Decoding**: When the user's message contains any term from the glossary below, silently expand it to its full meaning in your internal reasoning. Do NOT echo back the expansion to the user or ask for clarification on recognized terms.
+4. **Context-Aware Resolution**: Some abbreviations have multiple meanings depending on context (e.g., `rc` can mean "release candidate" or "run commands file", `fb` can mean "Firebase" or "Facebook"). Use surrounding context to select the correct expansion. If genuinely ambiguous, ask the user.
 3. **Case Insensitivity**: All glossary terms are case insensitive. `ATM`, `atm`, and `Atm` all resolve identically.
 4. **Composability**: Users may chain multiple abbreviations in a single message (e.g., "can u check the pr deps rn"). Expand all of them independently.
 5. **Passthrough**: If a term is not in the glossary, treat it normally. Do not attempt to guess abbreviations that are not explicitly listed.
@@ -98,6 +100,20 @@ This skill serves as a deterministic glossary for interpreting shorthand, acrony
 | `wfh` | working from home |
 | `wym` | what do you mean |
 | `ymmv` | your mileage may vary |
+| `yolo` | you only live once, meaning hold nothing back in this moment |
+| `bussin` | exceptionally good or delicious |
+| `cap` | a lie |
+| `crash out` | clear display of frustration, losing self control |
+| `drip` | stylish clothing or excellent fashion sense |
+| `full send` | 100 percent or more |
+| `ghost` | to completely stop communicating with someone without warning |
+| `mid` | below average or mediocre quality |
+| `no cap` | not a lie |
+| `rizz` | charisma |
+| `salty` | feeling bitter or upset about a situation |
+| `slaps` | exceptionally good quality, mostly referring to music or audio |
+| `sus` | suspicious or questionable behavior |
+| `tea` | gossip or exclusive news |
 
 ### Technical & Development
 
@@ -370,4 +386,3 @@ When a term has multiple possible expansions, apply these resolution rules in or
 
 * This skill does NOT auto-correct spelling errors. It only maps explicitly listed abbreviations.
 * This skill does NOT translate between natural languages. It operates exclusively on English shorthand.
-* This skill does NOT modify, truncate, or abbreviate the agent's own output. It is strictly an input decoder.
