@@ -484,7 +484,7 @@ impl App {
                     let logo = logo.trim_start_matches('\n');
                     let tick = self.splash_tick_count;
                     let height = logo.lines().count();
-                    
+
                     for (i, line) in logo.lines().enumerate() {
                         if line.is_empty() {
                             text_lines.push(ratatui::text::Line::from(""));
@@ -497,7 +497,7 @@ impl App {
                             let r = (r1 * (1.0 - ratio) + r2 * ratio) as u8;
                             let g = (g1 * (1.0 - ratio) + g2 * ratio) as u8;
                             let b = (b1 * (1.0 - ratio) + b2 * ratio) as u8;
-                            
+
                             // Procedural Hologram Assembly Effect
                             // Delay rendering of characters from top-left to bottom-right
                             let char_delay = (i * 2 + (j / 4)) as usize;
@@ -508,7 +508,7 @@ impl App {
                                 let noise = ((i * j * tick) % 255) as u32;
                                 ch = char::from_u32(0x2800 + noise).unwrap_or(' ');
                             }
-                            
+
                             spans.push(ratatui::text::Span::styled(ch.to_string(), ratatui::style::Style::default().fg(ratatui::style::Color::Rgb(r, g, b))));
                         }
                         text_lines.push(ratatui::text::Line::from(spans));
