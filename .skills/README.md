@@ -21,6 +21,7 @@ This directory contains complex code payloads (skills) that the Code Scaffold en
 | **GitHub** | GitHub push workflow with .env based identity configuration; merges github.md into the skill | v5 | `.skills/github` |
 | **Hyperframes** | Video rendering framework for AI agents to create videos using HTML, CSS, and JS. | v2 | `.skills/hyperframes` |
 | **Kinetic Canvas** | Ultra-fast, zero-dependency WebGL shaders and interactive HTML canvases wrapped as native React components. | v2 | `.skills/kinetic-canvas` |
+| **Lingo** | Deterministic shorthand glossary that maps user lingo, acronyms, and abbreviations to their full meanings for faster, unambiguous communication. | v2 | `.skills/lingo` |
 | **MCP Generator** | Assists with creating new custom Model Context Protocol (MCP) servers, clients, and apps using official SDKs and best practices. | v3 | `.skills/mcp-generator` |
 | **Manim Math Animations** | Mathematical animations using the Manim library. | v2 | `.skills/manim` |
 | **Markmap** | Interactive hierarchical mindmaps derived directly from standard markdown syntax. | v1 | `.skills/markmap` |
@@ -42,7 +43,7 @@ This directory contains complex code payloads (skills) that the Code Scaffold en
 | **Resend** | Sends emails using the Resend API | v2 | `.skills/resend` |
 | **Reveal.js** | Comprehensive toolkit and knowledge base for scaffolding, configuring, and exporting Reveal.js presentations. | v2 | `.skills/revealjs` |
 | **Rust** | Orchestrates Rust workspace topologies, optimized compilation profiles, and local automation scripts. | v1 | `.skills/rust` |
-| **Scrollytelling** | Design architecture, workflows, and code implementations for scroll triggered 3D model manipulation and interactive 'production explosion' views. | v2 | `.skills/scrollytelling` |
+| **Scrollytelling** | Design architecture, workflows, and code implementations for scroll triggered 3D model manipulation and interactive 'production explosion' views. | v3 | `.skills/scrollytelling` |
 | **SEO GEO AEO Auditor** | Unified model agnostic Search Engine, Generative Engine, and Answer Engine Optimization auditor to analyze traditional visibility, AI engine discoverability, and snippet answers. | v2 | `.skills/seo-geo-aeo-auditor` |
 | **Slidev** | Comprehensive skill for building, configuring, and exporting Slidev markdown presentations. | v2 | `.skills/slidev` |
 | **Stealth Browser MCP** | Undetectable browser automation for AI agents, bypassing Cloudflare and antibots via nodriver and CDP. | v1 | `.skills/stealth-browser-mcp` |

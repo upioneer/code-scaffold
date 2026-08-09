@@ -8,7 +8,7 @@ description: Agent harness for headlessly deploying Code Scaffold assets.
 This skill equips you with the instructions to interact with the Code Scaffold binary strictly from the CLI/headless interface. Code Scaffold is an advanced code-generation engine that outputs architecture assets for projects.
 
 ## Reference Website
-https://code-scaffold.web.app/
+https://code-scaffold.com/
 
 ## Installation & Availability
 The Code Scaffold binary is typically provided natively via `code-scaffold.exe` on Windows or `code-scaffold` on Unix. If it is not immediately present in your PATH or working directory, you must acquire the precompiled binary from the project's official distributions or compile it from source via `cargo build --release`.

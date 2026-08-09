@@ -1,6 +1,6 @@
 # [Project Name]
 
-> Built with [Code Scaffold](https://code-scaffold.web.app) — the AI-native project scaffolding system.
+> Built with [Code Scaffold](https://code-scaffold.com) — the AI-native project scaffolding system.
 
 ## Overview
 
@@ -79,4 +79,4 @@ See [LICENSE.md](./LICENSE.md) for full license terms.
 
 ---
 
-*Scaffolded by [Code Scaffold](https://code-scaffold.web.app)*
+*Scaffolded by [Code Scaffold](https://code-scaffold.com)*

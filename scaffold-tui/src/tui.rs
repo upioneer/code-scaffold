@@ -40,6 +40,13 @@ pub fn map_key_to_action(key: KeyEvent) -> Action {
             _ => {}
         }
     }
+    if key.modifiers.contains(KeyModifiers::SHIFT) {
+        match key.code {
+            KeyCode::Char('A') | KeyCode::Char('a') => return Action::AgentInstructions,
+            KeyCode::Char('O') | KeyCode::Char('o') => return Action::OpenIde,
+            _ => {}
+        }
+    }
     match key.code {
         KeyCode::Esc => Action::Quit,
         KeyCode::Up => Action::Up,

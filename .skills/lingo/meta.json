@@ -1,0 +1,14 @@
+{
+  "label": "Lingo",
+  "description": "Deterministic shorthand glossary that maps user lingo, acronyms, and abbreviations to their full meanings for faster, unambiguous communication.",
+  "version": "2",
+  "target": ".skills/lingo",
+  "logo": [
+    "  ██╗     ██╗███╗   ██╗ ██████╗  ██████╗   ",
+    "  ██║     ██║████╗  ██║██╔════╝ ██╔═══██╗  ",
+    "  ██║     ██║██╔██╗ ██║██║  ███╗██║   ██║  ",
+    "  ██║     ██║██║╚██╗██║██║   ██║██║   ██║  ",
+    "  ███████╗██║██║ ╚████║╚██████╔╝╚██████╔╝  ",
+    "  ╚══════╝╚═╝╚═╝  ╚═══╝ ╚═════╝  ╚═════╝   "
+  ]
+}
