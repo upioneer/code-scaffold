@@ -55,9 +55,9 @@ Allow an external remote agent (like Hermes/OpenClaw running on Proxmox LXC/VPS)
 # Project Tasks
 * [ ] Update "SCAFFOLD" in the splash screen to Terminal UI (TUI) design, specifically utilizing Braille Patterns (Unicode block U+2800 to U+28FF) for high-density graphics and ASCII Art for the large headers. Replace current ASCII art with "braille animations" 
 * [x] Implement graceful auto-updates for the frontend CLI binary (prompt user when new version is available)
-* [ ] "Open Code-Scaffold in new tab" integration for VS Code/Antigravity (similar to OpenCode or Claude Code) for QoL enhancement.
-* [ ] Add a specific modal guiding users to take advantage of the agentic workflow/agent harness capabilities. Point users to the `code-scaffold` skill (e.g. "Press [Shift+A] for Agent instructions").
-* [ ] Re-implement QR code in Summary Pane linking to project website (code-scaffold.web.app).
+* [x] "Open Code-Scaffold in new tab" integration for VS Code/Antigravity (similar to OpenCode or Claude Code) for QoL enhancement.
+* [x] Add a specific modal guiding users to take advantage of the agentic workflow/agent harness capabilities. Point users to the `code-scaffold` skill (e.g. "Press [Shift+A] for Agent instructions").
+* [ ] Re-implement QR code in Summary Pane linking to project website (code-scaffold.com).
 * [x] Integrate `vhs` (Charmbracelet) into the `bump_version.ps1` script to automatically generate high-quality GIF/PNG screenshots for the `project_details/history` docs going forward.
 ## Completed
 * [x] **Profile-Specific Testing Suites**: Dynamically provisions tailored verification harnesses (web-dev, database, systems-auto) with async pre-flight checks and auto-pairing UI toggles (v3.6.0).

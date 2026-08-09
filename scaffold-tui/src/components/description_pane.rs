@@ -10,7 +10,7 @@ use ratatui::style::{Modifier, Style};
 use ratatui::text::{Line, Span};
 use ratatui::widgets::{Block, Borders, Paragraph, Wrap};
 
-const SITE_URL: &str = "https://code-scaffold.web.app";
+const SITE_URL: &str = "https://code-scaffold.com";
 
 /// A static description table mapping item labels to human-readable descriptions.
 fn item_description(label: &str) -> &'static str {

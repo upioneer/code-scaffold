@@ -1,0 +1,8 @@
+{
+  "name": "lingo",
+  "version": "2",
+  "description": "Deterministic shorthand glossary that maps user lingo, acronyms, and abbreviations to their full meanings for faster, unambiguous communication.",
+  "entryPoint": "./SKILL.md",
+  "engines": {},
+  "requiredPermissions": []
+}

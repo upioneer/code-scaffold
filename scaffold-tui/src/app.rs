@@ -49,6 +49,7 @@ pub enum WizardState {
     AgentCopilotTimerSelection,
     AgentCopilot,
     ConfirmExit,
+    AgentInstructionsModal,
 }
 
 #[derive(Debug, Clone)]
@@ -799,6 +800,23 @@ impl App {
                     let area = Self::centered_rect(40, 30, size);
                     f.render_widget(ratatui::widgets::Clear, area);
                     f.render_widget(popup_block, area);
+                } else if self.wizard_state == WizardState::AgentInstructionsModal {
+                    let text = "Agent Harness Mode\n\nTo hook an AI agent into this project's scaffolding system, invoke the agent in this directory and direct it to use the Code Scaffold skill.\n\nExample Prompt:\n\"Initialize a new feature using the code-scaffold skill\"\n\nPress [Esc] or [Shift+A] to close this modal.";
+                    let lines = Self::format_highlighted_lines(text, &self.theme);
+                    let popup_block = ratatui::widgets::Paragraph::new(lines)
+                        .wrap(ratatui::widgets::Wrap { trim: false })
+                        .alignment(ratatui::layout::Alignment::Center)
+                        .block(
+                            ratatui::widgets::Block::default()
+                                .title(" Agent Instructions ")
+                                .borders(ratatui::widgets::Borders::ALL)
+                                .border_style(ratatui::style::Style::default().fg(self.theme.accent))
+                                .style(ratatui::style::Style::default().bg(self.theme.bg).fg(self.theme.text))
+                                .padding(ratatui::widgets::Padding::new(2, 2, 1, 1))
+                        );
+                    let area = Self::centered_rect(60, 40, size);
+                    f.render_widget(ratatui::widgets::Clear, area);
+                    f.render_widget(popup_block, area);
                 }
             })?;
 
@@ -1225,11 +1243,28 @@ impl App {
                     }
                 }
             }
+            Action::AgentInstructions => {
+                if self.wizard_state == WizardState::AgentInstructionsModal {
+                    self.wizard_state = WizardState::DeploymentTarget;
+                } else {
+                    self.wizard_state = WizardState::AgentInstructionsModal;
+                }
+            }
+            Action::OpenIde => {
+                if !self.target_folder.is_empty() {
+                    let _ = std::process::Command::new("code")
+                        .arg(&self.target_folder)
+                        .spawn();
+                    let _ = std::process::Command::new("agy")
+                        .arg(&self.target_folder)
+                        .spawn();
+                }
+            }
             Action::Quit => match self.wizard_state {
                 WizardState::DeploymentTarget => {
                     self.wizard_state = WizardState::ConfirmExit;
                 }
-                WizardState::ConfirmExit => {
+                WizardState::ConfirmExit | WizardState::AgentInstructionsModal => {
                     self.wizard_state = WizardState::DeploymentTarget;
                 }
                 WizardState::Executing | WizardState::UpdateComplete | WizardState::Complete => {
@@ -1927,7 +1962,8 @@ impl App {
                     | WizardState::ThemeAccentInput
                     | WizardState::AgentCopilotTimerSelection
                     | WizardState::AgentCopilot
-                    | WizardState::AgentOverwritePrompt => {}
+                    | WizardState::AgentOverwritePrompt
+                    | WizardState::AgentInstructionsModal => {}
                 }
                 self.update_summary();
             }
