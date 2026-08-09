@@ -19,4 +19,6 @@ pub enum Action {
     Execute,
     Char(char),
     Backspace,
+    AgentInstructions,
+    OpenIde,
 }
