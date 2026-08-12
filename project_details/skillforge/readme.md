@@ -8,7 +8,8 @@ The **SkillForge Protocol** is an administrative, developer-side routine designe
 
 1. **Market Pulse Auditing**: The protocol actively scrapes live OEM documentation and market trends to identify deprecations (e.g., outdated API endpoints or deprecated CI/CD versions) and seamlessly patches the internal skill templates to match state-of-the-art standards.
 2. **Cross-Skill Synthesis**: It maps the `.skills` directory to identify topological overlap. When synergies are found, SkillForge generates curated, multi-skill integration templates—such as teaching an agent how to bridge `tldraw` spatial canvases with `A2UI` declarative components.
-3. **Rigid Skill Incubation**: Whenever a net-new skill is requested, SkillForge forces the creation pipeline through strict Code Scaffold architectural compliance. It demands the generation of `meta.json`, ad-hoc CLI distribution manifests, and highly sophisticated `SKILL.md` cognitive instructions that embed AI-specific value adds (like headless bypasses or GitHub Action workflows).
+3. **Execution Paradigm Routing**: It enforces a dual-path deployment model. For highly repeatable workflows, it mandates the generation of declarative YAML workflows instead of raw scripts or soft agent instructions, guaranteeing identical, parseable execution on every run.
+4. **Rigid Skill Incubation**: Whenever a net-new skill is requested, SkillForge forces the creation pipeline through strict Code Scaffold architectural compliance. It demands the generation of `meta.json`, ad-hoc CLI distribution manifests, and highly sophisticated `SKILL.md` cognitive instructions that embed AI-specific value adds (like headless bypasses or GitHub Action workflows).
 
 ## Current Ecosystem Topology
 
