@@ -1,6 +1,6 @@
 [package]
 name = "scaffold-tui"
-version = "7.16.2"
+version = "7.17.1"
 edition = "2021"
 
 [dependencies]

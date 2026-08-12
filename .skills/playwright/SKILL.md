@@ -1,18 +1,17 @@
 ---
 name: playwright_automation
-description: Complete browser automation with Playwright. Auto-detects dev servers, writes clean test scripts to /tmp. Test pages, fill forms, take screenshots, check responsive design, validate UX, test login flows, check links, automate any browser task. Use when user wants to test websites, automate browser interactions, validate web functionality, or perform any browser-based testing.
+description: Complete browser automation with Playwright. Auto-detects dev servers, authors declarative YAML workflows for deterministic testing. Test pages, fill forms, take screenshots, validate UX. Use when user wants to test websites, automate browser interactions, or perform browser-based testing.
 ---
 
 **IMPORTANT - Path Resolution:**
 This skill can be installed in different locations (plugin system, manual installation, global, or project-specific). Before executing any commands, determine the skill directory based on where you loaded this SKILL.md file, and use that path in all commands below. Replace `$SKILL_DIR` with the actual discovered path.
 
 Common installation paths:
-
 - Plugin system: `~/.claude/plugins/marketplaces/playwright-skill/skills/playwright-skill`
 - Manual global: `~/.claude/skills/playwright-skill`
 - Project-specific: `<project>/.claude/skills/playwright-skill`
 
-General-purpose browser automation skill. I'll write custom Playwright code for any automation task you request and execute it via the universal executor.
+General-purpose browser automation skill. I will orchestrate browser automation tasks using rigid, declarative YAML workflows rather than executing opaque javascript scripts, guaranteeing deterministic execution.
 
 **CRITICAL WORKFLOW - Follow these steps in order:**
 
@@ -26,27 +25,18 @@ General-purpose browser automation skill. I'll write custom Playwright code for 
    - If **multiple servers found**: Ask user which one to test
    - If **no servers found**: Ask for URL or offer to help start dev server
 
-2. **Write scripts to /tmp** - NEVER write test files to skill directory; always use `/tmp/playwright-test-*.js`
+2. **Author YAML Workflows** - NEVER write raw JS test scripts to `/tmp`. Always author declarative YAML workflow definitions in the `workflows/` directory.
 
-3. **Use visible browser by default** - Always use `headless: false` unless user specifically requests headless mode
+3. **Use visible browser by default** - Always set `headless: false` in the YAML config unless user specifically requests headless mode.
 
-4. **Parameterize URLs** - Always make URLs configurable via environment variable or constant at top of script
+4. **Parameterize URLs** - Always make URLs configurable via CEL expressions (e.g. `${env.TARGET_URL}`).
 
 ## How It Works
 1. You describe what you want to test/automate
 2. I auto-detect running dev servers (or ask for URL if testing external site)
-3. I write custom Playwright code in `/tmp/playwright-test-*.js` (won't clutter your project)
-4. I execute it via: `cd $SKILL_DIR && node run.js /tmp/playwright-test-*.js`
-5. Results displayed in real-time, browser window visible for debugging
-6. Test files auto-cleaned from /tmp by your OS
-
-## Setup (First Time)
-```bash
-cd $SKILL_DIR
-npm run setup
-```
-
-This installs Playwright and Chromium browser. Only needed once.
+3. I author a custom declarative Playwright YAML workflow in the `workflows/` directory.
+4. I execute it via the native manifest engine: `code-scaffold run workflows/test-*.yaml`
+5. Results are parsed by the engine safely without evaluating arbitrary Javascript.
 
 ## Execution Pattern
 **Step 1: Detect dev servers (for localhost testing)**
@@ -55,266 +45,109 @@ This installs Playwright and Chromium browser. Only needed once.
 cd $SKILL_DIR && node -e "require('./lib/helpers').detectDevServers().then(s => console.log(JSON.stringify(s)))"
 ```
 
-**Step 2: Write test script to /tmp with URL parameter**
+**Step 2: Author declarative YAML workflow**
 
-```javascript
-// /tmp/playwright-test-page.js
-const { chromium } = require('playwright');
-
-// Parameterized URL (detected or user-provided)
-const TARGET_URL = 'http://localhost:3001'; // <-- Auto-detected or from user
-
-(async () => {
-  const browser = await chromium.launch({ headless: false });
-  const page = await browser.newPage();
-
-  await page.goto(TARGET_URL);
-  console.log('Page loaded:', await page.title());
-
-  await page.screenshot({ path: '/tmp/screenshot.png', fullPage: true });
-  console.log('📸 Screenshot saved to /tmp/screenshot.png');
-
-  await browser.close();
-})();
+```yaml
+# workflows/test-page.yaml
+name: Basic Page Load Test
+trigger: manual
+jobs:
+  test_load:
+    steps:
+      - name: Launch Browser
+        model: browser/playwright
+        method: launch
+        args:
+          headless: false
+      - name: Navigate
+        model: browser/playwright
+        method: goto
+        args:
+          url: ${env.TARGET_URL}
+      - name: Capture Screenshot
+        model: browser/playwright
+        method: screenshot
+        args:
+          path: /tmp/screenshot.png
+          fullPage: true
 ```
 
-**Step 3: Execute from skill directory**
+**Step 3: Execute via the Scaffold Engine**
 
 ```bash
-cd $SKILL_DIR && node run.js /tmp/playwright-test-page.js
+cd $SKILL_DIR && code-scaffold run workflows/test-page.yaml
 ```
 
-### Test a Page (Multiple Viewports)
-```javascript
-// /tmp/playwright-test-responsive.js
-const { chromium } = require('playwright');
-
-const TARGET_URL = 'http://localhost:3001'; // Auto-detected
-
-(async () => {
-  const browser = await chromium.launch({ headless: false, slowMo: 100 });
-  const page = await browser.newPage();
-
-  // Desktop test
-  await page.setViewportSize({ width: 1920, height: 1080 });
-  await page.goto(TARGET_URL);
-  console.log('Desktop - Title:', await page.title());
-  await page.screenshot({ path: '/tmp/desktop.png', fullPage: true });
-
-  // Mobile test
-  await page.setViewportSize({ width: 375, height: 667 });
-  await page.screenshot({ path: '/tmp/mobile.png', fullPage: true });
-
-  await browser.close();
-})();
+### Test Login Flow (Declarative)
+```yaml
+# workflows/test-login.yaml
+name: Authentication Flow
+trigger: manual
+jobs:
+  login:
+    steps:
+      - name: Launch Browser
+        model: browser/playwright
+        method: launch
+        args:
+          headless: false
+      - name: Navigate to Login
+        model: browser/playwright
+        method: goto
+        args:
+          url: ${env.TARGET_URL}/login
+      - name: Fill Email
+        model: browser/playwright
+        method: fill
+        args:
+          selector: 'input[name="email"]'
+          value: ${vault.test_email}
+      - name: Fill Password
+        model: browser/playwright
+        method: fill
+        args:
+          selector: 'input[name="password"]'
+          value: ${vault.test_password}
+      - name: Submit
+        model: browser/playwright
+        method: click
+        args:
+          selector: 'button[type="submit"]'
+      - name: Verify Redirect
+        model: browser/playwright
+        method: waitForURL
+        args:
+          url: '**/dashboard'
 ```
 
-### Test Login Flow
-```javascript
-// /tmp/playwright-test-login.js
-const { chromium } = require('playwright');
-
-const TARGET_URL = 'http://localhost:3001'; // Auto-detected
-
-(async () => {
-  const browser = await chromium.launch({ headless: false });
-  const page = await browser.newPage();
-
-  await page.goto(`${TARGET_URL}/login`);
-
-  await page.fill('input[name="email"]', 'test@example.com');
-  await page.fill('input[name="password"]', 'password123');
-  await page.click('button[type="submit"]');
-
-  // Wait for redirect
-  await page.waitForURL('**/dashboard');
-  console.log('✅ Login successful, redirected to dashboard');
-
-  await browser.close();
-})();
-```
-
-### Fill and Submit Form
-```javascript
-// /tmp/playwright-test-form.js
-const { chromium } = require('playwright');
-
-const TARGET_URL = 'http://localhost:3001'; // Auto-detected
-
-(async () => {
-  const browser = await chromium.launch({ headless: false, slowMo: 50 });
-  const page = await browser.newPage();
-
-  await page.goto(`${TARGET_URL}/contact`);
-
-  await page.fill('input[name="name"]', 'John Doe');
-  await page.fill('input[name="email"]', 'john@example.com');
-  await page.fill('textarea[name="message"]', 'Test message');
-  await page.click('button[type="submit"]');
-
-  // Verify submission
-  await page.waitForSelector('.success-message');
-  console.log('✅ Form submitted successfully');
-
-  await browser.close();
-})();
-```
-
-### Check for Broken Links
-```javascript
-const { chromium } = require('playwright');
-
-(async () => {
-  const browser = await chromium.launch({ headless: false });
-  const page = await browser.newPage();
-
-  await page.goto('http://localhost:3000');
-
-  const links = await page.locator('a[href^="http"]').all();
-  const results = { working: 0, broken: [] };
-
-  for (const link of links) {
-    const href = await link.getAttribute('href');
-    try {
-      const response = await page.request.head(href);
-      if (response.ok()) {
-        results.working++;
-      } else {
-        results.broken.push({ url: href, status: response.status() });
-      }
-    } catch (e) {
-      results.broken.push({ url: href, error: e.message });
-    }
-  }
-
-  console.log(`✅ Working links: ${results.working}`);
-  console.log(`❌ Broken links:`, results.broken);
-
-  await browser.close();
-})();
-```
-
-### Take Screenshot with Error Handling
-```javascript
-const { chromium } = require('playwright');
-
-(async () => {
-  const browser = await chromium.launch({ headless: false });
-  const page = await browser.newPage();
-
-  try {
-    await page.goto('http://localhost:3000', {
-      waitUntil: 'networkidle',
-      timeout: 10000,
-    });
-
-    await page.screenshot({
-      path: '/tmp/screenshot.png',
-      fullPage: true,
-    });
-
-    console.log('📸 Screenshot saved to /tmp/screenshot.png');
-  } catch (error) {
-    console.error('❌ Error:', error.message);
-  } finally {
-    await browser.close();
-  }
-})();
-```
-
-## Inline Execution (Simple Tasks)
-For quick one-off tasks, you can execute code inline without creating files:
-
-```bash
-# Take a quick screenshot
-cd $SKILL_DIR && node run.js "
-const browser = await chromium.launch({ headless: false });
-const page = await browser.newPage();
-await page.goto('http://localhost:3001');
-await page.screenshot({ path: '/tmp/quick-screenshot.png', fullPage: true });
-console.log('Screenshot saved');
-await browser.close();
-"
-```
-
-**When to use inline vs files:**
-
-- **Inline**: Quick one-off tasks (screenshot, check if element exists, get page title)
-- **Files**: Complex tests, responsive design checks, anything user might want to re-run
-
-## Available Helpers
-Optional utility functions in `lib/helpers.js`:
-
-```javascript
-const helpers = require('./lib/helpers');
-
-// Detect running dev servers (CRITICAL - use this first!)
-const servers = await helpers.detectDevServers();
-console.log('Found servers:', servers);
-
-// Safe click with retry
-await helpers.safeClick(page, 'button.submit', { retries: 3 });
-
-// Safe type with clear
-await helpers.safeType(page, '#username', 'testuser');
-
-// Take timestamped screenshot
-await helpers.takeScreenshot(page, 'test-result');
-
-// Handle cookie banners
-await helpers.handleCookieBanner(page);
-
-// Extract table data
-const data = await helpers.extractTableData(page, 'table.results');
-```
-
-## Custom HTTP Headers
-Configure custom headers for all HTTP requests via environment variables. Useful for:
-
-- Identifying automated traffic to your backend
-- Getting LLM-optimized responses (e.g., plain text errors instead of styled HTML)
-- Adding authentication tokens globally
-
-### Configuration
-**Single header (common case):**
-
-```bash
-PW_HEADER_NAME=X-Automated-By PW_HEADER_VALUE=playwright-skill \
-  cd $SKILL_DIR && node run.js /tmp/my-script.js
-```
-
-**Multiple headers (JSON format):**
-
-```bash
-PW_EXTRA_HEADERS='{"X-Automated-By":"playwright-skill","X-Debug":"true"}' \
-  cd $SKILL_DIR && node run.js /tmp/my-script.js
-```
-
-### How It Works
-Headers are automatically applied when using `helpers.createContext()`:
-
-```javascript
-const context = await helpers.createContext(browser);
-const page = await context.newPage();
-// All requests from this page include your custom headers
-```
-
-For scripts using raw Playwright API, use the injected `getContextOptionsWithHeaders()`:
-
-```javascript
-const context = await browser.newContext(
-  getContextOptionsWithHeaders({ viewport: { width: 1920, height: 1080 } }),
-);
+### Check for Broken Links (Declarative)
+```yaml
+# workflows/test-links.yaml
+name: Broken Link Auditor
+trigger: manual
+jobs:
+  audit_links:
+    steps:
+      - name: Launch Browser
+        model: browser/playwright
+        method: launch
+        args:
+          headless: false
+      - name: Navigate
+        model: browser/playwright
+        method: goto
+        args:
+          url: ${env.TARGET_URL}
+      - name: Extract and Verify Links
+        model: browser/playwright
+        method: audit_links
+        args:
+          selector: 'a[href^="http"]'
+          fail_on_404: true
 ```
 
 ## Tips
-- **CRITICAL: Detect servers FIRST** - Always run `detectDevServers()` before writing test code for localhost testing
-- **Custom headers** - Use `PW_HEADER_NAME`/`PW_HEADER_VALUE` env vars to identify automated traffic to your backend
-- **Use /tmp for test files** - Write to `/tmp/playwright-test-*.js`, never to skill directory or user's project
-- **Parameterize URLs** - Put detected/provided URL in a `TARGET_URL` constant at the top of every script
-- **DEFAULT: Visible browser** - Always use `headless: false` unless user explicitly asks for headless mode
-- **Headless mode** - Only use `headless: true` when user specifically requests "headless" or "background" execution
-- **Slow down:** Use `slowMo: 100` to make actions visible and easier to follow
-- **Wait strategies:** Use `waitForURL`, `waitForSelector`, `waitForLoadState` instead of fixed timeouts
-- **Error handling:** Always use try-catch for robust automation
-- **Console output:** Use `console.log()` to track progress and show what's happening
+- **CRITICAL: Detect servers FIRST** - Always run server detection before writing workflows for localhost testing
+- **Declarative Only** - You must use YAML workflows modeled on the SkillForge Swamp Protocol. Do not write JS.
+- **Zero-Trust Secrets** - Never hardcode passwords. Always use CEL expression injection like `${vault.test_password}`.
+- **DEFAULT: Visible browser** - Always set `headless: false` in your YAML unless user explicitly asks for headless mode
