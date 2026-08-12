@@ -12,7 +12,7 @@ Hide
 Type "cd scaffold-tui && clear"
 Enter
 Show
-Type "./target/debug/code-scaffold"
+Type "./target/debug/code-scaffold.exe"
 Enter
 
 # Wait for the welcome splash screen

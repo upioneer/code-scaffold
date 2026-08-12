@@ -27,7 +27,10 @@ When an AI agent is instructed to "Run the SkillForge Protocol", it must adhere 
 ### Phase 3: Net-New Incubation Pipeline
 When generating a *new* skill, agents MUST strictly follow this pipeline without skipping steps:
 1. **Deep Ingestion:** Read all available OEM documentation.
-2. **AI Value-Add:** Do not just write a wrapper. Brainstorm and embed workflows optimized specifically for headless AI operations (e.g., bypassing Cloudflare, silent testing loops, pre-configured GitHub Actions).
+2. **Execution Paradigm Routing:** Before writing any logic, evaluate if the workflow requires highly repeatable, identical deterministic outcomes. You MUST either explicitly prompt the user for their preference, or use deep reasoning to route the skill into one of two paths:
+   - *Soft Agent Instructions:* For fluid, context-dependent workflows where the agent operates autonomously based on `SKILL.md` cognitive guidelines.
+   - *Declarative Workflows:* For rigid, identical processes. Author and bundle declarative YAML workflows (e.g., `workflow.yaml`) inside a `workflows/` subdirectory within the skill. These workflows must use typed models and expressions to orchestrate method executions across jobs and steps, completely replacing raw bash/PowerShell scripts. The `SKILL.md` must instruct future agents to execute these YAML definitions via the core engine rather than reasoning through steps manually.
+3. **AI Value-Add:** Do not just write a wrapper. Brainstorm and embed workflows optimized specifically for headless AI operations (e.g., bypassing Cloudflare, silent testing loops, pre-configured GitHub Actions).
 3. **Scaffolding Compliance:**
    - Provision a strictly validated `meta.json`.
    - Provision an ad-hoc distribution `skill-manifest.json`.
