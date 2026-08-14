@@ -1,0 +1,14 @@
+{
+  "name": "react-modernization",
+  "version": "1.0.0",
+  "description": "Comprehensive guide and references for modern React 19 development, best practices, validatons, and UI styling.",
+  "entryPoint": "./SKILL.md",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "requiredPermissions": [
+    "fs:read",
+    "fs:write",
+    "net:connect"
+  ]
+}

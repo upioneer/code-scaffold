@@ -40,6 +40,7 @@ This directory contains complex code payloads (skills) that the Code Scaffold en
 | **Proxmox** | Proxmox VE LXC toolbox for building reusable templates, baseline app deployments, and SSH hardening. | v2 | `.skills/proxmox` |
 | **Quarto Scientific Publishing** | Scientific and technical publishing system for dynamically generating books, websites, dashboards, and presentations. | v1 | `.skills/quarto` |
 | **Ratatui TUI Framework** | Build Terminal User Interfaces (TUI) using Ratatui in Rust. | v4 | `.skills/ratatui` |
+| **React Modernization** | Comprehensive React 19 playbook for architectural standards, validations, and design engineering using modern UI frameworks. | v1 | `.skills/react-modernization` |
 | **Resend** | Sends emails using the Resend API | v2 | `.skills/resend` |
 | **Reveal.js** | Comprehensive toolkit and knowledge base for scaffolding, configuring, and exporting Reveal.js presentations. | v2 | `.skills/revealjs` |
 | **Rust** | Orchestrates Rust workspace topologies, optimized compilation profiles, and local automation scripts. | v1 | `.skills/rust` |
