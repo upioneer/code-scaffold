@@ -113,7 +113,13 @@ To build a standalone cinematic scrollytelling page (like Kage), follow this DOM
         <div class="fg-el fg-wall"><img src="wall.webp" alt=""></div>
         <div class="fg-el fg-pine"><img src="pine.webp" alt=""></div>
       </div>
-    </section>
   </main>
 </body>
 ```
+
+---
+
+## 7. Bundled Visual Demo (Sandbox)
+
+This skill ships with a working cinematic visual demo proving out the Zero-Build WebGL and GSAP architecture. 
+Agents should reference or copy the file located at `.skills/scrollytelling/sandbox/index.html` to provide users with a tangible, ready-to-use starting point for high-fidelity scrollytelling.

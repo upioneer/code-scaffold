@@ -1,118 +1,396 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scrollytelling - Sandbox</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <style>
-        body { margin: 0; padding: 0; width: 100vw; min-height: 100vh; overflow-x: hidden; background-color: #020617; color: #f8fafc; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
-        .glass-panel { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(34, 211, 238, 0.2); }
-        .ascii-logo { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; white-space: pre; line-height: 1.2; font-size: 0.6rem; }
-        @media (min-width: 768px) { .ascii-logo { font-size: 0.8rem; } }
-        .grid-bg { background-image: radial-gradient(rgba(34, 211, 238, 0.1) 1px, transparent 1px); background-size: 30px 30px; }
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: #0f172a; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #475569; }
-        
-        /* Pulse Animation for Terminal Cursor */
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-        .cursor { display: inline-block; width: 8px; height: 1.2em; background-color: #22d3ee; vertical-align: text-bottom; animation: blink 1s step-end infinite; }
-    </style>
-</head>
-<body class="grid-bg relative antialiased selection:bg-cyan-500/30">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Scrollytelling Cinematic Demo - Flash Edition</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Inter:wght@300;400;600&display=swap');
+
+    :root {
+      --bg-dark: #050505;
+      --accent: #ff2a00;
+      --accent-alt: #00e5ff;
+      --text: #ffffff;
+    }
     
-    <!-- Background Glow -->
-    <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-cyan-600/10 rounded-full blur-[150px] pointer-events-none"></div>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    <!-- Sticky Header -->
-    <header class="sticky top-0 z-50 glass-panel border-x-0 border-t-0 border-b-slate-800/80 px-6 py-4">
-        <div class="max-w-6xl mx-auto flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded bg-cyan-500/20 flex items-center justify-center border border-cyan-500/50 text-cyan-400 font-bold">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                </div>
-                <h1 class="text-xl font-black uppercase tracking-widest text-white">Scrollytelling</h1>
-            </div>
-            <span class="px-3 py-1 bg-cyan-500/10 text-cyan-400 text-xs font-bold rounded-full border border-cyan-500/30 uppercase tracking-widest hidden sm:inline-block">v2</span>
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      cursor: crosshair;
+    }
+
+    /* WebGL Background */
+    #gl-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Cinematic Noise & Vignette Overlay */
+    #fx-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background: 
+        radial-gradient(circle at center, transparent 30%, rgba(0,0,0,0.95) 100%),
+        url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)" opacity="0.08"/%3E%3C/svg%3E');
+    }
+
+    /* Huge Background Typography */
+    .bg-text {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Syncopate', sans-serif;
+      font-size: 15vw;
+      font-weight: 700;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(255, 255, 255, 0.05);
+      z-index: 2;
+      pointer-events: none;
+      white-space: nowrap;
+      mix-blend-mode: overlay;
+    }
+
+    main { position: relative; z-index: 10; }
+
+    section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      padding: 5vw;
+    }
+
+    /* Glassmorphic Editorial Cards */
+    .editorial-card {
+      background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-top: 1px solid rgba(255,255,255,0.15);
+      border-left: 1px solid rgba(255,255,255,0.15);
+      padding: 4rem;
+      max-width: 650px;
+      border-radius: 2px;
+      opacity: 0;
+      transform: translateY(100px) rotateX(10deg);
+      box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .editorial-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%; width: 50%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+      transform: skewX(-20deg);
+      animation: shine 8s infinite;
+    }
+    @keyframes shine {
+      0% { left: -100%; }
+      20% { left: 200%; }
+      100% { left: 200%; }
+    }
+
+    .editorial-card h2 {
+      font-family: 'Syncopate', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      background: linear-gradient(to right, #fff, #888);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .editorial-card p {
+      font-size: 1.15rem;
+      line-height: 1.8;
+      color: #a0a0a0;
+      font-weight: 300;
+    }
+
+    /* Pinned High-Tech Exploded View */
+    .pin-section {
+      height: 400vh;
+      display: block; 
+    }
+    .pin-container {
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      perspective: 1000px;
+    }
+
+    /* Exploded HUD Rings */
+    .hud-ring {
+      position: absolute;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
+
+    .hud-core {
+      width: 150px; height: 150px;
+      border: 2px solid var(--accent);
+      background: radial-gradient(circle, rgba(255,42,0,0.4) 0%, transparent 70%);
+      box-shadow: 0 0 50px rgba(255,42,0,0.5), inset 0 0 30px rgba(255,42,0,0.5);
+      z-index: 30;
+    }
+    .hud-core::after {
+      content: 'CORE // 01';
+      font-family: 'Syncopate', sans-serif;
+      font-size: 10px;
+      color: var(--accent);
+      letter-spacing: 2px;
+    }
+
+    .hud-shell {
+      width: 350px; height: 350px;
+      border: 1px dashed rgba(255,255,255,0.3);
+      border-top: 4px solid #fff;
+      border-bottom: 4px solid #fff;
+      z-index: 20;
+    }
+
+    .hud-armor {
+      width: 600px; height: 600px;
+      border: 1px solid rgba(0, 229, 255, 0.2);
+      border-left: 2px solid var(--accent-alt);
+      border-right: 2px solid var(--accent-alt);
+      background: radial-gradient(circle, transparent 50%, rgba(0,229,255,0.05) 100%);
+      z-index: 10;
+    }
+
+    /* Scroll Indicator */
+    .scroll-indicator {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      opacity: 0.6;
+    }
+    .mouse {
+      width: 24px; height: 36px;
+      border: 2px solid #fff;
+      border-radius: 12px;
+      position: relative;
+    }
+    .wheel {
+      width: 4px; height: 8px;
+      background: #fff;
+      border-radius: 2px;
+      position: absolute;
+      top: 6px; left: 50%;
+      transform: translateX(-50%);
+      animation: scroll 1.5s infinite;
+    }
+    @keyframes scroll { 0% { top: 6px; opacity: 1; } 100% { top: 20px; opacity: 0; } }
+
+  </style>
+</head>
+<body>
+
+  <!-- WebGL Background -->
+  <canvas id="gl-canvas"></canvas>
+
+  <!-- Noise, Vignette, and BG Typography -->
+  <div id="fx-layer"></div>
+  <div class="bg-text" id="bg-typography">SCROLLYTELLING</div>
+
+  <!-- Editorial Content -->
+  <main>
+    <section id="scene-1" style="justify-content: flex-start;">
+      <div class="editorial-card gs-reveal">
+        <h2>Cinematic<br>Immersion</h2>
+        <p>The viewport is no longer a static document. It is a realtime, reactive canvas. As you scroll, you manipulate the camera array, the rendering loop, and the physics of the environment.</p>
+      </div>
+      <div class="scroll-indicator">
+        <div class="mouse"><div class="wheel"></div></div>
+        <span style="font-family:'Syncopate', sans-serif; font-size:10px; letter-spacing:2px;">INITIATE</span>
+      </div>
+    </section>
+
+    <!-- Exploded View Pin Track -->
+    <div class="pin-section" id="scene-2">
+      <div class="pin-container">
+        <div class="editorial-card gs-reveal" id="explosion-text" style="position: absolute; left: 5vw; z-index: 50; max-width: 400px; padding: 2.5rem;">
+          <h2 style="font-size: 1.5rem; color: var(--accent-alt);">Spatial Explosion</h2>
+          <p style="font-size: 0.95rem;">By pinning the viewport, we hijack the scrollbar to scrub through spatial keyframes. Observe the HUD elements detaching across the Z-axis, driven entirely by scroll velocity.</p>
         </div>
-    </header>
 
-    <main class="max-w-6xl mx-auto px-6 py-12 relative z-10 space-y-16">
+        <div class="hud-ring hud-core" id="h-core"></div>
+        <div class="hud-ring hud-shell" id="h-shell"></div>
+        <div class="hud-ring hud-armor" id="h-armor"></div>
+      </div>
+    </div>
+
+    <section id="scene-3" style="justify-content: flex-end;">
+      <div class="editorial-card gs-reveal" style="text-align: right;">
+        <h2 style="background: linear-gradient(to left, var(--accent), #fff); -webkit-background-clip: text;">Zero-Build Power</h2>
+        <p>Powered by Three.js, GSAP, and Lenis. We achieve sub-millisecond interpolation and hardware-accelerated 3D rendering without a single bundler step.</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1/bundled/lenis.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    // 1. Smooth Scrolling (Lenis)
+    const lenis = new Lenis({ duration: 1.5, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smooth: true });
+    function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+    requestAnimationFrame(raf);
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add((t) => lenis.raf(t * 1000));
+    gsap.ticker.lagSmoothing(0);
+
+    // 2. High-Fidelity Three.js Scene
+    const canvas = document.getElementById('gl-canvas');
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2(0x050505, 0.04);
+    
+    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.z = 15;
+
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: "high-performance" });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    // Create a massive wireframe geometric core
+    const geometry = new THREE.IcosahedronGeometry(8, 2);
+    const material = new THREE.MeshStandardMaterial({ 
+      color: 0xff2a00, 
+      wireframe: true,
+      emissive: 0xff0000,
+      emissiveIntensity: 0.5,
+      transparent: true,
+      opacity: 0.8
+    });
+    const geoMesh = new THREE.Mesh(geometry, material);
+    scene.add(geoMesh);
+
+    // Create orbiting satellite rings
+    const ringGeo = new THREE.TorusGeometry(12, 0.05, 16, 100);
+    const ringMat = new THREE.MeshBasicMaterial({ color: 0x00e5ff, transparent: true, opacity: 0.3 });
+    const ring1 = new THREE.Mesh(ringGeo, ringMat);
+    const ring2 = new THREE.Mesh(ringGeo, ringMat);
+    ring1.rotation.x = Math.PI / 2;
+    ring2.rotation.y = Math.PI / 3;
+    scene.add(ring1, ring2);
+
+    // Lights
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
+    scene.add(ambientLight);
+    
+    const pointLight = new THREE.PointLight(0xffffff, 2, 50);
+    scene.add(pointLight);
+
+    // Mouse interactive lighting
+    let mouseX = 0; let mouseY = 0;
+    document.addEventListener('mousemove', (e) => {
+      mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+      mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+    });
+
+    // Animate WebGL based on Scroll
+    ScrollTrigger.create({
+      trigger: "body",
+      start: "top top",
+      end: "bottom bottom",
+      onUpdate: (self) => {
+        // Spin the geometry based on scroll velocity
+        geoMesh.rotation.y = self.progress * Math.PI * 4;
+        geoMesh.rotation.x = self.progress * Math.PI * 2;
         
-        <!-- Hero Section -->
-        <section id="hero" class="text-center max-w-4xl mx-auto space-y-8">
-            <div id="logo-container" class="p-6 bg-slate-950 rounded-xl border border-slate-800 shadow-inner w-full overflow-x-auto text-cyan-400 ascii-logo text-left flex justify-center mx-auto opacity-0 translate-y-8">
-  ███████╗ ██████╗██████╗  ██████╗ ██╗     ██╗  ██╗   ██╗████████╗███████╗██╗     ██╗     ██╗███╗   ██╗ ██████╗   
-  ██╔════╝██╔════╝██╔══██╗██╔═══██╗██║     ██║  ╚██╗ ██╔╝╚══██╔══╝██╔════╝██║     ██║     ██║████╗  ██║██╔════╝   
-  ███████╗██║     ██████╔╝██║   ██║██║     ██║   ╚████╔╝    ██║   █████╗  ██║     ██║     ██║██╔██╗ ██║██║  ███╗  
-  ╚════██║██║     ██╔══██╗██║   ██║██║     ██║    ╚██╔╝     ██║   ██╔══╝  ██║     ██║     ██║██║╚██╗██║██║   ██║  
-  ███████║╚██████╗██║  ██║╚██████╔╝███████╗███████╗██║      ██║   ███████╗███████╗███████╗██║██║ ╚████║╚██████╔╝  
-  ╚══════╝ ╚═════╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚══════╝╚═╝      ╚═╝   ╚══════╝╚══════╝╚══════╝╚═╝╚═╝  ╚═══╝ ╚═════╝   
-            </div>
-            
-            <p id="desc" class="text-lg md:text-xl text-slate-400 leading-relaxed opacity-0 translate-y-4">
-                Design architecture, workflows, and code implementations for scroll-triggered 3D model manipulation and interactive 'production explosion' views.
-            </p>
-        </section>
-
-        <!-- Context & Details -->
-        <section id="context" class="grid md:grid-cols-2 gap-8 opacity-0 translate-y-8">
-            
-            <div class="glass-panel p-8 rounded-2xl flex flex-col gap-4">
-                <div class="flex items-center gap-3 border-b border-slate-800/50 pb-4">
-                    <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
-                    <h3 class="text-xl font-bold text-white tracking-wide">Skill Context</h3>
-                </div>
-                <p class="text-slate-400 leading-relaxed">
-                    This sandbox provides a high-fidelity presentation layer for the <strong class="text-slate-200">scrollytelling</strong> skill. Whether this is an interactive GUI skill or a headless CI/CD backend integration, the Code Scaffold runtime seamlessly provisions its exact structural constraints directly into your workspace.
-                </p>
-            </div>
-
-            <div class="glass-panel p-8 rounded-2xl flex flex-col gap-4">
-                <div class="flex items-center gap-3 border-b border-slate-800/50 pb-4">
-                    <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                    <h3 class="text-xl font-bold text-white tracking-wide">CLI Deployment</h3>
-                </div>
-                <p class="text-slate-400 leading-relaxed mb-2">
-                    To inject this specialized knowledge graph and scaffolding payload directly into your project architecture, run the following command in your terminal:
-                </p>
-                <div class="relative flex items-center bg-slate-950 border border-slate-800 rounded-lg p-4 shadow-xl group cursor-pointer overflow-hidden">
-                    <div class="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg blur opacity-20 group-hover:opacity-40 transition duration-500"></div>
-                    <code class="relative text-cyan-400 font-mono text-sm md:text-base text-left w-full">npx @code-scaffold/skills install scrollytelling<span class="cursor"></span></code>
-                </div>
-            </div>
-
-        </section>
+        // Morph colors: Red to Blue
+        const r = 1 - self.progress;
+        const b = self.progress;
+        material.color.setRGB(r, 0.2, b);
+        material.emissive.setRGB(r, 0, b);
         
-        <div id="footer-spacer" class="h-12"></div>
-    </main>
+        // Move camera closer/further
+        camera.position.z = 15 - (self.progress * 8);
+      }
+    });
 
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const tl = gsap.timeline();
-            
-            tl.to("#logo-container", {
-                y: 0,
-                opacity: 1,
-                duration: 0.8,
-                ease: "back.out(1.4)"
-            })
-            .to("#desc", {
-                y: 0,
-                opacity: 1,
-                duration: 0.6,
-                ease: "power3.out"
-            }, "-=0.5")
-            .to("#context", {
-                y: 0,
-                opacity: 1,
-                duration: 0.8,
-                ease: "power3.out"
-            }, "-=0.4");
-        });
-    </script>
+    function renderThree() {
+      // Idle continuous rotation
+      ring1.rotation.z += 0.002;
+      ring2.rotation.x += 0.003;
+      
+      // Light follows mouse smoothly
+      pointLight.position.x += (mouseX * 15 - pointLight.position.x) * 0.05;
+      pointLight.position.y += (mouseY * 10 - pointLight.position.y) * 0.05;
+      pointLight.position.z = camera.position.z - 2;
+
+      renderer.render(scene, camera);
+      requestAnimationFrame(renderThree);
+    }
+    renderThree();
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    // 3. Cinematic DOM Animations
+    
+    // Background Typography Parallax
+    gsap.to("#bg-typography", {
+      scrollTrigger: { trigger: "body", start: "top top", end: "bottom bottom", scrub: true },
+      x: "-20vw", opacity: 0.1, scale: 1.5, letterSpacing: "0.2em"
+    });
+
+    // Reveal Cards
+    document.querySelectorAll('.gs-reveal').forEach(card => {
+      gsap.to(card, {
+        scrollTrigger: { trigger: card, start: "top 85%", end: "bottom 15%", toggleActions: "play reverse play reverse" },
+        y: 0, rotationX: 0, opacity: 1, duration: 1.5, ease: "power4.out"
+      });
+    });
+
+    // 4. High-Tech Exploded View (HUD Rings)
+    const tl = gsap.timeline({
+      scrollTrigger: { trigger: "#scene-2", start: "top top", end: "bottom bottom", scrub: 1.5 }
+    });
+
+    gsap.set(["#h-core", "#h-shell", "#h-armor"], { position: "absolute", left: "50%", top: "50%", xPercent: -50, yPercent: -50 });
+
+    tl.to("#h-core", { rotationZ: 360, scale: 0.5, opacity: 0.8, x: -200, duration: 1 }, 0)
+      .to("#h-shell", { rotationZ: -180, rotationX: 45, scale: 1.2, x: 50, duration: 1 }, 0)
+      .to("#h-armor", { rotationZ: 90, rotationY: -45, scale: 2, x: 300, opacity: 0.2, duration: 1 }, 0)
+      .fromTo("#explosion-text", { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.3 }, 0.2);
+
+  </script>
 </body>
 </html>
