@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kinetic Canvas: Crystalline</title>
+    <style>
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+        canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
+        .overlay { position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; justify-content: space-between; padding: 3rem; pointer-events: none; }
+        .back-btn { pointer-events: auto; align-self: flex-start; color: white; text-decoration: none; font-weight: 600; padding: 12px 24px; border-radius: 100px; background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); transition: background 0.2s; }
+        .back-btn:hover { background: rgba(255,255,255,0.2); }
+        .hero { max-width: 800px; }
+        h1 { font-size: 5rem; margin: 0 0 1rem 0; color: white; letter-spacing: -2px; line-height: 1; text-transform: uppercase; mix-blend-mode: overlay; }
+        p { font-size: 1.5rem; color: rgba(255,255,255,0.8); margin: 0; max-width: 600px; line-height: 1.4; }
+    </style>
+</head>
+<body>
+    <canvas id="c"></canvas>
+    <div class="overlay">
+        <a href="index.html" class="back-btn">&larr; Back to Hub</a>
+        <div class="hero">
+            <h1>Crystalline</h1>
+            <p>Refracting chromatic glass shards using sharp geometric voronoi bounces. Perfect for ambient backgrounds or brutalist typography masking.</p>
+        </div>
+    </div>
+    <script>
+        const canvas = document.getElementById('c'); const gl = canvas.getContext('webgl');
+        const vs = `attribute vec2 position; void main() { gl_Position = vec4(position, 0.0, 1.0); }`;
+        const fs = `precision highp float; uniform float uTime; uniform vec2 uResolution;
+      vec2 hash2( vec2 p ) { p = vec2( dot(p,vec2(127.1,311.7)), dot(p,vec2(269.5,183.3)) ); return -1.0 + 2.0*fract(sin(p)*43758.5453123); }
+      float voronoi( in vec2 x ) {
+        vec2 n = floor(x); vec2 f = fract(x); float F1 = 8.0; float F2 = 8.0;
+        for( int j=-1; j<=1; j++ ) for( int i=-1; i<=1; i++ ) {
+            vec2 g = vec2(float(i),float(j)); vec2 o = hash2( n + g );
+            o = 0.5 + 0.5*sin( uTime*0.5 + 6.2831*o ); vec2 r = g + o - f; float d = dot(r,r);
+            if( d < F1 ) { F2 = F1; F1 = d; } else if( d < F2 ) { F2 = d; }
+        } return sqrt(F2) - sqrt(F1);
+      }
+      void main() {
+        vec2 st = gl_FragCoord.xy / uResolution.xy; st.x *= uResolution.x / uResolution.y;
+        float v = voronoi(st * 5.0);
+        float r = voronoi(st * 5.0 + vec2(0.02)); float g = voronoi(st * 5.0 + vec2(0.0)); float b = voronoi(st * 5.0 - vec2(0.02));
+        vec3 color = vec3(smoothstep(0.0, 0.1, r), smoothstep(0.0, 0.1, g), smoothstep(0.0, 0.1, b));
+        color = mix(vec3(0.0, 0.05, 0.1), color, 0.8);
+        color += vec3(1.0) * smoothstep(0.0, 0.02, v);
+        gl_FragColor = vec4(color, 1.0);
+      }`;
+        const comp = (s, t) => { const x = gl.createShader(t); gl.shaderSource(x, s); gl.compileShader(x); return x; };
+        const p = gl.createProgram(); gl.attachShader(p, comp(vs, gl.VERTEX_SHADER)); gl.attachShader(p, comp(fs, gl.FRAGMENT_SHADER)); gl.linkProgram(p); gl.useProgram(p);
+        gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer()); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+        const pos = gl.getAttribLocation(p, 'position'); gl.enableVertexAttribArray(pos); gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+        const uT = gl.getUniformLocation(p, 'uTime'), uR = gl.getUniformLocation(p, 'uResolution');
+        const rz = () => { canvas.width = window.innerWidth*devicePixelRatio; canvas.height = window.innerHeight*devicePixelRatio; gl.viewport(0,0,canvas.width,canvas.height); };
+        window.addEventListener('resize', rz); rz();
+        const start = Date.now();
+        const render = () => { gl.uniform1f(uT, (Date.now()-start)*0.001); gl.uniform2f(uR, canvas.width, canvas.height); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); requestAnimationFrame(render); };
+        render();
+    </script>
+</body>
+</html>

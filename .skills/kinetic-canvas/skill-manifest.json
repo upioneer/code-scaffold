@@ -1,6 +1,6 @@
 {
   "name": "kinetic-canvas",
-  "version": "4",
+  "version": "5",
   "description": "Advanced WebGL shaders and interactive HTML canvases wrapped as native React components for Code Scaffold.",
   "entryPoint": "./SKILL.md",
   "engines": {

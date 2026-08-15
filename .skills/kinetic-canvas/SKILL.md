@@ -1,7 +1,7 @@
 ---
 name: Kinetic Canvas
 description: Advanced WebGL shaders and interactive HTML canvases wrapped as proprietary native React components for Code Scaffold.
-version: 4
+version: 5
 ---
 
 # Kinetic Canvas
@@ -87,6 +87,23 @@ import { KineticBlaze } from '@/components/kinetic/index';
 </KineticBlaze>
 ```
 
+#### E. The Luminescence & Geometric Series
+These ultra-premium standalone WebGL components simulate the fluid, high-contrast, geometric light topologies characteristic of elite modern motion design.
+* **`KineticCrystalline`** - Refracting chromatic glass shards using sharp geometric voronoi bounces.
+* **`KineticFluidAura`** - A high-viscosity, gradient-mapped SDF fluid simulation that creates mesmerizing optical loops.
+* **`GeometricHalftone`** - An optical illusion filter that converts underlying elements into expanding geometric ripples (dots, diamonds).
+* **`ChromatographicPrism`** - Splits light into vibrant spectral bands that warp across the DOM surface depending on cursor velocity.
+* **`AbyssalWireframe`** - A hypnotic, looping 3D topological wireframe that dynamically morphs, glowing with high-contrast neon lines.
+
+*Example - Using Fluid Aura:*
+```jsx
+import { KineticFluidAura } from '@/components/kinetic/index';
+
+<div className="w-full h-screen bg-black">
+  <KineticFluidAura colors={['#FF0055', '#4599FF', '#9360F7']} viscosity={0.8} />
+</div>
+```
+
 ### 4. Design Engineering & Advanced Animation
 Kinetic Canvas must strictly adhere to our Design Engineering principles to guarantee premium, fluid interactions:
 * **Restraint & Purpose:** The best animation is often no animation. Use shaders for purpose (feedback, spatial consistency, state indication), not decoration. Avoid animating frequent actions like typing.
@@ -123,5 +140,12 @@ export function SmoothKineticMesh() {
 }
 ```
 
-### 5. Agent Automation Rules
+### 5. Pipeline Standard for Creating New Effects
+Whenever generating or adding new WebGL shaders/effects to this skill, you MUST strictly adhere to the following architectural pipeline:
+1. **Zero-Dependency Native Ownership:** Do NOT bundle or import shaders from third-party libraries (e.g., `@paper-design`). All new effects must be engineered natively from scratch as standalone raw WebGL/React components within the `.skills/kinetic-canvas/components/` directory.
+2. **Dedicated Sandbox Demos:** Every new effect MUST receive its own dedicated, full-screen interactive HTML demo page (e.g., `demo-[name].html`) within the `.skills/kinetic-canvas/sandbox/` directory. Never bundle multiple effects into a single legacy viewer.
+3. **1:1 Playwright Screenshot Pipeline:** To maintain the premium aesthetic of the Hub without sacrificing performance, you must NEVER use simulated CSS gradients or `generate_image` for preview thumbnails. Instead, you MUST spin up a headless Playwright instance (`npx playwright screenshot` or a custom Node script), inject CSS to hide the UI overlays, wait exactly 1000ms for the shader to compile and bloom, and capture a mathematically perfect 1:1 `.jpg` screenshot into the `/assets/` directory.
+4. **Hub Integration:** Map the resulting 1:1 screenshot path to the `--bg` CSS variable for the new effect's card in `sandbox/index.html` to enable the fade-in hover preview.
+
+### 6. Agent Automation Rules
 When instructed to use Kinetic Canvas, automatically scaffold the required dependencies, create a dedicated `/components/kinetic` folder in the user's project containing the `index.ts` alias wrapper (and the standalone DOM distortion files), and deploy 1-3 highly-interactive stateful wrappers (like `ScrollKineticMesh` or `AudioKineticMesh`) immediately so the user has interactive building blocks. Ensure all wrappers follow the Design Engineering principles above.

@@ -1,6 +1,6 @@
 # Kinetic Canvas
 
-**Version:** 4
+**Version:** 5
 **Target:** `.skills/kinetic-canvas`
 
 ## Description
@@ -109,3 +109,5 @@ export function RepellentCaustics({ mouseVelocity }) {
 * **3** : Integrated Canvas UI components (Blaze, Frost, Cipher Reveal, Liquid Glass) under the SkillForge protocol. Renamed and mapped them into the Code Scaffold taxonomy (`KineticBlaze`, etc.). Added DOM Distortion category to the visual gallery with automated screenshot generation.
 * **2** : Full 13-shader visual gallery capabilities mapped out in readme.
 * **1** : Initial creation of the Kinetic Canvas skill via the SkillForge protocol. Integrated the proprietary taxonomy (`KineticMesh`, `KineticFluid`, etc.) with Code Scaffold. Added categorical examples for Logo Animations, Environmental Effects, and Image Filters.
+
+* **v5** : Completely stripped the legacy @paper-design dependency. Engineered native replacements for the 10 remaining core shaders using pure WebGL/React. Re-architected the sandbox into 12 dedicated demo HTML pages and integrated a local Node.js/Playwright pipeline to capture mathematically perfect 1:1 headless WebGL screenshots for the Sandbox Hub index cards. Hardcoded this standard pipeline into the SKILL.md.

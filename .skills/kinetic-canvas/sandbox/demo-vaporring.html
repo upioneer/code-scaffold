@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Kinetic Canvas: Vapor Ring</title>
+    <style>
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+        canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
+        .overlay { position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; justify-content: space-between; padding: 3rem; pointer-events: none; }
+        .back-btn { pointer-events: auto; align-self: flex-start; color: white; text-decoration: none; font-weight: 600; padding: 12px 24px; border-radius: 100px; background: rgba(0,0,0,0.3); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); transition: background 0.2s; }
+        .back-btn:hover { background: rgba(0,0,0,0.5); }
+        .hero { max-width: 800px; text-align: left; }
+        h1 { font-size: 6rem; margin: 0 0 1rem 0; color: white; letter-spacing: -3px; line-height: 1; text-transform: uppercase; mix-blend-mode: overlay; }
+        p { font-size: 1.5rem; color: rgba(255,255,255,0.9); margin: 0; max-width: 500px; line-height: 1.4; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+    </style>
+</head>
+<body>
+    <canvas id='c'></canvas>
+    <div class='overlay'>
+        <a href='index.html' class='back-btn'>&larr; Back to Hub</a>
+        <div class='hero'>
+            <h1>Vapor Ring</h1>
+            <p>Toroidal smoke rings moving through space.</p>
+        </div>
+    </div>
+    <script>
+        const canvas = document.getElementById('c'); const gl = canvas.getContext('webgl');
+        const vs = `attribute vec2 position; void main() { gl_Position = vec4(position, 0.0, 1.0); }`;
+        const fs = `precision highp float;
+      uniform float uTime;
+      uniform vec2 uResolution;
+      
+      // Dave Hoskins Hash
+      float hash(vec3 p) {
+          p = fract(p * vec3(0.1031, 0.1030, 0.0973));
+          p += dot(p, p.yxz + 33.33);
+          return fract((p.x + p.y) * p.z);
+      }
+      
+      // 3D Value Noise
+      float noise(vec3 x) {
+          vec3 i = floor(x);
+          vec3 f = fract(x);
+          f = f * f * (3.0 - 2.0 * f);
+          return mix(mix(mix(hash(i + vec3(0,0,0)), hash(i + vec3(1,0,0)), f.x),
+                         mix(hash(i + vec3(0,1,0)), hash(i + vec3(1,1,0)), f.x), f.y),
+                     mix(mix(hash(i + vec3(0,0,1)), hash(i + vec3(1,0,1)), f.x),
+                         mix(hash(i + vec3(0,1,1)), hash(i + vec3(1,1,1)), f.x), f.y), f.z);
+      }
+      
+      // Fractional Brownian Motion
+      float fbm(vec3 p) {
+          float f = 0.0; float amp = 0.5;
+          for(int i=0; i<4; i++) {
+              f += amp * noise(p); p *= 2.0; amp *= 0.5;
+          }
+          return f;
+      }
+
+      float sdTorus(vec3 p, vec2 t) {
+          vec2 q = vec2(length(p.xz) - t.x, p.y);
+          return length(q) - t.y;
+      }
+      
+      mat2 rot(float a) {
+          float s = sin(a), c = cos(a);
+          return mat2(c, -s, s, c);
+      }
+      
+      void main() {
+        vec2 uv = (gl_FragCoord.xy - 0.5 * uResolution.xy) / min(uResolution.x, uResolution.y);
+        
+        vec3 ro = vec3(0.0, 1.0, -2.5); // Camera origin
+        vec3 rd = normalize(vec3(uv.x, uv.y - 0.2, 1.0)); // Camera direction
+        
+        float t = 0.0;
+        float density = 0.0;
+        vec3 color = vec3(0.0);
+        
+        vec3 lightDir = normalize(vec3(0.8, 1.0, -0.5));
+        
+        // Raymarch
+        for(int i=0; i<45; i++) {
+            vec3 p = ro + rd * t;
+            p.yz = rot(-0.4) * p.yz; // Tilt the ring
+            
+            float d = sdTorus(p, vec2(1.0, 0.4)); // Torus bounds
+            
+            if(d < 0.2) {
+                // Rolling internal smoke
+                vec3 noiseDomain = p * 1.5;
+                
+                // Spin the ring around the Y axis
+                float angle = atan(p.z, p.x);
+                noiseDomain.y += uTime * 0.5;
+                noiseDomain.x += cos(angle) * uTime * 0.2;
+                noiseDomain.z += sin(angle) * uTime * 0.2;
+                
+                float n = fbm(noiseDomain);
+                
+                // Shape the smoke inside the torus bounds
+                float smokeDensity = smoothstep(0.2, -0.2, d + n * 0.6 - 0.3);
+                
+                if(smokeDensity > 0.0) {
+                    float alpha = smokeDensity * 0.15;
+                    
+                    // Directional scattering (Self-shadowing approximation)
+                    float l = fbm(noiseDomain + lightDir * 0.3);
+                    vec3 col = mix(vec3(0.3, 0.4, 0.5), vec3(0.95, 0.98, 1.0), smoothstep(0.2, 0.8, l));
+                    
+                    color += col * alpha * (1.0 - density);
+                    density += alpha * (1.0 - density);
+                    
+                    if(density > 0.95) break;
+                }
+            }
+            
+            t += max(0.05, d * 0.5);
+            if(t > 5.0) break;
+        }
+        
+        vec3 bg = mix(vec3(0.01, 0.02, 0.04), vec3(0.0), length(uv));
+        color = mix(bg, color, density);
+
+        // Subtle cinematic vignette
+        color *= 1.0 - smoothstep(0.5, 1.5, length(uv));
+
+        gl_FragColor = vec4(color, 1.0);
+      }`;
+        const comp = (s, t) => { const x = gl.createShader(t); gl.shaderSource(x, s); gl.compileShader(x); if (!gl.getShaderParameter(x, gl.COMPILE_STATUS)) console.error(gl.getShaderInfoLog(x)); return x; };
+        const p = gl.createProgram(); gl.attachShader(p, comp(vs, gl.VERTEX_SHADER)); gl.attachShader(p, comp(fs, gl.FRAGMENT_SHADER)); gl.linkProgram(p); gl.useProgram(p);
+        gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer()); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+        const pos = gl.getAttribLocation(p, 'position'); gl.enableVertexAttribArray(pos); gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+        const uT = gl.getUniformLocation(p, 'uTime'), uR = gl.getUniformLocation(p, 'uResolution');
+        const rz = () => { canvas.width = window.innerWidth*devicePixelRatio; canvas.height = window.innerHeight*devicePixelRatio; gl.viewport(0,0,canvas.width,canvas.height); };
+        window.addEventListener('resize', rz); rz();
+        const start = Date.now();
+        const render = () => { gl.uniform1f(uT, (Date.now()-start)*0.001); gl.uniform2f(uR, canvas.width, canvas.height); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); requestAnimationFrame(render); };
+        render();
+    </script>
+</body>
+</html>
