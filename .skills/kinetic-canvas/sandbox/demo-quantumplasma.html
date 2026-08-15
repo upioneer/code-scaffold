@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Kinetic Canvas: Quantum Plasma</title>
+    <style>
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+        canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
+        .overlay { position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; justify-content: space-between; padding: 3rem; pointer-events: none; }
+        .back-btn { pointer-events: auto; align-self: flex-start; color: white; text-decoration: none; font-weight: 600; padding: 12px 24px; border-radius: 100px; background: rgba(0,0,0,0.3); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); transition: background 0.2s; }
+        .back-btn:hover { background: rgba(0,0,0,0.5); }
+        .hero { max-width: 800px; text-align: left; }
+        h1 { font-size: 6rem; margin: 0 0 1rem 0; color: white; letter-spacing: -3px; line-height: 1; text-transform: uppercase; mix-blend-mode: overlay; }
+        p { font-size: 1.5rem; color: rgba(255,255,255,0.9); margin: 0; max-width: 500px; line-height: 1.4; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+    </style>
+</head>
+<body>
+    <canvas id='c'></canvas>
+    <div class='overlay'>
+        <a href='index.html' class='back-btn'>&larr; Back to Hub</a>
+        <div class='hero'>
+            <h1>Quantum Plasma</h1>
+            <p>Fluid merging metaballs with energy threshold glowing.</p>
+        </div>
+    </div>
+    <script>
+        const canvas = document.getElementById('c'); const gl = canvas.getContext('webgl');
+        const vs = `attribute vec2 position; void main() { gl_Position = vec4(position, 0.0, 1.0); }`;
+        const fs = `precision highp float;
+      uniform float uTime;
+      uniform vec2 uResolution;
+
+      void main() {
+        vec2 st = gl_FragCoord.xy / uResolution.xy;
+        st.x *= uResolution.x / uResolution.y;
+        
+        vec2 center = vec2(0.5 * uResolution.x/uResolution.y, 0.5);
+        
+        float metaball = 0.0;
+        for(float i=1.0; i<=5.0; i++) {
+            vec2 pos = center + vec2(sin(uTime*i*0.3)*0.3, cos(uTime*i*0.4)*0.3);
+            metaball += 0.01 / pow(length(st - pos), 2.0);
+        }
+
+        vec3 col = vec3(0.0);
+        if (metaball > 1.0) {
+            col = vec3(0.8, 0.2, 1.0);
+        } else if (metaball > 0.9) {
+            col = vec3(1.0); // glowing edge
+        }
+
+        gl_FragColor = vec4(col, 1.0);
+      }`;
+        const comp = (s, t) => { const x = gl.createShader(t); gl.shaderSource(x, s); gl.compileShader(x); if (!gl.getShaderParameter(x, gl.COMPILE_STATUS)) console.error(gl.getShaderInfoLog(x)); return x; };
+        const p = gl.createProgram(); gl.attachShader(p, comp(vs, gl.VERTEX_SHADER)); gl.attachShader(p, comp(fs, gl.FRAGMENT_SHADER)); gl.linkProgram(p); gl.useProgram(p);
+        gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer()); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+        const pos = gl.getAttribLocation(p, 'position'); gl.enableVertexAttribArray(pos); gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+        const uT = gl.getUniformLocation(p, 'uTime'), uR = gl.getUniformLocation(p, 'uResolution');
+        const rz = () => { canvas.width = window.innerWidth*devicePixelRatio; canvas.height = window.innerHeight*devicePixelRatio; gl.viewport(0,0,canvas.width,canvas.height); };
+        window.addEventListener('resize', rz); rz();
+        const start = Date.now();
+        const render = () => { gl.uniform1f(uT, (Date.now()-start)*0.001); gl.uniform2f(uR, canvas.width, canvas.height); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); requestAnimationFrame(render); };
+        render();
+    </script>
+</body>
+</html>
