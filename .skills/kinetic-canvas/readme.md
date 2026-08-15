@@ -1,62 +1,56 @@
 # Kinetic Canvas
 
-**Version:** 5
+**Version:** 6
 **Target:** `.skills/kinetic-canvas`
 
 ## Description
-Kinetic Canvas is a heavily optimized, zero-dependency WebGL shader engine uniquely branded and extended for the Code Scaffold ecosystem. It provides AI agents with instant access to ultra-premium canvas effects (like `KineticFluid`, `KineticMesh`, and `CausticDisplacement`), specifically tailored for reactive, motion-driven interfaces. It integrates elements from the SkillForge protocol and Canvas UI, enabling experimental HTML-in-Canvas DOM distortion.
+Kinetic Canvas is a heavily optimized, zero-dependency WebGL shader engine uniquely branded and extended for the Code Scaffold ecosystem. It provides AI agents with instant access to ultra-premium canvas effects (like `KineticFluid`, `KineticMesh`, and `Caustics`), specifically tailored for reactive, motion-driven interfaces. 
 
 ## Capabilities & Use Cases
-* **Proprietary Aliasing:** Wraps the entire `@paper-design/shaders-react` library into Code Scaffold's internal taxonomy, ensuring all deployed shaders (`ThermalAura`, `QuantumPlasma`, `RibbedGlassMask`, etc.) maintain a cohesive architectural identity.
-* **DOM Distortion:** Leverages experimental HTML-in-Canvas APIs through the SkillForge protocol to allow physics-based destruction and distortion of live DOM elements (`KineticBlaze`, `KineticFrost`, etc.).
-* **Logo Animations & Typography:** Provides explicit patterns for clipping `KineticFluid` and `ThermalAura` shaders to massive hero text elements using CSS blend modes.
-* **Environmental Effects:** Deploys massive, performant `KineticMesh` and `VolumetricLight` backgrounds that agents are instructed to wrap in GSAP or Web Audio API state bounds.
-* **Image Filters & Caustics:** Allows agents to overlay physical material simulations like `CausticDisplacement` (Water) and `OrganicPulp` (Paper Texture) onto standard DOM elements, heavily bound to cursor velocity physics.
+* **Proprietary Aliasing:** A completely native WebGL ecosystem engineered exclusively for Code Scaffold. Ensures all deployed shaders (`ThermalAura`, `QuantumPlasma`, `RibbedGlass`, etc.) maintain a cohesive architectural identity.
+* **Logo Animations & Typography:** Provides explicit patterns for clipping shaders to massive hero text elements using CSS blend modes or providing highly dynamic backdrops to typography elements.
+* **Environmental Effects:** Deploys massive, performant 3D spatial backgrounds (e.g. `OrbitalParticles`, `VaporRing`) that agents are instructed to wrap in GSAP or Web Audio API state bounds.
+* **Optics & Optics Simulations:** Allows agents to overlay physical material simulations like `Caustics` (Water) and `OrganicPulp` (Paper Texture) onto standard DOM layouts, heavily bound to cursor velocity physics.
 
 ## Visual Capabilities Gallery
 
-This skill provides proprietary high-performance shaders, categorized into four distinct domains.
+This skill provides proprietary high-performance shaders, categorized into three distinct domains.
 
-### 1. Logo Animations & Typography
-Used to mask massive brutalist text or SVG logos using `mix-blend-mode` or `background-clip`.
-
-| Shader Alias | Visual |
-| :--- | :--- |
-| **KineticFluid** | ![Kinetic Fluid](assets/kinetic-fluid.png) |
-| **ThermalAura** | ![Thermal Aura](assets/thermal-aura.png) |
-| **CrystallineVapor** | ![Crystalline Vapor](assets/crystalline-vapor.png) |
-
-### 2. Environmental Effects
-Massive, full-bleed backgrounds intended to be bound to GSAP ScrollTriggers or Web Audio APIs for stateful interactivity.
+### 1. Fluid & Aura Overlays
+Highly fluid, colorful, and liquid-like shaders perfect for clipping to logos or acting as dynamic abstract auras.
 
 | Shader Alias | Visual |
 | :--- | :--- |
-| **KineticMesh** | ![Kinetic Mesh](assets/kinetic-mesh.png) |
-| **OrbitalParticles** | ![Orbital Particles](assets/orbital-particles.png) |
-| **QuantumPlasma** | ![Quantum Plasma](assets/quantum-plasma.png) |
-| **VolumetricLight** | ![Volumetric Light](assets/volumetric-light.png) |
-| **VaporRing** | ![Vapor Ring](assets/vapor-ring.png) |
-| **CellularVoronoi** | ![Cellular Voronoi](assets/cellular-voronoi.png) |
+| **Kinetic Fluid** | ![Kinetic Fluid](assets/demo-kineticfluid.jpg) |
+| **Thermal Aura** | ![Thermal Aura](assets/demo-thermalaura.jpg) |
+| **Fluid Aura** | ![Fluid Aura](assets/demo-fluidaura.jpg) |
+| **Crystalline Vapor** | ![Crystalline Vapor](assets/demo-crystallinevapor.jpg) |
+| **Quantum Plasma** | ![Quantum Plasma](assets/demo-quantumplasma.jpg) |
 
-### 3. Image Filters & Caustics
-Physical material simulations intended to be overlaid on standard DOM elements (like images or cards) and bound to cursor velocity physics.
-
-| Shader Alias | Visual |
-| :--- | :--- |
-| **CausticDisplacement** | ![Caustic Displacement](assets/caustic-displacement.png) |
-| **RibbedGlassMask** | ![Ribbed Glass Mask](assets/ribbed-glass-mask.png) |
-| **RetroHalftone** | ![Retro Halftone](assets/retro-halftone.png) |
-| **OrganicPulp** | ![Organic Pulp](assets/organic-pulp.png) |
-
-### 4. DOM Distortion & Overlays
-Creative HTML-in-Canvas effects capable of distorting live DOM elements. Uses advanced shaders to render physics over interface elements.
+### 2. Spatial & Environmental
+Massive, full-bleed 3D math backgrounds intended to be bound to GSAP ScrollTriggers or Web Audio APIs for stateful interactivity.
 
 | Shader Alias | Visual |
 | :--- | :--- |
-| **KineticBlaze** | ![Kinetic Blaze](assets/kinetic-blaze.png) |
-| **KineticFrost** | ![Kinetic Frost](assets/kinetic-frost.png) |
-| **KineticCipherReveal** | ![Kinetic Cipher Reveal](assets/kinetic-cipher.png) |
-| **KineticLiquidGlass** | ![Kinetic Liquid Glass](assets/kinetic-liquid-glass.png) |
+| **Kinetic Mesh** | ![Kinetic Mesh](assets/demo-kineticmesh.jpg) |
+| **Orbital Particles** | ![Orbital Particles](assets/demo-orbitalparticles.jpg) |
+| **Volumetric Light** | ![Volumetric Light](assets/demo-volumetriclight.jpg) |
+| **Vapor Ring** | ![Vapor Ring](assets/demo-vaporring.jpg) |
+| **Cellular Voronoi** | ![Cellular Voronoi](assets/demo-cellularvoronoi.jpg) |
+| **Crystalline** | ![Crystalline](assets/demo-crystalline.jpg) |
+| **Wireframe** | ![Wireframe](assets/demo-wireframe.jpg) |
+
+### 3. Glass, Optics & Material Simulations
+Physical material simulations and lens effects intended to be overlaid on standard DOM elements or used as textured masks.
+
+| Shader Alias | Visual |
+| :--- | :--- |
+| **Caustics** | ![Caustics](assets/demo-caustics.jpg) |
+| **Prism** | ![Prism](assets/demo-prism.jpg) |
+| **Ribbed Glass** | ![Ribbed Glass](assets/demo-ribbedglass.jpg) |
+| **Organic Pulp** | ![Organic Pulp](assets/demo-organicpulp.jpg) |
+| **Retro Halftone** | ![Retro Halftone](assets/demo-retrohalftone.jpg) |
+| **Halftone** | ![Halftone](assets/demo-halftone.jpg) |
 
 ## Design Engineering & Advanced Animation
 Kinetic Canvas must strictly adhere to our Design Engineering principles to guarantee premium, fluid interactions:
@@ -87,15 +81,15 @@ export function KineticHeroText() {
 ```
 
 ### Caustics Example
-Overlay physical material simulations like `CausticDisplacement` heavily bound to cursor velocity physics:
+Overlay physical material simulations like `Caustics` heavily bound to cursor velocity physics:
 ```jsx
-import { CausticDisplacement } from '@/components/kinetic/index';
+import { Caustics } from '@/components/kinetic/index';
 
 export function RepellentCaustics({ mouseVelocity }) {
   // mouseVelocity calculates dx/dy over dt
   return (
     <div className="relative w-full h-full overflow-hidden">
-      <CausticDisplacement 
+      <Caustics 
         speed={mouseVelocity} 
         style={{ width: '100%', height: '100%', transition: 'none' }} 
       />
@@ -105,9 +99,10 @@ export function RepellentCaustics({ mouseVelocity }) {
 ```
 
 ## Changelog
+* **6** : Updated `readme.md` to reflect the massive library expansion to 18 native shaders. Categorized shaders into Fluid & Aura, Spatial & Environmental, and Material Simulations. Overhauled visual gallery assets to point to the new high-fidelity 1:1 headless Playwright sandbox captures generated by the automated pipeline.
+* **5** : Completely stripped the legacy @paper-design dependency. Engineered native replacements for the 10 remaining core shaders using pure WebGL/React. Re-architected the sandbox into 12 dedicated demo HTML pages and integrated a local Node.js/Playwright pipeline to capture mathematically perfect 1:1 headless WebGL screenshots for the Sandbox Hub index cards. Hardcoded this standard pipeline into the SKILL.md.
 * **4** : Introduced Design Engineering & Advanced Animation principles. Migrated components to leverage GSAP's `useGSAP` hook for optimal React context cleanup. Replaced manual requestAnimationFrame loops with GSAP physics and spring easing in `RepellentCaustics` and `ScrollKineticMesh` for superior UX.
 * **3** : Integrated Canvas UI components (Blaze, Frost, Cipher Reveal, Liquid Glass) under the SkillForge protocol. Renamed and mapped them into the Code Scaffold taxonomy (`KineticBlaze`, etc.). Added DOM Distortion category to the visual gallery with automated screenshot generation.
 * **2** : Full 13-shader visual gallery capabilities mapped out in readme.
 * **1** : Initial creation of the Kinetic Canvas skill via the SkillForge protocol. Integrated the proprietary taxonomy (`KineticMesh`, `KineticFluid`, etc.) with Code Scaffold. Added categorical examples for Logo Animations, Environmental Effects, and Image Filters.
 
-* **v5** : Completely stripped the legacy @paper-design dependency. Engineered native replacements for the 10 remaining core shaders using pure WebGL/React. Re-architected the sandbox into 12 dedicated demo HTML pages and integrated a local Node.js/Playwright pipeline to capture mathematically perfect 1:1 headless WebGL screenshots for the Sandbox Hub index cards. Hardcoded this standard pipeline into the SKILL.md.
