@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kinetic Canvas: Thermal Aura</title>
+    <style>
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+        canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
+        .overlay { position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; justify-content: space-between; padding: 3rem; pointer-events: none; }
+        .back-btn { pointer-events: auto; align-self: flex-start; color: white; text-decoration: none; font-weight: 600; padding: 12px 24px; border-radius: 100px; background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); transition: background 0.2s; }
+        .back-btn:hover { background: rgba(255,255,255,0.2); }
+        .hero { max-width: 800px; margin: auto; text-align: center; }
+        h1 { font-size: 6rem; margin: 0 0 1rem 0; color: white; letter-spacing: -2px; line-height: 1; text-transform: uppercase; mix-blend-mode: overlay; }
+        p { font-size: 1.5rem; color: rgba(255,255,255,0.9); margin: 0 auto; max-width: 600px; line-height: 1.4; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
+    </style>
+</head>
+<body>
+    <canvas id="c"></canvas>
+    <div class="overlay">
+        <a href="index.html" class="back-btn">&larr; Back to Hub</a>
+        <div class="hero">
+            <h1>Thermal Aura</h1>
+            <p>A procedural volumetric heat map overlay that natively generates fluid fiery gradients.</p>
+        </div>
+    </div>
+    <script>
+        const canvas = document.getElementById('c'); const gl = canvas.getContext('webgl');
+        const vs = `attribute vec2 position; void main() { gl_Position = vec4(position, 0.0, 1.0); }`;
+        const fs = `precision highp float; uniform float uTime; uniform vec2 uResolution;
+            float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123); }
+            float noise(vec2 p) {
+              vec2 i = floor(p); vec2 f = fract(p); vec2 u = f*f*(3.0-2.0*f);
+              return mix(mix(hash(i+vec2(0.,0.)), hash(i+vec2(1.,0.)), u.x),
+                         mix(hash(i+vec2(0.,1.)), hash(i+vec2(1.,1.)), u.x), u.y);
+            }
+            float fbm(vec2 p) {
+              float f=0.0; f+=0.5000*noise(p); p=p*2.02; f+=0.2500*noise(p); p=p*2.03;
+              f+=0.1250*noise(p); p=p*2.01; f+=0.0625*noise(p); return f/0.9375;
+            }
+            vec3 palette(float t) {
+              if(t<0.2) return mix(vec3(0.), vec3(0.5,0.,0.), t/0.2);
+              if(t<0.5) return mix(vec3(0.5,0.,0.), vec3(1.0,0.3,0.), (t-0.2)/0.3);
+              if(t<0.8) return mix(vec3(1.0,0.3,0.), vec3(1.0,0.8,0.), (t-0.5)/0.3);
+              return mix(vec3(1.0,0.8,0.), vec3(1.,1.,1.), (t-0.8)/0.2);
+            }
+            void main() {
+                vec2 st = gl_FragCoord.xy / uResolution.xy; st.x *= uResolution.x / uResolution.y;
+                vec2 q = vec2(fbm(st + uTime*0.2), fbm(st + vec2(1.0) - uTime*0.1));
+                vec2 r = vec2(fbm(st + 1.0*q + vec2(1.7, 9.2) + 0.15*uTime),
+                              fbm(st + 1.0*q + vec2(8.3, 2.8) + 0.126*uTime));
+                float f = fbm(st + r);
+                gl_FragColor = vec4(palette(f * 1.5), 1.0);
+            }`;
+        const comp = (s, t) => { const x = gl.createShader(t); gl.shaderSource(x, s); gl.compileShader(x); return x; };
+        const p = gl.createProgram(); gl.attachShader(p, comp(vs, gl.VERTEX_SHADER)); gl.attachShader(p, comp(fs, gl.FRAGMENT_SHADER)); gl.linkProgram(p); gl.useProgram(p);
+        gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer()); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+        const pos = gl.getAttribLocation(p, 'position'); gl.enableVertexAttribArray(pos); gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+        const uT = gl.getUniformLocation(p, 'uTime'), uR = gl.getUniformLocation(p, 'uResolution');
+        const rz = () => { canvas.width = window.innerWidth*devicePixelRatio; canvas.height = window.innerHeight*devicePixelRatio; gl.viewport(0,0,canvas.width,canvas.height); };
+        window.addEventListener('resize', rz); rz();
+        const start = Date.now();
+        const render = () => { gl.uniform1f(uT, (Date.now()-start)*0.001); gl.uniform2f(uR, canvas.width, canvas.height); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); requestAnimationFrame(render); };
+        render();
+    </script>
+</body>
+</html>

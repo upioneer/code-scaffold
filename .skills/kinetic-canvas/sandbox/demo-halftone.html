@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kinetic Canvas: Geometric Halftone</title>
+    <style>
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #fff; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+        canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
+        .overlay { position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; justify-content: space-between; padding: 3rem; pointer-events: none; }
+        .back-btn { pointer-events: auto; align-self: flex-start; color: black; text-decoration: none; font-weight: 600; padding: 12px 24px; border-radius: 100px; background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); border: 1px solid rgba(0,0,0,0.2); transition: background 0.2s; }
+        .back-btn:hover { background: rgba(255,255,255,1); }
+        .hero { max-width: 800px; text-align: center; align-self: center; margin-top: auto; margin-bottom: auto; }
+        h1 { font-size: 5rem; margin: 0 0 1rem 0; color: black; letter-spacing: -2px; line-height: 1; text-transform: uppercase; background: white; padding: 0 20px; display: inline-block; mix-blend-mode: screen; }
+        p { font-size: 1.5rem; color: #000; margin: 1rem auto 0; max-width: 600px; line-height: 1.4; background: rgba(255,255,255,0.8); padding: 10px 20px; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <canvas id="c"></canvas>
+    <div class="overlay">
+        <a href="index.html" class="back-btn">&larr; Back to Hub</a>
+        <div class="hero">
+            <h1>Geometric Halftone</h1>
+            <p>An optical illusion filter converting underlying textures into expanding, rippling halftone matrices.</p>
+        </div>
+    </div>
+    <script>
+        const canvas = document.getElementById('c'); const gl = canvas.getContext('webgl');
+        const vs = `attribute vec2 position; void main() { gl_Position = vec4(position, 0.0, 1.0); }`;
+        const fs = `precision highp float; uniform float uTime; uniform vec2 uResolution;
+            void main() {
+                vec2 st = gl_FragCoord.xy / uResolution.xy; st.x *= uResolution.x / uResolution.y;
+                float d = length(st - 0.5); float circles = sin(d*80.0 - uTime*5.0);
+                vec2 grid = fract(st*80.0); float distToCenter = length(grid-0.5);
+                float radius = 0.5 * (0.5+0.5*circles); float dot = step(distToCenter, radius);
+                gl_FragColor = vec4(mix(vec3(0.05), vec3(0.9), dot), 1.0);
+            }`;
+        const comp = (s, t) => { const x = gl.createShader(t); gl.shaderSource(x, s); gl.compileShader(x); return x; };
+        const p = gl.createProgram(); gl.attachShader(p, comp(vs, gl.VERTEX_SHADER)); gl.attachShader(p, comp(fs, gl.FRAGMENT_SHADER)); gl.linkProgram(p); gl.useProgram(p);
+        gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer()); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+        const pos = gl.getAttribLocation(p, 'position'); gl.enableVertexAttribArray(pos); gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+        const uT = gl.getUniformLocation(p, 'uTime'), uR = gl.getUniformLocation(p, 'uResolution');
+        const rz = () => { canvas.width = window.innerWidth*devicePixelRatio; canvas.height = window.innerHeight*devicePixelRatio; gl.viewport(0,0,canvas.width,canvas.height); };
+        window.addEventListener('resize', rz); rz();
+        const start = Date.now();
+        const render = () => { gl.uniform1f(uT, (Date.now()-start)*0.001); gl.uniform2f(uR, canvas.width, canvas.height); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); requestAnimationFrame(render); };
+        render();
+    </script>
+</body>
+</html>
