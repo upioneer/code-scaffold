@@ -7,10 +7,10 @@
     <style>
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
         canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
-        .overlay { position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; justify-content: space-between; padding: 3rem; pointer-events: none; }
+        .overlay { position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; justify-content: space-between; padding: 3rem; pointer-events: none; box-sizing: border-box; }
         .back-btn { pointer-events: auto; align-self: flex-start; color: #00ffcc; text-decoration: none; font-weight: 600; padding: 12px 24px; border-radius: 100px; background: rgba(0,255,204,0.1); backdrop-filter: blur(10px); border: 1px solid rgba(0,255,204,0.3); transition: background 0.2s; }
         .back-btn:hover { background: rgba(0,255,204,0.2); }
-        .hero { max-width: 800px; text-align: center; margin: 0 auto; align-self: center; }
+        .hero { max-width: 800px; margin: auto; text-align: center; }
         h1 { font-size: 6rem; margin: 0 0 1rem 0; color: #00ffcc; letter-spacing: 10px; line-height: 1; text-transform: uppercase; text-shadow: 0 0 30px rgba(0,255,204,0.5); }
         p { font-size: 1.2rem; color: rgba(0,255,204,0.8); margin: 0 auto; max-width: 500px; line-height: 1.6; letter-spacing: 2px; text-transform: uppercase; }
     </style>
@@ -49,5 +49,6 @@
     </script>
 </body>
 </html>
+
 
 
