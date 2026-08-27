@@ -11,6 +11,7 @@ Thumbs.db
 /.gemini
 /plan.md
 scaffold-tui/target/
+/scratch/
 
 !project_details/changelog/
 !project_details/playbooks/
