@@ -10,5 +10,14 @@
     "fs:read",
     "fs:write",
     "net:connect"
+  ],
+  "category": "Animation & Graphics",
+  "keywords": [
+    "manim",
+    "math-animation",
+    "python-video",
+    "3b1b",
+    "technical-animations",
+    "scientific-viz"
   ]
 }

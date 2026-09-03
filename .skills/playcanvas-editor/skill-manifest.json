@@ -10,5 +10,15 @@
     "fs:read",
     "fs:write",
     "net:connect"
+  ],
+  "category": "Animation & Graphics",
+  "keywords": [
+    "playcanvas-editor",
+    "3d-engine",
+    "webgl",
+    "webgpu",
+    "scene-editor",
+    "gltf",
+    "spatial-dev"
   ]
 }

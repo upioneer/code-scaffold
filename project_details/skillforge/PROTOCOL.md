@@ -31,20 +31,32 @@ When generating a *new* skill, agents MUST strictly follow this pipeline without
    - *Soft Agent Instructions:* For fluid, context-dependent workflows where the agent operates autonomously based on `SKILL.md` cognitive guidelines.
    - *Declarative Workflows:* For rigid, identical processes. Author and bundle declarative YAML workflows (e.g., `workflow.yaml`) inside a `workflows/` subdirectory within the skill. These workflows must use typed models and expressions to orchestrate method executions across jobs and steps, completely replacing raw bash/PowerShell scripts. The `SKILL.md` must instruct future agents to execute these YAML definitions via the core engine rather than reasoning through steps manually.
 3. **AI Value-Add:** Do not just write a wrapper. Brainstorm and embed workflows optimized specifically for headless AI operations (e.g., bypassing Cloudflare, silent testing loops, pre-configured GitHub Actions).
-3. **Scaffolding Compliance:**
+4. **Scaffolding Compliance:**
    - Provision a strictly validated `meta.json`.
-   - Provision an ad-hoc distribution `skill-manifest.json`.
-   - Generate a `readme.md` strictly following the unified Code Scaffold typographic rules (NO en/em dashes, NO hyphens as punctuation).
-4. **Sandbox & Demo Generation:**
+   - Provision an ad-hoc distribution `skill-manifest.json` with functional `category` and granular search `keywords`.
+   - Generate a `readme.md` strictly following the unified Code Scaffold typographic rules (NO en/em dashes, NO hyphens as punctuation) including category and keyword badges.
+5. **Sandbox & Demo Generation:**
    - You MUST generate a live interactive sandbox or "demo" page for the skill in `project_details/proof/<skill-name>-sandbox`.
    - The sandbox must comply strictly with the constraints defined in `project_details/sandbox-architecure.md` (e.g., single-file bundle via Vite, relative paths, dark mode presentation, heavy asset fallbacks).
    - Once the sandbox is built and verified, deploy it to `.skills/<skill-name>/sandbox/index.html` using the provided playbook script `project_details/playbooks/build_sandbox.ps1 <skill-name>`.
-5. **Payload Crafting:** Write a deep, technically advanced `SKILL.md` that serves as the cognitive blueprint for future agents.
+6. **Payload Crafting:** Write a deep, technically advanced `SKILL.md` with keyword-rich YAML frontmatter that serves as the cognitive blueprint for future agents.
+
+### Phase 4: Skill SEO, GEO & Discovery Standardization
+Every skill must be systematically audited and optimized for search engine and AI agent discoverability:
+1. **Semantic Trigger Intents:** Ensure `SKILL.md` frontmatter descriptions contain specific trigger phrases, problem domains, and technology keywords.
+2. **Distribution Manifest Discovery:** Ensure `skill-manifest.json` contains `category` and a rich `keywords` array to power CLI search and package discovery.
+3. **Structured Entity Readmes:** Ensure `readme.md` clearly defines entity domains, capabilities, usage patterns, and keywords.
+4. **Global Index Synchronization:** Keep `/.skills/readme.md` organized by domain with searchable tags.
+
+### Phase 5: Zero Brand Leak & Automated Compliance Gatekeeper
+Before any skill creation or modification is considered complete:
+1. **Zero External Brand Leak Rule:** NEVER name, credit, or leak upstream open-source package names, third-party authors, or external corporate trademarks in user-facing skill titles, descriptions, manifests, documentation, CLI messages, logs, or diagrams. Aggressively rebrand every technology under Code Scaffold proprietary identity (e.g. *Ghost Graph*, *Stealth Browser Engine*, *Tasty Styling Engine*, *TUI Tools Tape Engine*).
+2. **Automated Verification:** Execute `node project_details/playbooks/verify_skills.js`. You MUST guarantee a 0 exit code and 100% compliance across all 51 skills (5-file anatomy, whole-number version synchronization, manifest schema, meta schema, typography, and brand leak protection).
 
 ## Execution Templates
 
 **Ad-Hoc Prompt:**
-> "Run the SkillForge Protocol to build a new skill for [Domain]. Research the latest OEM docs, enforce the Code Scaffold architecture, and ensure you cross-reference existing skills to build synergistic templates and visual dependency diagrams using tldraw/mermaid."
+> "Run the SkillForge Protocol to build a new skill for [Domain]. Research the latest OEM docs, enforce the Code Scaffold architecture, ensure 100% proprietary rebranding with zero brand leakage, and run verify_skills.js to assert complete compliance."
 
 **Scheduled Pulse Check (via `/schedule`):**
-> `/schedule cron="0 0 * * 0" prompt="Run the SkillForge Pulse Check. Review the top 5 skills in the .skills directory against the live web to see if any underlying frameworks have released major updates. Update their SKILL.md and templates to match current market trends, and output a Mermaid diagram summarizing the updates."`
+> `/schedule cron="0 0 * * 0" prompt="Run the SkillForge Pulse Check. Review the top 5 skills in the .skills directory against the live web to see if any underlying frameworks have released major updates. Update their SKILL.md and templates to match current market trends, and execute verify_skills.js."`

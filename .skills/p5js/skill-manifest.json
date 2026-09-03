@@ -10,5 +10,14 @@
     "fs:read",
     "fs:write",
     "net:connect"
+  ],
+  "category": "Animation & Graphics",
+  "keywords": [
+    "p5js",
+    "creative-coding",
+    "canvas2d",
+    "generative-art",
+    "interactive-sketches",
+    "webgl"
   ]
 }

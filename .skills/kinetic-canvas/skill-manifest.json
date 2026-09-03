@@ -1,7 +1,7 @@
 {
   "name": "kinetic-canvas",
-  "version": 6,
-  "description": "Advanced WebGL shaders and interactive HTML canvases wrapped as native React components for Code Scaffold.",
+  "version": "6",
+  "description": "Ultra-fast, zero-dependency WebGL shaders and interactive HTML canvases wrapped as native React components.",
   "entryPoint": "./SKILL.md",
   "engines": {
     "node": ">=18.0.0"
@@ -9,5 +9,14 @@
   "requiredPermissions": [
     "fs:read",
     "fs:write"
+  ],
+  "category": "Animation & Graphics",
+  "keywords": [
+    "kinetic-canvas",
+    "canvas-api",
+    "physics-simulation",
+    "interactive-visuals",
+    "particles",
+    "webgl"
   ]
 }

@@ -2,6 +2,8 @@
 
 **Version:** 2
 **Target:** `.skills/clerk`
+**Category:** Data, Databases & Storage
+**Keywords:** `clerk`, `authentication`, `user-management`, `jwt`, `oauth`, `nextjs-auth`, `security`
 
 ## Description
 Authentication perimeter and identity management using Clerk.

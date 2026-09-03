@@ -11,5 +11,15 @@
     "fs:write",
     "net:connect",
     "run:command"
+  ],
+  "category": "AI, MCP & Developer Tools",
+  "keywords": [
+    "rust",
+    "cargo",
+    "cargo-clippy",
+    "cargo-fmt",
+    "rust-workspaces",
+    "systems-programming",
+    "wasm"
   ]
 }

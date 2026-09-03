@@ -10,5 +10,14 @@
     "fs:read",
     "fs:write",
     "net:connect"
+  ],
+  "category": "Animation & Graphics",
+  "keywords": [
+    "braille-art",
+    "terminal-animations",
+    "ascii-art",
+    "cli-spinners",
+    "text-fx",
+    "tui"
   ]
 }

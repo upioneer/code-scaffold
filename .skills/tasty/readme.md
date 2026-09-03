@@ -2,6 +2,8 @@
 
 **Version:** 3
 **Target:** `.skills/tasty`
+**Category:** Frontend & UI Design
+**Keywords:** `tasty`, `anti-slop`, `design-tokens`, `landing-page`, `typography`, `micro-animations`, `curated-ui`
 
 ## Description
 Tasty is Code Scaffold's bespoke, native anti-slop frontend orchestration engine. It acts as a strict cognitive enforcer that overrides default LLM aesthetic biases, ensuring AI agents ship premium, high-fidelity user interfaces instead of generic templates.

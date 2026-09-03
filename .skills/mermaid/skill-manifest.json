@@ -10,5 +10,14 @@
     "fs:read",
     "fs:write",
     "net:connect"
+  ],
+  "category": "Publishing & Documentation",
+  "keywords": [
+    "mermaid",
+    "mermaid-cli",
+    "diagrams-as-code",
+    "flowcharts",
+    "sequence-diagrams",
+    "er-diagrams"
   ]
 }

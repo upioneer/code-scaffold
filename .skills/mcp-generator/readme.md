@@ -2,6 +2,8 @@
 
 **Version:** 3
 **Target:** `.skills/mcp-generator`
+**Category:** AI, MCP & Developer Tools
+**Keywords:** `mcp-generator`, `model-context-protocol`, `fastmcp`, `custom-tools`, `json-rpc`, `agent-integrations`
 
 ## Description
 Assists with creating new custom Model Context Protocol (MCP) servers, clients, and apps using official SDKs and best practices.

@@ -1,3 +1,8 @@
+---
+name: OpenCLI
+description: Bridge websites and the CLI for structured data extraction and browser automation
+---
+
 # OpenCLI Skill
 
 This skill allows you to bridge websites and the CLI, providing structured data extraction and browser automation primitives. It is optimized for AI agents to discover site capabilities and perform high-level actions without manually driving a browser.

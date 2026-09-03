@@ -2,6 +2,8 @@
 
 **Version:** 1
 **Target:** `.skills/officecli`
+**Category:** Publishing & Documentation
+**Keywords:** `officecli`, `docx`, `pptx`, `xlsx`, `office-documents`, `document-automation`, `pdf-generation`
 
 ## Description
 OfficeCLI is the first and best Office suite purpose-built for AI agents to read, edit, and automate Word, Excel, and PowerPoint files. Free, open-source, single binary, no Office installation required.

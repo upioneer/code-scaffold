@@ -2,6 +2,8 @@
 
 **Version:** 2
 **Target:** `.skills/playcanvas-editor`
+**Category:** Animation & Graphics
+**Keywords:** `playcanvas-editor`, `3d-engine`, `webgl`, `webgpu`, `scene-editor`, `gltf`, `spatial-dev`
 
 ## Description
 Visual development environment for real time 3D collaboration.

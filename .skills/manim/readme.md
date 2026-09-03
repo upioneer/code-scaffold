@@ -2,6 +2,8 @@
 
 **Version:** 2
 **Target:** `.skills/manim`
+**Category:** Animation & Graphics
+**Keywords:** `manim`, `math-animation`, `python-video`, `3b1b`, `technical-animations`, `scientific-viz`
 
 ## Description
 Mathematical animations using the Manim library.

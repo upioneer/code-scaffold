@@ -10,5 +10,13 @@
     "fs:read",
     "fs:write",
     "net:connect"
+  ],
+  "category": "Data, Databases & Storage",
+  "keywords": [
+    "trackio",
+    "ml-experiment-tracking",
+    "hyperparameters",
+    "metrics-logging",
+    "huggingface-spaces"
   ]
 }

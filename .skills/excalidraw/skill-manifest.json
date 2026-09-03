@@ -10,5 +10,14 @@
     "fs:read",
     "fs:write",
     "net:connect"
+  ],
+  "category": "Publishing & Documentation",
+  "keywords": [
+    "excalidraw",
+    "virtual-whiteboard",
+    "hand-drawn-diagrams",
+    "architecture-diagram",
+    "canvas",
+    "visuals"
   ]
 }

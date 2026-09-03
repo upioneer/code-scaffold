@@ -1,0 +1,63 @@
+graph TD
+    %% Core Infrastructure
+    A["Code Scaffold Engine"] --> B("Payload Library")
+    B --> C{"Skill Domains"}
+
+    %% Domains
+    C --> D["Web Automation & Discovery"]
+    C --> E["Data & Databases"]
+    C --> F["Publishing & UI"]
+    C --> G["Infrastructure & DevOps"]
+    C --> H["AI Integration & Memory"]
+
+    %% Web Automation & Discovery
+    D --> |"Dual-Engine Ghost Scraping"| SBM["Stealth Browser & Ghost Graph"]
+    D --> |"E2E & Responsive QA"| PW["Playwright"]
+    D --> |"Search & Snippet Auditor"| SEO["SEO GEO AEO Auditor"]
+    D --> |"Cloud Web Extraction"| FC["Firecrawl"]
+    D --> |"CLI-to-Web Primitives"| OC["OpenCLI"]
+
+    %% Data & Databases
+    E --> |"Postgres Auth/DB"| SUP["Supabase"]
+    E --> |"Firebase BaaS"| FB["Firebase"]
+    E --> |"Serverless Cache"| UP["Upstash"]
+    E --> |"Tracking & ML"| TR["Trackio ML"]
+
+    %% Publishing & UI
+    F --> |"Spatial Computing"| TL["tldraw"]
+    F --> |"Declarative UI JSON"| A2UI["A2UI"]
+    F --> |"Scientific Docs"| QRT["Quarto"]
+    F --> |"HTML Presentations"| REV["Reveal.js"]
+    F --> |"Markdown Slides"| SL["Slidev"]
+    F --> |"3D Web Engine"| PC["PlayCanvas"]
+    F --> |"Office Automation"| OCLI["OfficeCLI"]
+    F --> |"Anti-Slop UI Styling"| TST["Tasty"]
+
+    %% Infrastructure & DevOps
+    G --> |"Config Mgmt"| ANS["Ansible"]
+    G --> |"IaC Provisioning"| TF["Terraform"]
+    G --> |"LXC Containers"| PX["Proxmox"]
+    G --> |"GitOps Workflows"| GH["GitHub"]
+    G --> |"Linux SPA Deployment"| WDL["Website Deploy Linux"]
+
+    %% AI Integration & Memory
+    H --> |"MCP Tool Generation"| MCPG["MCP Generator"]
+    H --> |"Semantic Code Indexing"| CBM["Codebase Memory MCP"]
+
+    %% Cross-Skill Synergies
+    PW -.->|"Validates Mobile & Layout for"| SEO
+    SEO -.->|"Audits Web Discovery for"| WDL
+    SBM -.->|"Ghost Graph Feeds Extracted Data to"| SUP
+    PW -.->|"Validates UI JSON"| A2UI
+    TL -.->|"Renders 2D Canvas Physics for"| PC
+    SUP -.->|"Feeds Data Pipelines to"| QRT
+    GH -.->|"Triggers CI Pipelines for"| WDL
+    FC -.->|"Feeds Raw HTML to"| SBM
+    A2UI -.->|"Injects Agent UI into"| TL
+    CBM -.->|"Indexes Repository Context for"| MCPG
+    OCLI -.->|"Generates PPTX Dashboards from"| SUP
+    TST -.->|"Provides Design Tokens for"| A2UI
+
+    style A fill:#0f172a,stroke:#38bdf8,stroke-width:2px,color:#f8fafc
+    style B fill:#1e293b,stroke:#38bdf8,stroke-width:2px,color:#f8fafc
+    style C fill:#334155,stroke:#06b6d4,stroke-width:2px,color:#f8fafc

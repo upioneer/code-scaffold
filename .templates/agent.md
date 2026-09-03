@@ -24,6 +24,16 @@
 * **PowerShell Syntax (Logical Operators in Cmdlets):** When writing PowerShell scripts, ALWAYS wrap cmdlets in parentheses before chaining logical operators (e.g., `-and`, `-or`). Otherwise, PowerShell will incorrectly parse the operator as a positional argument to the cmdlet and crash.
   - **INCORRECT:** `if (Get-Command wsl -ErrorAction SilentlyContinue -and (wsl bash -c "command -v vhs")) { ... }` (Crash: `Get-Command` attempts to parse `-and` as an argument).
   - **CORRECT:** `if ((Get-Command wsl -ErrorAction SilentlyContinue) -and (wsl bash -c "command -v vhs")) { ... }`
+* **Mandatory Mobile-First Responsive Design Protocol:**
+  * **Mobile Baseline Viewport**: All web interfaces, layouts, and components must be styled and tested for mobile viewports (320px to 390px) first before progressively enhancing for tablet (768px) and desktop (1024px+) viewports.
+  * **Viewport and Touch Compliance**: All HTML documents must declare `<meta name="viewport" content="width=device-width, initial-scale=1.0">`. All interactive elements (buttons, links, form inputs) must maintain a minimum touch target size of 48 by 48 pixels with appropriate touch spacing.
+  * **Fluid Layouts and Typography**: Use relative CSS units (rem, clamp, percentage, flex, grid) for typography and structural layouts. Never use fixed pixel widths on container elements that induce horizontal scroll overflow.
+  * **Responsive Media**: All images and visual media must include responsive properties (`srcset`, `sizes`, `loading="lazy"`) and must scale fluidly with `max-width: 100%`.
+* **Mandatory SEO, GEO & AEO Discovery Protocol:**
+  * **Dynamic Metadata Lifecycle**: Every public route, page, or view must automatically include descriptive title tags (50 to 60 characters), meta descriptions (120 to 160 characters), canonical URLs, and OpenGraph / Twitter Card social preview tags.
+  * **Structured Data (JSON-LD)**: Pages must provide valid schema.org JSON-LD structured data (e.g. `WebSite`, `Organization`, `Article`, `Product`, `BreadcrumbList`, `FAQPage`) to enable rich snippets and entity indexing.
+  * **Sitemaps and Robots Directives**: Automatically create and update `/sitemap.xml` and `/robots.txt` upon introducing, changing, or removing routes.
+  * **Generative Engine and Answer Optimization (GEO/AEO)**: Content must adhere to strict semantic HTML heading hierarchies (single `<h1>` per page, logical `<h2>` to `<h6>`), question-phrased subheadings with immediate direct answer paragraph summaries, high factual density, and clear entity definitions to optimize for AI synthesis engines (Perplexity, ChatGPT, Gemini) and featured voice snippets.
 
 ## Immutable Constraints
 * **CRITICAL - EXPLICIT CONSENT FOR PUSHING:** NEVER execute a `git push` (or any command that modifies a remote repository) without the user's explicit, direct permission for that specific push action. You must ALWAYS pause execution, summarize what is about to be pushed, and ask the user for authorization. Do not assume consent based on previous instructions or context.

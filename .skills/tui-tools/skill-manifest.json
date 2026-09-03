@@ -1,8 +1,17 @@
 {
   "name": "tui-tools",
-  "version": "5",
+  "version": "6",
   "description": "Architectural playbook and tooling (including VHS integration) for building robust, instant-on, and visually stunning modern terminal splash screens and integrations.",
   "entryPoint": "./SKILL.md",
   "engines": {},
-  "requiredPermissions": []
+  "requiredPermissions": [],
+  "category": "Frontend & UI Design",
+  "keywords": [
+    "tui-tools",
+    "vhs-tapes",
+    "terminal-gif",
+    "ratatui-helpers",
+    "figlet-ascii",
+    "cli-branding"
+  ]
 }

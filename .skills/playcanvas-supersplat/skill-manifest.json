@@ -10,5 +10,14 @@
     "fs:read",
     "fs:write",
     "net:connect"
+  ],
+  "category": "Animation & Graphics",
+  "keywords": [
+    "gaussian-splats",
+    "3d-splatting",
+    "point-cloud",
+    "photogrammetry",
+    "radiance-fields",
+    "ply-optimizer"
   ]
 }

@@ -2,6 +2,8 @@
 
 **Version:** 2
 **Target:** `.skills/proxmox`
+**Category:** DevOps & Infrastructure
+**Keywords:** `proxmox`, `proxmox-ve`, `lxc-containers`, `qemu-vms`, `homelab`, `hypervisor`, `virtualization`
 
 ## Description
 Proxmox VE LXC toolbox for building reusable templates, baseline app deployments, and SSH hardening.

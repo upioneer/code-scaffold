@@ -2,6 +2,8 @@
 
 **Version:** 1
 **Target:** `.skills/tldraw`
+**Category:** Publishing & Documentation
+**Keywords:** `tldraw`, `infinite-canvas`, `spatial-computing`, `whiteboard`, `canvas-sdk`, `live-collaboration`
 
 ## Description
 Comprehensive toolkit for integrating tldraw into web applications to create interactive canvases, presentations, whiteboards, and data dashboards.

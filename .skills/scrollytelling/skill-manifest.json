@@ -10,5 +10,13 @@
     "fs:read",
     "fs:write",
     "net:connect"
+  ],
+  "category": "Frontend & UI Design",
+  "keywords": [
+    "scrollytelling",
+    "scroll-magic",
+    "gsap-scrolltrigger",
+    "interactive-storytelling",
+    "3d-product-view"
   ]
 }

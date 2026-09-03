@@ -2,6 +2,8 @@
 
 **Version:** 4
 **Target:** `.skills/node`
+**Category:** AI, MCP & Developer Tools
+**Keywords:** `node`, `nodejs`, `npm`, `pnpm`, `backend-javascript`, `runtime`, `package-management`
 
 ## Description
 Bootstraps a Node.js runtime environment

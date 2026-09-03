@@ -10,5 +10,13 @@
     "fs:read",
     "fs:write",
     "net:connect"
+  ],
+  "category": "Data, Databases & Storage",
+  "keywords": [
+    "telegram",
+    "telegram-bot-api",
+    "messaging-bot",
+    "webhooks",
+    "bot-automation"
   ]
 }

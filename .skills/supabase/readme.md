@@ -2,6 +2,11 @@
 
 **Version:** 2
 **Target:** `.skills/supabase`
+**Category:** Data, Databases & Storage
+**Keywords:** `supabase`, `postgresql`, `row-level-security`, `database-auth`, `edge-functions`, `realtime-db`
+
+**Version:** 2
+**Target:** `.skills/supabase`
 
 ## Description
 Supabase database and authentication integration

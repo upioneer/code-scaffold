@@ -10,5 +10,15 @@
     "fs:read",
     "fs:write",
     "net:connect"
+  ],
+  "category": "AI, MCP & Developer Tools",
+  "keywords": [
+    "node",
+    "nodejs",
+    "npm",
+    "pnpm",
+    "backend-javascript",
+    "runtime",
+    "package-management"
   ]
 }

@@ -2,6 +2,8 @@
 
 **Version:** 2
 **Target:** `.skills/marp`
+**Category:** Publishing & Documentation
+**Keywords:** `marp`, `markdown-presentations`, `slide-deck`, `pdf-export`, `slide-generator`, `presenter`
 
 ## Description
 Generates Marp presentation slides from Markdown

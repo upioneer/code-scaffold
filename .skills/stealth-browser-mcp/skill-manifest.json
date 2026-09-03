@@ -1,7 +1,7 @@
 {
   "name": "stealth-browser-mcp",
-  "version": "1",
-  "description": "Undetectable browser automation for MCP-compatible AI agents, bypassing Cloudflare and antibots via nodriver and CDP.",
+  "version": "2",
+  "description": "Powerhouse dual-engine ghost browser skill for AI agents, combining Ghost Graph LLM extraction pipelines with FastMCP undetectable browser automation and Cloudflare bypass.",
   "entryPoint": "./SKILL.md",
   "engines": {
     "node": ">=18.0.0"
@@ -11,5 +11,15 @@
     "fs:write",
     "net:connect",
     "env:read"
+  ],
+  "category": "Web Automation & Scraping",
+  "keywords": [
+    "stealth-browser",
+    "ghost-graph",
+    "nodriver",
+    "cloudflare-bypass",
+    "antibot",
+    "fastmcp",
+    "smart-scraper"
   ]
 }

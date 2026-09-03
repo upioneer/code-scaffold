@@ -10,5 +10,14 @@
     "fs:read",
     "fs:write",
     "net:connect"
+  ],
+  "category": "Web Automation & Scraping",
+  "keywords": [
+    "opencli",
+    "cli-to-web",
+    "site-adapters",
+    "terminal-browser",
+    "structured-extraction",
+    "cli-tools"
   ]
 }

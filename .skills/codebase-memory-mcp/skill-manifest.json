@@ -1,7 +1,7 @@
 {
   "name": "codebase-memory-mcp",
   "version": "1",
-  "description": "High-performance code intelligence MCP server that indexes codebases into a persistent knowledge graph.",
+  "description": "High-performance code intelligence MCP server. Indexes codebases into a persistent knowledge graph.",
   "entryPoint": "./SKILL.md",
   "engines": {},
   "requiredPermissions": [
@@ -9,5 +9,14 @@
     "fs:write",
     "net:connect",
     "cli:execute"
+  ],
+  "category": "AI, MCP & Developer Tools",
+  "keywords": [
+    "codebase-memory",
+    "mcp-server",
+    "vector-embeddings",
+    "ast-index",
+    "semantic-search",
+    "rag"
   ]
 }

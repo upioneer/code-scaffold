@@ -2,6 +2,11 @@
 
 **Version:** 3
 **Target:** `.skills/p5js`
+**Category:** Animation & Graphics
+**Keywords:** `p5js`, `creative-coding`, `canvas2d`, `generative-art`, `interactive-sketches`, `webgl`
+
+**Version:** 3
+**Target:** `.skills/p5js`
 
 ## Description
 Creative coding and visual animations using the p5.js library.

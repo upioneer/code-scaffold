@@ -2,6 +2,8 @@
 
 **Version:** 2
 **Target:** `.skills/telegram`
+**Category:** Data, Databases & Storage
+**Keywords:** `telegram`, `telegram-bot-api`, `messaging-bot`, `webhooks`, `bot-automation`
 
 ## Description
 Telegram Bot API interactions

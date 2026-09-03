@@ -9,5 +9,15 @@
     "fs:write",
     "net:connect",
     "cli:execute"
+  ],
+  "category": "Publishing & Documentation",
+  "keywords": [
+    "officecli",
+    "docx",
+    "pptx",
+    "xlsx",
+    "office-documents",
+    "document-automation",
+    "pdf-generation"
   ]
 }

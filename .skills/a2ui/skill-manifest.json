@@ -9,5 +9,15 @@
   "requiredPermissions": [
     "fs:read",
     "fs:write"
+  ],
+  "category": "Frontend & UI Design",
+  "keywords": [
+    "a2ui",
+    "declarative-ui",
+    "json-to-ui",
+    "agent-ui",
+    "adaptive-cards",
+    "dynamic-forms",
+    "design-system"
   ]
 }

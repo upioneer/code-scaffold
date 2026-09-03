@@ -10,5 +10,15 @@
     "fs:read",
     "fs:write",
     "net:connect"
+  ],
+  "category": "Data, Databases & Storage",
+  "keywords": [
+    "clerk",
+    "authentication",
+    "user-management",
+    "jwt",
+    "oauth",
+    "nextjs-auth",
+    "security"
   ]
 }

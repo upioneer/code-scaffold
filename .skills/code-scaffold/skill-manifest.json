@@ -10,5 +10,14 @@
     "fs:read",
     "fs:write",
     "sys:exec"
+  ],
+  "category": "AI, MCP & Developer Tools",
+  "keywords": [
+    "code-scaffold",
+    "scaffolding-engine",
+    "project-generator",
+    "templates",
+    "agentic-workflow",
+    "tui"
   ]
 }

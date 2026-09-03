@@ -2,6 +2,8 @@
 
 **Version:** 2
 **Target:** `.skills/trackio`
+**Category:** Data, Databases & Storage
+**Keywords:** `trackio`, `ml-experiment-tracking`, `hyperparameters`, `metrics-logging`, `huggingface-spaces`
 
 ## Description
 Integration with Trackio for ML experiment tracking, dashboard deployments, and Hugging Face Spaces sync.

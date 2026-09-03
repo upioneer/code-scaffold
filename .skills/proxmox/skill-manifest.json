@@ -11,5 +11,15 @@
     "fs:write",
     "net:connect",
     "sys:command"
+  ],
+  "category": "DevOps & Infrastructure",
+  "keywords": [
+    "proxmox",
+    "proxmox-ve",
+    "lxc-containers",
+    "qemu-vms",
+    "homelab",
+    "hypervisor",
+    "virtualization"
   ]
 }

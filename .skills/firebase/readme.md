@@ -2,6 +2,8 @@
 
 **Version:** 3
 **Target:** `.skills/firebase`
+**Category:** Data, Databases & Storage
+**Keywords:** `firebase`, `firestore`, `baas`, `authentication`, `realtime-database`, `cloud-functions`, `hosting`
 
 ## Description
 Firebase authentication and database connectivity

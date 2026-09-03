@@ -9,5 +9,14 @@
   "requiredPermissions": [
     "fs:read",
     "fs:write"
+  ],
+  "category": "Publishing & Documentation",
+  "keywords": [
+    "privacy-policy",
+    "gdpr",
+    "ccpa",
+    "legal-compliance",
+    "cookie-policy",
+    "terms-of-service"
   ]
 }

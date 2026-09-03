@@ -1,3 +1,8 @@
+---
+name: Mermaid
+description: Mermaid diagram creation and rendering
+---
+
 # Mermaid Diagram Skill
 
 ## Description

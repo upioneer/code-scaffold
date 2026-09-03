@@ -10,5 +10,14 @@
     "fs:read",
     "fs:write",
     "sys:exec"
+  ],
+  "category": "Publishing & Documentation",
+  "keywords": [
+    "quarto",
+    "scientific-publishing",
+    "computational-notebooks",
+    "r-python-julia",
+    "dashboards",
+    "academic-docs"
   ]
 }

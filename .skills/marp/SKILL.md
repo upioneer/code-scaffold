@@ -1,3 +1,8 @@
+---
+name: Marp
+description: Generates Marp presentation slides from Markdown
+---
+
 # Marp Slide Generation Skill
 
 ## Description

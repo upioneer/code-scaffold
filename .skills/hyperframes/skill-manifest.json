@@ -10,5 +10,13 @@
     "fs:read",
     "fs:write",
     "net:connect"
+  ],
+  "category": "Frontend & UI Design",
+  "keywords": [
+    "hyperframes",
+    "micro-frontends",
+    "iframe-orchestration",
+    "cross-window-messaging",
+    "web-components"
   ]
 }

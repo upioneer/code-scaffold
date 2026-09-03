@@ -1,3 +1,8 @@
+---
+name: PlayCanvas Editor
+description: Visual development environment for real-time 3D collaboration.
+---
+
 # PlayCanvas Editor Skill
 
 ## Overview

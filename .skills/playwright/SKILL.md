@@ -146,6 +146,18 @@ jobs:
           fail_on_404: true
 ```
 
+### Automated Mobile-First Responsive Viewport Testing
+
+You can instantly test whether a website or web application has horizontal layout overflow or rendering issues across standard mobile devices (iPhone 14, Pixel 7), tablet (iPad), and desktop:
+
+```bash
+# Test local dev server across mobile/tablet/desktop viewports
+cd $SKILL_DIR && node scripts/test-responsive.js http://localhost:3000
+
+# Capture responsive screenshots to a directory
+cd $SKILL_DIR && node scripts/test-responsive.js http://localhost:3000 --screenshot-dir ./screenshots
+```
+
 ## Tips
 - **CRITICAL: Detect servers FIRST** - Always run server detection before writing workflows for localhost testing
 - **Declarative Only** - You must use YAML workflows modeled on the SkillForge Swamp Protocol. Do not write JS.

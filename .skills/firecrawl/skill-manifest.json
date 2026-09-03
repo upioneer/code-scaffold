@@ -10,5 +10,14 @@
     "fs:read",
     "fs:write",
     "net:connect"
+  ],
+  "category": "Web Automation & Scraping",
+  "keywords": [
+    "firecrawl",
+    "web-crawler",
+    "llm-scraping",
+    "clean-markdown",
+    "structured-json",
+    "data-extraction"
   ]
 }

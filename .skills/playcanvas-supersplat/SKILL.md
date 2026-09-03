@@ -1,3 +1,8 @@
+---
+name: PlayCanvas SuperSplat
+description: High-performance tool for editing and optimizing 3D Gaussian Splats.
+---
+
 # PlayCanvas SuperSplat Skill
 
 ## Overview

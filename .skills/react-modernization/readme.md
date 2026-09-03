@@ -2,6 +2,8 @@
 
 **Version:** 1
 **Target:** `.skills/react-modernization`
+**Category:** Frontend & UI Design
+**Keywords:** `react-19`, `react-server-components`, `server-actions`, `modernization`, `nextjs`, `state-management`
 
 ## Description
 A definitive, highly creative React 19 Modernization and Standardization playbook. This skill instructs AI agents and developers on architecting, styling, and validating modern React applications across web and mobile using 2026 standards, with built-in sandbox demos for design engineering.

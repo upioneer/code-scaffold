@@ -16,8 +16,21 @@ This pillar targets visibility on traditional search engines such as Google and 
 
 * **Metadata Integrity**: Verify title tags (ideal length 50 to 60 characters) and meta descriptions (ideal length 120 to 160 characters). Check for canonical tags, secure HTTPS protocols, and robots.txt indexability directives.
 * **Semantic HTML Structure**: Analyze heading hierarchies (H1 to H6). Ensure there is exactly one H1 tag per page. Verify that HTML5 semantic tags (e.g. `<header>`, `<nav>`, `<main>`, `<article>`, `<section>`, `<footer>`) are used to partition content logically.
+* **Mobile Viewport & Touch Optimization**: Validate `<meta name="viewport" content="width=device-width, initial-scale=1.0">`, check for fluid layout responsiveness, confirm no anti-accessibility scaling restrictions, and ensure interactive touch targets meet the 48 by 48 pixel standard.
 * **Technical Performance**: Evaluate mobile responsiveness, clean URL architectures, page speed indicators, XML sitemap configurations, and core web vitals parameters (Largest Contentful Paint, Interaction to Next Paint, Cumulative Layout Shift).
 * **Structured Data Validation**: Scan for rich schema implementations (specifically JSON-LD format) to ensure search crawlers can parse core metadata.
+
+## Automated Audit Execution
+
+Agents can run the automated zero-dependency audit tool directly against any local HTML file or live endpoint:
+
+```bash
+# Audit a local file or build artifact
+node .skills/seo-geo-aeo-auditor/scripts/audit.js dist/index.html
+
+# Audit a live dev server or URL
+node .skills/seo-geo-aeo-auditor/scripts/audit.js http://localhost:3000 --json
+```
 
 ### 2. GEO (Generative Engine Optimization)
 This pillar targets visibility within AI-driven search platforms and LLM synthesizers, such as Perplexity, ChatGPT Search, Gemini, and Google AI Overviews. These systems rely on authority validation, semantic networks, and dense factual structuring.

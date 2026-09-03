@@ -2,6 +2,8 @@
 
 **Version:** 2
 **Target:** `.skills/ansible`
+**Category:** DevOps & Infrastructure
+**Keywords:** `ansible`, `configuration-management`, `playbooks`, `server-provisioning`, `devops`, `automation`, `yaml`
 
 ## Description
 Infrastructure automation, configuration management, and application deployment orchestration using Ansible.

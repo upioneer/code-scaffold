@@ -10,5 +10,14 @@
     "fs:read",
     "fs:write",
     "net:connect"
+  ],
+  "category": "Data, Databases & Storage",
+  "keywords": [
+    "supabase",
+    "postgresql",
+    "row-level-security",
+    "database-auth",
+    "edge-functions",
+    "realtime-db"
   ]
 }

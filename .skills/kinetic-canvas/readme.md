@@ -2,6 +2,8 @@
 
 **Version:** 6
 **Target:** `.skills/kinetic-canvas`
+**Category:** Animation & Graphics
+**Keywords:** `kinetic-canvas`, `canvas-api`, `physics-simulation`, `interactive-visuals`, `particles`, `webgl`
 
 ## Description
 Kinetic Canvas is a heavily optimized, zero-dependency WebGL shader engine uniquely branded and extended for the Code Scaffold ecosystem. It provides AI agents with instant access to ultra-premium canvas effects (like `KineticFluid`, `KineticMesh`, and `Caustics`), specifically tailored for reactive, motion-driven interfaces. 

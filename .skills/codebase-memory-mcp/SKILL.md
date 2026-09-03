@@ -1,6 +1,6 @@
 ---
 name: Codebase Memory MCP
-description: High-performance code intelligence MCP server. Indexes codebases into a persistent knowledge graph — average repo in milliseconds.
+description: High-performance code intelligence MCP server. Indexes codebases into a persistent knowledge graph :  average repo in milliseconds.
 version: 1
 ---
 

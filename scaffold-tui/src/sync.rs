@@ -80,6 +80,7 @@ pub async fn sync_payload() -> Result<std::path::PathBuf> {
                                     if rel_path.starts_with(".templates")
                                         || rel_path.starts_with(".skills")
                                         || rel_path.starts_with(".licenses")
+                                        || rel_path.starts_with(".contributions")
                                     {
                                         let target = cache_dir.join(&rel_path);
                                         if file.name().ends_with('/') {

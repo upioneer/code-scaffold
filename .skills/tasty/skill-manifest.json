@@ -1,7 +1,7 @@
 {
   "name": "tasty",
-  "version": 3,
-  "description": "Code Scaffold's bespoke anti-slop frontend styling engine.",
+  "version": "3",
+  "description": "Code Scaffold's bespoke anti-slop frontend styling engine for premium landing pages and portfolios.",
   "entryPoint": "./SKILL.md",
   "engines": {
     "node": ">=18.0.0"
@@ -9,5 +9,15 @@
   "requiredPermissions": [
     "fs:read",
     "fs:write"
+  ],
+  "category": "Frontend & UI Design",
+  "keywords": [
+    "tasty",
+    "anti-slop",
+    "design-tokens",
+    "landing-page",
+    "typography",
+    "micro-animations",
+    "curated-ui"
   ]
 }

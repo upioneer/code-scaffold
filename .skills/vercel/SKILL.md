@@ -1,3 +1,8 @@
+---
+name: Vercel Deployment Routine
+description: Configuration and deployment routines for Vercel hosting.
+---
+
 name: vercel_deployment
 description: Skill for managing and optimizing Vercel serverless and edge deployments.
 

@@ -10,5 +10,14 @@
     "fs:read",
     "fs:write",
     "net:connect"
+  ],
+  "category": "Animation & Graphics",
+  "keywords": [
+    "playcanvas-engine",
+    "3d-rendering",
+    "shader-graph",
+    "physics-ammo",
+    "webgl2",
+    "webgpu-games"
   ]
 }
