@@ -10,5 +10,14 @@
     "fs:read",
     "fs:write",
     "net:connect"
+  ],
+  "category": "Publishing & Documentation",
+  "keywords": [
+    "marp",
+    "markdown-presentations",
+    "slide-deck",
+    "pdf-export",
+    "slide-generator",
+    "presenter"
   ]
 }

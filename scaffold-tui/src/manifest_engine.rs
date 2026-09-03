@@ -134,6 +134,27 @@ pub async fn execute(
                     artifact.target
                 ));
             }
+        } else if artifact.method == "write" {
+            if let Some(content) = &artifact.content {
+                if let Some(parent) = path.parent() {
+                    let _ = fs::create_dir_all(parent);
+                }
+                if path.exists() {
+                    let _ = tx.send(format!(" -> Skipped (already exists): {}", artifact.target));
+                } else if let Err(e) = fs::write(&path, content) {
+                    let _ = tx.send(format!(
+                        " -> (Error) Failed to write artifact {}: {}",
+                        artifact.target, e
+                    ));
+                } else {
+                    let _ = tx.send(format!(" -> Generated artifact: {}", artifact.target));
+                }
+            } else {
+                let _ = tx.send(format!(
+                    " -> (No Content) Failed to generate: {}",
+                    artifact.target
+                ));
+            }
         } else if artifact.method == "copy" {
             if let Some(src) = &artifact.source {
                 let src_path = PathBuf::from(src);

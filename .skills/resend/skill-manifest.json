@@ -10,5 +10,14 @@
     "fs:read",
     "fs:write",
     "net:connect"
+  ],
+  "category": "Data, Databases & Storage",
+  "keywords": [
+    "resend",
+    "transactional-email",
+    "react-email",
+    "smtp",
+    "email-api",
+    "deliverability"
   ]
 }

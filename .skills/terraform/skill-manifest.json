@@ -10,5 +10,14 @@
     "fs:read",
     "fs:write",
     "net:connect"
+  ],
+  "category": "DevOps & Infrastructure",
+  "keywords": [
+    "terraform",
+    "opentofu",
+    "infrastructure-as-code",
+    "hcl",
+    "aws-azure-gcp",
+    "state-management"
   ]
 }

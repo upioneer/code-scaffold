@@ -10,5 +10,15 @@
     "fs:read",
     "fs:write",
     "net:connect"
+  ],
+  "category": "DevOps & Infrastructure",
+  "keywords": [
+    "ansible",
+    "configuration-management",
+    "playbooks",
+    "server-provisioning",
+    "devops",
+    "automation",
+    "yaml"
   ]
 }

@@ -424,7 +424,57 @@ async function detectDevServers(customPorts = []) {
   return detectedServers;
 }
 
+const STANDARD_VIEWPORTS = [
+  { name: 'Mobile (iPhone 14)', width: 390, height: 844, isMobile: true, hasTouch: true },
+  { name: 'Mobile (Pixel 7)', width: 412, height: 915, isMobile: true, hasTouch: true },
+  { name: 'Tablet (iPad)', width: 768, height: 1024, isMobile: true, hasTouch: true },
+  { name: 'Desktop (Standard)', width: 1280, height: 800, isMobile: false, hasTouch: false }
+];
+
+/**
+ * Run responsive viewport tests against a URL
+ * @param {Object} page - Playwright page instance
+ * @param {string} url - Target URL
+ * @param {Object} options - Options for screenshots and viewports
+ */
+async function testResponsiveViewports(page, url, options = {}) {
+  const viewports = options.viewports || STANDARD_VIEWPORTS;
+  const results = [];
+
+  for (const vp of viewports) {
+    await page.setViewportSize({ width: vp.width, height: vp.height });
+    await page.goto(url, { waitUntil: 'networkidle' });
+    await waitForPageReady(page);
+
+    // Check for horizontal overflow
+    const hasHorizontalOverflow = await page.evaluate(() => {
+      return document.documentElement.scrollWidth > window.innerWidth;
+    });
+
+    const screenshotPath = options.screenshotDir
+      ? `${options.screenshotDir}/${vp.name.toLowerCase().replace(/[^a-z0-9]/g, '_')}.png`
+      : null;
+
+    if (screenshotPath) {
+      await page.screenshot({ path: screenshotPath, fullPage: true });
+    }
+
+    results.push({
+      viewport: vp.name,
+      width: vp.width,
+      height: vp.height,
+      hasHorizontalOverflow,
+      screenshotPath,
+      passed: !hasHorizontalOverflow
+    });
+  }
+
+  return results;
+}
+
 module.exports = {
+  STANDARD_VIEWPORTS,
+  testResponsiveViewports,
   launchBrowser,
   createPage,
   waitForPageReady,
@@ -441,3 +491,4 @@ module.exports = {
   detectDevServers,
   getExtraHeadersFromEnv
 };
+

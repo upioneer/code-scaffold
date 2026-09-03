@@ -2,6 +2,11 @@
 
 **Version:** 3
 **Target:** `.skills/excalidraw`
+**Category:** Publishing & Documentation
+**Keywords:** `excalidraw`, `virtual-whiteboard`, `hand-drawn-diagrams`, `architecture-diagram`, `canvas`, `visuals`
+
+**Version:** 3
+**Target:** `.skills/excalidraw`
 
 ## Description
 Renders and embeds Excalidraw whiteboards

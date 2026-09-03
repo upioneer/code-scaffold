@@ -1,3 +1,8 @@
+---
+name: Clerk Authentication Perimeter
+description: Authentication perimeter and identity management using Clerk.
+---
+
 name: clerk_authentication
 description: Skill for implementing and managing Clerk Auth boundaries and Next.js App Router security layers.
 

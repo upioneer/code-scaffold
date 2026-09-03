@@ -2,6 +2,8 @@
 
 **Version:** 6
 **Target:** `.skills/cybersecurity-toolkit`
+**Category:** DevOps & Infrastructure
+**Keywords:** `cybersecurity`, `security-audit`, `vulnerability-scan`, `owasp`, `penetration-testing`, `hardening`
 
 ## Description
 Comprehensive cybersecurity arsenal integrating MITRE and NIST framework methodologies, NVIDIA SkillSpector vulnerability scanning, and deep SAST secret detection.

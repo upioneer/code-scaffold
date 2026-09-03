@@ -1,6 +1,6 @@
 {
   "name": "code_scaffold_seo_geo_aeo_auditor_skill",
-  "version": "2",
+  "version": "3",
   "description": "Unified model-agnostic Search Engine, Generative Engine, and Answer Engine Optimization auditor to analyze traditional visibility, AI engine discoverability, and snippet answers.",
   "entryPoint": "./SKILL.md",
   "engines": {
@@ -10,5 +10,16 @@
     "fs:read",
     "fs:write",
     "net:connect"
+  ],
+  "category": "Web Automation & Scraping",
+  "keywords": [
+    "seo",
+    "geo",
+    "aeo",
+    "schema-org",
+    "json-ld",
+    "generative-engine",
+    "answer-engine",
+    "mobile-viewport"
   ]
 }

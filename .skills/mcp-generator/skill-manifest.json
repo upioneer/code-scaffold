@@ -11,5 +11,14 @@
     "fs:write",
     "net:connect",
     "sys:exec"
+  ],
+  "category": "AI, MCP & Developer Tools",
+  "keywords": [
+    "mcp-generator",
+    "model-context-protocol",
+    "fastmcp",
+    "custom-tools",
+    "json-rpc",
+    "agent-integrations"
   ]
 }

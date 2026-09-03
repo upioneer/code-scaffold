@@ -1,10 +1,6 @@
 ---
 name: CAD Tools
-description: >
-  Comprehensive CAD/CAM engineering skill for AI agents — orchestrating
-  parametric 3D modeling, multi-format conversion, mass property analysis,
-  desktop CAD automation, and AI-generative geometry workflows using open-source
-  and cloud toolchains.
+description: Comprehensive CAD/CAM engineering skill for AI agents: orchestrating parametric 3D modeling, multi-format conversion, mass property analysis, desktop CAD automation, and AI-generative geometry workflows using open-source and cloud toolchains.
 version: 1
 target: .skills/cad-tools
 ---
@@ -131,7 +127,7 @@ part.part.export_stl("cad/output/<model_name>.stl")
 
 ## Workflow: End-to-End Design Pipeline
 
-### Step 1 — Requirements Elicitation
+### Step 1 :  Requirements Elicitation
 
 Before writing any geometry, the agent MUST clarify:
 
@@ -141,27 +137,27 @@ Before writing any geometry, the agent MUST clarify:
 4. **Functional Requirements**: Loads, mating parts, tolerance classes?
 5. **Output Formats**: STEP (engineering), STL (printing), DXF (CNC), glTF (web)?
 
-### Step 2 — Parametric Code Generation
+### Step 2 :  Parametric Code Generation
 
 Generate the `build123d` Python model:
-- All dimensions are **named constants** at the top — never magic numbers
+- All dimensions are **named constants** at the top :  never magic numbers
 - Include docstring with parameter table
 - Use `Mode.SUBTRACT` for holes, pockets, reliefs
 - Apply fillets/chamfers for manufacturability
 - Validate geometric operations don't fail (catch `OCC_Error`)
 
-### Step 3 — Compile and Validate
+### Step 3 :  Compile and Validate
 
 ```bash
 python cad/models/<model_name>.py
 ```
 
 If the script exits with error, read the traceback and fix:
-- `NullShapeError`: Boolean operation failed — check intersecting/zero-thickness geometry
-- `StdFail_NotDone`: Fillet radius too large — reduce `FILLET_R`
-- `TopologicalError`: Non-manifold geometry — check face normals and closes
+- `NullShapeError`: Boolean operation failed :  check intersecting/zero-thickness geometry
+- `StdFail_NotDone`: Fillet radius too large :  reduce `FILLET_R`
+- `TopologicalError`: Non-manifold geometry :  check face normals and closes
 
-### Step 4 — Measurement & Self-Validation
+### Step 4 :  Measurement & Self-Validation
 
 After successful compilation, the agent MUST verify key measurements:
 
@@ -184,25 +180,25 @@ print(f"Volume: {volume_mm3:.1f} mm³ | Est. Mass: {mass_g:.1f} g (PLA)")
 print(f"Surface Area: {part.area:.1f} mm²")
 ```
 
-### Step 5 — Multi-Format Export
+### Step 5 :  Multi-Format Export
 
 ```python
-# STEP — Engineering / interoperability (always produce this)
+# STEP :  Engineering / interoperability (always produce this)
 part.export_step("cad/output/<model>.step")
 
-# STL — FDM/SLA 3D printing
+# STL :  FDM/SLA 3D printing
 part.export_stl("cad/output/<model>.stl", tolerance=0.01, angular_tolerance=0.1)
 
-# DXF — CNC, laser cutting, 2D drawings (export a face projection)
+# DXF :  CNC, laser cutting, 2D drawings (export a face projection)
 with BuildSketch() as sketch:
     face_projection = part.faces().sort_by(Axis.Z)[-1]
     Add(face_projection)
 sketch.sketch.export_dxf("cad/output/<model>_top.dxf")
 
-# 3MF — Modern print format (via external tool)
+# 3MF :  Modern print format (via external tool)
 # meshlabserver -i output.stl -o output.3mf  (if meshlab available)
 
-# glTF — Web visualization (via trimesh)
+# glTF :  Web visualization (via trimesh)
 import trimesh
 mesh = trimesh.load("cad/output/<model>.stl")
 mesh.export("cad/output/<model>.glb")
@@ -264,7 +260,7 @@ Agents should use this engine when passing geometric specifications to or from e
 
 ---
 
-## Cloud Generative CAD — Zoo.dev / KittyCAD API
+## Cloud Generative CAD :  Zoo.dev / KittyCAD API
 
 When local `build123d` code is insufficient or the user prefers cloud AI
 geometry generation, use the Zoo.dev text-to-CAD API.
@@ -392,7 +388,7 @@ def get_mass_properties(model_path: str, material_density: float = 1.24) -> dict
 
 ---
 
-## Desktop CAD Automation — AutoCAD / ZWCAD / GstarCAD (Windows)
+## Desktop CAD Automation :  AutoCAD / ZWCAD / GstarCAD (Windows)
 
 For projects requiring native `.dwg`/`.dxf` output or operating within an
 enterprise desktop CAD environment, use Windows COM automation.
@@ -535,10 +531,10 @@ def check_print_ready(stl_path: str) -> dict:
     issues = []
 
     if not mesh.is_watertight:
-        issues.append("CRITICAL: Mesh is not watertight — non-manifold geometry")
+        issues.append("CRITICAL: Mesh is not watertight :  non-manifold geometry")
 
     if not mesh.is_winding_consistent:
-        issues.append("WARNING: Inconsistent face winding — potential normal flip")
+        issues.append("WARNING: Inconsistent face winding :  potential normal flip")
 
     # Overhang angle check (FDM typically needs supports for > 45°)
     face_normals = mesh.face_normals
@@ -546,12 +542,12 @@ def check_print_ready(stl_path: str) -> dict:
     angles = np.degrees(np.arccos(np.clip(face_normals @ down_vec, -1, 1)))
     overhang_faces = np.sum(angles < 45)
     if overhang_faces > 0:
-        issues.append(f"INFO: {overhang_faces} faces with overhangs > 45° — supports may be needed")
+        issues.append(f"INFO: {overhang_faces} faces with overhangs > 45° :  supports may be needed")
 
     # Minimum wall thickness (rough estimate via convex hull deviation)
     vol_ratio = mesh.volume / mesh.convex_hull.volume
     if vol_ratio < 0.3:
-        issues.append("WARNING: Very thin geometry detected — check wall thickness")
+        issues.append("WARNING: Very thin geometry detected :  check wall thickness")
 
     return {
         "watertight": mesh.is_watertight,
@@ -618,10 +614,10 @@ cad/
     └── manufacturing_notes.md
 ```
 
-**CRITICAL — `.gitignore` rules for CAD projects:**
+**CRITICAL :  `.gitignore` rules for CAD projects:**
 
 ```gitignore
-# CAD binary outputs — never commit these, they are build artifacts
+# CAD binary outputs :  never commit these, they are build artifacts
 cad/output/*.step
 cad/output/*.stl
 cad/output/*.stl
@@ -672,7 +668,7 @@ CAD_MODELS_DIR=./cad/models
 
 ---
 
-## Quick Reference — Format Decision Matrix
+## Quick Reference :  Format Decision Matrix
 
 | Format | Use Case | Produces | Toolchain |
 |--------|----------|----------|-----------|

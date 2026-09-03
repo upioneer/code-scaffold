@@ -2,6 +2,8 @@
 
 **Version:** 2
 **Target:** `.skills/open-design`
+**Category:** Frontend & UI Design
+**Keywords:** `open-design`, `design-system`, `figma-tokens`, `tailwind-tokens`, `component-library`, `ui-ux`
 
 ## Description
 Create production grade UI design prototypes using the open source Open Design system

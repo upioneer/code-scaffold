@@ -1,6 +1,6 @@
 {
   "name": "code_scaffold_playwright_skill",
-  "version": "3",
+  "version": "4",
   "description": "Browser automation and end-to-end testing with Playwright",
   "entryPoint": "./SKILL.md",
   "engines": {
@@ -10,5 +10,14 @@
     "fs:read",
     "fs:write",
     "net:connect"
+  ],
+  "category": "Web Automation & Scraping",
+  "keywords": [
+    "playwright",
+    "browser-automation",
+    "e2e-testing",
+    "mobile-viewports",
+    "layout-overflow",
+    "visual-qa"
   ]
 }

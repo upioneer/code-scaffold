@@ -2,6 +2,8 @@
 
 **Version:** 2
 **Target:** `.skills/firecrawl`
+**Category:** Web Automation & Scraping
+**Keywords:** `firecrawl`, `web-crawler`, `llm-scraping`, `clean-markdown`, `structured-json`, `data-extraction`
 
 ## Description
 Crawl and scrape websites to clean markdown or structured data with Firecrawl API & CLI

@@ -1,0 +1,8 @@
+scrapegraphai>=1.30.0
+playwright>=1.40.0
+nodriver>=0.34
+fastmcp>=0.4.0
+pydantic>=2.0.0
+nest-asyncio>=1.5.0
+beautifulsoup4>=4.12.0
+html2text>=2024.2.26

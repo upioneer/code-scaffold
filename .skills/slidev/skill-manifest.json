@@ -11,5 +11,14 @@
     "fs:write",
     "net:connect",
     "cmd:execute"
+  ],
+  "category": "Publishing & Documentation",
+  "keywords": [
+    "slidev",
+    "developer-slides",
+    "vue-slides",
+    "markdown-presentations",
+    "unocss",
+    "live-code-demos"
   ]
 }

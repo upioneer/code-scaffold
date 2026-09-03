@@ -2,6 +2,8 @@
 
 **Version:** 2
 **Target:** `.skills/upstash`
+**Category:** Data, Databases & Storage
+**Keywords:** `upstash`, `serverless-redis`, `rate-limiting`, `edge-caching`, `qstash`, `vector-db`
 
 ## Description
 Serverless Redis management and rate limiting using Upstash.

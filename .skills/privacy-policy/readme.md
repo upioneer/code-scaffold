@@ -2,6 +2,8 @@
 
 **Version:** 5
 **Target:** `.skills/privacy-policy`
+**Category:** Publishing & Documentation
+**Keywords:** `privacy-policy`, `gdpr`, `ccpa`, `legal-compliance`, `cookie-policy`, `terms-of-service`
 
 ## Description
 Generates a customizable privacy policy tailored to the project (website/app) with optional Google Analytics integration.

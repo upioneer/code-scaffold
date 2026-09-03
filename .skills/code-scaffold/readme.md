@@ -2,6 +2,8 @@
 
 **Version:** 6
 **Target:** `.skills/code-scaffold`
+**Category:** AI, MCP & Developer Tools
+**Keywords:** `code-scaffold`, `scaffolding-engine`, `project-generator`, `templates`, `agentic-workflow`, `tui`
 
 ## Description
 Agent harness instructions for interacting with the Code Scaffold CLI headlessly.

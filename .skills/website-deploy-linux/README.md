@@ -2,6 +2,8 @@
 
 **Version:** 6
 **Target:** `.skills/website-deploy-linux`
+**Category:** DevOps & Infrastructure
+**Keywords:** `website-deploy-linux`, `nginx-deploy`, `putty-plink-pscp`, `ssh-deployment`, `static-hosting`, `spa-deploy`
 
 ## Description
 Enterprise Linux Deployment Agent for deploying static sites and SPAs to Nginx locally or remotely via PuTTY CLI (plink/pscp) or SSH, featuring upfront architectural prompting, automatic .env setups, reference scripts, and non destructive folder structures

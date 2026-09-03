@@ -1,4 +1,9 @@
 ---
+name: GitHub
+description: GitHub push workflow with .env-based identity configuration; merges github.md into the skill
+---
+
+---
 name: github_push
 description: Specialized skill for safely pushing to GitHub, verifying .env GitHub configuration, and handling edge cases like rebasing, diverging, or conflicts.
 ---
@@ -7,7 +12,7 @@ description: Specialized skill for safely pushing to GitHub, verifying .env GitH
 
 This skill manages all GitHub interactions. GitHub configuration (identity, remote URL, visibility) is stored in the project's root `.env` file rather than a separate `github.md` artifact. This allows multiple contributors to maintain their own local credentials without polluting version-tracked files.
 
-## Step 1: .env GitHub Configuration — Self-Heal
+## Step 1: .env GitHub Configuration :  Self-Heal
 
 Before any other action, the agent must verify and self-heal the `.env` file in the project root to ensure GitHub credentials are present.
 
@@ -51,7 +56,7 @@ If the local branch does not match the remote (diverged branches, remote has new
 * Explain the exact mismatch to the user in plain English and offer these specific options:
   * **Merge**: Combine remote changes with local changes.
   * **Rebase**: Reapply local commits on top of the remote branch (cleaner history).
-  * **Overwrite Remote (Force Push)**: Overwrite the remote with the local state — destroys differing remote changes (Dangerous).
+  * **Overwrite Remote (Force Push)**: Overwrite the remote with the local state :  destroys differing remote changes (Dangerous).
   * **Overwrite Local (Hard Reset)**: Discard local unpushed commits and match the remote exactly (Dangerous).
 * Wait for the user to explicitly select an option before proceeding.
 
@@ -92,7 +97,7 @@ Upon a successful push, review and update any of the following project artifacts
 
 * `design.md`, `plan.md`, `testing.md`, `readme.md`, `todo.md`
 
-Do **not** create or update a `github.md` file — all GitHub configuration now lives in `.env`.
+Do **not** create or update a `github.md` file :  all GitHub configuration now lives in `.env`.
 
 ## Step 9: Generate Versioned Walkthrough
 

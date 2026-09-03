@@ -1,7 +1,7 @@
 {
   "label": "React Modernization",
   "description": "Comprehensive guide and references for modern React 19 development, best practices, validatons, and UI styling using HeroUI, Radix, shadcn/ui, and Framer Motion.",
-  "version": 1,
+  "version": "1",
   "target": ".skills/react-modernization",
   "logo": [
     "  ██████╗ ███████╗ █████╗  ██████╗████████╗  ",

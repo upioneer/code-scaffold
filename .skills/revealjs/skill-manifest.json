@@ -10,5 +10,14 @@
     "fs:read",
     "fs:write",
     "net:connect"
+  ],
+  "category": "Publishing & Documentation",
+  "keywords": [
+    "revealjs",
+    "html-presentations",
+    "3d-transitions",
+    "web-slides",
+    "markdown-slides",
+    "interactive-talks"
   ]
 }

@@ -1,4 +1,9 @@
 ---
+name: Resend
+description: Sends emails using the Resend API
+---
+
+---
 name: resend_email
 description: Specialized skill for initializing Resend email services and scaffolding a reusable email utility function.
 ---

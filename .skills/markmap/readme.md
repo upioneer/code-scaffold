@@ -2,6 +2,8 @@
 
 **Version:** 1
 **Target:** `.skills/markmap`
+**Category:** Publishing & Documentation
+**Keywords:** `markmap`, `mindmaps`, `markdown-to-mindmap`, `interactive-tree`, `d3-visualization`, `hierarchy`
 
 ## Description
 A highly robust standalone skill for Markmap, enabling the transformation of standard markdown into interactive, hierarchical mindmaps.

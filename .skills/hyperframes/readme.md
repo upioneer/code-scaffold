@@ -2,6 +2,8 @@
 
 **Version:** 2
 **Target:** `.skills/hyperframes`
+**Category:** Frontend & UI Design
+**Keywords:** `hyperframes`, `micro-frontends`, `iframe-orchestration`, `cross-window-messaging`, `web-components`
 
 ## Description
 Video rendering framework for AI agents to create videos using HTML, CSS, and JS.

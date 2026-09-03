@@ -1,3 +1,8 @@
+---
+name: Excalidraw
+description: Renders and embeds Excalidraw whiteboards
+---
+
 # Excalidraw Diagram Skill
 
 ## Description

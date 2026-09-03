@@ -2,6 +2,8 @@
 
 **Version:** 3
 **Target:** `.skills/braille-animations`
+**Category:** Animation & Graphics
+**Keywords:** `braille-art`, `terminal-animations`, `ascii-art`, `cli-spinners`, `text-fx`, `tui`
 
 ## Description
 Create and manage unicode braille animations and spinners for CLIs and web apps.

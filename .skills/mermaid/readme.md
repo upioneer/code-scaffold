@@ -2,6 +2,11 @@
 
 **Version:** 3
 **Target:** `.skills/mermaid`
+**Category:** Publishing & Documentation
+**Keywords:** `mermaid`, `mermaid-cli`, `diagrams-as-code`, `flowcharts`, `sequence-diagrams`, `er-diagrams`
+
+**Version:** 3
+**Target:** `.skills/mermaid`
 
 ## Description
 Mermaid diagram creation and rendering

@@ -10,5 +10,14 @@
     "fs:read",
     "fs:write",
     "net:connect"
+  ],
+  "category": "DevOps & Infrastructure",
+  "keywords": [
+    "website-deploy-linux",
+    "nginx-deploy",
+    "putty-plink-pscp",
+    "ssh-deployment",
+    "static-hosting",
+    "spa-deploy"
   ]
 }

@@ -9,5 +9,14 @@
   "requiredPermissions": [
     "fs:read",
     "fs:write"
+  ],
+  "category": "Publishing & Documentation",
+  "keywords": [
+    "tldraw",
+    "infinite-canvas",
+    "spatial-computing",
+    "whiteboard",
+    "canvas-sdk",
+    "live-collaboration"
   ]
 }

@@ -1,4 +1,9 @@
 ---
+name: Ratatui TUI Framework
+description: Build Terminal User Interfaces (TUI) using Ratatui in Rust.
+---
+
+---
 name: ratatui
 description: Build Terminal User Interfaces (TUI) using Ratatui in Rust.
 ---

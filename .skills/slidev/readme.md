@@ -2,6 +2,8 @@
 
 **Version:** 2
 **Target:** `.skills/slidev`
+**Category:** Publishing & Documentation
+**Keywords:** `slidev`, `developer-slides`, `vue-slides`, `markdown-presentations`, `unocss`, `live-code-demos`
 
 ## Description
 Comprehensive skill for building, configuring, and exporting Slidev markdown presentations.

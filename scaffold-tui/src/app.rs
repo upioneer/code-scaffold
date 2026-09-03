@@ -105,22 +105,18 @@ pub struct App {
 
 impl App {
     pub fn default_target_dir() -> String {
-        #[cfg(debug_assertions)]
-        return if cfg!(windows) {
-            "C:\\Users\\Developer".to_string()
-        } else {
-            "/home/developer".to_string()
-        };
-
-        #[cfg(not(debug_assertions))]
-        directories::UserDirs::new()
-            .map(|u| u.home_dir().to_path_buf().to_string_lossy().to_string())
-            .unwrap_or_else(|| {
-                if cfg!(windows) {
-                    "C:\\".to_string()
-                } else {
-                    "/".to_string()
-                }
+        std::env::current_dir()
+            .map(|p| p.to_string_lossy().to_string())
+            .unwrap_or_else(|_| {
+                directories::UserDirs::new()
+                    .map(|u| u.home_dir().to_path_buf().to_string_lossy().to_string())
+                    .unwrap_or_else(|| {
+                        if cfg!(windows) {
+                            "C:\\".to_string()
+                        } else {
+                            "/".to_string()
+                        }
+                    })
             })
     }
 
@@ -1486,19 +1482,51 @@ impl App {
                                 }
                             }
                             Category::ContributingTemplate => {
+                                if item.label == "None" {
+                                    continue;
+                                }
                                 let source = self
                                     .payload_dir
                                     .join(".contributions")
                                     .join(format!("{}.md", item.label));
                                 let target = std::path::PathBuf::from(&self.target_folder)
                                     .join("CONTRIBUTING.md");
+
+                                let fallback_content = if !source.exists() {
+                                    match item.label.as_str() {
+                                        "open-source" => Some(
+                                            include_str!("../../.contributions/open-source.md")
+                                                .to_string(),
+                                        ),
+                                        "strict-ownership" => Some(
+                                            include_str!(
+                                                "../../.contributions/strict-ownership.md"
+                                            )
+                                            .to_string(),
+                                        ),
+                                        _ => None,
+                                    }
+                                } else {
+                                    None
+                                };
+
+                                let (method, src, content) = if let Some(c) = fallback_content {
+                                    ("write".into(), None, Some(c))
+                                } else {
+                                    (
+                                        "copy".into(),
+                                        Some(source.to_string_lossy().to_string()),
+                                        None,
+                                    )
+                                };
+
                                 selected_artifacts.push(crate::models::manifest::ArtifactEntry {
                                     id: item.label.clone(),
                                     label: item.label.clone(),
-                                    source: Some(source.to_string_lossy().to_string()),
+                                    source: src,
                                     target: target.to_string_lossy().to_string(),
-                                    method: "copy".into(),
-                                    content: None,
+                                    method,
+                                    content,
                                 });
                             }
                             Category::License => {
@@ -2127,5 +2155,31 @@ mod visual_artifacts_tests {
 
         let buffer = terminal.backend().buffer();
         assert_eq!(app.active_block, ActiveBlock::Workspace);
+    }
+
+    #[test]
+    fn test_default_target_dir_is_current_dir() {
+        let expected = std::env::current_dir()
+            .unwrap()
+            .to_string_lossy()
+            .to_string();
+        assert_eq!(App::default_target_dir(), expected);
+    }
+
+    #[test]
+    fn test_contributing_templates_not_empty() {
+        // Test with empty/dummy payload dir to verify fallback items are loaded
+        let workspace = Workspace::new(std::path::PathBuf::from("/nonexistent/dummy/path"));
+        let cont_items: Vec<_> = workspace
+            .items
+            .iter()
+            .filter(|i| i.category == Category::ContributingTemplate)
+            .collect();
+        assert!(
+            !cont_items.is_empty(),
+            "ContributingTemplate items must never be empty"
+        );
+        assert!(cont_items.iter().any(|i| i.label == "open-source"));
+        assert!(cont_items.iter().any(|i| i.label == "strict-ownership"));
     }
 }

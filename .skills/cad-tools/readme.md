@@ -2,6 +2,8 @@
 
 **Version:** 2
 **Target:** `.skills/cad-tools`
+**Category:** Animation & Graphics
+**Keywords:** `cad`, `3d-modeling`, `step-files`, `stl`, `parametric-design`, `manufacturing`, `engineering`
 
 ## Description
 

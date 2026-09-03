@@ -2,6 +2,8 @@
 
 **Version:** 4
 **Target:** `.skills/lingo`
+**Category:** Publishing & Documentation
+**Keywords:** `lingo`, `localization`, `i18n`, `translation`, `multilingual`, `po-editor`, `l10n`
 
 ## Description
 Deterministic shorthand glossary that maps user lingo, acronyms, and abbreviations to their full meanings for faster, unambiguous communication.

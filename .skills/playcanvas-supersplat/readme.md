@@ -2,6 +2,8 @@
 
 **Version:** 2
 **Target:** `.skills/playcanvas-supersplat`
+**Category:** Animation & Graphics
+**Keywords:** `gaussian-splats`, `3d-splatting`, `point-cloud`, `photogrammetry`, `radiance-fields`, `ply-optimizer`
 
 ## Description
 High performance tool for editing and optimizing 3D Gaussian Splats.

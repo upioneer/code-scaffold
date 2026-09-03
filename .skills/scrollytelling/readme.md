@@ -2,6 +2,8 @@
 
 **Version:** 3
 **Target:** `.skills/scrollytelling`
+**Category:** Frontend & UI Design
+**Keywords:** `scrollytelling`, `scroll-magic`, `gsap-scrolltrigger`, `interactive-storytelling`, `3d-product-view`
 
 ## Description
 Design architecture, workflows, and code implementations for scroll-triggered 3D model manipulation, interactive 'production explosion' views, and cinematic WebGL environmental storytelling.

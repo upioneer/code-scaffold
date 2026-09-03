@@ -1,7 +1,7 @@
 {
   "name": "react-modernization",
-  "version": "1.0.0",
-  "description": "Comprehensive guide and references for modern React 19 development, best practices, validatons, and UI styling.",
+  "version": "1",
+  "description": "Comprehensive guide and references for modern React 19 development, best practices, validatons, and UI styling using HeroUI, Radix, shadcn/ui, and Framer Motion.",
   "entryPoint": "./SKILL.md",
   "engines": {
     "node": ">=18.0.0"
@@ -10,5 +10,14 @@
     "fs:read",
     "fs:write",
     "net:connect"
+  ],
+  "category": "Frontend & UI Design",
+  "keywords": [
+    "react-19",
+    "react-server-components",
+    "server-actions",
+    "modernization",
+    "nextjs",
+    "state-management"
   ]
 }

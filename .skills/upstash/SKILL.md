@@ -1,3 +1,8 @@
+---
+name: Upstash Redis Management
+description: Serverless Redis management and rate limiting using Upstash.
+---
+
 name: upstash_redis
 description: Skill for implementing connectionless Redis state operations and API rate limiting boundaries.
 

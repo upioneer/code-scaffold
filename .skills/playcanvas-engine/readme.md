@@ -2,6 +2,8 @@
 
 **Version:** 2
 **Target:** `.skills/playcanvas-engine`
+**Category:** Animation & Graphics
+**Keywords:** `playcanvas-engine`, `3d-rendering`, `shader-graph`, `physics-ammo`, `webgl2`, `webgpu-games`
 
 ## Description
 Modular 3D/2D game engine for the web supporting WebGL and WebGPU.

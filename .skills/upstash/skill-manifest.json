@@ -10,5 +10,14 @@
     "fs:read",
     "fs:write",
     "net:connect"
+  ],
+  "category": "Data, Databases & Storage",
+  "keywords": [
+    "upstash",
+    "serverless-redis",
+    "rate-limiting",
+    "edge-caching",
+    "qstash",
+    "vector-db"
   ]
 }

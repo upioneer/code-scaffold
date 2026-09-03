@@ -2,6 +2,8 @@
 
 **Version:** 1
 **Target:** `.skills/quarto`
+**Category:** Publishing & Documentation
+**Keywords:** `quarto`, `scientific-publishing`, `computational-notebooks`, `r-python-julia`, `dashboards`, `academic-docs`
 
 ## Description
 A comprehensive automation skill for Quarto, the open source scientific and technical publishing system built on Pandoc. It empowers agents to dynamically weave together narrative text and code to produce elegantly formatted HTML, PDF, Word, ePub, Reveal.js slides, and interactive dashboards.

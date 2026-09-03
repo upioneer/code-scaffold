@@ -1,3 +1,8 @@
+---
+name: Firebase
+description: Firebase authentication and database connectivity
+---
+
 name: firebase_deployment
 description: Specialized skill for safely pushing to Firebase, verifying firebase.md configuration, and updating it upon success.
 

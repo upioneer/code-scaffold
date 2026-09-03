@@ -10,5 +10,14 @@
     "fs:read",
     "fs:write",
     "net:connect"
+  ],
+  "category": "Frontend & UI Design",
+  "keywords": [
+    "ratatui",
+    "rust-tui",
+    "terminal-ui",
+    "crossterm",
+    "cli-dashboard",
+    "console-app"
   ]
 }

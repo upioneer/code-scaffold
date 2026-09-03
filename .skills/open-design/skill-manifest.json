@@ -10,5 +10,14 @@
     "fs:read",
     "fs:write",
     "net:connect"
+  ],
+  "category": "Frontend & UI Design",
+  "keywords": [
+    "open-design",
+    "design-system",
+    "figma-tokens",
+    "tailwind-tokens",
+    "component-library",
+    "ui-ux"
   ]
 }

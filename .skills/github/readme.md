@@ -2,6 +2,11 @@
 
 **Version:** 5
 **Target:** `.skills/github`
+**Category:** DevOps & Infrastructure
+**Keywords:** `github`, `git`, `github-actions`, `cicd`, `pull-requests`, `releases`, `repo-management`
+
+**Version:** 5
+**Target:** `.skills/github`
 
 ## Description
 GitHub push workflow with .env based identity configuration; merges github.md into the skill

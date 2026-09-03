@@ -2,6 +2,8 @@
 
 **Version:** 1
 **Target:** `.skills/codebase-memory-mcp`
+**Category:** AI, MCP & Developer Tools
+**Keywords:** `codebase-memory`, `mcp-server`, `vector-embeddings`, `ast-index`, `semantic-search`, `rag`
 
 ## Description
 High-performance code intelligence MCP server that indexes codebases into a persistent knowledge graph. It handles 158 languages and enables sub-ms structural queries.

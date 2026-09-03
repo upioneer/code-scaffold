@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stealth Browser MCP - Sandbox</title>
+    <title>Stealth Browser MCP & Ghost Graph - Sandbox</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <style>
@@ -17,7 +17,6 @@
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #475569; }
         
-        /* Pulse Animation for Terminal Cursor */
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
         .cursor { display: inline-block; width: 8px; height: 1.2em; background-color: #22d3ee; vertical-align: text-bottom; animation: blink 1s step-end infinite; }
     </style>
@@ -27,23 +26,23 @@
     <!-- Background Glow -->
     <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-cyan-600/10 rounded-full blur-[150px] pointer-events-none"></div>
 
-    <!-- Sticky Header -->
+    <!-- Header -->
     <header class="sticky top-0 z-50 glass-panel border-x-0 border-t-0 border-b-slate-800/80 px-6 py-4">
         <div class="max-w-6xl mx-auto flex items-center justify-between">
             <div class="flex items-center gap-3">
                 <div class="w-8 h-8 rounded bg-cyan-500/20 flex items-center justify-center border border-cyan-500/50 text-cyan-400 font-bold">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                 </div>
-                <h1 class="text-xl font-black uppercase tracking-widest text-white">Stealth Browser MCP</h1>
+                <h1 class="text-xl font-black uppercase tracking-widest text-white">Stealth Browser & Ghost Graph</h1>
             </div>
-            <span class="px-3 py-1 bg-cyan-500/10 text-cyan-400 text-xs font-bold rounded-full border border-cyan-500/30 uppercase tracking-widest hidden sm:inline-block">v1</span>
+            <span class="px-3 py-1 bg-cyan-500/10 text-cyan-400 text-xs font-bold rounded-full border border-cyan-500/30 uppercase tracking-widest">v2</span>
         </div>
     </header>
 
-    <main class="max-w-6xl mx-auto px-6 py-12 relative z-10 space-y-16">
+    <main class="max-w-6xl mx-auto px-6 py-12 relative z-10 space-y-12">
         
         <!-- Hero Section -->
-        <section id="hero" class="text-center max-w-4xl mx-auto space-y-8">
+        <section id="hero" class="text-center max-w-4xl mx-auto space-y-6">
             <div id="logo-container" class="p-6 bg-slate-950 rounded-xl border border-slate-800 shadow-inner w-full overflow-x-auto text-cyan-400 ascii-logo text-left flex justify-center mx-auto opacity-0 translate-y-8">
   ███████╗████████╗███████╗ █████╗ ██╗  ████████╗██╗  ██╗      
   ██╔════╝╚══██╔══╝██╔════╝██╔══██╗██║  ╚══██╔══╝██║  ██║      
@@ -66,21 +65,60 @@
             </div>
             
             <p id="desc" class="text-lg md:text-xl text-slate-400 leading-relaxed opacity-0 translate-y-4">
-                Undetectable browser automation for MCP-compatible AI agents, bypassing Cloudflare and antibots via nodriver and CDP.
+                Powerhouse dual-engine ghost browser skill for AI agents. Combines Ghost Graph LLM extraction pipelines with FastMCP undetectable browser automation and Cloudflare bypass.
             </p>
         </section>
 
+        <!-- Dual Engine Architecture Cards -->
+        <section class="grid md:grid-cols-2 gap-8">
+            <!-- Engine 1 -->
+            <div class="glass-panel p-8 rounded-2xl flex flex-col gap-4 border-cyan-500/40">
+                <div class="flex items-center gap-3 border-b border-slate-800/50 pb-4">
+                    <span class="w-8 h-8 rounded-full bg-cyan-500/20 text-cyan-400 font-bold flex items-center justify-center border border-cyan-500/40">1</span>
+                    <h3 class="text-xl font-bold text-white tracking-wide">Ghost Graph Extraction Engine</h3>
+                </div>
+                <ul class="text-slate-300 space-y-2 text-sm">
+                    <li><strong class="text-cyan-400">Smart Scraper Graph:</strong> Prompt-driven single-pass extraction of structured JSON or Markdown.</li>
+                    <li><strong class="text-cyan-400">Autonomous Search Graph:</strong> Multi-source web search query synthesis.</li>
+                    <li><strong class="text-cyan-400">Multi-Model Support:</strong> Gemini, Claude 3.5 Sonnet, OpenAI GPT-4o, Groq, and local Ollama.</li>
+                    <li><strong class="text-cyan-400">Zero-Subscription:</strong> Free local extraction without paid third-party API keys.</li>
+                </ul>
+                <div class="mt-auto pt-4 bg-slate-950 p-3 rounded-lg border border-slate-800 font-mono text-xs text-cyan-300">
+                    python scripts/scrape.py --url &lt;URL&gt; --prompt "Extract data" --json
+                </div>
+            </div>
+
+            <!-- Engine 2 -->
+            <div class="glass-panel p-8 rounded-2xl flex flex-col gap-4 border-cyan-500/40">
+                <div class="flex items-center gap-3 border-b border-slate-800/50 pb-4">
+                    <span class="w-8 h-8 rounded-full bg-cyan-500/20 text-cyan-400 font-bold flex items-center justify-center border border-cyan-500/40">2</span>
+                    <h3 class="text-xl font-bold text-white tracking-wide">FastMCP Stealth Automation</h3>
+                </div>
+                <ul class="text-slate-300 space-y-2 text-sm">
+                    <li><strong class="text-cyan-400">Anti-Detection:</strong> Bypasses Cloudflare, Queue-It, and browser fingerprinting via nodriver.</li>
+                    <li><strong class="text-cyan-400">97-Tool Arsenal:</strong> Spanning navigation, clicks, human-like typing, and tab controls.</li>
+                    <li><strong class="text-cyan-400">Pixel-Accurate CDP:</strong> Full DOM cloning with CSS styles, computed metrics, and event listeners.</li>
+                    <li><strong class="text-cyan-400">Dynamic AI Hooks:</strong> On-the-fly Python network hooks to rewrite request/response traffic.</li>
+                </ul>
+                <div class="mt-auto pt-4 bg-slate-950 p-3 rounded-lg border border-slate-800 font-mono text-xs text-cyan-300">
+                    python src/server.py --minimal
+                </div>
+            </div>
+        </section>
+
         <!-- Context & Details -->
-        <section id="context" class="grid md:grid-cols-2 gap-8 opacity-0 translate-y-8">
-            
+        <section id="context" class="grid md:grid-cols-2 gap-8">
             <div class="glass-panel p-8 rounded-2xl flex flex-col gap-4">
                 <div class="flex items-center gap-3 border-b border-slate-800/50 pb-4">
                     <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
-                    <h3 class="text-xl font-bold text-white tracking-wide">Skill Context</h3>
+                    <h3 class="text-xl font-bold text-white tracking-wide">Environment Diagnostics</h3>
                 </div>
-                <p class="text-slate-400 leading-relaxed">
-                    This sandbox provides a high-fidelity presentation layer for the <strong class="text-slate-200">stealth-browser-mcp</strong> skill. Whether this is an interactive GUI skill or a headless CI/CD backend integration, the Code Scaffold runtime seamlessly provisions its exact structural constraints directly into your workspace.
+                <p class="text-slate-400 leading-relaxed text-sm">
+                    Run the automated environment setup utility to verify Python 3.10+, Playwright Chromium binaries, and model provider credentials in a single command:
                 </p>
+                <div class="bg-slate-950 border border-slate-800 rounded-lg p-3 font-mono text-xs text-cyan-400">
+                    python .skills/stealth-browser-mcp/scripts/setup.py --install
+                </div>
             </div>
 
             <div class="glass-panel p-8 rounded-2xl flex flex-col gap-4">
@@ -88,15 +126,13 @@
                     <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                     <h3 class="text-xl font-bold text-white tracking-wide">CLI Deployment</h3>
                 </div>
-                <p class="text-slate-400 leading-relaxed mb-2">
-                    To inject this specialized knowledge graph and scaffolding payload directly into your project architecture, run the following command in your terminal:
+                <p class="text-slate-400 leading-relaxed text-sm mb-2">
+                    Inject this dual-engine ghost browser payload into your project:
                 </p>
-                <div class="relative flex items-center bg-slate-950 border border-slate-800 rounded-lg p-4 shadow-xl group cursor-pointer overflow-hidden">
-                    <div class="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg blur opacity-20 group-hover:opacity-40 transition duration-500"></div>
-                    <code class="relative text-cyan-400 font-mono text-sm md:text-base text-left w-full">npx @code-scaffold/skills install stealth-browser-mcp<span class="cursor"></span></code>
+                <div class="relative flex items-center bg-slate-950 border border-slate-800 rounded-lg p-3 shadow-xl overflow-hidden font-mono text-xs text-cyan-400">
+                    npx @code-scaffold/skills install stealth-browser-mcp<span class="cursor"></span>
                 </div>
             </div>
-
         </section>
         
         <div id="footer-spacer" class="h-12"></div>

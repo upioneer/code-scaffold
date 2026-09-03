@@ -2,6 +2,8 @@
 
 **Version:** 6
 **Target:** `.skills/tui-tools`
+**Category:** Frontend & UI Design
+**Keywords:** `tui-tools`, `vhs-tapes`, `terminal-gif`, `ratatui-helpers`, `figlet-ascii`, `cli-branding`
 
 ## Description
 Architectural playbook and tooling (including VHS integration) for building robust, instant-on, and visually stunning modern terminal splash screens and integrations.

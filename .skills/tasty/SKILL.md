@@ -24,7 +24,7 @@ Emulate the precision of advanced design harnesses by recognizing and applying t
 * `/tasty redesign <target>` : Throw out the visual structure while keeping the copy, IA, and brand intact. Rebuild with a completely different structural fingerprint within existing implementation boundaries.
 * `/tasty audit <target>` : Read the target, score it against the anti-pattern list, and return a ranked punch list. Do not edit.
 * `/tasty polish` : The final pass. Aligns the codebase strictly with the design system, removing stray styles and finalizing the UI.
-* `/tasty critique` : UX design review mode. Analyze hierarchy, clarity, and emotional resonance. Do not write code—just critique.
+* `/tasty critique` : UX design review mode. Analyze hierarchy, clarity, and emotional resonance. Do not write code: just critique.
 * `/tasty distill` : Strip the UI to its absolute essence. Remove unnecessary visual noise and redundant nested containers.
 * `/tasty bolder` : Amplify boring designs. Increase contrast, typography size, or layout asymmetry to make it punchier.
 * `/tasty quieter` : Tone down overly bold designs. Introduce more negative space and subtle typography.
@@ -97,7 +97,7 @@ You are explicitly forbidden from generating the following "AI Tells":
 4. **No Pure Black or Pure Gray:** Never use pure `#000000` or neutral grays (e.g., `#888888`). Always tint grays and shadows with the background's lowest luminance hue.
 5. **No Bounce Easing:** Do not use bouncy or elastic easing functions. Use crisp, purposeful easing curves (e.g., `cubic-bezier(0.16, 1, 0.3, 1)`).
 6. **The "Bento Box" Crutch:** Do not default every feature section to a 3-column CSS Grid of rounded cards. Innovate your layouts.
-7. **Honest Copy (No Fabricated Content):** Do not invent metrics like "24,591" or "+47% conversion". Use real numbers, a placeholder like `—`, or `[METRIC_WIDGET]`. Do not fake testimonials or logos.
+7. **Honest Copy (No Fabricated Content):** Do not invent metrics like "24,591" or "+47% conversion". Use real numbers, a placeholder like `: `, or `[METRIC_WIDGET]`. Do not fake testimonials or logos.
 8. **Locked Tokens:** No mid-render inline color or font improvisation. Use CSS variables or Tailwind config tokens strictly. No random `style={{ color: '#ff0000' }}`.
 9. **No Re-drawn Chrome:** Do not build fake browser bars, fake macOS window dots, or fake phone frames. Use real screenshots wrapped in a simple `<figure>`.
 10. **Typography Purity:** No italic headers. Headings and display type are always roman (`font-style: normal`). Carry emphasis with weight, color, or drawn underlines. Italics are for body-copy emphasis only.
@@ -106,7 +106,7 @@ You are explicitly forbidden from generating the following "AI Tells":
 
 ## 6. Pre-Emit Self-Critique
 
-Before handing back any output, mentally score it 1–5 on six axes:
+Before handing back any output, mentally score it 1-5 on six axes:
 **Philosophy, Hierarchy, Execution, Specificity, Restraint, Variety.**
 If any score is `< 3`, you MUST execute a revision pass before returning the code.
 Optionally stamp the scores at the top of the artifact: `/* Tasty · critique: P5 H4 E5 S4 R5 V5 */`

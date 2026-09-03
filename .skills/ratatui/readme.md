@@ -2,6 +2,8 @@
 
 **Version:** 4
 **Target:** `.skills/ratatui`
+**Category:** Frontend & UI Design
+**Keywords:** `ratatui`, `rust-tui`, `terminal-ui`, `crossterm`, `cli-dashboard`, `console-app`
 
 ## Description
 Build Terminal User Interfaces (TUI) using Ratatui in Rust.

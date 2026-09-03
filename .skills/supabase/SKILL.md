@@ -1,4 +1,9 @@
 ---
+name: Supabase
+description: Supabase database and authentication integration
+---
+
+---
 name: supabase_management
 description: Specialized skill for safely executing Supabase migrations and generating strict TypeScript types from the database schema.
 ---

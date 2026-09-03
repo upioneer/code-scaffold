@@ -1,74 +1,129 @@
 ---
-name: Stealth Browser MCP
-description: Highly robust standalone skill for building, configuring, and operating the Stealth Browser MCP for undetectable browser automation.
+name: Stealth Browser MCP & Ghost Graph
+description: Powerhouse dual-engine ghost browser skill for AI agents. Combines Ghost Graph LLM extraction pipelines with FastMCP undetectable browser automation and Cloudflare bypass.
 ---
 
-# Stealth Browser MCP Skill
+# Stealth Browser & Ghost Graph Skill
 
-This skill provides comprehensive instructions for deploying, configuring, and operating the [Stealth Browser MCP](https://github.com/vibheksoni/stealth-browser-mcp). This tool provides undetectable browser automation for MCP-compatible AI agents, bypassing Cloudflare, antibot systems, and social media blocks using `nodriver`, Chrome DevTools Protocol (CDP), and FastMCP.
+This skill equips the agent with an all-in-one ghost browser and AI-driven web extraction powerhouse. It operates in two complementary modes:
 
-## 1. Installation & Environment Verification (CRITICAL)
+1. **Engine 1 (Ghost Graph Extraction Pipelines)**: Direct prompt-driven scraping, multi-source search graph synthesis, and Pydantic schema validation using local (Ollama) or cloud (Gemini, Claude, OpenAI, Groq) LLMs.
+2. **Engine 2 (FastMCP Stealth Browser Automation)**: Undetectable low-level browser automation (`nodriver`, Chrome DevTools Protocol, Cloudflare bypass, and network interception).
 
-Before attempting to use or configure Stealth Browser MCP, you MUST proactively verify if the required environment exists and prompt the user if dependencies are missing.
+---
 
-### Verification Steps
-1. **Check for Python & Virtual Environment:** Ensure `python` (or `python3`) is available.
-2. **Check for the Repository:** Verify if the `stealth-browser-mcp` directory exists in the expected location (usually within the project or globally).
-3. **Check for Browsers:** The MCP requires Chrome, Chromium, or Microsoft Edge to be installed on the system.
+## 1. Quick Start & Environment Verification
 
-### Installation Instructions
-If the user needs to install the MCP, guide them through or execute (with permission) the following steps:
+Before executing browser tasks, run the environment diagnostic tool:
+
 ```bash
-# 1. Clone the repository
-git clone https://github.com/vibheksoni/stealth-browser-mcp.git
-cd stealth-browser-mcp
+# Verify Python version, browser binaries, and installed packages
+python .skills/stealth-browser-mcp/scripts/setup.py
 
-# 2. Create and activate a virtual environment
-python -m venv venv
-# Windows: venv\Scripts\activate
-# Mac/Linux: source venv/bin/activate
-
-# 3. Install dependencies
-pip install -r requirements.txt
+# Install missing dependencies and Playwright Chromium
+python .skills/stealth-browser-mcp/scripts/setup.py --install
 ```
 
-### Adding to MCP Clients
-Provide the user with the correct configuration JSON for their specific MCP client (Claude Desktop, Cursor, etc.). 
-Example for Claude Desktop (`claude_desktop_config.json`):
+### Supported Environment Variables
+* `GEMINI_API_KEY` or `GOOGLE_API_KEY`: Google Gemini provider.
+* `OPENAI_API_KEY`: OpenAI GPT-4o / GPT-4o-mini provider.
+* `ANTHROPIC_API_KEY`: Anthropic Claude 3.5 Sonnet provider.
+* `GROQ_API_KEY`: Groq ultra-fast Llama 3 70B provider.
+* `OLLAMA_URL`: Local Ollama instance (default: `http://localhost:11434`).
+
+---
+
+## 2. Engine 1: Ghost Graph Extraction Pipelines
+
+### A. Smart Scraper Graph (Prompt to Structured JSON)
+Extract clean, structured JSON or Markdown from any static or dynamic JavaScript webpage:
+
+```bash
+# Extract structured data with natural language prompt
+python .skills/stealth-browser-mcp/scripts/scrape.py \
+  --url "https://news.ycombinator.com" \
+  --prompt "Extract the top 10 articles with title, score, author, and url" \
+  --json
+
+# Enforce a custom model provider (e.g. Gemini, OpenAI, Claude, Ollama)
+python .skills/stealth-browser-mcp/scripts/scrape.py \
+  --url "https://github.com/trending" \
+  --prompt "List trending repositories with repo name, description, and stars" \
+  --model gemini \
+  --json
+```
+
+### B. Autonomous Search Graph (Multi-Source Research)
+Execute multi-page search and synthesis across search engines without manual scraping:
+
+```bash
+# Search across multiple web sources and synthesize key takeaways
+python .skills/stealth-browser-mcp/scripts/search.py \
+  --query "Latest architectural features in React 19" \
+  --max-results 4 \
+  --json
+```
+
+### C. Programmatic Python Ghost Graph Recipe
+
+```python
+from scrapegraphai.graphs import SmartScraperGraph
+
+graph_config = {
+    "llm": {
+        "api_key": "YOUR_API_KEY",
+        "model": "google_genai/gemini-1.5-flash",
+    },
+    "headless": True
+}
+
+smart_scraper = SmartScraperGraph(
+    prompt="Extract pricing tiers with name, monthly price, and feature list",
+    source="https://example.com/pricing",
+    config=graph_config
+)
+
+result = smart_scraper.run()
+print(result)
+```
+
+---
+
+## 3. Engine 2: FastMCP Stealth Browser Automation
+
+For complex multi-step interactions, form fills, button clicks, and bypassing heavy anti-bot walls (Cloudflare, Queue-It), use the Stealth Browser FastMCP server.
+
+### Key Capabilities
+* **Anti-Detection**: Employs `nodriver` and CDP hooks to strip `navigator.webdriver` flags and simulate human interaction heuristics.
+* **Element Interaction**: `spawn_browser()`, `navigate()`, `click_element()`, `type_text()`, `paste_text()`, `file_upload()`.
+* **CDP Element Extraction**: `extract_complete_element_cdp()`, `extract_element_styles()`, `extract_element_structure()`.
+* **Dynamic Network Hooks**: `create_dynamic_hook()` - Injects custom Python hooks to intercept or rewrite HTTP requests and API responses in real-time.
+
+### Running the MCP Server
+```bash
+# Minimal mode (20 core tools, optimal context footprint)
+python src/server.py --minimal
+
+# Full mode (97 tools across 11 categories)
+python src/server.py
+```
+
+### Adding to MCP Clients (`claude_desktop_config.json` or `mcp.json`)
 ```json
 {
   "mcpServers": {
     "stealth-browser-mcp": {
-      "command": "/absolute/path/to/venv/bin/python",
-      "args": ["/absolute/path/to/src/server.py"]
+      "command": "python",
+      "args": [".skills/stealth-browser-mcp/src/server.py"]
     }
   }
 }
 ```
 
-## 2. Core Features & Tool Arsenal
+---
 
-The MCP exposes up to 97 tools across 11 sections. It supports **Modular Architecture**: you can run it in full mode (97 tools), minimal mode (20 core tools via `--minimal`), or selectively disable sections (e.g., `--disable-cdp-functions`).
+## 4. Best Practices for AI Agents
 
-**Key Capabilities to leverage:**
-* **Browser Management:** `spawn_browser()`, `navigate()`, `close_instance()`, `list_instances()`, `get_instance_state()`
-* **Element Interaction:** `query_elements()`, `click_element()`, `type_text()`, `paste_text()`, `file_upload()`, `execute_script()`
-* **Progressive Element Extraction (CDP-Accurate):** `extract_complete_element_cdp()`, `extract_element_styles()`, `extract_element_structure()`, `extract_element_events()`
-* **Network Debugging & Interception:** `list_network_requests()`, `get_request_details()`, `modify_headers()`, `spawn_browser(block_resources=[...])`
-* **Dynamic AI Hooks:** `create_dynamic_hook()`, `create_simple_dynamic_hook()` - Generates Python functions on the fly to intercept or modify network traffic in real-time.
-* **CDP Function Execution:** `execute_cdp_command()`, `call_javascript_function()`, `inject_and_execute_script()`
-
-## 3. Best Practices & Operational Mechanics
-
-When operating the Stealth Browser MCP, always adhere to these best practices:
-1. **State Verification:** Always verify browser state (using `get_instance_state()` or taking a screenshot) after navigating or performing critical actions. Do not assume page loads succeed blindly.
-2. **Antibot Navigation:** If blocked, ensure you are not missing implicit waits, or try using human-like typing (`type_text()`) instead of fast text injection.
-3. **Resource Cleanup:** The MCP automatically reaps idle browsers after 10 minutes (configurable via `BROWSER_IDLE_TIMEOUT` env var). If you need an instance to persist longer, pass `idle_timeout_seconds` when spawning.
-4. **Environment Variables:** Use `STEALTH_BROWSER_MCP_AUTH_TOKEN` for HTTP transport security if not using local `stdio`. Use `STEALTH_BROWSER_DEBUG=1` to enable verbose stderr logging if things break.
-
-## 4. Known Issues & Troubleshooting
-
-* **No compatible browser found:** The system will auto-detect Chrome/Edge. If it fails, run `validate_browser_environment_tool()` to diagnose.
-* **Tools hang or return malformed JSON:** If debug output pollutes stdout during `stdio` transport, the MCP JSON-RPC protocol gets corrupted. Ensure `STEALTH_BROWSER_DEBUG` is not set unless using HTTP transport, or ensure debug logs route to stderr.
-* **Linux/Docker Crashes:** Chromium may crash in containerized environments. Run with sandbox disabled (the server typically auto-detects Docker/root environments to handle this).
-* **Too Many Tools Cluttering Context:** If the LLM context is overwhelmed by 97 tools, advise the user to restart the MCP server with the `--minimal` flag.
+1. **Model Selection**: Default to `gemini` (Gemini 1.5 Flash) for fastest zero-cost extraction or `ollama` for fully offline local operations.
+2. **Deterministic Schemas**: When structured data is required, pass explicit field names in the prompt or supply a JSON schema file via `--schema <file.json>`.
+3. **Ghost Evasion**: If a site blocks standard requests, toggle Engine 2 with `nodriver` and human-like typing delays (`type_text`).

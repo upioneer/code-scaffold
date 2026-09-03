@@ -2,6 +2,8 @@
 
 **Version:** 1
 **Target:** `.skills/a2ui`
+**Category:** Frontend & UI Design
+**Keywords:** `a2ui`, `declarative-ui`, `json-to-ui`, `agent-ui`, `adaptive-cards`, `dynamic-forms`, `design-system`
 
 ## Description
 Implements the Agent to User Interface (A2UI) protocol to generate declarative, secure, and incrementally updatable JSON UI payloads for client-side rendering.

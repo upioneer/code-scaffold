@@ -10,5 +10,13 @@
     "fs:read",
     "fs:write",
     "net:connect"
+  ],
+  "category": "DevOps & Infrastructure",
+  "keywords": [
+    "vercel",
+    "edge-deployments",
+    "nextjs-hosting",
+    "serverless-functions",
+    "domain-management"
   ]
 }

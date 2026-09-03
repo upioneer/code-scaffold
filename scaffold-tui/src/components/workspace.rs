@@ -143,10 +143,10 @@ impl Workspace {
                 label: "Web Dev".into(),
                 selected: false,
                 category: Category::AgentPersona,
-                description: Some("Specialized in modern web technologies (React, Vue, Node.js, HTML/CSS) focusing on responsive design, SEO best practices, and dynamic web application aesthetics. MUST strictly enforce security best practices: implement appropriate rate limiting, securely hash passwords, and protect against common attacks.".into()),
+                description: Some("Specialized in modern full-stack web technologies (React, Next.js, Vue, Node.js, HTML/CSS). MUST strictly enforce mobile-first responsive design (320px+ viewports, fluid typography, >=48px touch targets, zero horizontal overflow) and automated SEO/GEO/AEO lifecycle maintenance (dynamic metadata, canonical URLs, JSON-LD structured schemas, sitemap.xml, robots.txt, semantic HTML hierarchies). MUST strictly enforce security best practices: rate limiting, secure password hashing, and OWASP protection.".into()),
                 version: None,
-                    exists_in_target: false,
-                    target_version: None, logo: None,
+                exists_in_target: false,
+                target_version: None, logo: None,
             },
         ]);
 
@@ -301,6 +301,8 @@ impl Workspace {
         }
 
         let contributions_dir = payload_dir.join(".contributions");
+        let mut cont_items: Vec<(String, Option<String>)> = Vec::new();
+
         if contributions_dir.exists() {
             if let Ok(entries) = std::fs::read_dir(&contributions_dir) {
                 let mut cont_names: Vec<String> = entries
@@ -319,19 +321,33 @@ impl Workspace {
                         "strict-ownership" => Some("Soft-closed PR policy enforcing issues/discussions only to maintain strict architectural integrity.".to_string()),
                         _ => None,
                     };
-
-                    items.push(WorkspaceItem {
-                        label: name,
-                        selected: false,
-                        category: Category::ContributingTemplate,
-                        description,
-                        version: None,
-                        exists_in_target: false,
-                        target_version: None,
-                        logo: None,
-                    });
+                    cont_items.push((name, description));
                 }
             }
+        }
+
+        if cont_items.is_empty() {
+            cont_items.push((
+                "open-source".to_string(),
+                Some("Standard open-source contribution guidelines permitting PRs and community development.".to_string()),
+            ));
+            cont_items.push((
+                "strict-ownership".to_string(),
+                Some("Soft-closed PR policy enforcing issues/discussions only to maintain strict architectural integrity.".to_string()),
+            ));
+        }
+
+        for (name, description) in cont_items {
+            items.push(WorkspaceItem {
+                label: name,
+                selected: false,
+                category: Category::ContributingTemplate,
+                description,
+                version: None,
+                exists_in_target: false,
+                target_version: None,
+                logo: None,
+            });
         }
 
         let skills_dir = payload_dir.join(".skills");
@@ -637,6 +653,11 @@ impl Component for Workspace {
                             .iter_mut()
                             .find(|i| i.label == "tasty" && i.category == Category::AgentSkills)
                         {
+                            companion.selected = true;
+                        }
+                        if let Some(companion) = self.items.iter_mut().find(|i| {
+                            i.label == "open-design" && i.category == Category::AgentSkills
+                        }) {
                             companion.selected = true;
                         }
                     }

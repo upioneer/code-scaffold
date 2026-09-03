@@ -10,5 +10,15 @@
     "fs:read",
     "fs:write",
     "net:connect"
+  ],
+  "category": "Data, Databases & Storage",
+  "keywords": [
+    "firebase",
+    "firestore",
+    "baas",
+    "authentication",
+    "realtime-database",
+    "cloud-functions",
+    "hosting"
   ]
 }

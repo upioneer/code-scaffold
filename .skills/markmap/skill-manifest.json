@@ -9,5 +9,14 @@
   "requiredPermissions": [
     "fs:read",
     "fs:write"
+  ],
+  "category": "Publishing & Documentation",
+  "keywords": [
+    "markmap",
+    "mindmaps",
+    "markdown-to-mindmap",
+    "interactive-tree",
+    "d3-visualization",
+    "hierarchy"
   ]
 }
