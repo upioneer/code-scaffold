@@ -9,6 +9,7 @@ mod manifest_engine;
 mod models;
 mod prefs;
 mod scaffold_connect;
+mod skills_cli;
 mod sync;
 mod theme;
 mod tui;
@@ -39,6 +40,11 @@ async fn main() -> Result<()> {
 
     // Process initialization and cache directory resolution
     let payload_dir = sync::sync_payload().await?;
+
+    if args.len() >= 2 && args[1] == "skills" {
+        skills_cli::run(payload_dir, args).await?;
+        return Ok(());
+    }
 
     if args
         .iter()

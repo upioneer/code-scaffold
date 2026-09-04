@@ -28,6 +28,24 @@ struct InjectPersonaParams {
     persona_id: String,
 }
 
+#[derive(Serialize, Deserialize, JsonSchema)]
+struct SearchSkillsParams {
+    query: String,
+    limit: Option<usize>,
+}
+
+#[derive(Serialize, Deserialize, JsonSchema)]
+struct InstallSkillsParams {
+    target_directory: String,
+    skills: Vec<String>,
+    force: Option<bool>,
+}
+
+#[derive(Serialize, Deserialize, JsonSchema)]
+struct GetSkillInfoParams {
+    slug: String,
+}
+
 pub async fn run_acp_server(payload_dir: PathBuf, args: Vec<String>) -> Result<()> {
     eprintln!("Starting Agent Client Protocol (ACP) Server in Headless Mode...");
     eprintln!("Payload Directory: {}", payload_dir.display());
@@ -140,6 +158,74 @@ pub async fn run_acp_server(payload_dir: PathBuf, args: Vec<String>) -> Result<(
                 }
 
                 Ok(serde_json::json!({"status": "success", "persona": input.persona_id}))
+            },
+            tool_fn!(),
+        )
+        .tool_fn(
+            "search_skills",
+            "Search available skills by query (keyword, intent, name, domain).",
+            async |input: SearchSkillsParams, _cx| -> Result<serde_json::Value, agent_client_protocol::Error> {
+                let pdir = std::path::PathBuf::from(".");
+                if let Ok(index) = crate::skills_cli::index::SkillIndex::build(&pdir) {
+                    let results = crate::skills_cli::search::search(&index, &input.query, None, input.limit.unwrap_or(20));
+                    Ok(serde_json::to_value(results).unwrap_or(serde_json::json!([])))
+                } else {
+                    Ok(serde_json::json!([]))
+                }
+            },
+            tool_fn!(),
+        )
+        .tool_fn(
+            "install_skills",
+            "Install one or more skills into a target project directory.",
+            async |input: InstallSkillsParams, _cx| -> Result<serde_json::Value, agent_client_protocol::Error> {
+                let pdir = std::path::PathBuf::from(".");
+                if let Ok(index) = crate::skills_cli::index::SkillIndex::build(&pdir) {
+                    let printer = crate::skills_cli::output::Printer::new(crate::skills_cli::output::OutputConfig {
+                        json: true,
+                        quiet: true,
+                        ..Default::default()
+                    });
+                    let options = crate::skills_cli::install::InstallOptions {
+                        target: std::path::PathBuf::from(&input.target_directory),
+                        force: input.force.unwrap_or(false),
+                        dry_run: false,
+                        no_lock: false,
+                    };
+                    match crate::skills_cli::install::run_install(&index, &printer, &input.skills, &options) {
+                        Ok(_) => Ok(serde_json::json!({"status": "success", "installed": input.skills})),
+                        Err(e) => Ok(serde_json::json!({"status": "error", "message": e.to_string()})),
+                    }
+                } else {
+                    Ok(serde_json::json!({"status": "error", "message": "Failed to build skill index."}))
+                }
+            },
+            tool_fn!(),
+        )
+        .tool_fn(
+            "get_skill_info",
+            "Get detailed metadata, permissions, and status for a specific skill.",
+            async |input: GetSkillInfoParams, _cx| -> Result<serde_json::Value, agent_client_protocol::Error> {
+                let pdir = std::path::PathBuf::from(".");
+                if let Ok(index) = crate::skills_cli::index::SkillIndex::build(&pdir) {
+                    if let Some(rec) = index.get_by_slug(&input.slug) {
+                        Ok(serde_json::json!({
+                            "slug": rec.slug,
+                            "label": rec.label,
+                            "version": rec.version,
+                            "category": rec.category,
+                            "description": rec.description,
+                            "keywords": rec.keywords,
+                            "permissions": rec.permissions,
+                            "engines": rec.engines,
+                            "entryPoint": rec.entry_point
+                        }))
+                    } else {
+                        Ok(serde_json::json!({"status": "not_found", "slug": input.slug}))
+                    }
+                } else {
+                    Ok(serde_json::json!({"status": "error", "message": "Failed to build skill index."}))
+                }
             },
             tool_fn!(),
         )
