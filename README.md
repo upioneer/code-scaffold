@@ -7,7 +7,7 @@
 
 Code Scaffold is a modular, robust, and highly visual native TUI provisioning engine. It is designed to bootstrap new development projects with predefined directory structures, architectural templates, and complex skill payloads, all driven by a high-fidelity Terminal User Interface.
 
-![Code Scaffold Screenshot 1](project_details/changelog/v7.20.0/demo.gif)
+![Code Scaffold Screenshot 1](project_details/changelog/v7.21.0/demo.gif)
 
 ## Compatibility & Integration
 
@@ -25,6 +25,7 @@ Code Scaffold is officially compatible with the Agent Client Protocol (ACP). Thi
 ## Features
 
 * **High-Fidelity TUI**: A deeply interactive, color-coded terminal interface featuring animated ASCII branding, staggered visual loading, and clean category-based module selection.
+* **Native Skill Package Manager**: Standalone CLI (`code-scaffold skills`) for ad-hoc search, discovery, atomic installation, updating, auditing, and diffing of AI skills without launching the full TUI wizard.
 * **Remote Synchronization Engine**: Capable of dynamically fetching the latest `manifest.json` from the remote GitHub repository. If an update is detected, it automatically downloads and caches the latest `.templates` and `.skills` payloads before execution.
 * **Intelligent Environment Detection**: Detects if it is running in "Local Dev" mode (within the core repository) to preserve source files, or in "Production" mode where it uses a secure temporary workspace (`$env:TEMP\Scaffold_Workspace`).
 * **Dynamic Payload Library**: Easily extensible. By placing a new folder with a `meta.json` inside the `.skills` directory, the engine will automatically discover it and present it as an option in the UI.
@@ -32,7 +33,7 @@ Code Scaffold is officially compatible with the Agent Client Protocol (ACP). Thi
 * **Automated Baseline Documentation**: Automatically generates a structured `README.md` in the target directory, dynamically titled with the project's folder name, to provide a consistent starting point for all scaffolded projects.
 * **Immutable Version History**: Adheres to a strict versioning protocol, maintaining snapshots of every significant deployment cycle in `project_details\changelog`.
 
-![Code Scaffold Screenshot 2](project_details/changelog/v7.20.0/demo_splash.png)
+![Code Scaffold Screenshot 2](project_details/changelog/v7.21.0/demo_splash.png)
 
 ## Architecture Overview
 
@@ -80,6 +81,33 @@ Run the native executable from your terminal (e.g., on Windows):
     * **[Space]**: Toggle individual selection (prompts to overwrite if the artifact already exists).
     * **[T]**: Toggle **All/None** selections (prompts to overwrite if any selected artifacts already exist).
 4. **Execution**: Press **[Enter]** to begin the provisioning process.
+
+### Skill Package Manager CLI
+
+Manage agent skills ad-hoc across any project workspace:
+
+```bash
+# List all skills categorized
+code-scaffold skills list
+
+# Search skills by keyword, intent, or domain
+code-scaffold skills search "browser automation"
+
+# Inspect detailed metadata, permissions, and status
+code-scaffold skills info playwright --target ./my-app
+
+# Install skills atomically into a project
+code-scaffold skills install playwright tasty --target ./my-app
+
+# Scan for available updates
+code-scaffold skills outdated --target ./my-app
+
+# Update skills in-place
+code-scaffold skills update --target ./my-app
+
+# Audit skill anatomy, lockfile, and version integrity
+code-scaffold skills doctor --target ./my-app
+```
 
 ## Built-In Scaffolding Options
 
