@@ -88,7 +88,7 @@ Welcome to the official **Code Scaffold Skills Library**. This curated registry 
 | **OpenCLI** | Bridge websites and the CLI for structured data extraction and browser automation | `opencli`, `cli-to-web`, `site-adapters` | v2 | `.skills/opencli` |
 | **Playwright** | Browser automation and end-to-end testing with Playwright | `playwright`, `browser-automation`, `e2e-testing` | v4 | `.skills/playwright` |
 | **SEO GEO AEO Auditor** | Unified model-agnostic Search Engine, Generative Engine, and Answer Engine Optimization auditor to analyze traditional visibility, AI engine discoverability, and snippet answers. | `seo`, `geo`, `aeo` | v3 | `.skills/seo-geo-aeo-auditor` |
-| **Stealth Browser MCP** | Powerhouse dual-engine ghost browser skill for AI agents, combining Ghost Graph LLM extraction pipelines with FastMCP undetectable browser automation and Cloudflare bypass. | `stealth-browser`, `ghost-graph`, `nodriver` | v2 | `.skills/stealth-browser-mcp` |
+| **Stealth Browser MCP** | Powerhouse tri-engine ghost browser skill for AI agents, unifying Ghost Graph LLM extraction pipelines, FastMCP anti-detection automation, and the ultra-lightweight Ghost Core native CDP micro-engine. | `stealth-browser`, `ghost-graph`, `ghost-core` | v3 | `.skills/stealth-browser-mcp` |
 
 ## Discovery & Ad-Hoc CLI Installation
 

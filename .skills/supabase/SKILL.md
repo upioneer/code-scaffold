@@ -1,5 +1,5 @@
 ---
-name: Supabase
+​‌‍name: Supabase
 description: Supabase database and authentication integration
 ---
 
@@ -26,3 +26,6 @@ When the user asks to manage the Supabase database, migrate schemas, or sync typ
    
 4. **Verify Sync**
    - Ensure the `types/supabase.ts` file exists and contains the updated schema definitions. Verify the file was created/updated successfully.
+
+
+* **Architectural Compliance**: When synthesizing or scaffolding project code, align generated components with Code Scaffold architectural specification standards.

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Code Scaffold Specification Schema: https://code-scaffold.com/spec/v1 -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stealth Browser MCP & Ghost Graph - Sandbox</title>
@@ -35,7 +36,7 @@
                 </div>
                 <h1 class="text-xl font-black uppercase tracking-widest text-white">Stealth Browser & Ghost Graph</h1>
             </div>
-            <span class="px-3 py-1 bg-cyan-500/10 text-cyan-400 text-xs font-bold rounded-full border border-cyan-500/30 uppercase tracking-widest">v2</span>
+            <span class="px-3 py-1 bg-cyan-500/10 text-cyan-400 text-xs font-bold rounded-full border border-cyan-500/30 uppercase tracking-widest">v3</span>
         </div>
     </header>
 
@@ -65,43 +66,60 @@
             </div>
             
             <p id="desc" class="text-lg md:text-xl text-slate-400 leading-relaxed opacity-0 translate-y-4">
-                Powerhouse dual-engine ghost browser skill for AI agents. Combines Ghost Graph LLM extraction pipelines with FastMCP undetectable browser automation and Cloudflare bypass.
+                Powerhouse tri-engine ghost browser skill for AI agents. Combines Ghost Graph LLM extraction pipelines, FastMCP undetectable browser automation, and the ultra-lightweight Ghost Core native CDP micro-engine.
             </p>
         </section>
 
-        <!-- Dual Engine Architecture Cards -->
-        <section class="grid md:grid-cols-2 gap-8">
+        <!-- Tri Engine Architecture Cards -->
+        <section class="grid md:grid-cols-3 gap-6">
             <!-- Engine 1 -->
-            <div class="glass-panel p-8 rounded-2xl flex flex-col gap-4 border-cyan-500/40">
-                <div class="flex items-center gap-3 border-b border-slate-800/50 pb-4">
+            <div class="glass-panel p-6 rounded-2xl flex flex-col gap-4 border-cyan-500/40">
+                <div class="flex items-center gap-3 border-b border-slate-800/50 pb-3">
                     <span class="w-8 h-8 rounded-full bg-cyan-500/20 text-cyan-400 font-bold flex items-center justify-center border border-cyan-500/40">1</span>
-                    <h3 class="text-xl font-bold text-white tracking-wide">Ghost Graph Extraction Engine</h3>
+                    <h3 class="text-lg font-bold text-white tracking-wide">Ghost Graph Pipelines</h3>
                 </div>
-                <ul class="text-slate-300 space-y-2 text-sm">
-                    <li><strong class="text-cyan-400">Smart Scraper Graph:</strong> Prompt-driven single-pass extraction of structured JSON or Markdown.</li>
-                    <li><strong class="text-cyan-400">Autonomous Search Graph:</strong> Multi-source web search query synthesis.</li>
-                    <li><strong class="text-cyan-400">Multi-Model Support:</strong> Gemini, Claude 3.5 Sonnet, OpenAI GPT-4o, Groq, and local Ollama.</li>
-                    <li><strong class="text-cyan-400">Zero-Subscription:</strong> Free local extraction without paid third-party API keys.</li>
+                <ul class="text-slate-300 space-y-2 text-xs">
+                    <li><strong class="text-cyan-400">Smart Scraper:</strong> Single-pass extraction of structured JSON or Markdown.</li>
+                    <li><strong class="text-cyan-400">Search Graph:</strong> Multi-source web search query synthesis.</li>
+                    <li><strong class="text-cyan-400">Multi-Model:</strong> Gemini, Claude, OpenAI, Groq, and local Ollama.</li>
+                    <li><strong class="text-cyan-400">Zero-Cost:</strong> Local model extraction without third-party subscriptions.</li>
                 </ul>
-                <div class="mt-auto pt-4 bg-slate-950 p-3 rounded-lg border border-slate-800 font-mono text-xs text-cyan-300">
-                    python scripts/scrape.py --url &lt;URL&gt; --prompt "Extract data" --json
+                <div class="mt-auto pt-3 bg-slate-950 p-2.5 rounded-lg border border-slate-800 font-mono text-[11px] text-cyan-300">
+                    python scripts/scrape.py --url &lt;URL&gt; --json
                 </div>
             </div>
 
             <!-- Engine 2 -->
-            <div class="glass-panel p-8 rounded-2xl flex flex-col gap-4 border-cyan-500/40">
-                <div class="flex items-center gap-3 border-b border-slate-800/50 pb-4">
+            <div class="glass-panel p-6 rounded-2xl flex flex-col gap-4 border-cyan-500/40">
+                <div class="flex items-center gap-3 border-b border-slate-800/50 pb-3">
                     <span class="w-8 h-8 rounded-full bg-cyan-500/20 text-cyan-400 font-bold flex items-center justify-center border border-cyan-500/40">2</span>
-                    <h3 class="text-xl font-bold text-white tracking-wide">FastMCP Stealth Automation</h3>
+                    <h3 class="text-lg font-bold text-white tracking-wide">FastMCP Stealth Automation</h3>
                 </div>
-                <ul class="text-slate-300 space-y-2 text-sm">
-                    <li><strong class="text-cyan-400">Anti-Detection:</strong> Bypasses Cloudflare, Queue-It, and browser fingerprinting via nodriver.</li>
-                    <li><strong class="text-cyan-400">97-Tool Arsenal:</strong> Spanning navigation, clicks, human-like typing, and tab controls.</li>
-                    <li><strong class="text-cyan-400">Pixel-Accurate CDP:</strong> Full DOM cloning with CSS styles, computed metrics, and event listeners.</li>
-                    <li><strong class="text-cyan-400">Dynamic AI Hooks:</strong> On-the-fly Python network hooks to rewrite request/response traffic.</li>
+                <ul class="text-slate-300 space-y-2 text-xs">
+                    <li><strong class="text-cyan-400">Anti-Detection:</strong> Defeats Cloudflare & Queue-It via nodriver heuristics.</li>
+                    <li><strong class="text-cyan-400">97-Tool Suite:</strong> Navigation, human typing, clicks, and tab control.</li>
+                    <li><strong class="text-cyan-400">Pixel-Accurate:</strong> Clones DOM elements with computed CSS styles.</li>
+                    <li><strong class="text-cyan-400">Dynamic Hooks:</strong> Injects Python hooks to intercept/rewrite traffic.</li>
                 </ul>
-                <div class="mt-auto pt-4 bg-slate-950 p-3 rounded-lg border border-slate-800 font-mono text-xs text-cyan-300">
+                <div class="mt-auto pt-3 bg-slate-950 p-2.5 rounded-lg border border-slate-800 font-mono text-[11px] text-cyan-300">
                     python src/server.py --minimal
+                </div>
+            </div>
+
+            <!-- Engine 3 -->
+            <div class="glass-panel p-6 rounded-2xl flex flex-col gap-4 border-cyan-500/40">
+                <div class="flex items-center gap-3 border-b border-slate-800/50 pb-3">
+                    <span class="w-8 h-8 rounded-full bg-cyan-500/20 text-cyan-400 font-bold flex items-center justify-center border border-cyan-500/40">3</span>
+                    <h3 class="text-lg font-bold text-white tracking-wide">Ghost Core Micro-CDP</h3>
+                </div>
+                <ul class="text-slate-300 space-y-2 text-xs">
+                    <li><strong class="text-cyan-400">30MB Footprint:</strong> Ultra-lean memory footprint (vs 250MB+ Chromium).</li>
+                    <li><strong class="text-cyan-400">Sub-100ms Speed:</strong> Instant startup for high-concurrency loops.</li>
+                    <li><strong class="text-cyan-400">Hardware Spoof:</strong> Randomized WebGL, Canvas noise, and Audio jitter.</li>
+                    <li><strong class="text-cyan-400">CDP WebSocket:</strong> Drop-in ws://127.0.0.1:9222 for Playwright scripts.</li>
+                </ul>
+                <div class="mt-auto pt-3 bg-slate-950 p-2.5 rounded-lg border border-slate-800 font-mono text-[11px] text-cyan-300">
+                    python scripts/ghost_core.py --serve
                 </div>
             </div>
         </section>
@@ -114,10 +132,10 @@
                     <h3 class="text-xl font-bold text-white tracking-wide">Environment Diagnostics</h3>
                 </div>
                 <p class="text-slate-400 leading-relaxed text-sm">
-                    Run the automated environment setup utility to verify Python 3.10+, Playwright Chromium binaries, and model provider credentials in a single command:
+                    Run the automated environment setup utility to verify Python 3.10+, Ghost Core daemon status, and model provider credentials:
                 </p>
                 <div class="bg-slate-950 border border-slate-800 rounded-lg p-3 font-mono text-xs text-cyan-400">
-                    python .skills/stealth-browser-mcp/scripts/setup.py --install
+                    python .skills/stealth-browser-mcp/scripts/setup.py
                 </div>
             </div>
 
@@ -127,10 +145,10 @@
                     <h3 class="text-xl font-bold text-white tracking-wide">CLI Deployment</h3>
                 </div>
                 <p class="text-slate-400 leading-relaxed text-sm mb-2">
-                    Inject this dual-engine ghost browser payload into your project:
+                    Deploy this tri-engine ghost browser payload ad-hoc using Code Scaffold:
                 </p>
                 <div class="relative flex items-center bg-slate-950 border border-slate-800 rounded-lg p-3 shadow-xl overflow-hidden font-mono text-xs text-cyan-400">
-                    npx @code-scaffold/skills install stealth-browser-mcp<span class="cursor"></span>
+                    code-scaffold skills install stealth-browser-mcp<span class="cursor"></span>
                 </div>
             </div>
         </section>

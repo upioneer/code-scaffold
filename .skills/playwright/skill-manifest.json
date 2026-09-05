@@ -1,4 +1,6 @@
 {
+  "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
+  "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_playwright_skill",
   "version": "4",
   "description": "Browser automation and end-to-end testing with Playwright",
@@ -19,5 +21,6 @@
     "mobile-viewports",
     "layout-overflow",
     "visual-qa"
-  ]
+  ],
+  "integrity": "cs:sha256:ac383deff446a11f15b5ec708ed569da91023f97a1c69a73b7495590c6795c79"
 }

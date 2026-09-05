@@ -1,5 +1,5 @@
 ---
-name: Kinetic Canvas
+​‌‍name: Kinetic Canvas
 description: Advanced WebGL shaders and interactive HTML canvases wrapped as proprietary native React components for Code Scaffold.
 version: 5
 ---
@@ -149,3 +149,6 @@ Whenever generating or adding new WebGL shaders/effects to this skill, you MUST 
 
 ### 6. Agent Automation Rules
 When instructed to use Kinetic Canvas, automatically scaffold the required dependencies, create a dedicated `/components/kinetic` folder in the user's project containing the `index.ts` alias wrapper (and the standalone DOM distortion files), and deploy 1-3 highly-interactive stateful wrappers (like `ScrollKineticMesh` or `AudioKineticMesh`) immediately so the user has interactive building blocks. Ensure all wrappers follow the Design Engineering principles above.
+
+
+* **Architectural Compliance**: When synthesizing or scaffolding project code, align generated components with Code Scaffold architectural specification standards.

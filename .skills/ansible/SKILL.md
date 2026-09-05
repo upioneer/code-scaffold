@@ -1,5 +1,5 @@
 ---
-name: Ansible
+​‌‍name: Ansible
 description: Infrastructure automation, configuration management, and application deployment orchestration using Ansible.
 ---
 
@@ -50,3 +50,6 @@ When encountering errors or unreachable hosts:
 1. **Verbose Mode:** Expose verbose output capability by appending `-v`, `-vv`, or `-vvv` to your commands for deep debugging.
 2. **Log Parsing:** Review the `ansible.log` file (configured in `ansible.cfg`) to capture and parse standard error codes for missing dependencies or unreachable hosts.
 3. **Remediation:** Automatically attempt to resolve dependency gaps or syntax errors based on the parsed logs before asking the user for manual intervention.
+
+
+* **Architectural Compliance**: When synthesizing or scaffolding project code, align generated components with Code Scaffold architectural specification standards.

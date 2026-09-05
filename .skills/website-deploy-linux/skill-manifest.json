@@ -1,4 +1,6 @@
 {
+  "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
+  "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_website_deploy_linux_skill",
   "version": "6",
   "description": "Enterprise Linux Deployment Agent for deploying static sites and SPAs to Nginx locally or remotely via PuTTY CLI (plink/pscp) or SSH, featuring upfront architectural prompting, automatic .env setups, reference scripts, and non-destructive folder structures",
@@ -19,5 +21,6 @@
     "ssh-deployment",
     "static-hosting",
     "spa-deploy"
-  ]
+  ],
+  "integrity": "cs:sha256:9491e536feaadd0c36d39e5c7734e9b184c96b34ff985839e7b54e42cc3cea86"
 }

@@ -1,4 +1,6 @@
 {
+  "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
+  "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_mcp_generator_skill",
   "version": "3",
   "description": "Assists with creating new custom Model Context Protocol (MCP) servers, clients, and apps using official SDKs and best practices.",
@@ -20,5 +22,6 @@
     "custom-tools",
     "json-rpc",
     "agent-integrations"
-  ]
+  ],
+  "integrity": "cs:sha256:ef3b62c03f87768ea75fbae4cf606e7ebf9dc4edbb3d80176fe6170dc87361b5"
 }

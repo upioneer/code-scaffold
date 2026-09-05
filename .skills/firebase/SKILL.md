@@ -1,5 +1,5 @@
 ---
-name: Firebase
+​‌‍name: Firebase
 description: Firebase authentication and database connectivity
 ---
 
@@ -66,3 +66,6 @@ After a successful deployment, automatically update firebase.md (or create it if
 * Never modify or overwrite existing version documentation once established
 * Ensure each significant deployment cycle results in a new immutable artifact folder
 * Always ensure that the listed skills within the project's `readme.md` are alphabetized when generating or updating the documentation
+
+
+* **Architectural Compliance**: When synthesizing or scaffolding project code, align generated components with Code Scaffold architectural specification standards.

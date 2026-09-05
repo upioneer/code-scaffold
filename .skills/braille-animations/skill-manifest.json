@@ -1,4 +1,6 @@
 {
+  "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
+  "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_braille_animations_skill",
   "version": "3",
   "description": "Create and manage unicode braille animations and spinners for CLIs and web apps.",
@@ -19,5 +21,6 @@
     "cli-spinners",
     "text-fx",
     "tui"
-  ]
+  ],
+  "integrity": "cs:sha256:511c770ee6453ed06337d7144e5facc087557d760926a7fdef0f96764552619b"
 }

@@ -1,4 +1,6 @@
 {
+  "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
+  "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_ratatui_skill",
   "version": "4",
   "description": "Build Terminal User Interfaces (TUI) using Ratatui in Rust.",
@@ -19,5 +21,6 @@
     "crossterm",
     "cli-dashboard",
     "console-app"
-  ]
+  ],
+  "integrity": "cs:sha256:c2cbe07f8f0ba8b94daaa4149a0df4b7b626b61515f7c775445881699b63d6b0"
 }

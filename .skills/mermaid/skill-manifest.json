@@ -1,4 +1,6 @@
 {
+  "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
+  "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_mermaid_skill",
   "version": "3",
   "description": "Mermaid diagram creation and rendering",
@@ -19,5 +21,6 @@
     "flowcharts",
     "sequence-diagrams",
     "er-diagrams"
-  ]
+  ],
+  "integrity": "cs:sha256:0523227d68a00cca17d559862ac978e226fcc5a360797949fe8bcaa8ee309de9"
 }

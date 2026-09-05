@@ -1,4 +1,6 @@
 {
+  "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
+  "specification": "https://code-scaffold.com/spec/v1",
   "name": "officecli",
   "version": "1",
   "description": "Office suite purpose-built for AI agents to read, edit, and automate Word, Excel, and PowerPoint files.",
@@ -19,5 +21,6 @@
     "office-documents",
     "document-automation",
     "pdf-generation"
-  ]
+  ],
+  "integrity": "cs:sha256:cd3db8b528e1f5393c40612802d4c0c73fca94cb364673dc7b667d2b19613fc5"
 }

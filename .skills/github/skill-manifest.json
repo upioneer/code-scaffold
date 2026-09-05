@@ -1,4 +1,6 @@
 {
+  "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
+  "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_github_skill",
   "version": "5",
   "description": "GitHub push workflow with .env-based identity configuration; merges github.md into the skill",
@@ -20,5 +22,6 @@
     "pull-requests",
     "releases",
     "repo-management"
-  ]
+  ],
+  "integrity": "cs:sha256:b4ffb2619a0fd9ea091545f639752080ac19ded2a9608d63f8429088328dd8af"
 }

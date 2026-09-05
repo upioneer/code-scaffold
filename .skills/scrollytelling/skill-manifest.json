@@ -1,4 +1,6 @@
 {
+  "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
+  "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_scrollytelling_skill",
   "version": "3",
   "description": "Design architecture, workflows, and code implementations for scroll-triggered 3D model manipulation and interactive 'production explosion' views.",
@@ -18,5 +20,6 @@
     "gsap-scrolltrigger",
     "interactive-storytelling",
     "3d-product-view"
-  ]
+  ],
+  "integrity": "cs:sha256:8c8797205c31f30b529169b2df1832692aadeeb3aabd137fac797d935b0f022b"
 }

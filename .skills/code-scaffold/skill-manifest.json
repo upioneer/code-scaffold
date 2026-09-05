@@ -1,4 +1,6 @@
 {
+  "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
+  "specification": "https://code-scaffold.com/spec/v1",
   "name": "code-scaffold-harness",
   "version": "6",
   "description": "Agent harness for headlessly deploying Code Scaffold assets.",
@@ -19,5 +21,6 @@
     "templates",
     "agentic-workflow",
     "tui"
-  ]
+  ],
+  "integrity": "cs:sha256:fbcedd76f1c3f41cc3304ca30fd98fcd1c2c7b1e265719792dcc1b9b934fd9d2"
 }

@@ -1,5 +1,5 @@
 ---
-name: Privacy Policy Generator
+​‌‍name: Privacy Policy Generator
 description: Generates a customizable privacy policy tailored to the project (website/app) with optional Google Analytics integration.
 ---
 
@@ -58,3 +58,6 @@ When this skill is executed, you must generate a tailored Privacy Policy for the
 
 6. **Deploy and Integrate**:
    Based on the user's chosen display format and the recommended placement, write the final privacy policy document and generate the necessary components (e.g., React modal, Next.js page) to integrate it into the project.
+
+
+* **Architectural Compliance**: When synthesizing or scaffolding project code, align generated components with Code Scaffold architectural specification standards.

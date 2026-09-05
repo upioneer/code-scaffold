@@ -1,5 +1,5 @@
 ---
-name: MCP Generator
+​‌‍name: MCP Generator
 description: Assists with creating new custom Model Context Protocol (MCP) servers, clients, and apps using official SDKs and best practices.
 ---
 
@@ -61,3 +61,6 @@ Write the boilerplate code for the server or client:
 
 ## Step 5: Finalize and Document
 Create a `README.md` in the generated project directory explaining how to build, run, and test the MCP component (e.g., using the MCP Inspector via `npx @modelcontextprotocol/inspector`). Inform the user that the generation is complete and provide instructions on how to test it.
+
+
+* **Architectural Compliance**: When synthesizing or scaffolding project code, align generated components with Code Scaffold architectural specification standards.

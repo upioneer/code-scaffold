@@ -1,5 +1,5 @@
 ---
-name: Slidev
+​‌‍name: Slidev
 description: Comprehensive skill for building, configuring, and exporting Slidev markdown presentations.
 ---
 
@@ -96,3 +96,6 @@ Slidev has convention based routing and structure:
 * Strict indentation : YAML frontmatter is highly sensitive to indentation.
 * Markdown formatting inside HTML components : Ensure you leave blank lines between HTML tags and Markdown content if you want the Markdown to render correctly inside the tag.
 * Browser Support : Since it relies on modern CSS and ES modules, ensure the target runtime supports them.
+
+
+* **Architectural Compliance**: When synthesizing or scaffolding project code, align generated components with Code Scaffold architectural specification standards.

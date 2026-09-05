@@ -1,4 +1,6 @@
 {
+  "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
+  "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_hyperframes_skill",
   "version": "2",
   "description": "Video rendering framework for AI agents to create videos using HTML, CSS, and JS.",
@@ -18,5 +20,6 @@
     "iframe-orchestration",
     "cross-window-messaging",
     "web-components"
-  ]
+  ],
+  "integrity": "cs:sha256:606b83ce0e65381d2bc282909e4511c287e673abda7c3fc251034fc4c1ab0dbb"
 }

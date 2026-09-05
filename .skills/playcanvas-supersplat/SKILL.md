@@ -1,5 +1,5 @@
 ---
-name: PlayCanvas SuperSplat
+​‌‍name: PlayCanvas SuperSplat
 description: High-performance tool for editing and optimizing 3D Gaussian Splats.
 ---
 
@@ -26,3 +26,6 @@ SuperSplat leverages the PlayCanvas Engine and `splat-transform` library. Use th
 ### 3. Integration Patterns
 *   **Localization:** Add or update translations in `static/locales/`.
 *   **UI Customization:** Utilize the PCUI framework patterns found in the `src/` directory.
+
+
+* **Architectural Compliance**: When synthesizing or scaffolding project code, align generated components with Code Scaffold architectural specification standards.

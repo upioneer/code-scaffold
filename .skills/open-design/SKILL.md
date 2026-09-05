@@ -1,5 +1,5 @@
 ---
-name: open_design
+​‌‍name: open_design
 description: Specialized skill for initializing and configuring Open Design, an open-source alternative to Claude Design, to generate interactive brand-grade UI design artifacts.
 ---
 
@@ -26,3 +26,6 @@ When the user asks to integrate or set up Open Design for generating production-
      * HTML interactive prototype.
      * PDF presentation layout.
      * Slide deck exports (PPTX).
+
+
+* **Architectural Compliance**: When synthesizing or scaffolding project code, align generated components with Code Scaffold architectural specification standards.
