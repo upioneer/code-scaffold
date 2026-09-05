@@ -176,7 +176,7 @@ const SKILL_METADATA = {
     category: "Publishing & Documentation",
     keywords: ["slidev", "developer-slides", "vue-slides", "markdown-presentations", "unocss", "live-code-demos"]
   },
-  "stealth-browser-mcp": {
+  "stealth-browser": {
     category: "Web Automation & Scraping",
     keywords: ["stealth-browser", "ghost-graph", "nodriver", "cloudflare-bypass", "antibot", "fastmcp", "smart-scraper"]
   },

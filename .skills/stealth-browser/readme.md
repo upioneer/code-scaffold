@@ -1,7 +1,7 @@
-# Stealth Browser MCP
+# Stealth Browser
 
 **Version:** 3
-**Target:** `.skills/stealth-browser-mcp`
+**Target:** `.skills/stealth-browser`
 **Category:** Web Automation & Scraping
 **Keywords:** `stealth-browser`, `ghost-graph`, `ghost-core`, `lightweight-cdp`, `nodriver`, `cloudflare-bypass`, `antibot`, `fastmcp`, `smart-scraper`, `hardware-randomization`, `canvas-noise`, `micro-browser`
 
