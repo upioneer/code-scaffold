@@ -1,5 +1,5 @@
 ---
-​‌‍name: Stealth Browser MCP & Ghost Graph
+​‌‍name: Stealth Browser & Ghost Graph
 description: Powerhouse tri-engine ghost browser skill for AI agents. Combines Ghost Graph LLM extraction pipelines, FastMCP undetectable browser automation, and Ghost Core ultra-lightweight CDP micro-engine.
 version: 3
 ---
@@ -20,10 +20,10 @@ Before executing browser tasks, run the environment diagnostic tool:
 
 ```bash
 # Verify Python version, browser binaries, and installed packages
-python .skills/stealth-browser-mcp/scripts/setup.py
+python .skills/stealth-browser/scripts/setup.py
 
 # Install missing dependencies and Playwright Chromium
-python .skills/stealth-browser-mcp/scripts/setup.py --install
+python .skills/stealth-browser/scripts/setup.py --install
 ```
 
 ### Supported Environment Variables
@@ -42,13 +42,13 @@ Extract clean, structured JSON or Markdown from any static or dynamic JavaScript
 
 ```bash
 # Extract structured data with natural language prompt
-python .skills/stealth-browser-mcp/scripts/scrape.py \
+python .skills/stealth-browser/scripts/scrape.py \
   --url "https://news.ycombinator.com" \
   --prompt "Extract the top 10 articles with title, score, author, and url" \
   --json
 
 # Enforce a custom model provider (e.g. Gemini, OpenAI, Claude, Ollama)
-python .skills/stealth-browser-mcp/scripts/scrape.py \
+python .skills/stealth-browser/scripts/scrape.py \
   --url "https://github.com/trending" \
   --prompt "List trending repositories with repo name, description, and stars" \
   --model gemini \
@@ -60,7 +60,7 @@ Execute multi-page search and synthesis across search engines without manual scr
 
 ```bash
 # Search across multiple web sources and synthesize key takeaways
-python .skills/stealth-browser-mcp/scripts/search.py \
+python .skills/stealth-browser/scripts/search.py \
   --query "Latest architectural features in React 19" \
   --max-results 4 \
   --json
@@ -101,16 +101,16 @@ When running high-concurrency scraping loops or operating in memory-constrained 
 ### Running the Ghost Core Controller
 ```bash
 # Start or bind the Ghost Core CDP daemon listener
-python .skills/stealth-browser-mcp/scripts/ghost_core.py --serve --port 9222
+python .skills/stealth-browser/scripts/ghost_core.py --serve --port 9222
 
 # Inspect daemon health, memory footprint, and active endpoint
-python .skills/stealth-browser-mcp/scripts/ghost_core.py --status
+python .skills/stealth-browser/scripts/ghost_core.py --status
 
 # Generate a randomized anti-bot hardware profile
-python .skills/stealth-browser-mcp/scripts/ghost_core.py --randomize-profile
+python .skills/stealth-browser/scripts/ghost_core.py --randomize-profile
 
 # Rapidly render and dump a target webpage
-python .skills/stealth-browser-mcp/scripts/ghost_core.py --dump "https://example.com"
+python .skills/stealth-browser/scripts/ghost_core.py --dump "https://example.com"
 ```
 
 ### Playwright Integration Recipe (Connect over CDP)

@@ -1,8 +1,8 @@
 {
-  "label": "Stealth Browser MCP",
+  "label": "Stealth Browser",
   "description": "Tri-engine ghost browser skill for AI agents, unifying Ghost Graph LLM extraction pipelines, FastMCP anti-detection automation, and the ultra-lightweight Ghost Core native CDP engine.",
   "version": "3",
-  "target": ".skills/stealth-browser-mcp",
+  "target": ".skills/stealth-browser",
   "logo": [
     "  ███████╗████████╗███████╗ █████╗ ██╗  ████████╗██╗  ██╗      ",
     "  ██╔════╝╚══██╔══╝██╔════╝██╔══██╗██║  ╚══██╔══╝██║  ██║      ",
@@ -15,12 +15,6 @@
     "  ██████╔╝██████╔╝██║   ██║██║ █╗ ██║███████╗█████╗  ██████╔╝  ",
     "  ██╔══██╗██╔══██╗██║   ██║██║███╗██║╚════██║██╔══╝  ██╔══██╗  ",
     "  ██████╔╝██║  ██║╚██████╔╝╚███╔███╔╝███████║███████╗██║  ██║  ",
-    "  ╚═════╝ ╚═╝  ╚═╝ ╚═════╝  ╚══╝╚══╝ ╚══════╝╚══════╝╚═╝  ╚═╝  ",
-    "  ███╗   ███╗ ██████╗██████╗                                   ",
-    "  ████╗ ████║██╔════╝██╔══██╗                                  ",
-    "  ██╔████╔██║██║     ██████╔╝                                  ",
-    "  ██║╚██╔╝██║██║     ██╔═══╝                                   ",
-    "  ██║ ╚═╝ ██║╚██████╗██║                                       ",
-    "  ╚═╝     ╚═╝ ╚═════╝╚═╝                                       "
+    "  ╚═════╝ ╚═╝  ╚═╝ ╚═════╝  ╚══╝╚══╝ ╚══════╝╚══════╝╚═╝  ╚═╝  "
   ]
 }
