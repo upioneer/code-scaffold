@@ -1,4 +1,6 @@
 {
+  "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
+  "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_clerk_skill",
   "version": "2",
   "description": "Authentication perimeter and identity management using Clerk.",
@@ -20,5 +22,6 @@
     "oauth",
     "nextjs-auth",
     "security"
-  ]
+  ],
+  "integrity": "cs:sha256:44bd8dc2c2695d3199e34590437485137418a5967a357e884304fe1eab0878ec"
 }

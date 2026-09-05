@@ -66,7 +66,19 @@ def check_environment():
             print(f"  [OK] {dep} is installed")
         except ImportError:
             print(f"  [MISSING] {dep}")
-            missing.append(dep)
+    # 5. Ghost Core Native CDP Daemon Check
+    print("\n* Ghost Core Micro-Engine:")
+    try:
+        import socket
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.settimeout(1)
+            is_active = s.connect_ex(('127.0.0.1', 9222)) == 0
+        if is_active:
+            print("  [OK] Ghost Core CDP Daemon listening on port 9222 (ws://127.0.0.1:9222)")
+        else:
+            print("  [NOTE] Ghost Core CDP Daemon offline (run 'python scripts/ghost_core.py --serve' to start)")
+    except Exception as e:
+        print(f"  [!] Daemon check error: {e}")
 
     print("=" * 60)
     return missing

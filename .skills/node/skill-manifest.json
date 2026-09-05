@@ -1,4 +1,6 @@
 {
+  "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
+  "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_node_skill",
   "version": "4",
   "description": "Bootstraps a Node.js runtime environment",
@@ -20,5 +22,6 @@
     "backend-javascript",
     "runtime",
     "package-management"
-  ]
+  ],
+  "integrity": "cs:sha256:cce8cf776466d6751487d8a7d555d1b133fe432160ae044d6857b36b9262e310"
 }

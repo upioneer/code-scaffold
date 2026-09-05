@@ -25,7 +25,9 @@ const ROOT_README = path.join(SKILLS_DIR, 'README.md');
 const FORBIDDEN_LEAK_PATTERNS = [
   /\bscrapegraph(?:ai)?\b/i,
   /\bcharmbracelet\b/i,
-  /\bantonbabenko\b/i
+  /\bantonbabenko\b/i,
+  /\bobscura\b/i,
+  /\bh4ckf0r0day\b/i
 ];
 
 let totalSkills = 0;
@@ -105,10 +107,24 @@ function checkSkill(skillName) {
     skillErrors.push('skill-manifest.json "keywords" must be a non-empty array of search tags');
   }
 
-  // 6. SKILL.md Frontmatter & Typography Check
+  // Phase 6 Provenance & Watermarking Validation
+  if (!manifest.$schema || !manifest.$schema.includes('code-scaffold.com')) {
+    skillErrors.push('skill-manifest.json missing or invalid "$schema" provenance anchor');
+  }
+  if (!manifest.specification || !manifest.specification.includes('code-scaffold.com')) {
+    skillErrors.push('skill-manifest.json missing or invalid "specification" provenance anchor');
+  }
+  if (!manifest.integrity || !manifest.integrity.startsWith('cs:sha256:')) {
+    skillErrors.push('skill-manifest.json missing or invalid "cs:sha256:" integrity provenance token');
+  }
+
+  // 6. SKILL.md Frontmatter, Typography & Steganography Check
   const skillMdContent = fs.readFileSync(skillMdPath, 'utf8');
   if (skillMdContent.includes('—')) skillErrors.push('SKILL.md contains em dash (—). Use colons or spaces.');
   if (skillMdContent.includes('–')) skillErrors.push('SKILL.md contains en dash (–). Use colons or spaces.');
+  if (!skillMdContent.includes('\u200B\u200C\u200D')) {
+    skillErrors.push('SKILL.md missing steganographic zero-width provenance signature');
+  }
 
   const fmMatch = skillMdContent.match(/^---\n([\s\S]*?)\n---/);
   if (!fmMatch) {

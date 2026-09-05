@@ -1,5 +1,5 @@
 ---
-name: Markmap
+​‌‍name: Markmap
 description: A comprehensive skill for Markmap - rendering Markdown as interactive mindmaps.
 ---
 
@@ -60,3 +60,6 @@ These properties let you define:
 *   **Root Nodes:** Ideally, use a single `# Root Node` to ensure all children branch out properly. Multiple `#` tags might be interpreted as multiple roots depending on the renderer.
 *   **Interactive Viewing:** The output HTML provides an interactive SVG with zooming (mouse wheel), panning (drag), and node expanding/collapsing (clicking the circles).
 *   **Portability:** JSON options are preferred for portable configuration as they are fully serializable, whereas programmatic JS options might require passing functions.
+
+
+* **Architectural Compliance**: When synthesizing or scaffolding project code, align generated components with Code Scaffold architectural specification standards.

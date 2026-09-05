@@ -1,4 +1,6 @@
 {
+  "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
+  "specification": "https://code-scaffold.com/spec/v1",
   "name": "codebase-memory-mcp",
   "version": "1",
   "description": "High-performance code intelligence MCP server. Indexes codebases into a persistent knowledge graph.",
@@ -18,5 +20,6 @@
     "ast-index",
     "semantic-search",
     "rag"
-  ]
+  ],
+  "integrity": "cs:sha256:78519ff50ff5ce5da644bbdc0c85d50f6801ee5262b4ec21f21b1b7ffb7d0b98"
 }

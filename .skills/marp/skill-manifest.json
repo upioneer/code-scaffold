@@ -1,4 +1,6 @@
 {
+  "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
+  "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_marp_skill",
   "version": "2",
   "description": "Generates Marp presentation slides from Markdown",
@@ -19,5 +21,6 @@
     "pdf-export",
     "slide-generator",
     "presenter"
-  ]
+  ],
+  "integrity": "cs:sha256:ddb70e06e446b27c97b0cf4e795089dcd44e9c0d75d29aab4218e87ca76db5bc"
 }

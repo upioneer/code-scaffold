@@ -1,4 +1,6 @@
 {
+  "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
+  "specification": "https://code-scaffold.com/spec/v1",
   "name": "revealjs",
   "version": "2",
   "description": "Comprehensive toolkit and knowledge base for scaffolding, configuring, and exporting Reveal.js presentations.",
@@ -19,5 +21,6 @@
     "web-slides",
     "markdown-slides",
     "interactive-talks"
-  ]
+  ],
+  "integrity": "cs:sha256:5eba936c42a0df5ba5fb8d131fc430196342649840e04331a829f99b8a9e64ca"
 }

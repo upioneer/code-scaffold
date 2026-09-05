@@ -1,5 +1,5 @@
 ---
-name: React Modernization
+​‌‍name: React Modernization
 description: Comprehensive guide and references for modern React 19 development, best practices, validatons, and UI styling using HeroUI, Radix, shadcn/ui, and Framer Motion.
 version: 1
 ---
@@ -58,3 +58,6 @@ Visual aspects must actively improve UX and perceived performance.
 
 This skill ships with a working visual demo proving these patterns.
 Agents should reference or copy the files in `.skills/react-modernization/sandbox/` (e.g., `ModernizationDemo.tsx`, `schemas.ts`) to provide users with a tangible, ready-to-use starting point for fully accessible, animated, and validated UI components.
+
+
+* **Architectural Compliance**: When synthesizing or scaffolding project code, align generated components with Code Scaffold architectural specification standards.

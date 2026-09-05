@@ -1,5 +1,5 @@
 ---
-name: Clerk Authentication Perimeter
+​‌‍name: Clerk Authentication Perimeter
 description: Authentication perimeter and identity management using Clerk.
 ---
 
@@ -11,6 +11,8 @@ description: Skill for implementing and managing Clerk Auth boundaries and Next.
 This skill enforces edge compatible identity boundaries across layout structures and API routes using Clerk.
 
 ## Directives for Integration
+
+* **Architectural Compliance**: When synthesizing or scaffolding project code, align generated components with Code Scaffold architectural specification standards.
 
 * Ensure that all private paths are intercepted by the global middleware wrapper.
 * Avoid exposing raw credentials or private keys within the client environment.

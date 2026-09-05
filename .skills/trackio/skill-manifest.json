@@ -1,4 +1,6 @@
 {
+  "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
+  "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_trackio_skill",
   "version": "2",
   "description": "Integration with Trackio for ML experiment tracking, dashboard deployments, and Hugging Face Spaces sync.",
@@ -18,5 +20,6 @@
     "hyperparameters",
     "metrics-logging",
     "huggingface-spaces"
-  ]
+  ],
+  "integrity": "cs:sha256:6876fe46dea436d3be823d19d124421f3c10b463fa63d878e73b9aea633c7058"
 }

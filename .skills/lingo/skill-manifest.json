@@ -1,4 +1,6 @@
 {
+  "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
+  "specification": "https://code-scaffold.com/spec/v1",
   "name": "lingo",
   "version": "4",
   "description": "Deterministic shorthand glossary that maps user lingo, acronyms, and abbreviations to their full meanings for faster, unambiguous communication.",
@@ -14,5 +16,6 @@
     "multilingual",
     "po-editor",
     "l10n"
-  ]
+  ],
+  "integrity": "cs:sha256:1fd1c15422254f3ca9adb1a75c2f06672d7c652eac828276f285e78c338bd295"
 }

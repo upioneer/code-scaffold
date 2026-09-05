@@ -1,4 +1,6 @@
 {
+  "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
+  "specification": "https://code-scaffold.com/spec/v1",
   "name": "react-modernization",
   "version": "1",
   "description": "Comprehensive guide and references for modern React 19 development, best practices, validatons, and UI styling using HeroUI, Radix, shadcn/ui, and Framer Motion.",
@@ -19,5 +21,6 @@
     "modernization",
     "nextjs",
     "state-management"
-  ]
+  ],
+  "integrity": "cs:sha256:f7f1bd2b25cb831fb49358338ed0d78dc3a0c2c0034a3998c478a00f4670c0a1"
 }

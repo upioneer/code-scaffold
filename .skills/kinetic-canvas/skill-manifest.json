@@ -1,4 +1,6 @@
 {
+  "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
+  "specification": "https://code-scaffold.com/spec/v1",
   "name": "kinetic-canvas",
   "version": "6",
   "description": "Ultra-fast, zero-dependency WebGL shaders and interactive HTML canvases wrapped as native React components.",
@@ -18,5 +20,6 @@
     "interactive-visuals",
     "particles",
     "webgl"
-  ]
+  ],
+  "integrity": "cs:sha256:e0061552565a25693b52624637fd77e2601b29c88a257a574ecf959807ee695b"
 }

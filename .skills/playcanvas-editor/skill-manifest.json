@@ -1,4 +1,6 @@
 {
+  "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
+  "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_playcanvas_editor_skill",
   "version": "2",
   "description": "Visual development environment for real-time 3D collaboration.",
@@ -20,5 +22,6 @@
     "scene-editor",
     "gltf",
     "spatial-dev"
-  ]
+  ],
+  "integrity": "cs:sha256:a64a012317854659f8655bb97de21ae4359dcdbe70de6b6d37951ef72d3a95d1"
 }

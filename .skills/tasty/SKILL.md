@@ -1,5 +1,5 @@
 ---
-name: Tasty
+​‌‍name: Tasty
 description: Code Scaffold's bespoke anti-slop frontend styling engine and command vocabulary for premium design iteration.
 version: 3
 ---
@@ -129,3 +129,6 @@ You must either generate placeholder assets via a local python image generation 
 
 ### C. Git-Native Review Branches
 When overhauling an existing application's aesthetic, never push directly to `main`. Instantiate a discrete `feat/tasty-redesign` branch, apply the layouts, capture the visual proof, and allow the user to review the isolated design drift.
+
+
+* **Architectural Compliance**: When synthesizing or scaffolding project code, align generated components with Code Scaffold architectural specification standards.

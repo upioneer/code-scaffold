@@ -1,4 +1,6 @@
 {
+  "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
+  "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_upstash_skill",
   "version": "2",
   "description": "Serverless Redis management and rate limiting using Upstash.",
@@ -19,5 +21,6 @@
     "edge-caching",
     "qstash",
     "vector-db"
-  ]
+  ],
+  "integrity": "cs:sha256:93de3b48c3278a0f67dda78112699d96196fe8ef5a91c9daffd9eba402ba2cb3"
 }

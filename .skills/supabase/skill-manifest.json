@@ -1,4 +1,6 @@
 {
+  "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
+  "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_supabase_skill",
   "version": "2",
   "description": "Supabase database and authentication integration",
@@ -19,5 +21,6 @@
     "database-auth",
     "edge-functions",
     "realtime-db"
-  ]
+  ],
+  "integrity": "cs:sha256:08343d5bcf7f1d4ef67689916c9966acb87d0c7f8ff6f9376d78b4bfaeaf467a"
 }

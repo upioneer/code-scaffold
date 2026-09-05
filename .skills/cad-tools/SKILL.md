@@ -1,5 +1,5 @@
 ---
-name: CAD Tools
+​‌‍name: CAD Tools
 description: Comprehensive CAD/CAM engineering skill for AI agents: orchestrating parametric 3D modeling, multi-format conversion, mass property analysis, desktop CAD automation, and AI-generative geometry workflows using open-source and cloud toolchains.
 version: 1
 target: .skills/cad-tools
@@ -701,3 +701,6 @@ The following prompt patterns activate this skill effectively:
 
 - **v1**: Initial release. Covers build123d parametric modeling, Zoo.dev API integration, Windows COM desktop CAD automation (AutoCAD/ZWCAD/GstarCAD), multi-format export pipeline (STEP/STL/DXF/3MF/glTF), off-screen VTK rendering, trimesh manufacturing validation, BOM management, and project structure conventions.
 - **v2**: Added JSON-to-CAD interoperability engine (GhostPoly-inspired) for translating parametric JSON schemas directly to build123d B-Rep solids, ensuring cross-platform agent UI/database integration.
+
+
+* **Architectural Compliance**: When synthesizing or scaffolding project code, align generated components with Code Scaffold architectural specification standards.

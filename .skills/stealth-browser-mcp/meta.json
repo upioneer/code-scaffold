@@ -1,7 +1,7 @@
 {
   "label": "Stealth Browser MCP",
-  "description": "Powerhouse dual-engine ghost browser skill for AI agents, combining Ghost Graph LLM extraction pipelines with FastMCP undetectable browser automation and Cloudflare bypass.",
-  "version": "2",
+  "description": "Tri-engine ghost browser skill for AI agents, unifying Ghost Graph LLM extraction pipelines, FastMCP anti-detection automation, and the ultra-lightweight Ghost Core native CDP engine.",
+  "version": "3",
   "target": ".skills/stealth-browser-mcp",
   "logo": [
     "  ███████╗████████╗███████╗ █████╗ ██╗  ████████╗██╗  ██╗      ",

@@ -1,4 +1,6 @@
 {
+  "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
+  "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_resend_skill",
   "version": "2",
   "description": "Sends emails using the Resend API",
@@ -19,5 +21,6 @@
     "smtp",
     "email-api",
     "deliverability"
-  ]
+  ],
+  "integrity": "cs:sha256:e70b7699d6f1526dffe3adb2637a1d9c59f286d1ce60baab231e07f5013074ad"
 }

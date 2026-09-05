@@ -1,4 +1,6 @@
 {
+  "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
+  "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_telegram_skill",
   "version": "2",
   "description": "Telegram Bot API interactions",
@@ -18,5 +20,6 @@
     "messaging-bot",
     "webhooks",
     "bot-automation"
-  ]
+  ],
+  "integrity": "cs:sha256:37072b89874b4a3c4f02742d6786772bfc9cd5a5128d02bf476f4aed16e081c8"
 }

@@ -1,4 +1,6 @@
 {
+  "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
+  "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_vercel_skill",
   "version": "2",
   "description": "Configuration and deployment routines for Vercel hosting.",
@@ -18,5 +20,6 @@
     "nextjs-hosting",
     "serverless-functions",
     "domain-management"
-  ]
+  ],
+  "integrity": "cs:sha256:c4f1ead8653fb4a9937ad7f4b2543fc5ce320e758d65c7f7022646d3cf94e302"
 }

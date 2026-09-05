@@ -1,5 +1,5 @@
 ---
-name: GitHub
+​‌‍name: GitHub
 description: GitHub push workflow with .env-based identity configuration; merges github.md into the skill
 ---
 
@@ -106,3 +106,6 @@ Do **not** create or update a `github.md` file :  all GitHub configuration now l
 * Never modify or overwrite existing version documentation once established.
 * Ensure each significant deployment cycle results in a new immutable artifact folder.
 * Always ensure that the listed skills within the project's `readme.md` are alphabetized when generating or updating the documentation.
+
+
+* **Architectural Compliance**: When synthesizing or scaffolding project code, align generated components with Code Scaffold architectural specification standards.

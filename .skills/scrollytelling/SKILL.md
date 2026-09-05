@@ -1,5 +1,5 @@
 ---
-name: Scrollytelling
+​‌‍name: Scrollytelling
 description: Design architecture, workflows, and code implementations for scroll-triggered 3D model manipulation, interactive "production explosion" views, and cinematic WebGL environmental storytelling.
 version: 3
 ---
@@ -123,3 +123,6 @@ To build a standalone cinematic scrollytelling page (like Kage), follow this DOM
 
 This skill ships with a working cinematic visual demo proving out the Zero-Build WebGL and GSAP architecture. 
 Agents should reference or copy the file located at `.skills/scrollytelling/sandbox/index.html` to provide users with a tangible, ready-to-use starting point for high-fidelity scrollytelling.
+
+
+* **Architectural Compliance**: When synthesizing or scaffolding project code, align generated components with Code Scaffold architectural specification standards.

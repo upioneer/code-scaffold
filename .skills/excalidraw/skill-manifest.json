@@ -1,4 +1,6 @@
 {
+  "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
+  "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_excalidraw_skill",
   "version": "3",
   "description": "Renders and embeds Excalidraw whiteboards",
@@ -19,5 +21,6 @@
     "architecture-diagram",
     "canvas",
     "visuals"
-  ]
+  ],
+  "integrity": "cs:sha256:9a54cfaac5340a615c2b36c800fde4be8bf5ca8447239bc213e9a8dd924f6753"
 }

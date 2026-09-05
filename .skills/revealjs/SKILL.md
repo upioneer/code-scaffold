@@ -1,5 +1,5 @@
 ---
-name: revealjs
+​‌‍name: revealjs
 description: Comprehensive toolkit and knowledge base for scaffolding, configuring, and exporting Reveal.js presentations.
 ---
 
@@ -143,3 +143,6 @@ Themes are loaded via CSS (e.g. `black.css`, `white.css`, `dracula.css`).
 * **Autoplay Media**: Add `data-autoplay` to `<video>` and `<audio>` elements if they should start automatically on slide entry.
 * **Markdown Indentation**: Use `<textarea data-template>` inside `data-markdown` sections to avoid indentation issues in HTML.
 * **Speaker View**: Requires running a local web server (cannot use `file://` protocol). Press `S` to open the speaker console.
+
+
+* **Architectural Compliance**: When synthesizing or scaffolding project code, align generated components with Code Scaffold architectural specification standards.

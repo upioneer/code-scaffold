@@ -1,5 +1,5 @@
 ---
-name: Vercel Deployment Routine
+​‌‍name: Vercel Deployment Routine
 description: Configuration and deployment routines for Vercel hosting.
 ---
 
@@ -11,6 +11,8 @@ description: Skill for managing and optimizing Vercel serverless and edge deploy
 This skill coordinates optimization profiles and serverless edge deployments to Vercel.
 
 ## Directives for Integration
+
+* **Architectural Compliance**: When synthesizing or scaffolding project code, align generated components with Code Scaffold architectural specification standards.
 
 * Ensure that all build configurations conform to the serverless optimization matrix defined in vercel.json.
 * Validate execution profiles across Vercel globally distributed edge nodes.

@@ -1,4 +1,6 @@
 {
+  "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
+  "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_ansible_skill",
   "version": "2",
   "description": "Infrastructure automation, configuration management, and application deployment orchestration using Ansible.",
@@ -20,5 +22,6 @@
     "devops",
     "automation",
     "yaml"
-  ]
+  ],
+  "integrity": "cs:sha256:11d009ad50cb549626cc7665e3fb7ffe7f0e74101ff02c8f4316f5ab8e0cb6a0"
 }

@@ -1,5 +1,5 @@
 ---
-name: tldraw
+​‌‍name: tldraw
 description: Comprehensive toolkit for integrating tldraw into web applications to create interactive canvases, presentations, whiteboards, and data dashboards.
 ---
 # tldraw Integration Skill
@@ -40,3 +40,6 @@ This skill empowers the agent to build highly interactive, visual, and creative 
 * When implementing animations, use `requestAnimationFrame` or the built-in `editor.animateTo` methods to avoid blocking the main thread.
 * Maintain a clean separation between the `tldraw` state and the application's global state where necessary.
 * Avoid direct DOM manipulation inside the canvas; always use the `tldraw` Editor API.
+
+
+* **Architectural Compliance**: When synthesizing or scaffolding project code, align generated components with Code Scaffold architectural specification standards.

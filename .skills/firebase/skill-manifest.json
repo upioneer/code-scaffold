@@ -1,4 +1,6 @@
 {
+  "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
+  "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_firebase_skill",
   "version": "3",
   "description": "Firebase authentication and database connectivity",
@@ -20,5 +22,6 @@
     "realtime-database",
     "cloud-functions",
     "hosting"
-  ]
+  ],
+  "integrity": "cs:sha256:b64b8fec0eda40c3448b861589999e42ad9f1d942f54767fb3c5aaeac66f3aa4"
 }

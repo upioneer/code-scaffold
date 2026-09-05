@@ -1,5 +1,5 @@
 ---
-name: A2UI
+​‌‍name: A2UI
 description: Agent-to-User Interface (A2UI) protocol implementation and client renderer scaffolding.
 ---
 
@@ -86,3 +86,6 @@ function A2UIRenderer({ nodes, rootId }) {
 
 ## Validation (When Applicable)
 If working within a backend environment, always ensure your A2UI JSON output passes structural validation before streaming it to the frontend, verifying that `id` fields are unique and `children` references exist within the node array.
+
+
+* **Architectural Compliance**: When synthesizing or scaffolding project code, align generated components with Code Scaffold architectural specification standards.

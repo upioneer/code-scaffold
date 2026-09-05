@@ -1,4 +1,6 @@
 {
+  "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
+  "specification": "https://code-scaffold.com/spec/v1",
   "name": "proxmox-skill",
   "version": "2",
   "description": "Proxmox VE LXC toolbox for building reusable templates, baseline app deployments, and SSH hardening.",
@@ -21,5 +23,6 @@
     "homelab",
     "hypervisor",
     "virtualization"
-  ]
+  ],
+  "integrity": "cs:sha256:f359517190b08565a91da0ca8ec1be3849e1c92d7f1439e2aeb73b685c6265ba"
 }

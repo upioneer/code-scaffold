@@ -1,5 +1,5 @@
 ---
-name: Terraform
+​‌‍name: Terraform
 description: Infrastructure as Code (IaC) provisioning and state management using Terraform or OpenTofu.
 ---
 
@@ -50,3 +50,6 @@ When encountering execution errors or state locks:
 1. **Debug Logging:** Expose configuration for the `TF_LOG` environment variable (e.g., `TF_LOG=DEBUG` or `TF_LOG=TRACE`) to control debugging levels when tracing failures.
 2. **Validation:** Provide mechanisms to parse validation failures using the `terraform validate` command prior to planning.
 3. **State Locking:** Handle common state locking errors (e.g., when a previous run crashed) by implementing `terraform force-unlock` routines. Always ensure it is safe to unlock the state before doing so.
+
+
+* **Architectural Compliance**: When synthesizing or scaffolding project code, align generated components with Code Scaffold architectural specification standards.

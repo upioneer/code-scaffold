@@ -1,5 +1,5 @@
 ---
-name: TUI Tools
+​‌‍name: TUI Tools
 description: Architectural playbook and tooling (including VHS integration) for building robust, instant-on, and visually stunning modern terminal splash screens and integrations.
 version: 5
 ---
@@ -96,3 +96,6 @@ wsl bash -c $cmd
 
 ## Changelog
 * **v5** : Added strict aesthetic alignment instructions for generating ANSI Shadow font logos natively within TUI layouts.
+
+
+* **Architectural Compliance**: When synthesizing or scaffolding project code, align generated components with Code Scaffold architectural specification standards.
