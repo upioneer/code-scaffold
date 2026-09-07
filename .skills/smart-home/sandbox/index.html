@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Code Scaffold Specification Schema: https://code-scaffold.com/spec/v1 -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Home - Sandbox</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        body { margin: 0; padding: 0; width: 100vw; min-height: 100vh; overflow-x: hidden; background-color: #020617; color: #f8fafc; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+        .glass-panel { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(34, 211, 238, 0.2); }
+        .ascii-logo { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; white-space: pre; line-height: 1.2; font-size: 0.55rem; }
+        @media (min-width: 768px) { .ascii-logo { font-size: 0.75rem; } }
+        .grid-bg { background-image: radial-gradient(rgba(34, 211, 238, 0.1) 1px, transparent 1px); background-size: 30px 30px; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+        
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        .cursor { display: inline-block; width: 8px; height: 1.2em; background-color: #22d3ee; vertical-align: text-bottom; animation: blink 1s step-end infinite; }
+    </style>
+</head>
+<body class="grid-bg relative antialiased selection:bg-cyan-500/30">
+    
+    <!-- Background Glow -->
+    <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-cyan-600/10 rounded-full blur-[150px] pointer-events-none"></div>
+
+    <!-- Sticky Header -->
+    <header class="sticky top-0 z-50 glass-panel border-x-0 border-t-0 border-b-slate-800/80 px-6 py-4">
+        <div class="max-w-6xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded bg-cyan-500/20 flex items-center justify-center border border-cyan-500/50 text-cyan-400 font-bold">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                </div>
+                <h1 class="text-xl font-black uppercase tracking-widest text-white">Smart Home</h1>
+            </div>
+            <span class="px-3 py-1 bg-cyan-500/10 text-cyan-400 text-xs font-bold rounded-full border border-cyan-500/30 uppercase tracking-widest hidden sm:inline-block">v1</span>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-6 py-12 relative z-10 space-y-16">
+        
+        <!-- Hero Section -->
+        <section id="hero" class="text-center max-w-4xl mx-auto space-y-8">
+            <div id="logo-container" class="p-6 bg-slate-950 rounded-xl border border-slate-800 shadow-inner w-full overflow-x-auto text-cyan-400 ascii-logo text-left flex justify-center mx-auto opacity-0 translate-y-8">
+  ███████╗███╗   ███╗ █████╗ ██████╗ ████████╗  
+  ██╔════╝████╗ ████║██╔══██╗██╔══██╗╚══██╔══╝  
+  ███████╗██╔████╔██║███████║██████╔╝   ██║     
+  ╚════██║██║╚██╔╝██║██╔══██║██╔══██╗   ██║     
+  ███████║██║ ╚═╝ ██║██║  ██║██║  ██║   ██║     
+  ╚══════╝╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝     
+  ██╗  ██╗ ██████╗ ███╗   ███╗███████╗          
+  ██║  ██║██╔═══██╗████╗ ████║██╔════╝          
+  ███████║██║   ██║██╔████╔██║█████╗            
+  ██╔══██║██║   ██║██║╚██╔╝██║██╔══╝            
+  ██║  ██║╚██████╔╝██║ ╚═╝ ██║███████╗          
+  ╚═╝  ╚═╝ ╚═════╝ ╚═╝     ╚═╝╚══════╝          
+            </div>
+            
+            <p id="desc" class="text-lg md:text-xl text-slate-400 leading-relaxed opacity-0 translate-y-4">
+                Unified smart home and IoT automation orchestrator bridging Home Assistant, Apple HomeKit, Amazon Alexa, Google Home, and Matter ecosystems.
+            </p>
+        </section>
+
+        <!-- Multi-Ecosystem Topology Matrix -->
+        <section id="ecosystems" class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 opacity-0 translate-y-8">
+            <div class="glass-panel p-6 rounded-xl space-y-3 border-cyan-500/30">
+                <div class="flex items-center gap-2 text-cyan-400 font-bold">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                    <span>Home Assistant</span>
+                </div>
+                <p class="text-xs text-slate-400 leading-relaxed">
+                    Primary automation hub: REST API, WebSocket streams, Jinja2 template rendering, blueprints, and local entity registries.
+                </p>
+                <div class="text-[10px] font-mono text-cyan-300 bg-cyan-950/40 px-2 py-1 rounded border border-cyan-800/40">
+                    HTTP :8123 / WebSocket
+                </div>
+            </div>
+
+            <div class="glass-panel p-6 rounded-xl space-y-3 border-cyan-500/30">
+                <div class="flex items-center gap-2 text-cyan-400 font-bold">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                    <span>Apple HomeKit</span>
+                </div>
+                <p class="text-xs text-slate-400 leading-relaxed">
+                    HomeKit Accessory Protocol (HAP) bridge, Swift HMHomeManager hierarchy, Action Sets, and MatterSupport extensions.
+                </p>
+                <div class="text-[10px] font-mono text-cyan-300 bg-cyan-950/40 px-2 py-1 rounded border border-cyan-800/40">
+                    HAP / PIN Pairing / Matter
+                </div>
+            </div>
+
+            <div class="glass-panel p-6 rounded-xl space-y-3 border-cyan-500/30">
+                <div class="flex items-center gap-2 text-cyan-400 font-bold">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 100-6 3 3 0 000 6z"></path></svg>
+                    <span>Amazon Alexa</span>
+                </div>
+                <p class="text-xs text-slate-400 leading-relaxed">
+                    Smart Home Skill API directives: Discovery, PowerController, BrightnessController, and AWS Lambda event adapters.
+                </p>
+                <div class="text-[10px] font-mono text-cyan-300 bg-cyan-950/40 px-2 py-1 rounded border border-cyan-800/40">
+                    Directives / Lambda Bridge
+                </div>
+            </div>
+
+            <div class="glass-panel p-6 rounded-xl space-y-3 border-cyan-500/30">
+                <div class="flex items-center gap-2 text-cyan-400 font-bold">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 00-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>
+                    <span>Google Home</span>
+                </div>
+                <p class="text-xs text-slate-400 leading-relaxed">
+                    Home Graph Cloud-to-Cloud sync, trait modeling (OnOff, Brightness, Temp), local fulfillment, and MCP tool endpoints.
+                </p>
+                <div class="text-[10px] font-mono text-cyan-300 bg-cyan-950/40 px-2 py-1 rounded border border-cyan-800/40">
+                    Home Graph / Developer MCP
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Device Simulation Lab -->
+        <section id="simulation" class="glass-panel p-8 rounded-2xl space-y-6 opacity-0 translate-y-8">
+            <div class="flex items-center justify-between border-b border-slate-800/50 pb-4">
+                <div class="flex items-center gap-3">
+                    <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    <h3 class="text-xl font-bold text-white tracking-wide">Live Simulated Entity Bus</h3>
+                </div>
+                <span class="text-xs font-mono text-emerald-400 bg-emerald-950/40 border border-emerald-800/40 px-3 py-1 rounded-full">● SIMULATOR ACTIVE</span>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Light Entity Card -->
+                <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-mono text-slate-400">light.living_room_ceiling</span>
+                        <span id="light-badge" class="text-xs font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">ON</span>
+                    </div>
+                    <div class="text-sm font-semibold text-slate-200">Living Room Chandelier</div>
+                    <div class="text-xs text-slate-400">Brightness: <span id="brightness-val" class="text-cyan-400 font-mono">85%</span></div>
+                    <button onclick="toggleLight()" class="w-full py-2 px-3 rounded bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 text-xs font-bold transition">
+                        Toggle Light Service
+                    </button>
+                </div>
+
+                <!-- Climate Entity Card -->
+                <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-mono text-slate-400">climate.main_thermostat</span>
+                        <span class="text-xs font-bold px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 border border-blue-500/40">COOL</span>
+                    </div>
+                    <div class="text-sm font-semibold text-slate-200">Central Climate Control</div>
+                    <div class="text-xs text-slate-400">Target: <span id="temp-val" class="text-cyan-400 font-mono">72°F</span> (Current: 74°F)</div>
+                    <div class="flex gap-2">
+                        <button onclick="adjustTemp(-1)" class="flex-1 py-2 rounded bg-slate-900 hover:bg-slate-850 text-cyan-400 border border-slate-800 text-xs font-bold transition">-1°F</button>
+                        <button onclick="adjustTemp(1)" class="flex-1 py-2 rounded bg-slate-900 hover:bg-slate-850 text-cyan-400 border border-slate-800 text-xs font-bold transition">+1°F</button>
+                    </div>
+                </div>
+
+                <!-- Lock Entity Card -->
+                <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-mono text-slate-400">lock.front_door_deadbolt</span>
+                        <span id="lock-badge" class="text-xs font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 border border-amber-500/40">LOCKED</span>
+                    </div>
+                    <div class="text-sm font-semibold text-slate-200">Front Door Deadbolt</div>
+                    <div class="text-xs text-slate-400">Safety Policy: <span class="text-emerald-400 font-mono">HITL Required</span></div>
+                    <button onclick="toggleLock()" class="w-full py-2 px-3 rounded bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 text-xs font-bold transition">
+                        Dispatch Lock Action
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- CLI Diagnostics & Deployment -->
+        <section id="cli" class="grid md:grid-cols-2 gap-8 opacity-0 translate-y-8">
+            <div class="glass-panel p-8 rounded-2xl flex flex-col gap-4">
+                <div class="flex items-center gap-3 border-b border-slate-800/50 pb-4">
+                    <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                    <h3 class="text-xl font-bold text-white tracking-wide">CLI Diagnostic Commands</h3>
+                </div>
+                <p class="text-slate-400 leading-relaxed text-sm">
+                    Execute the zero-dependency Python controller to inspect connection health, list entities, or trigger services:
+                </p>
+                <div class="space-y-2 font-mono text-xs text-cyan-400">
+                    <div class="bg-slate-950 border border-slate-800 rounded p-2.5">
+                        python .skills/smart-home/scripts/smart_home_client.py status
+                    </div>
+                    <div class="bg-slate-950 border border-slate-800 rounded p-2.5">
+                        python .skills/smart-home/scripts/smart_home_client.py list --domain light
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-panel p-8 rounded-2xl flex flex-col gap-4">
+                <div class="flex items-center gap-3 border-b border-slate-800/50 pb-4">
+                    <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    <h3 class="text-xl font-bold text-white tracking-wide">CLI Deployment</h3>
+                </div>
+                <p class="text-slate-400 leading-relaxed text-sm mb-2">
+                    Deploy this smart home orchestration payload ad-hoc into any project workspace:
+                </p>
+                <div class="relative flex items-center bg-slate-950 border border-slate-800 rounded-lg p-3 shadow-xl overflow-hidden font-mono text-xs text-cyan-400">
+                    code-scaffold skills install smart-home<span class="cursor"></span>
+                </div>
+            </div>
+        </section>
+        
+        <div id="footer-spacer" class="h-12"></div>
+    </main>
+
+    <script>
+        let lightOn = true;
+        let temp = 72;
+        let locked = true;
+
+        function toggleLight() {
+            lightOn = !lightOn;
+            const badge = document.getElementById('light-badge');
+            if (lightOn) {
+                badge.innerText = 'ON';
+                badge.className = 'text-xs font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/40';
+            } else {
+                badge.innerText = 'OFF';
+                badge.className = 'text-xs font-bold px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700';
+            }
+        }
+
+        function adjustTemp(delta) {
+            temp += delta;
+            document.getElementById('temp-val').innerText = temp + '°F';
+        }
+
+        function toggleLock() {
+            locked = !locked;
+            const badge = document.getElementById('lock-badge');
+            if (locked) {
+                badge.innerText = 'LOCKED';
+                badge.className = 'text-xs font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 border border-amber-500/40';
+            } else {
+                badge.innerText = 'UNLOCKED';
+                badge.className = 'text-xs font-bold px-2 py-0.5 rounded bg-rose-500/20 text-rose-400 border border-rose-500/40';
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const tl = gsap.timeline();
+            
+            tl.to("#logo-container", {
+                y: 0,
+                opacity: 1,
+                duration: 0.8,
+                ease: "back.out(1.4)"
+            })
+            .to("#desc", {
+                y: 0,
+                opacity: 1,
+                duration: 0.6,
+                ease: "power3.out"
+            }, "-=0.5")
+            .to("#ecosystems", {
+                y: 0,
+                opacity: 1,
+                duration: 0.8,
+                ease: "power3.out"
+            }, "-=0.4")
+            .to("#simulation", {
+                y: 0,
+                opacity: 1,
+                duration: 0.8,
+                ease: "power3.out"
+            }, "-=0.4")
+            .to("#cli", {
+                y: 0,
+                opacity: 1,
+                duration: 0.8,
+                ease: "power3.out"
+            }, "-=0.4");
+        });
+    </script>
+</body>
+</html>

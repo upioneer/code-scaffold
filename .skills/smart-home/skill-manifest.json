@@ -1,0 +1,33 @@
+{
+  "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
+  "specification": "https://code-scaffold.com/spec/v1",
+  "name": "smart-home",
+  "version": "1",
+  "description": "Unified smart home and IoT automation orchestrator bridging Home Assistant, Apple HomeKit, Amazon Alexa, Google Home, and Matter ecosystems.",
+  "entryPoint": "./SKILL.md",
+  "engines": {
+    "node": ">=18.0.0",
+    "python": ">=3.10.0"
+  },
+  "requiredPermissions": [
+    "fs:read",
+    "fs:write",
+    "net:connect"
+  ],
+  "category": "Smart Home & IoT Automation",
+  "keywords": [
+    "smart-home",
+    "home-assistant",
+    "homekit",
+    "matter",
+    "thread",
+    "alexa-smart-home",
+    "google-home",
+    "iot-automation",
+    "zigbee",
+    "zwave",
+    "hass-rest-api",
+    "hass-websocket"
+  ],
+  "integrity": "cs:sha256:91299a2befde92053cae5ede15f6ae19c8baa87d5f46de7db760b43f6dc431d5"
+}

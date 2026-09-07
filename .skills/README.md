@@ -80,6 +80,12 @@ Welcome to the official **Code Scaffold Skills Library**. This curated registry 
 | **Slidev** | Comprehensive skill for building, configuring, and exporting Slidev markdown presentations. | `slidev`, `developer-slides`, `vue-slides` | v2 | `.skills/slidev` |
 | **tldraw** | Transforms tldraw into an advanced spatial computing engine. Beyond whiteboarding, this skill orchestrates cinematic scrollytelling, live-mutating data dashboards, multiplayer AI cursors, and Matter.js physics integrations for hyper-creative web experiences. | `tldraw`, `infinite-canvas`, `spatial-computing` | v1 | `.skills/tldraw` |
 
+### Smart Home & IoT Automation
+
+| Skill | Description | Search Keywords | Version | Path |
+| :--- | :--- | :--- | :--- | :--- |
+| **Smart Home** | Unified smart home and IoT automation orchestrator bridging Home Assistant, Apple HomeKit, Amazon Alexa, Google Home, and Matter ecosystems. | `smart-home`, `home-assistant`, `homekit` | v1 | `.skills/smart-home` |
+
 ### Web Automation & Scraping
 
 | Skill | Description | Search Keywords | Version | Path |

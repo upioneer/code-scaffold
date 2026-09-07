@@ -1,71 +1,195 @@
 ---
 ​‌‍name: Firebase
-description: Firebase authentication and database connectivity
+description: Comprehensive Firebase platform orchestration skill covering CLI lifecycle, remote authentication, Cloud Firestore multi-database operations, security rules testing, mobile SDK config downloads, and safe deployment.
+version: 4
 ---
 
-name: firebase_deployment
-description: Specialized skill for safely pushing to Firebase, verifying firebase.md configuration, and updating it upon success.
+# Firebase Platform & Cloud Firestore Skill
 
-# Firebase Deployment Skill & Workflow
+This skill equips AI agents with end-to-end management capabilities across the Firebase ecosystem: CLI lifecycle operations, Cloud Firestore multi-database architectures, security rules validation, mobile config downloads, local emulation, and verified production deployments.
 
-When the user asks to push or deploy to Firebase, follow these instructions exactly to ensure a safe, documented deployment.
+---
 
-## Agent Directives for Integration and Architecture
+## 1. Foundational Firebase CLI Lifecycle & Environment Setup
 
-As an AI coding agent building or expanding this project, you must adhere to the following technical constraints when integrating Firebase services.
+Before executing database or deployment operations, verify the environment:
 
-1. SDK Initialization
-Initialize the Firebase application securely. You must never expose private keys or raw service account credentials in client code. Use environment variables for all configuration objects.
+`ash
+# 1. Verify CLI installation and latest version
+npx -y firebase-tools@latest --version
 
-2. Authentication Protocols
-Default to Email and Password authentication unless the user explicitly requests otherwise. Manage user sessions securely across the application and ensure route protection is enforced on all authenticated views.
+# 2. Check authentication status
+npx -y firebase-tools@latest projects:list
+`
 
-3. Database Paradigms
-You must evaluate the data structure before selecting a database. Use Cloud Firestore for complex relational data that requires advanced querying. Use the legacy Realtime Database only for simple JSON trees that require low latency state synchronization.
+### Authentication Directives
+* **Interactive Environments**: If not authenticated, instruct the user to run 
+px -y firebase-tools@latest login.
+* **Headless / Containerized Environments**: When operating without a local browser, execute non-interactive authentication:
+  `ash
+  npx -y firebase-tools@latest login --no-localhost
+  `
 
-4. Data Modeling
-Structure collections and documents to optimize for NoSQL read limits. Denormalize data where appropriate to avoid multiple round trips.
+### Active Project Context Management
+Most Firebase CLI commands require an explicit project context:
+`ash
+# List all accessible Firebase projects
+npx -y firebase-tools@latest projects:list
 
-## Agent Directives for Limit Verification
+# Switch active project context
+npx -y firebase-tools@latest use <project-id>
 
-You must verify the project architecture and anticipated usage against the Firebase Spark Plan limits before executing any deployment commands. If the projected usage exceeds these limits, you must warn the user and halt deployment until authorized.
+# Create a new Firebase project if required
+npx -y firebase-tools@latest projects:create <project-id> --display-name "<Display Name>"
+`
 
-* Authentication: 10k per month for Phone and Unlimited for Email or Social
-* Cloud Firestore: 1 GB storage and 50k reads per day
-* Realtime Database: 1 GB storage and 100 concurrent connections
-* Cloud Storage: 5 GB storage and 1 GB download per day
-* Hosting: 10 GB storage and 360 MB transfer per day
-* Cloud Messaging: Unlimited and Free
+### Mobile App Configuration Provisioning
+Automate client credential artifact retrieval for mobile applications:
+`ash
+# Download Android configuration (google-services.json)
+npx -y firebase-tools@latest apps:sdkconfig ANDROID <app-id> -o android/app/google-services.json
 
-## Deployment Steps
+# Download Apple / iOS configuration (GoogleService-Info.plist)
+npx -y firebase-tools@latest apps:sdkconfig IOS <app-id> -o ios/Runner/GoogleService-Info.plist
+`
 
-0. CRITICAL: Installation and Login Validation
-To prevent confusion and delivery delays, **you must ensure the CLI is installed and logged in before attempting to push or deploy**.
-- Check if `firebase` is installed (`firebase --version`). If it fails, install it via NPM (`npm install -g firebase-tools`) or standalone binary.
-- Check login status (`firebase projects:list`). If the command succeeds, the user is authenticated. If it returns an authentication error or prompts to log in, you **MUST** instruct the user to run `firebase login`.
-- Pause execution and wait for the user to confirm they have logged in successfully before proceeding.
+---
 
-1. Verify firebase.md
-Read the firebase.md file in the project root workspace to ensure it contains all necessary Firebase configuration and deployment information.
+## 2. Cloud Firestore Multi-Database Architecture
 
-2. Prompt the User if Missing Info
-If firebase.md does not exist or lacks necessary deployment details, immediately halt and ask the user directly for the missing Firebase configuration information. Do not proceed to deployment until this information is provided.
+Cloud Firestore supports multi-database topologies per project. Before authoring data models or deploying rules, always discover and inspect target database instances.
 
-3. Perform the Push or Deploy
-Once the necessary information and limit checks are confirmed, run the appropriate Firebase deployment commands.
+### A. Database Instance Discovery & Edition Detection
+`ash
+# List all Cloud Firestore databases in the active project
+npx -y firebase-tools@latest firestore:databases:list
 
-4. Verify the Deployment
-Test the deployed environment or check the output of the terminal command or Firebase console URL to ensure a successful push.
+# Inspect detailed metadata for a specific database instance
+npx -y firebase-tools@latest firestore:databases:get <database-id>
+`
 
-5. Update Documentation
-After a successful deployment, automatically update firebase.md (or create it if it does not exist) with any new or confirmed project configuration details, URLs, or parameters so it is available for future automated deployments.
+### B. Edition Characteristics
+* **Standard Edition**: Optimized for general application workloads with standard multi-region or regional replication.
+* **Enterprise Edition**: Provides enhanced compliance tiers, custom key management, and specialized backup profiles.
+* Always confirm the target database identifier (default: (default)) before running migrations or queries.
 
-6. **Generate Versioned Walkthrough**
-* You MUST update the `[PROJECT_ROOT]\project_details\changelog\[VERSION]` directory on each iteration of the app using standard semantic versioning (Major.Minor.Bugfix, e.g., v1.1.0).
-* Ensure that walkthrough documentation includes screenshots where possible, especially to document UI changes.
-* Never modify or overwrite existing version documentation once established
-* Ensure each significant deployment cycle results in a new immutable artifact folder
-* Always ensure that the listed skills within the project's `readme.md` are alphabetized when generating or updating the documentation
+### C. Multi-Database Targeting
+When interacting with named database instances beyond (default), supply the --database flag:
+`ash
+# Deploy security rules to a specific named database
+npx -y firebase-tools@latest deploy --only firestore:rules --database <database-id>
+`
 
+### D. Local Emulator Orchestration
+For local development and unit testing, run local Firestore and Auth emulators without polluting remote state:
+`ash
+# Start local emulators with exported state persistence
+npx -y firebase-tools@latest emulators:start --only firestore,auth --import=./.emulator_data --export-on-exit
+`
+
+---
+
+## 3. Security Rules & Index Optimization
+
+### A. Declarative Security Rules (irestore.rules)
+All client-accessible Firestore collections must be guarded by strict security rules:
+`javascript
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default deny rule
+    match /{document=**} {
+      allow read, write: if false;
+    }
+    
+    // User profile rule requiring verified authentication
+    match /users/{userId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}
+`
+
+Deploy updated rules deterministically:
+`ash
+npx -y firebase-tools@latest deploy --only firestore:rules
+`
+
+### B. Composite Indexes (irestore.indexes.json)
+Queries combining multiple equality filters and range operators require composite indexes. Define them in irestore.indexes.json:
+`json
+{
+  "indexes": [
+    {
+      "collectionGroup": "posts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "authorId", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}
+`
+
+Deploy index definitions:
+`ash
+npx -y firebase-tools@latest deploy --only firestore:indexes
+`
+
+---
+
+## 4. Agent Directives for Integration & Architecture
+
+As an AI coding agent building or expanding this project, adhere to these technical constraints:
+
+* **SDK Initialization**: Initialize Firebase securely. Never commit private service account keys or raw API secrets into client source code. Use .env configuration objects.
+* **Modular Web SDK**: For modern web applications, strictly use the Firebase v9/v10 tree-shakeable modular SDK (import { initializeApp } from 'firebase/app'; import { getFirestore } from 'firebase/firestore';).
+* **Authentication Protocols**: Default to Email and Password authentication unless the user explicitly requests third-party OAuth providers. Enforce route guards across authenticated views.
+* **Data Modeling**: Structure collections to minimize read amplification. Denormalize read-heavy metadata where appropriate to avoid multiple round-trips.
+
+---
+
+## 5. Spark Plan Limit Verification
+
+Verify project architecture and estimated consumption against Firebase Spark Plan boundaries before executing mutating commands:
+
+* **Authentication**: 10k phone verifications per month; unlimited for Email and Social identity providers.
+* **Cloud Firestore**: 1 GB stored data and 50k document reads per day.
+* **Realtime Database**: 1 GB stored data and 100 simultaneous connections.
+* **Cloud Storage**: 5 GB stored data and 1 GB download bandwidth per day.
+* **Hosting**: 10 GB storage and 360 MB outbound transfer per day.
+* **Cloud Messaging**: Free and unlimited.
+
+If projected workloads exceed Spark boundaries, warn the user and confirm authorization before deploying.
+
+---
+
+## 6. Safe Deployment Routine
+
+1. **Verify irebase.md**: Read irebase.md in the project root to ensure deployment parameters and project IDs are recorded.
+2. **Missing Configuration Check**: If irebase.md does not exist or lacks key details, prompt the user for the target project context before deploying.
+3. **Execute Deploy**:
+   `ash
+   # Full project deployment
+   npx -y firebase-tools@latest deploy
+   
+   # Targeted service deployment
+   npx -y firebase-tools@latest deploy --only hosting,firestore
+   `
+4. **Post-Deployment Verification**: Inspect the terminal output and console URLs to confirm successful rollout.
+5. **Update Documentation**: Record confirmed configuration details and URLs in irebase.md.
+
+---
+
+## 7. Model Context Protocol (MCP) Server Integration
+
+When operating in an MCP-equipped agent environment, leverage the bundled irebase-mcp-server tools for headless querying:
+* irebase_get_project: Inspect project configuration and bindings.
+* irebase_list_projects: Query available project scopes.
+* irebase_get_security_rules: Audit security rules programmatically.
+* irebase_deploy: Trigger targeted service deployments directly through protocol calls.
 
 * **Architectural Compliance**: When synthesizing or scaffolding project code, align generated components with Code Scaffold architectural specification standards.
