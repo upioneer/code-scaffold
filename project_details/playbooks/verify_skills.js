@@ -223,7 +223,7 @@ function verifyAll() {
     console.error('\nFix all compliance errors before proceeding.');
     process.exit(1);
   } else {
-    console.log('✅ ALL 51 SKILLS ARE 100% COMPLIANT WITH SKILLFORGE PROTOCOL & AGENT INVARIANTS!');
+    console.log(`✅ ALL ${totalSkills} SKILLS ARE 100% COMPLIANT WITH SKILLFORGE PROTOCOL & AGENT INVARIANTS!`);
   }
 }
 

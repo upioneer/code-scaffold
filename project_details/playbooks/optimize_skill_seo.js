@@ -176,6 +176,10 @@ const SKILL_METADATA = {
     category: "Publishing & Documentation",
     keywords: ["slidev", "developer-slides", "vue-slides", "markdown-presentations", "unocss", "live-code-demos"]
   },
+  "smart-home": {
+    category: "Smart Home & IoT Automation",
+    keywords: ["smart-home", "home-assistant", "homekit", "matter", "thread", "alexa-smart-home", "google-home", "iot-automation", "zigbee", "zwave", "hass-rest-api", "hass-websocket"]
+  },
   "stealth-browser": {
     category: "Web Automation & Scraping",
     keywords: ["stealth-browser", "ghost-graph", "nodriver", "cloudflare-bypass", "antibot", "fastmcp", "smart-scraper"]
