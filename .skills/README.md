@@ -58,7 +58,7 @@ Welcome to the official **Code Scaffold Skills Library**. This curated registry 
 | **A2UI** | Agent-to-User Interface (A2UI) protocol implementation and client renderer scaffolding. | `a2ui`, `declarative-ui`, `json-to-ui` | v1 | `.skills/a2ui` |
 | **Hyperframes** | Video rendering framework for AI agents to create videos using HTML, CSS, and JS. | `hyperframes`, `micro-frontends`, `iframe-orchestration` | v2 | `.skills/hyperframes` |
 | **Open Design Prototypes** | Create production-grade UI design prototypes using the open-source Open Design system | `open-design`, `design-system`, `figma-tokens` | v2 | `.skills/open-design` |
-| **Ratatui TUI Framework** | Build Terminal User Interfaces (TUI) using Ratatui in Rust. | `ratatui`, `rust-tui`, `terminal-ui` | v4 | `.skills/ratatui` |
+| **Ratatui TUI Framework** | Build Terminal User Interfaces (TUI) using Ratatui in Rust. | `ratatui`, `rust-tui`, `terminal-ui` | v5 | `.skills/ratatui` |
 | **React Modernization** | Comprehensive guide and references for modern React 19 development, best practices, validatons, and UI styling using HeroUI, Radix, shadcn/ui, and Framer Motion. | `react-19`, `react-server-components`, `server-actions` | v1 | `.skills/react-modernization` |
 | **Scrollytelling** | Design architecture, workflows, and code implementations for scroll-triggered 3D model manipulation and interactive 'production explosion' views. | `scrollytelling`, `scroll-magic`, `gsap-scrolltrigger` | v3 | `.skills/scrollytelling` |
 | **Tasty** | Code Scaffold's bespoke anti-slop frontend styling engine for premium landing pages and portfolios. | `tasty`, `anti-slop`, `design-tokens` | v3 | `.skills/tasty` |
