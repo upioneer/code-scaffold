@@ -1,0 +1,70 @@
+/* Code Scaffold UI Primitives: Kinetic Color Fill Button */
+.cs-btn-fill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 12px 30px;
+  font-weight: 600;
+  color: #ffffff;
+  border-radius: 9999px;
+  overflow: hidden;
+  text-decoration: none;
+  z-index: 1;
+  cursor: pointer;
+  border: 0;
+  background: transparent;
+  user-select: none;
+}
+
+.cs-btn-fill:before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: #0f172a; /* Base dark background */
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 9999px;
+  transform-origin: 50% 90%;
+  transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  z-index: -2;
+}
+
+.cs-btn-fill:after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #0284c7 0%, #38bdf8 100%);
+  border-radius: 9999px;
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  z-index: -1;
+}
+
+.cs-btn-fill:hover:before {
+  transform: scale(0.92);
+}
+
+.cs-btn-fill:hover:after {
+  transform: translateY(0);
+}
+
+.cs-btn-fill:active {
+  transform: scale(0.96);
+}
+
+.cs-btn-fill-wrapper {
+  overflow: hidden;
+  white-space: nowrap;
+  line-height: 1.2;
+}
+
+.cs-btn-fill-text {
+  display: inline-block;
+  position: relative;
+  text-shadow: 0 -2em 0 currentColor;
+  transition: transform 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.cs-btn-fill:hover .cs-btn-fill-text {
+  transform: translateY(2em);
+}

@@ -1,0 +1,20 @@
+{
+  "label": "UI Primitives & Micro-Interactions",
+  "description": "High-fidelity interactive web UI components, kinetic buttons, range sliders, rolling number tickers, progressive blur, custom magnetic cursors, and stateful physics-driven micro-interactions.",
+  "version": "1",
+  "target": ".skills/ui-primitives",
+  "logo": [
+    "  ██╗   ██╗██╗                                                            ",
+    "  ██║   ██║██║                                                            ",
+    "  ██║   ██║██║                                                            ",
+    "  ██║   ██║██║                                                            ",
+    "  ╚██████╔╝██║                                                            ",
+    "   ╚═════╝ ╚═╝                                                            ",
+    "  ██████╗ ██████╗ ██╗███╗   ███╗██╗████████╗██╗██╗   ██╗███████╗███████╗  ",
+    "  ██╔══██╗██╔══██╗██║████╗ ████║██║╚══██╔══╝██║██║   ██║██╔════╝██╔════╝  ",
+    "  ██████╔╝██████╔╝██║██╔████╔██║██║   ██║   ██║██║   ██║█████╗  ███████╗  ",
+    "  ██╔═══╝ ██╔══██╗██║██║╚██╔╝██║██║   ██║   ██║╚██╗ ██╔╝██╔══╝  ╚════██║  ",
+    "  ██║     ██║  ██║██║██║ ╚═╝ ██║██║   ██║   ██║ ╚████╔╝ ███████╗███████║  ",
+    "  ╚═╝     ╚═╝  ╚═╝╚═╝╚═╝     ╚═╝╚═╝   ╚═╝   ╚═╝  ╚═══╝  ╚══════╝╚══════╝  "
+  ]
+}

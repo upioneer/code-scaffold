@@ -1,0 +1,31 @@
+{
+  "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
+  "specification": "https://code-scaffold.com/spec/v1",
+  "name": "code_scaffold_ui_primitives_skill",
+  "version": "1",
+  "description": "High-fidelity interactive web UI components, kinetic buttons, range sliders, rolling number tickers, progressive blur, custom magnetic cursors, and stateful physics-driven micro-interactions.",
+  "entryPoint": "./SKILL.md",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "requiredPermissions": [
+    "fs:read",
+    "fs:write",
+    "net:connect"
+  ],
+  "category": "Frontend & UI Design",
+  "keywords": [
+    "ui-primitives",
+    "micro-interactions",
+    "custom-cursors",
+    "color-fill-button",
+    "progressive-blur",
+    "number-flow",
+    "thinking-orb",
+    "range-sliders",
+    "spring-physics",
+    "web-ui",
+    "details-vault"
+  ],
+  "integrity": "cs:sha256:4bf6ceb881f19cc21d8bcc9a3d6f49719d3c2711bab265216614482db8553d15"
+}

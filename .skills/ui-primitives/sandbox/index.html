@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <!-- Code Scaffold Specification Schema: https://code-scaffold.com/spec/v1 -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UI Primitives & Micro-Interactions Showroom</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <style>
+    :root {
+      --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #030712;
+      color: #f8fafc;
+      font-family: var(--font-sans);
+      overflow-x: hidden;
+    }
+    .glass-card {
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(56, 189, 248, 0.15);
+    }
+    .glass-card:hover {
+      border-color: rgba(56, 189, 248, 0.35);
+    }
+    .ascii-logo {
+      font-family: var(--font-mono);
+      white-space: pre;
+      line-height: 1.15;
+      font-size: 0.65rem;
+    }
+    @media (min-width: 768px) {
+      .ascii-logo { font-size: 0.82rem; }
+    }
+    .grid-bg {
+      background-image: radial-gradient(rgba(56, 189, 248, 0.08) 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+
+    /* Kinetic Color Fill Button */
+    .cs-btn-fill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: 12px 30px;
+      font-weight: 600;
+      color: #ffffff;
+      border-radius: 9999px;
+      overflow: hidden;
+      text-decoration: none;
+      z-index: 1;
+      cursor: pointer;
+      border: 0;
+      background: transparent;
+      user-select: none;
+    }
+    .cs-btn-fill:before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-color: #0f172a;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 9999px;
+      transform-origin: 50% 90%;
+      transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+      z-index: -2;
+    }
+    .cs-btn-fill:after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #0284c7 0%, #38bdf8 100%);
+      border-radius: 9999px;
+      transform: translateY(100%);
+      transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+      z-index: -1;
+    }
+    .cs-btn-fill:hover:before {
+      transform: scale(0.92);
+    }
+    .cs-btn-fill:hover:after {
+      transform: translateY(0);
+    }
+    .cs-btn-fill:active {
+      transform: scale(0.96);
+    }
+    .cs-btn-fill-wrapper {
+      overflow: hidden;
+      white-space: nowrap;
+      line-height: 1.2;
+    }
+    .cs-btn-fill-text {
+      display: inline-block;
+      position: relative;
+      text-shadow: 0 -2em 0 currentColor;
+      transition: transform 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+    .cs-btn-fill:hover .cs-btn-fill-text {
+      transform: translateY(2em);
+    }
+
+    /* Range Slider Styling */
+    .cs-range-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 24px;
+      background: transparent;
+      cursor: pointer;
+    }
+    .cs-range-slider::-webkit-slider-runnable-track {
+      height: 6px;
+      border-radius: 9999px;
+      background: linear-gradient(to right, #38bdf8 var(--slider-pct, 65%), #334155 var(--slider-pct, 65%));
+    }
+    .cs-range-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 2px solid #0284c7;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+      margin-top: -8px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .cs-range-slider:hover::-webkit-slider-thumb {
+      transform: scale(1.18);
+      box-shadow: 0 0 16px rgba(56, 189, 248, 0.8);
+    }
+    .cs-range-slider::-moz-range-track {
+      height: 6px;
+      border-radius: 9999px;
+      background: #334155;
+    }
+    .cs-range-slider::-moz-range-thumb {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 2px solid #0284c7;
+    }
+
+    /* Rolling Number Ticker */
+    .cs-ticker-container {
+      display: inline-flex;
+      font-size: 56px;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+      height: 1.1em;
+      overflow: hidden;
+      color: #f8fafc;
+    }
+    .cs-digit-col {
+      height: 1.1em;
+      overflow: hidden;
+      position: relative;
+    }
+    .cs-digit-reel {
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: transform;
+    }
+    .cs-digit-reel span {
+      height: 1.1em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Shimmer Text */
+    .cs-shimmer-text {
+      background: linear-gradient(90deg, #64748b 0%, #ffffff 50%, #64748b 100%);
+      background-size: 200% 100%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: cs-shimmer 2.5s infinite linear;
+    }
+    @keyframes cs-shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* Progressive Blur Container */
+    .cs-blur-demo-box {
+      position: relative;
+      height: 220px;
+      overflow-y: auto;
+      border-radius: 12px;
+      background: #090d16;
+    }
+    .cs-progressive-blur {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 100px;
+      pointer-events: none;
+      z-index: 20;
+      --direction: to top;
+    }
+    .cs-blur-layer {
+      position: absolute;
+      inset: 0;
+    }
+    .b-1 { z-index: 1; backdrop-filter: blur(0.08px); -webkit-mask-image: linear-gradient(var(--direction), transparent 87.5%, #000 100%); }
+    .b-2 { z-index: 2; backdrop-filter: blur(0.16px); -webkit-mask-image: linear-gradient(var(--direction), transparent 75%, #000 87.5%, #000 100%); }
+    .b-3 { z-index: 3; backdrop-filter: blur(0.31px); -webkit-mask-image: linear-gradient(var(--direction), transparent 62.5%, #000 75%, #000 87.5%, transparent 100%); }
+    .b-4 { z-index: 4; backdrop-filter: blur(0.63px); -webkit-mask-image: linear-gradient(var(--direction), transparent 50%, #000 62.5%, #000 75%, transparent 87.5%); }
+    .b-5 { z-index: 5; backdrop-filter: blur(1.25px); -webkit-mask-image: linear-gradient(var(--direction), transparent 37.5%, #000 50%, #000 62.5%, transparent 75%); }
+    .b-6 { z-index: 6; backdrop-filter: blur(2.5px);  -webkit-mask-image: linear-gradient(var(--direction), transparent 25%, #000 37.5%, #000 50%, transparent 62.5%); }
+    .b-7 { z-index: 7; backdrop-filter: blur(5.0px);  -webkit-mask-image: linear-gradient(var(--direction), transparent 12.5%, #000 25%, #000 37.5%, transparent 50%); }
+    .b-8 { z-index: 8; backdrop-filter: blur(10.0px); -webkit-mask-image: linear-gradient(var(--direction), transparent 0%, #000 12.5%, #000 25%, transparent 37.5%); }
+
+    /* Custom Cursor */
+    .cs-custom-cursor {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid #38bdf8;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s, height 0.2s, background-color 0.2s;
+      mix-blend-mode: difference;
+    }
+    .cs-custom-cursor.active {
+      width: 44px;
+      height: 44px;
+      background-color: rgba(56, 189, 248, 0.2);
+    }
+  </style>
+</head>
+<body class="grid-bg relative antialiased selection:bg-cyan-500/30">
+
+  <div class="cs-custom-cursor" id="cursor"></div>
+
+  <!-- Header -->
+  <header class="sticky top-0 z-40 bg-slate-950/80 backdrop-blur-md border-b border-slate-800/80 px-6 py-4">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-lg bg-cyan-500/20 flex items-center justify-center border border-cyan-500/50 text-cyan-400 font-bold">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5"></path></svg>
+        </div>
+        <h1 class="text-lg md:text-xl font-black uppercase tracking-widest text-white">UI Primitives & Micro-Interactions</h1>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="px-3 py-1 bg-cyan-500/10 text-cyan-400 text-xs font-bold rounded-full border border-cyan-500/30 uppercase tracking-widest">v1</span>
+        <button id="copy-all-btn" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold rounded-md border border-slate-700 transition">
+          Copy CLI Install
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-6 py-10 space-y-12">
+    
+    <!-- Hero / Logo Banner -->
+    <section class="text-center max-w-4xl mx-auto space-y-6">
+      <div class="p-6 bg-slate-950 rounded-xl border border-slate-800 shadow-2xl overflow-x-auto text-cyan-400 ascii-logo text-left flex justify-center mx-auto">
+  ██╗   ██╗██╗                                                            
+  ██║   ██║██║                                                            
+  ██║   ██║██║                                                            
+  ██║   ██║██║                                                            
+  ╚██████╔╝██║                                                            
+   ╚═════╝ ╚═╝                                                            
+  ██████╗ ██████╗ ██╗███╗   ███╗██╗████████╗██╗██╗   ██╗███████╗███████╗  
+  ██╔══██╗██╔══██╗██║████╗ ████║██║╚══██╔══╝██║██║   ██║██╔════╝██╔════╝  
+  ██████╔╝██████╔╝██║██╔████╔██║██║   ██║   ██║██║   ██║█████╗  ███████╗  
+  ██╔═══╝ ██╔══██╗██║██║╚██╔╝██║██║   ██║   ██║╚██╗ ██╔╝██╔══╝  ╚════██║  
+  ██║     ██║  ██║██║██║ ╚═╝ ██║██║   ██║   ██║ ╚████╔╝ ███████╗███████║  
+  ╚═╝     ╚═╝  ╚═╝╚═╝╚═╝     ╚═╝╚═╝   ╚═╝   ╚═╝  ╚═══╝  ╚══════╝╚══════╝  
+      </div>
+      <p class="text-slate-400 text-lg md:text-xl max-w-2xl mx-auto">
+        Bespoke high-fidelity web UI components, kinetic buttons, elastic sliders, rolling counter tickers, progressive blur, and quantum thinking orbs.
+      </p>
+    </section>
+
+    <!-- Component Grid -->
+    <div class="grid lg:grid-cols-2 gap-8">
+      
+      <!-- 1. Kinetic Color Fill Buttons -->
+      <section class="glass-card p-6 rounded-2xl flex flex-col justify-between gap-6">
+        <div>
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+            <h2 class="text-lg font-bold text-white flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span> 1. Kinetic Color Fill Buttons
+            </h2>
+            <span class="text-xs text-slate-400 uppercase tracking-wider">Zero Layout Shift</span>
+          </div>
+          <p class="text-slate-400 text-sm mb-6">
+            Dual-layer pseudo-element sliding fills paired with vertical text-shadow displacement. Hover to observe the rolling label animation.
+          </p>
+          <div class="flex flex-wrap items-center gap-4 py-4 justify-center bg-slate-950/60 rounded-xl border border-slate-900 p-6">
+            <button class="cs-btn-fill" data-magnetic>
+              <div class="cs-btn-fill-wrapper">
+                <span class="cs-btn-fill-text">Discover More</span>
+              </div>
+            </button>
+            <button class="cs-btn-fill" style="color: #38bdf8;" data-magnetic>
+              <div class="cs-btn-fill-wrapper">
+                <span class="cs-btn-fill-text">Launch Workspace</span>
+              </div>
+            </button>
+          </div>
+        </div>
+        <div class="flex justify-between items-center text-xs text-slate-500 pt-2 border-t border-slate-800/50">
+          <span>Pure CSS · Springs · No Lag</span>
+          <button onclick="copySnippet('color-fill')" class="text-cyan-400 hover:text-cyan-300 font-mono">Copy Code</button>
+        </div>
+      </section>
+
+      <!-- 2. Elastic Range Sliders -->
+      <section class="glass-card p-6 rounded-2xl flex flex-col justify-between gap-6">
+        <div>
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+            <h2 class="text-lg font-bold text-white flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-sky-400"></span> 2. Elastic Range Controls
+            </h2>
+            <span class="text-xs text-slate-400 uppercase tracking-wider">Dynamic Fill</span>
+          </div>
+          <p class="text-slate-400 text-sm mb-6">
+            Normalized cross-browser range slider driving active gradient fills via custom CSS variables with real-time numeric readout.
+          </p>
+          <div class="space-y-4 py-2 px-6 bg-slate-950/60 rounded-xl border border-slate-900">
+            <div class="flex justify-between text-sm">
+              <span class="text-slate-300 font-medium">Haptic Output Level</span>
+              <span id="slider-val" class="text-cyan-400 font-mono font-bold">65%</span>
+            </div>
+            <input id="demo-slider" type="range" min="0" max="100" value="65" class="cs-range-slider" style="--slider-pct: 65%;">
+            <div class="flex justify-between text-xs text-slate-500">
+              <span>0 dB</span>
+              <span>+6 dB</span>
+              <span>+12 dB</span>
+            </div>
+          </div>
+        </div>
+        <div class="flex justify-between items-center text-xs text-slate-500 pt-2 border-t border-slate-800/50">
+          <span>WebKit & Gecko · Accessible ARIA</span>
+          <button onclick="copySnippet('slider')" class="text-cyan-400 hover:text-cyan-300 font-mono">Copy Code</button>
+        </div>
+      </section>
+
+      <!-- 3. Rolling Number Flow -->
+      <section class="glass-card p-6 rounded-2xl flex flex-col justify-between gap-6">
+        <div>
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+            <h2 class="text-lg font-bold text-white flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span> 3. Rolling Number Flow (Ticker)
+            </h2>
+            <span class="text-xs text-slate-400 uppercase tracking-wider">Tabular Digits</span>
+          </div>
+          <p class="text-slate-400 text-sm mb-6">
+            Smooth vertical translation reels for metrics and live pricing counters without layout jitter or horizontal popping.
+          </p>
+          <div class="flex flex-col items-center gap-6 py-4 bg-slate-950/60 rounded-xl border border-slate-900 p-6">
+            <div class="flex items-center gap-2">
+              <span class="text-slate-500 text-3xl font-bold">$</span>
+              <div class="cs-ticker-container" id="ticker">
+                <div class="cs-digit-col"><div class="cs-digit-reel"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span></div></div>
+                <div class="cs-digit-col"><div class="cs-digit-reel"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span></div></div>
+                <div class="cs-digit-col"><div class="cs-digit-reel"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span></div></div>
+                <div class="cs-digit-col"><div class="cs-digit-reel"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span></div></div>
+              </div>
+              <span class="text-slate-500 text-sm font-semibold">/mo</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="bumpTicker(1)" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-semibold rounded-lg border border-slate-700 transition">+1</button>
+              <button onclick="bumpTicker(25)" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-semibold rounded-lg border border-slate-700 transition">+25</button>
+              <button onclick="randomizeTicker()" class="px-3 py-1.5 bg-cyan-950/60 text-cyan-400 hover:bg-cyan-900/60 text-xs font-semibold rounded-lg border border-cyan-800/50 transition">Random</button>
+              <button onclick="resetTicker()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-semibold rounded-lg border border-slate-700 transition">Reset</button>
+            </div>
+          </div>
+        </div>
+        <div class="flex justify-between items-center text-xs text-slate-500 pt-2 border-t border-slate-800/50">
+          <span>Tabular Nums · CSS Reels</span>
+          <button onclick="copySnippet('ticker')" class="text-cyan-400 hover:text-cyan-300 font-mono">Copy Code</button>
+        </div>
+      </section>
+
+      <!-- 4. Progressive Optical Blur -->
+      <section class="glass-card p-6 rounded-2xl flex flex-col justify-between gap-6">
+        <div>
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+            <h2 class="text-lg font-bold text-white flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-indigo-400"></span> 4. Multi-Layer Progressive Blur
+            </h2>
+            <span class="text-xs text-slate-400 uppercase tracking-wider">8-Layer Depth</span>
+          </div>
+          <p class="text-slate-400 text-sm mb-4">
+            8 stacked exponential backdrop-filters mimicking native camera optical depth. Scroll inside the frame below to see content melt into blur.
+          </p>
+          <div class="cs-blur-demo-box p-4 space-y-3" id="scroll-box">
+            <div class="p-3 bg-slate-900/80 rounded-lg border border-slate-800 flex justify-between items-center">
+              <span class="text-sm font-semibold text-slate-200">System Kernel v7.23.0</span>
+              <span class="text-xs text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded">Active</span>
+            </div>
+            <div class="p-3 bg-slate-900/80 rounded-lg border border-slate-800 flex justify-between items-center">
+              <span class="text-sm font-semibold text-slate-200">Neural Graph Dispatcher</span>
+              <span class="text-xs text-cyan-400 bg-cyan-950/60 px-2 py-0.5 rounded">Standby</span>
+            </div>
+            <div class="p-3 bg-slate-900/80 rounded-lg border border-slate-800 flex justify-between items-center">
+              <span class="text-sm font-semibold text-slate-200">Async Channel Telemetry</span>
+              <span class="text-xs text-slate-400 bg-slate-800 px-2 py-0.5 rounded">Idle</span>
+            </div>
+            <div class="p-3 bg-slate-900/80 rounded-lg border border-slate-800 flex justify-between items-center">
+              <span class="text-sm font-semibold text-slate-200">Quantum Shard Matrix</span>
+              <span class="text-xs text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded">Synced</span>
+            </div>
+            <div class="p-3 bg-slate-900/80 rounded-lg border border-slate-800 flex justify-between items-center">
+              <span class="text-sm font-semibold text-slate-200">Memory Cache Cluster</span>
+              <span class="text-xs text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded">Optimal</span>
+            </div>
+
+            <!-- 8 Progressive Blur Layers Overlay -->
+            <div class="cs-progressive-blur" id="blur-overlay">
+              <div class="cs-blur-layer b-1"></div>
+              <div class="cs-blur-layer b-2"></div>
+              <div class="cs-blur-layer b-3"></div>
+              <div class="cs-blur-layer b-4"></div>
+              <div class="cs-blur-layer b-5"></div>
+              <div class="cs-blur-layer b-6"></div>
+              <div class="cs-blur-layer b-7"></div>
+              <div class="cs-blur-layer b-8"></div>
+            </div>
+          </div>
+        </div>
+        <div class="flex justify-between items-center text-xs text-slate-500 pt-2 border-t border-slate-800/50">
+          <button onclick="toggleBlur()" id="blur-toggle-btn" class="text-slate-300 hover:text-white font-medium">Toggle Blur: ON</button>
+          <button onclick="copySnippet('blur')" class="text-cyan-400 hover:text-cyan-300 font-mono">Copy Code</button>
+        </div>
+      </section>
+
+      <!-- 5. Quantum Thinking Orb -->
+      <section class="glass-card p-6 rounded-2xl flex flex-col justify-between gap-6 lg:col-span-2">
+        <div>
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+            <h2 class="text-lg font-bold text-white flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-violet-400"></span> 5. Quantum Thinking Orb & Agent State Canvas
+            </h2>
+            <span class="text-xs text-slate-400 uppercase tracking-wider">Fluid Plasma Engine</span>
+          </div>
+          <p class="text-slate-400 text-sm mb-6">
+            Multi-state ambient HTML5 canvas orb that dynamically shifts palettes, rotational velocity, and particle density depending on active agent tasks.
+          </p>
+          <div class="grid md:grid-cols-3 gap-6 items-center bg-slate-950/60 rounded-xl border border-slate-900 p-8">
+            <div class="md:col-span-1 flex flex-col items-center justify-center gap-3">
+              <canvas id="orbCanvas" width="160" height="160" class="rounded-full shadow-2xl"></canvas>
+              <span id="orb-status-text" class="cs-shimmer-text text-sm font-semibold">Agent Listening...</span>
+            </div>
+            <div class="md:col-span-2 space-y-4">
+              <h3 class="text-sm font-semibold text-slate-300 uppercase tracking-wider">Select Reasoning State:</h3>
+              <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+                <button onclick="setOrbState('listening')" class="orb-btn active px-3.5 py-2 rounded-lg bg-slate-800 text-xs font-semibold text-slate-200 border border-slate-700 hover:border-cyan-500 transition">Listening</button>
+                <button onclick="setOrbState('working')" class="orb-btn px-3.5 py-2 rounded-lg bg-slate-800 text-xs font-semibold text-slate-200 border border-slate-700 hover:border-cyan-500 transition">Working</button>
+                <button onclick="setOrbState('searching')" class="orb-btn px-3.5 py-2 rounded-lg bg-slate-800 text-xs font-semibold text-slate-200 border border-slate-700 hover:border-cyan-500 transition">Searching</button>
+                <button onclick="setOrbState('solving')" class="orb-btn px-3.5 py-2 rounded-lg bg-slate-800 text-xs font-semibold text-slate-200 border border-slate-700 hover:border-cyan-500 transition">Solving</button>
+                <button onclick="setOrbState('composing')" class="orb-btn px-3.5 py-2 rounded-lg bg-slate-800 text-xs font-semibold text-slate-200 border border-slate-700 hover:border-cyan-500 transition">Composing</button>
+                <button onclick="setOrbState('shaping')" class="orb-btn px-3.5 py-2 rounded-lg bg-slate-800 text-xs font-semibold text-slate-200 border border-slate-700 hover:border-cyan-500 transition">Shaping</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex justify-between items-center text-xs text-slate-500 pt-2 border-t border-slate-800/50">
+          <span>60fps WebGL / 2D Canvas · Zero CPU Spikes</span>
+          <button onclick="copySnippet('orb')" class="text-cyan-400 hover:text-cyan-300 font-mono">Copy Code</button>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Code Toast / Notification -->
+    <div id="toast" class="fixed bottom-6 right-6 bg-slate-900 text-cyan-400 border border-cyan-500/50 px-4 py-2.5 rounded-xl shadow-2xl text-xs font-semibold opacity-0 transition duration-300 pointer-events-none">
+      Code snippet copied to clipboard!
+    </div>
+
+  </main>
+
+  <script>
+    // 1. Magnetic Cursor Script
+    const cursor = document.getElementById('cursor');
+    let mouse = { x: -100, y: -100 };
+    let pos = { x: -100, y: -100 };
+
+    window.addEventListener('mousemove', (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    });
+
+    function updateCursor() {
+      pos.x += (mouse.x - pos.x) * 0.25;
+      pos.y += (mouse.y - pos.y) * 0.25;
+      cursor.style.left = `${pos.x}px`;
+      cursor.style.top = `${pos.y}px`;
+      requestAnimationFrame(updateCursor);
+    }
+    requestAnimationFrame(updateCursor);
+
+    document.querySelectorAll('button, a, input').forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.classList.add('active'));
+      el.addEventListener('mouseleave', () => cursor.classList.remove('active'));
+    });
+
+    // 2. Elastic Slider Script
+    const slider = document.getElementById('demo-slider');
+    const sliderVal = document.getElementById('slider-val');
+    slider.addEventListener('input', (e) => {
+      const val = e.target.value;
+      slider.style.setProperty('--slider-pct', `${val}%`);
+      sliderVal.textContent = `${val}%`;
+    });
+
+    // 3. Rolling Ticker Script
+    let currentTickerVal = 1420;
+    function renderTicker(val) {
+      const str = String(val).padStart(4, '0');
+      const reels = document.querySelectorAll('.cs-digit-reel');
+      reels.forEach((reel, i) => {
+        const d = parseInt(str[i], 10);
+        reel.style.transform = `translateY(-${d * 10}%)`;
+      });
+    }
+    renderTicker(currentTickerVal);
+
+    function bumpTicker(amount) {
+      currentTickerVal = Math.min(9999, currentTickerVal + amount);
+      renderTicker(currentTickerVal);
+    }
+    function randomizeTicker() {
+      currentTickerVal = Math.floor(Math.random() * 9000) + 1000;
+      renderTicker(currentTickerVal);
+    }
+    function resetTicker() {
+      currentTickerVal = 1420;
+      renderTicker(currentTickerVal);
+    }
+
+    // 4. Progressive Blur Toggle
+    let blurActive = true;
+    function toggleBlur() {
+      blurActive = !blurActive;
+      const overlay = document.getElementById('blur-overlay');
+      const btn = document.getElementById('blur-toggle-btn');
+      overlay.style.display = blurActive ? 'block' : 'none';
+      btn.textContent = `Toggle Blur: ${blurActive ? 'ON' : 'OFF'}`;
+    }
+
+    // 5. Quantum Thinking Orb Simulation
+    const canvas = document.getElementById('orbCanvas');
+    const ctx = canvas.getContext('2d');
+    let orbState = 'listening';
+    let orbTime = 0;
+
+    const orbConfigs = {
+      listening: { colors: ['#38bdf8', '#818cf8', '#0284c7'], speed: 0.02, pulse: 1.0, label: 'Agent Listening...' },
+      working:   { colors: ['#fbbf24', '#f59e0b', '#d97706'], speed: 0.05, pulse: 1.3, label: 'Agent Working...' },
+      searching: { colors: ['#22d3ee', '#38bdf8', '#0ea5e9'], speed: 0.04, pulse: 1.2, label: 'Agent Searching...' },
+      solving:   { colors: ['#34d399', '#10b981', '#059669'], speed: 0.06, pulse: 1.4, label: 'Agent Solving...' },
+      composing: { colors: ['#f472b6', '#e879f9', '#c084fc'], speed: 0.03, pulse: 1.1, label: 'Agent Composing...' },
+      shaping:   { colors: ['#a78bfa', '#6366f1', '#4338ca'], speed: 0.04, pulse: 1.25, label: 'Agent Shaping...' },
+    };
+
+    function setOrbState(state) {
+      orbState = state;
+      document.getElementById('orb-status-text').textContent = orbConfigs[state].label;
+      document.querySelectorAll('.orb-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.textContent.toLowerCase() === state);
+        if (btn.textContent.toLowerCase() === state) {
+          btn.style.borderColor = '#38bdf8';
+          btn.style.backgroundColor = '#0f172a';
+        } else {
+          btn.style.borderColor = '#334155';
+          btn.style.backgroundColor = '#1e293b';
+        }
+      });
+    }
+
+    function drawOrb() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const cfg = orbConfigs[orbState];
+      orbTime += cfg.speed;
+
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      const baseRadius = 46 + Math.sin(orbTime * 2) * (3 * cfg.pulse);
+
+      // Ambient outer glow
+      const glowGrad = ctx.createRadialGradient(centerX, centerY, baseRadius * 0.5, centerX, centerY, baseRadius * 1.5);
+      glowGrad.addColorStop(0, cfg.colors[0] + '88');
+      glowGrad.addColorStop(0.5, cfg.colors[1] + '44');
+      glowGrad.addColorStop(1, 'transparent');
+      ctx.fillStyle = glowGrad;
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, baseRadius * 1.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Fluid core
+      const coreGrad = ctx.createRadialGradient(
+        centerX + Math.cos(orbTime) * 12,
+        centerY + Math.sin(orbTime) * 12,
+        4,
+        centerX,
+        centerY,
+        baseRadius
+      );
+      coreGrad.addColorStop(0, '#ffffff');
+      coreGrad.addColorStop(0.3, cfg.colors[0]);
+      coreGrad.addColorStop(0.7, cfg.colors[1]);
+      coreGrad.addColorStop(1, cfg.colors[2]);
+
+      ctx.fillStyle = coreGrad;
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, baseRadius, 0, Math.PI * 2);
+      ctx.fill();
+
+      requestAnimationFrame(drawOrb);
+    }
+    requestAnimationFrame(drawOrb);
+
+    // Toast Utility
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.style.opacity = '1';
+      setTimeout(() => { toast.style.opacity = '0'; }, 2200);
+    }
+
+    // Snippets Copier
+    const snippets = {
+      'color-fill': `<button class="cs-btn-fill">\n  <div class="cs-btn-fill-wrapper">\n    <span class="cs-btn-fill-text">Discover More</span>\n  </div>\n</button>`,
+      'slider': `<input type="range" min="0" max="100" value="65" class="cs-range-slider" style="--slider-pct: 65%;">`,
+      'ticker': `<div class="cs-ticker-container">\n  <!-- 4 vertical reels with 0-9 spans -->\n</div>`,
+      'blur': `<div class="cs-progressive-blur">\n  <div class="cs-blur-layer b-1"></div>\n  <!-- layers 2 through 8 -->\n</div>`,
+      'orb': `<canvas id="orbCanvas" width="120" height="120"></canvas>`
+    };
+
+    function copySnippet(key) {
+      if (snippets[key]) {
+        navigator.clipboard.writeText(snippets[key]);
+        showToast('Component code copied to clipboard!');
+      }
+    }
+
+    document.getElementById('copy-all-btn').addEventListener('click', () => {
+      navigator.clipboard.writeText('npx @code-scaffold/skills install ui-primitives');
+      showToast('Install command copied!');
+    });
+  </script>
+</body>
+</html>

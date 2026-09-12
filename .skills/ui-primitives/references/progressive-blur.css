@@ -1,0 +1,26 @@
+/* Code Scaffold UI Primitives: Multi-Layer Progressive Optical Blur */
+.cs-progressive-blur {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 180px;
+  pointer-events: none;
+  z-index: 50;
+  --direction: to top;
+}
+
+.cs-blur-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.blur-layer-1 { z-index: 1; backdrop-filter: blur(0.078px); -webkit-mask-image: linear-gradient(var(--direction), transparent 87.5%, #000 100%); mask-image: linear-gradient(var(--direction), transparent 87.5%, #000 100%); }
+.blur-layer-2 { z-index: 2; backdrop-filter: blur(0.156px); -webkit-mask-image: linear-gradient(var(--direction), transparent 75%, #000 87.5%, #000 100%); mask-image: linear-gradient(var(--direction), transparent 75%, #000 87.5%, #000 100%); }
+.blur-layer-3 { z-index: 3; backdrop-filter: blur(0.312px); -webkit-mask-image: linear-gradient(var(--direction), transparent 62.5%, #000 75%, #000 87.5%, transparent 100%); mask-image: linear-gradient(var(--direction), transparent 62.5%, #000 75%, #000 87.5%, transparent 100%); }
+.blur-layer-4 { z-index: 4; backdrop-filter: blur(0.625px); -webkit-mask-image: linear-gradient(var(--direction), transparent 50%, #000 62.5%, #000 75%, transparent 87.5%); mask-image: linear-gradient(var(--direction), transparent 50%, #000 62.5%, #000 75%, transparent 87.5%); }
+.blur-layer-5 { z-index: 5; backdrop-filter: blur(1.25px);  -webkit-mask-image: linear-gradient(var(--direction), transparent 37.5%, #000 50%, #000 62.5%, transparent 75%); mask-image: linear-gradient(var(--direction), transparent 37.5%, #000 50%, #000 62.5%, transparent 75%); }
+.blur-layer-6 { z-index: 6; backdrop-filter: blur(2.5px);   -webkit-mask-image: linear-gradient(var(--direction), transparent 25%, #000 37.5%, #000 50%, transparent 62.5%); mask-image: linear-gradient(var(--direction), transparent 25%, #000 37.5%, #000 50%, transparent 62.5%); }
+.blur-layer-7 { z-index: 7; backdrop-filter: blur(5.0px);   -webkit-mask-image: linear-gradient(var(--direction), transparent 12.5%, #000 25%, #000 37.5%, transparent 50%); mask-image: linear-gradient(var(--direction), transparent 12.5%, #000 25%, #000 37.5%, transparent 50%); }
+.blur-layer-8 { z-index: 8; backdrop-filter: blur(10.0px);  -webkit-mask-image: linear-gradient(var(--direction), transparent 0%, #000 12.5%, #000 25%, transparent 37.5%); mask-image: linear-gradient(var(--direction), transparent 0%, #000 12.5%, #000 25%, transparent 37.5%); }
