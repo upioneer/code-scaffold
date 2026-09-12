@@ -1,16 +1,24 @@
 ---
 ​‌‍name: Stealth Browser & Ghost Graph
-description: Powerhouse tri-engine ghost browser skill for AI agents. Combines Ghost Graph LLM extraction pipelines, FastMCP undetectable browser automation, and Ghost Core ultra-lightweight CDP micro-engine.
-version: 3
+description: Powerhouse multi-engine ghost browser automation skill for AI agents. Combines Ghost Graph LLM extraction pipelines, FastMCP undetectable browser automation, Ghost Core ultra-lightweight CDP micro-engine, visual takeover, encrypted auth vaults, zero-token text perception, and cryptographic audit chains.
+version: 4
 ---
 
 # Stealth Browser & Ghost Graph Skill
 
-This skill equips the agent with an all-in-one ghost browser, AI-driven web extraction powerhouse, and ultra-lightweight CDP runtime. It operates in three complementary engine modes:
+This skill equips the agent with an all-in-one ghost browser automation powerhouse, AI-driven web extraction pipelines, ultra-lightweight CDP runtime, human-in-the-loop visual takeover, encrypted session vaults, zero-token text perception, and cryptographic audit logging.
+
+It operates across five unified architectural pillars:
 
 1. **Engine 1 (Ghost Graph Extraction Pipelines)**: Direct prompt-driven scraping, multi-source search graph synthesis, and Pydantic schema validation using local (Ollama) or cloud (Gemini, Claude, OpenAI, Groq) LLMs.
 2. **Engine 2 (FastMCP Stealth Browser Automation)**: Undetectable low-level browser automation (`nodriver`, Chrome DevTools Protocol, Cloudflare bypass, and real-time network interception).
 3. **Engine 3 (Ghost Core Ultra-Light CDP Micro-Engine)**: Bespoke native headless engine with a ~30MB memory footprint, sub-100ms startup latency, built-in hardware fingerprint randomization, and drop-in CDP compatibility.
+4. **Engine 4 (Ghost Visual Takeover Engine)**: Human-in-the-loop (HITL) live session streaming over WebSocket and screencasting for seamless operator takeover during complex 2FA checkpoints, SMS verifications, or brittle multi-step workflows without restarting the active agent session.
+5. **Engine 5 (Ghost Security, Perception & Witness Suite)**:
+   * **Ghost Vault**: Encrypted persistent auth profiles ("Login Once, Reuse Everywhere") using Fernet symmetric encryption.
+   * **Ghost Perception**: Zero-token semantic accessibility trees and context-windowed element discovery slashing token consumption by up to 90%.
+   * **Ghost Shield**: Automated PII and credential scrubbing before passing DOM data to LLM context.
+   * **Ghost Witness**: Tamper-evident, Ed25519-signed action receipts linked via SHA-256 cryptographic hash chains.
 
 ---
 
@@ -19,10 +27,10 @@ This skill equips the agent with an all-in-one ghost browser, AI-driven web extr
 Before executing browser tasks, run the environment diagnostic tool:
 
 ```bash
-# Verify Python version, browser binaries, and installed packages
+# Verify Python version, browser binaries, installed packages, and daemon status
 python .skills/stealth-browser/scripts/setup.py
 
-# Install missing dependencies and Playwright Chromium
+# Install missing dependencies and Playwright Chromium binaries
 python .skills/stealth-browser/scripts/setup.py --install
 ```
 
@@ -32,6 +40,7 @@ python .skills/stealth-browser/scripts/setup.py --install
 * `ANTHROPIC_API_KEY`: Anthropic Claude 3.5 Sonnet provider.
 * `GROQ_API_KEY`: Groq ultra-fast Llama 3 70B provider.
 * `OLLAMA_URL`: Local Ollama instance (default: `http://localhost:11434`).
+* `GHOST_VAULT_KEY`: Symmetric Fernet key for persistent auth profiles.
 
 ---
 
@@ -76,7 +85,7 @@ For complex multi-step interactions, form fills, button clicks, and bypassing he
 * **Anti-Detection**: Employs `nodriver` and CDP hooks to strip `navigator.webdriver` flags and simulate human interaction heuristics.
 * **Element Interaction**: `spawn_browser()`, `navigate()`, `click_element()`, `type_text()`, `paste_text()`, `file_upload()`.
 * **CDP Element Extraction**: `extract_complete_element_cdp()`, `extract_element_styles()`, `extract_element_structure()`.
-* **Dynamic Network Hooks**: `create_dynamic_hook()` : Injects custom Python hooks to intercept or rewrite HTTP requests and API responses in real-time.
+* **Dynamic Network Hooks**: `create_dynamic_hook()`: Injects custom Python hooks to intercept or rewrite HTTP requests and API responses in real-time.
 
 ### Running the MCP Server
 ```bash
@@ -135,10 +144,152 @@ asyncio.run(run_lean_scrape())
 
 ---
 
-## 5. Best Practices for AI Agents
+## 5. Engine 4: Ghost Visual Takeover Engine (HITL Stream & Intervention)
 
-1. **Model Selection**: Default to `gemini` (Gemini 1.5 Flash) for fastest zero-cost extraction or `ollama` for fully offline local operations.
-2. **Deterministic Schemas**: When structured data is required, pass explicit field names in the prompt or supply a JSON schema file via `--schema <file.json>`.
-3. **High-Concurrency Tasks**: Use Engine 3 (Ghost Core) whenever scraping multiple pages in parallel to avoid Chromium memory saturation.
-4. **Ghost Evasion**: If a site employs aggressive Cloudflare Turnstile or fingerprinting, use Engine 2 with `nodriver` and randomized hardware profiles.
-5. **Architectural Compliance**: When synthesizing or scaffolding project code, align generated components with Code Scaffold architectural specification standards.
+When an agent encounters complex multi-factor authentication (SMS verification, hardware token, custom 2FA prompts), human operator intervention is often required. The Ghost Visual Takeover Engine allows an operator to view and control the live browser session in real time without killing or restarting the active browser process.
+
+### Operational Workflow
+1. **Anomaly Detection**: Agent detects an interactive checkpoint (e.g. `2FA Verification Required`).
+2. **Takeover Stream Trigger**: The browser activates CDP screencasting (`Page.startScreencast`) or streams session frames over a local WebSocket endpoint (e.g. `ws://127.0.0.1:9223/takeover`).
+3. **Operator Interaction**: Operator connects via local browser or TUI visual client, solves the challenge or inputs the SMS code directly.
+4. **Resumption & Provenance**: Agent polls for checkpoint resolution, records a `visual_takeover_end` cryptographic audit receipt, and resumes autonomous execution.
+
+### Visual Takeover Playwright Recipe
+```python
+import asyncio
+from playwright.async_api import async_playwright
+
+async def run_takeover_aware_session():
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=False)
+        context = await browser.new_context()
+        page = await context.new_page()
+
+        await page.goto("https://example.com/protected-portal")
+        
+        # Check if 2FA or CAPTCHA checkpoint is triggered
+        if await page.locator("text='Two-Factor Authentication'").count() > 0:
+            print("[TAKE OVER ALERT] Human operator required. Stream active at http://localhost:9223")
+            # Wait for checkpoint completion signal
+            await page.wait_for_selector("text='Dashboard'", timeout=120000)
+            print("[RESUMING] Checkpoint resolved by human operator. Agent resumes autonomous control.")
+            
+        await browser.close()
+
+asyncio.run(run_takeover_aware_session())
+```
+
+---
+
+## 6. Engine 5: Ghost Security, Perception & Witness Suite
+
+### A. Ghost Vault: Encrypted Persistent Auth Profiles ("Login Once, Reuse Everywhere")
+Avoid repeated logins, bot flags, and vision token waste by preserving authenticated session states (cookies, localStorage, session tokens) encrypted at rest using Fernet symmetric cryptography.
+
+```bash
+# 1. Generate a high-entropy vault key
+python .skills/stealth-browser/scripts/auth_vault.py --generate-key
+
+# 2. Export and encrypt an active Playwright storage_state.json
+python .skills/stealth-browser/scripts/auth_vault.py \
+  --export session.json \
+  --output profile.ghostvault \
+  --key "YOUR_FERNET_KEY"
+
+# 3. Inspect encrypted vault metadata without revealing secrets
+python .skills/stealth-browser/scripts/auth_vault.py \
+  --inspect profile.ghostvault \
+  --key "YOUR_FERNET_KEY"
+
+# 4. Decrypt and restore state for a new browser session
+python .skills/stealth-browser/scripts/auth_vault.py \
+  --import profile.ghostvault \
+  --output restored_state.json \
+  --key "YOUR_FERNET_KEY"
+```
+
+### B. Ghost Perception: Zero-Token Semantic Text Pipeline
+Vision screenshots consume immense token budgets (often 1,500+ tokens per screenshot) and introduce latency. Ghost Perception parses the DOM and accessibility tree into a high-density, semantic text outline of interactive controls, headings, and inputs.
+
+```bash
+# Extract compact semantic accessibility outline from HTML or live dump
+python .skills/stealth-browser/scripts/text_perception.py \
+  --file page.html \
+  --outline
+
+# Output in machine-readable JSON format for programmatic agent planning
+python .skills/stealth-browser/scripts/text_perception.py \
+  --file page.html \
+  --outline \
+  --json
+```
+
+### C. Ghost Query: Context-Windowed Element Inspector
+Eliminate brittle CSS and XPath selectors by finding elements using natural language query matching or regular expressions, returning the target along with surrounding sibling and ancestor context.
+
+```bash
+# Search for target element and capture 2 preceding and succeeding sibling elements
+python .skills/stealth-browser/scripts/text_perception.py \
+  --file page.html \
+  --query "Sign In" \
+  --context 2
+
+# Search using regex patterns
+python .skills/stealth-browser/scripts/text_perception.py \
+  --file page.html \
+  --query "^Submit.*" \
+  --regex
+```
+
+### D. Ghost Shield: Automated PII & Credential Scrubbing
+Ghost Shield automatically scrubs passwords, API keys, bearer tokens, credit cards, SSNs, and emails from text outlines and network dumps before passing them into LLM prompt contexts. PII scrubbing is enabled by default across `text_perception.py` and `witness_audit.py`.
+
+### E. Ghost Witness: Cryptographic Audit Chains
+Ensure compliance, safety, and operational transparency with Ed25519-signed, hash-chained receipts for every navigation, click, form submission, and human takeover intervention.
+
+```bash
+# 1. Initialize an audit chain with genesis block and Ed25519 keypair
+python .skills/stealth-browser/scripts/witness_audit.py \
+  --init \
+  --chain audit_chain.json
+
+# 2. Append an action receipt to the cryptographic chain
+python .skills/stealth-browser/scripts/witness_audit.py \
+  --log-action \
+  --chain audit_chain.json \
+  --action click \
+  --url "https://example.com/checkout" \
+  --target "#pay-button" \
+  --operator agent
+
+# 3. Log a human visual takeover event
+python .skills/stealth-browser/scripts/witness_audit.py \
+  --log-action \
+  --chain audit_chain.json \
+  --action visual_takeover_end \
+  --url "https://example.com/2fa" \
+  --operator takeover
+
+# 4. Verify the unbroken cryptographic integrity of the audit chain
+python .skills/stealth-browser/scripts/witness_audit.py \
+  --verify-chain \
+  --chain audit_chain.json
+
+# 5. Output a clean human-readable execution summary
+python .skills/stealth-browser/scripts/witness_audit.py \
+  --summary \
+  --chain audit_chain.json
+```
+
+---
+
+## 7. Best Practices for AI Agents
+
+1. **Model Selection**: Default to `gemini` (Gemini Flash) for fastest low-cost extraction or `ollama` for fully offline local operations.
+2. **Zero-Token Perception First**: Always inspect the page with `text_perception.py` before capturing visual screenshots. Reserve screenshots exclusively for visual design or CAPTCHA resolution.
+3. **Session Persistence**: Utilize `auth_vault.py` with `GHOST_VAULT_KEY` to store and restore authenticated sessions across tasks. Avoid logging in redundantly on protected domains.
+4. **Deterministic Schemas**: When structured data is required, pass explicit field names in the prompt or supply a JSON schema file via `--schema <file.json>`.
+5. **High-Concurrency Tasks**: Use Engine 3 (Ghost Core) whenever scraping multiple pages in parallel to avoid Chromium memory saturation.
+6. **Ghost Evasion**: If a site employs aggressive Cloudflare Turnstile or fingerprinting, use Engine 2 with `nodriver` and randomized hardware profiles.
+7. **Tamper-Evident Accountability**: Always maintain an active `witness_audit.py` chain during sensitive transactions or multi-agent collaborations.
+* **Architectural Compliance**: When synthesizing or scaffolding project code, align generated components with Code Scaffold architectural specification standards.
