@@ -58,37 +58,41 @@
       cursor: pointer;
       border: 0;
       background: transparent;
-      user-select: none;
+      outline: none;
     }
     .cs-btn-fill:before {
       content: "";
       position: absolute;
       inset: 0;
       background-color: #0f172a;
-      border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 9999px;
       transform-origin: 50% 90%;
-      transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+      transition: transform 0.45s cubic-bezier(0.165, 0.84, 0.44, 1);
       z-index: -2;
+      border: 1px solid rgba(56, 189, 248, 0.3);
     }
     .cs-btn-fill:after {
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(135deg, #0284c7 0%, #38bdf8 100%);
+      background: linear-gradient(135deg, #0284c7, #38bdf8);
       border-radius: 9999px;
       transform: translateY(100%);
-      transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+      transition: transform 0.45s cubic-bezier(0.165, 0.84, 0.44, 1);
       z-index: -1;
     }
     .cs-btn-fill:hover:before {
       transform: scale(0.92);
+      border-color: #38bdf8;
     }
     .cs-btn-fill:hover:after {
       transform: translateY(0);
     }
     .cs-btn-fill:active {
       transform: scale(0.96);
+    }
+    .cs-btn-fill:focus-visible {
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.5);
     }
     .cs-btn-fill-wrapper {
       overflow: hidden;
@@ -140,88 +144,85 @@
       border-radius: 9999px;
       background: #334155;
     }
+    .cs-range-slider::-moz-range-progress {
+      height: 6px;
+      border-radius: 9999px;
+      background: #38bdf8;
+    }
     .cs-range-slider::-moz-range-thumb {
       width: 22px;
       height: 22px;
       border-radius: 50%;
       background: #ffffff;
       border: 2px solid #0284c7;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+      transition: transform 0.15s ease;
     }
 
-    /* Rolling Number Ticker */
+    /* Number Flow Ticker */
     .cs-ticker-container {
       display: inline-flex;
-      font-size: 56px;
+      font-family: var(--font-mono);
+      font-size: 2.5rem;
       font-weight: 800;
-      font-variant-numeric: tabular-nums;
       line-height: 1;
-      height: 1.1em;
+      height: 2.5rem;
       overflow: hidden;
-      color: #f8fafc;
+      padding: 4px 12px;
+      background: rgba(15, 23, 42, 0.8);
+      border-radius: 12px;
+      border: 1px solid rgba(56, 189, 248, 0.2);
     }
     .cs-digit-col {
-      height: 1.1em;
+      height: 2.5rem;
       overflow: hidden;
       position: relative;
+      width: 1.6rem;
+      text-align: center;
     }
     .cs-digit-reel {
       display: flex;
       flex-direction: column;
-      transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
-      will-change: transform;
+      transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .cs-digit-reel span {
-      height: 1.1em;
+      height: 2.5rem;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
-    /* Shimmer Text */
-    .cs-shimmer-text {
-      background: linear-gradient(90deg, #64748b 0%, #ffffff 50%, #64748b 100%);
-      background-size: 200% 100%;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: cs-shimmer 2.5s infinite linear;
-    }
-    @keyframes cs-shimmer {
-      0% { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
-    }
-
     /* Progressive Blur Container */
-    .cs-blur-demo-box {
+    .cs-blur-wrapper {
       position: relative;
       height: 220px;
       overflow-y: auto;
       border-radius: 12px;
+      border: 1px solid rgba(56, 189, 248, 0.2);
       background: #090d16;
     }
     .cs-progressive-blur {
-      position: absolute;
+      position: sticky;
+      bottom: 0;
       left: 0;
       right: 0;
-      bottom: 0;
       height: 100px;
       pointer-events: none;
       z-index: 20;
-      --direction: to top;
     }
     .cs-blur-layer {
       position: absolute;
       inset: 0;
     }
-    .b-1 { z-index: 1; backdrop-filter: blur(0.08px); -webkit-mask-image: linear-gradient(var(--direction), transparent 87.5%, #000 100%); }
-    .b-2 { z-index: 2; backdrop-filter: blur(0.16px); -webkit-mask-image: linear-gradient(var(--direction), transparent 75%, #000 87.5%, #000 100%); }
-    .b-3 { z-index: 3; backdrop-filter: blur(0.31px); -webkit-mask-image: linear-gradient(var(--direction), transparent 62.5%, #000 75%, #000 87.5%, transparent 100%); }
-    .b-4 { z-index: 4; backdrop-filter: blur(0.63px); -webkit-mask-image: linear-gradient(var(--direction), transparent 50%, #000 62.5%, #000 75%, transparent 87.5%); }
-    .b-5 { z-index: 5; backdrop-filter: blur(1.25px); -webkit-mask-image: linear-gradient(var(--direction), transparent 37.5%, #000 50%, #000 62.5%, transparent 75%); }
-    .b-6 { z-index: 6; backdrop-filter: blur(2.5px);  -webkit-mask-image: linear-gradient(var(--direction), transparent 25%, #000 37.5%, #000 50%, transparent 62.5%); }
-    .b-7 { z-index: 7; backdrop-filter: blur(5.0px);  -webkit-mask-image: linear-gradient(var(--direction), transparent 12.5%, #000 25%, #000 37.5%, transparent 50%); }
-    .b-8 { z-index: 8; backdrop-filter: blur(10.0px); -webkit-mask-image: linear-gradient(var(--direction), transparent 0%, #000 12.5%, #000 25%, transparent 37.5%); }
+    .cs-blur-layer.b-1 { backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px); mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 12.5%, rgba(0,0,0,1) 25%, rgba(0,0,0,0) 37.5%); }
+    .cs-blur-layer.b-2 { backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 12.5%, rgba(0,0,0,1) 25%, rgba(0,0,0,1) 37.5%, rgba(0,0,0,0) 50%); }
+    .cs-blur-layer.b-3 { backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 25%, rgba(0,0,0,1) 37.5%, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 62.5%); }
+    .cs-blur-layer.b-4 { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 37.5%, rgba(0,0,0,1) 50%, rgba(0,0,0,1) 62.5%, rgba(0,0,0,0) 75%); }
+    .cs-blur-layer.b-5 { backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 50%, rgba(0,0,0,1) 62.5%, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 87.5%); }
+    .cs-blur-layer.b-6 { backdrop-filter: blur(32px); -webkit-backdrop-filter: blur(32px); mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 62.5%, rgba(0,0,0,1) 75%, rgba(0,0,0,1) 87.5%, rgba(0,0,0,0) 100%); }
+    .cs-blur-layer.b-7 { backdrop-filter: blur(64px); -webkit-backdrop-filter: blur(64px); mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 75%, rgba(0,0,0,1) 87.5%, rgba(0,0,0,1) 100%); }
 
-    /* Custom Cursor */
+    /* Custom Cursor Element */
     .cs-custom-cursor {
       position: fixed;
       top: 0;
@@ -241,6 +242,251 @@
       height: 44px;
       background-color: rgba(56, 189, 248, 0.2);
     }
+
+    /* ==========================================================================
+       Motion Presentation Studio & Look Styles
+       ========================================================================== */
+
+    [data-motion-look="studio"] {
+      --look-bg: #0b0713;
+      --look-surface: rgba(23, 16, 34, 0.85);
+      --look-surface-border: rgba(163, 140, 216, 0.3);
+      --look-ink: #f3effa;
+      --look-accent: #a38cd8;
+      --look-highlight: #d8c5ff;
+      --look-radius: 12px;
+    }
+    [data-motion-look="editorial"] {
+      --look-bg: #e5decf;
+      --look-surface: #f0eade;
+      --look-surface-border: #d4ccbd;
+      --look-ink: #1f1b16;
+      --look-accent: #be442a;
+      --look-highlight: #d95d43;
+      --look-radius: 2px;
+    }
+    [data-motion-look="signal"] {
+      --look-bg: #090e0c;
+      --look-surface: #121c17;
+      --look-surface-border: rgba(212, 244, 74, 0.3);
+      --look-ink: #eaff80;
+      --look-accent: #d4f44a;
+      --look-highlight: #f0ff99;
+      --look-radius: 4px;
+    }
+    [data-motion-look="cobalt"] {
+      --look-bg: #051036;
+      --look-surface: #0f36b8;
+      --look-surface-border: rgba(153, 182, 255, 0.35);
+      --look-ink: #ffffff;
+      --look-accent: #5e8cff;
+      --look-highlight: #e5eeff;
+      --look-radius: 14px;
+    }
+    [data-motion-look="peach"] {
+      --look-bg: #e59d85;
+      --look-surface: #f4bba6;
+      --look-surface-border: #dca08a;
+      --look-ink: #481e16;
+      --look-accent: #8b3c2e;
+      --look-highlight: #a84b39;
+      --look-radius: 16px;
+    }
+    [data-motion-look="monochrome"] {
+      --look-bg: #0a0a0a;
+      --look-surface: #181818;
+      --look-surface-border: #383838;
+      --look-ink: #f5f5f5;
+      --look-accent: #e4e4e4;
+      --look-highlight: #ffffff;
+      --look-radius: 0px;
+    }
+
+    .cs-motion-stage {
+      position: relative;
+      background-color: var(--look-bg, #0b0713);
+      color: var(--look-ink, #f3effa);
+      border-radius: var(--look-radius, 12px);
+      border: 1px solid var(--look-surface-border, rgba(255, 255, 255, 0.15));
+      overflow: hidden;
+      transition: background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease;
+      width: 100%;
+      min-height: 380px;
+    }
+    .cs-motion-stage[data-format="16-9"] { aspect-ratio: 16 / 9; }
+    .cs-motion-stage[data-format="9-16"] { aspect-ratio: 9 / 16; max-height: 640px; margin-inline: auto; }
+    .cs-motion-stage[data-format="1-1"] { aspect-ratio: 1 / 1; max-height: 520px; margin-inline: auto; }
+
+    .cs-light-field-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.85;
+      transition: opacity 0.3s ease;
+    }
+    .cs-light-field-canvas[data-state="disabled"] {
+      display: none;
+    }
+
+    .cs-motion-viewport {
+      position: relative;
+      width: 100%;
+      height: calc(100% - 44px);
+      display: flex;
+      padding: 16px;
+      gap: 14px;
+      box-sizing: border-box;
+      z-index: 2;
+    }
+
+    .cs-motion-stage[data-layout="split"] .cs-motion-viewport { flex-direction: row; }
+    .cs-motion-stage[data-layout="split"] .cs-media-pane { flex: 1; height: 100%; }
+
+    .cs-motion-stage[data-layout="stack"] .cs-motion-viewport { flex-direction: column; }
+    .cs-motion-stage[data-layout="stack"] .cs-media-pane { flex: 1; width: 100%; }
+
+    .cs-motion-stage[data-layout="spotlight"] .cs-motion-viewport { position: relative; display: block; }
+    .cs-motion-stage[data-layout="spotlight"] .cs-media-primary { width: 100%; height: 100%; }
+    .cs-motion-stage[data-layout="spotlight"] .cs-media-secondary {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      width: 32%;
+      aspect-ratio: 16 / 9;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
+      border: 2px solid var(--look-surface-border, rgba(255, 255, 255, 0.2));
+      z-index: 10;
+    }
+
+    .cs-media-pane {
+      position: relative;
+      background-color: var(--look-surface);
+      border-radius: var(--look-radius);
+      border: 1px solid var(--look-surface-border);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    }
+    .cs-media-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      background: rgba(0, 0, 0, 0.25);
+      border-bottom: 1px solid var(--look-surface-border);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .cs-media-canvas {
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      min-height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      background: rgba(0, 0, 0, 0.15);
+      padding: 16px;
+    }
+
+    .cs-preset-card {
+      position: relative;
+      padding: 8px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(15, 23, 42, 0.6);
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s ease;
+      color: inherit;
+    }
+    .cs-preset-card:hover {
+      border-color: rgba(56, 189, 248, 0.4);
+      transform: translateY(-2px);
+    }
+    .cs-preset-card[aria-pressed="true"] {
+      border-color: #38bdf8;
+      background: rgba(56, 189, 248, 0.12);
+      box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.3);
+    }
+    .cs-preset-art {
+      height: 52px;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 6px;
+      display: grid;
+      padding: 6px;
+      gap: 3px;
+    }
+    .cs-preset-art i { display: block; border-radius: 2px; }
+
+    .cs-preset-card[data-look="studio"] .cs-preset-art { background: #171022; grid-template-columns: 1fr 1fr; }
+    .cs-preset-card[data-look="studio"] .cs-preset-art i { background: #d8c5ff; }
+    .cs-preset-card[data-look="studio"] .cs-preset-art i:first-child { grid-column: 1 / -1; height: 3px; background: #a38cd8; }
+
+    .cs-preset-card[data-look="editorial"] .cs-preset-art { background: #f0eade; grid-template-columns: 1fr; }
+    .cs-preset-card[data-look="editorial"] .cs-preset-art i { background: #39352f; border-radius: 0; }
+    .cs-preset-card[data-look="editorial"] .cs-preset-art i:first-child { height: 3px; background: #be442a; }
+
+    .cs-preset-card[data-look="signal"] .cs-preset-art { background: #121c17; grid-template-columns: 1fr; }
+    .cs-preset-card[data-look="signal"] .cs-preset-art i { background: #d4f44a; border-radius: 1px; }
+
+    .cs-preset-card[data-look="cobalt"] .cs-preset-art { background: #0f36b8; grid-template-columns: 2fr 1fr; }
+    .cs-preset-card[data-look="cobalt"] .cs-preset-art i { background: #e5eeff; }
+
+    .cs-preset-card[data-look="peach"] .cs-preset-art { background: #f4bba6; grid-template-columns: 1fr; }
+    .cs-preset-card[data-look="peach"] .cs-preset-art i { background: #73372c; }
+
+    .cs-preset-card[data-look="monochrome"] .cs-preset-art { background: #181818; grid-template-columns: 1fr 1fr; }
+    .cs-preset-card[data-look="monochrome"] .cs-preset-art i { background: #e4e4e4; border-radius: 0; }
+
+    .cs-transport-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 16px;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid var(--look-surface-border, rgba(255, 255, 255, 0.1));
+      font-family: var(--font-mono);
+      font-size: 11px;
+      z-index: 10;
+    }
+    .cs-timecode {
+      color: var(--look-highlight, #38bdf8);
+      font-variant-numeric: tabular-nums;
+      min-width: 90px;
+    }
+    .cs-scrub-track {
+      flex: 1;
+      position: relative;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 999px;
+      cursor: pointer;
+    }
+    .cs-scrub-progress {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      background: var(--look-accent, #38bdf8);
+      border-radius: 999px;
+      width: 35%;
+      transition: width 0.05s linear;
+    }
   </style>
 </head>
 <body class="grid-bg relative antialiased selection:bg-cyan-500/30">
@@ -257,7 +503,7 @@
         <h1 class="text-lg md:text-xl font-black uppercase tracking-widest text-white">UI Primitives & Micro-Interactions</h1>
       </div>
       <div class="flex items-center gap-3">
-        <span class="px-3 py-1 bg-cyan-500/10 text-cyan-400 text-xs font-bold rounded-full border border-cyan-500/30 uppercase tracking-widest">v1</span>
+        <span class="px-3 py-1 bg-cyan-500/10 text-cyan-400 text-xs font-bold rounded-full border border-cyan-500/30 uppercase tracking-widest">v2</span>
         <button id="copy-all-btn" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold rounded-md border border-slate-700 transition">
           Copy CLI Install
         </button>
@@ -284,108 +530,94 @@
   ╚═╝     ╚═╝  ╚═╝╚═╝╚═╝     ╚═╝╚═╝   ╚═╝   ╚═╝  ╚═══╝  ╚══════╝╚══════╝  
       </div>
       <p class="text-slate-400 text-lg md:text-xl max-w-2xl mx-auto">
-        Bespoke high-fidelity web UI components, kinetic buttons, elastic sliders, rolling counter tickers, progressive blur, and quantum thinking orbs.
+        Bespoke high-fidelity web UI components, kinetic buttons, elastic sliders, rolling counter tickers, progressive blur, WebGL chromatic wave light-fields, and motion presentation stages.
       </p>
     </section>
 
-    <!-- Component Grid -->
-    <div class="grid lg:grid-cols-2 gap-8">
+    <!-- Component Showcase Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
       
-      <!-- 1. Kinetic Color Fill Buttons -->
+      <!-- 1. Kinetic Color Fill Button -->
       <section class="glass-card p-6 rounded-2xl flex flex-col justify-between gap-6">
         <div>
           <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
             <h2 class="text-lg font-bold text-white flex items-center gap-2">
-              <span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span> 1. Kinetic Color Fill Buttons
+              <span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span> 1. Kinetic Color-Fill Button
             </h2>
-            <span class="text-xs text-slate-400 uppercase tracking-wider">Zero Layout Shift</span>
+            <span class="text-xs text-slate-400 uppercase tracking-wider">Pseudo Layer Morph</span>
           </div>
           <p class="text-slate-400 text-sm mb-6">
-            Dual-layer pseudo-element sliding fills paired with vertical text-shadow displacement. Hover to observe the rolling label animation.
+            Multi-layer pseudo-element reveal with vertical text-shadow rolling transforms, scale bounce on active press, and seamless keyboard focus ring.
           </p>
-          <div class="flex flex-wrap items-center gap-4 py-4 justify-center bg-slate-950/60 rounded-xl border border-slate-900 p-6">
-            <button class="cs-btn-fill" data-magnetic>
+          <div class="h-36 flex items-center justify-center bg-slate-950/60 rounded-xl border border-slate-900">
+            <button class="cs-btn-fill">
               <div class="cs-btn-fill-wrapper">
                 <span class="cs-btn-fill-text">Discover More</span>
               </div>
             </button>
-            <button class="cs-btn-fill" style="color: #38bdf8;" data-magnetic>
-              <div class="cs-btn-fill-wrapper">
-                <span class="cs-btn-fill-text">Launch Workspace</span>
-              </div>
-            </button>
           </div>
         </div>
         <div class="flex justify-between items-center text-xs text-slate-500 pt-2 border-t border-slate-800/50">
-          <span>Pure CSS · Springs · No Lag</span>
+          <span>Zero Layout Shift · GPU Accelerated</span>
           <button onclick="copySnippet('color-fill')" class="text-cyan-400 hover:text-cyan-300 font-mono">Copy Code</button>
         </div>
       </section>
 
-      <!-- 2. Elastic Range Sliders -->
+      <!-- 2. Elastic Range Slider & Audio Fader -->
       <section class="glass-card p-6 rounded-2xl flex flex-col justify-between gap-6">
         <div>
           <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
             <h2 class="text-lg font-bold text-white flex items-center gap-2">
-              <span class="w-2.5 h-2.5 rounded-full bg-sky-400"></span> 2. Elastic Range Controls
+              <span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span> 2. Elastic Range Slider
             </h2>
-            <span class="text-xs text-slate-400 uppercase tracking-wider">Dynamic Fill</span>
+            <span class="text-xs text-slate-400 uppercase tracking-wider">Dynamic Progress Fill</span>
           </div>
           <p class="text-slate-400 text-sm mb-6">
-            Normalized cross-browser range slider driving active gradient fills via custom CSS variables with real-time numeric readout.
+            Custom cross-browser range input featuring dynamic linear-gradient track progression, glow halo on hover, and elastic scale spring knob on press.
           </p>
-          <div class="space-y-4 py-2 px-6 bg-slate-950/60 rounded-xl border border-slate-900">
-            <div class="flex justify-between text-sm">
-              <span class="text-slate-300 font-medium">Haptic Output Level</span>
-              <span id="slider-val" class="text-cyan-400 font-mono font-bold">65%</span>
+          <div class="h-36 flex flex-col items-center justify-center gap-4 bg-slate-950/60 rounded-xl border border-slate-900 px-8">
+            <div class="w-full flex justify-between text-xs font-mono text-slate-400">
+              <span>OUTPUT GAIN</span>
+              <span id="slider-val" class="text-cyan-400 font-bold">65%</span>
             </div>
-            <input id="demo-slider" type="range" min="0" max="100" value="65" class="cs-range-slider" style="--slider-pct: 65%;">
-            <div class="flex justify-between text-xs text-slate-500">
-              <span>0 dB</span>
-              <span>+6 dB</span>
-              <span>+12 dB</span>
-            </div>
+            <input type="range" id="demo-slider" min="0" max="100" value="65" class="cs-range-slider" style="--slider-pct: 65%;">
           </div>
         </div>
         <div class="flex justify-between items-center text-xs text-slate-500 pt-2 border-t border-slate-800/50">
-          <span>WebKit & Gecko · Accessible ARIA</span>
+          <span>CSS Custom Properties Sync</span>
           <button onclick="copySnippet('slider')" class="text-cyan-400 hover:text-cyan-300 font-mono">Copy Code</button>
         </div>
       </section>
 
-      <!-- 3. Rolling Number Flow -->
+      <!-- 3. Rolling Number Flow Ticker -->
       <section class="glass-card p-6 rounded-2xl flex flex-col justify-between gap-6">
         <div>
           <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
             <h2 class="text-lg font-bold text-white flex items-center gap-2">
-              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span> 3. Rolling Number Flow (Ticker)
+              <span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span> 3. Rolling Metric Ticker
             </h2>
-            <span class="text-xs text-slate-400 uppercase tracking-wider">Tabular Digits</span>
+            <span class="text-xs text-slate-400 uppercase tracking-wider">Tabular Digit Reel</span>
           </div>
           <p class="text-slate-400 text-sm mb-6">
-            Smooth vertical translation reels for metrics and live pricing counters without layout jitter or horizontal popping.
+            Smooth vertical translate reels for metric counters, analytics dashboards, and real-time financial balances with guaranteed zero cumulative layout shift.
           </p>
-          <div class="flex flex-col items-center gap-6 py-4 bg-slate-950/60 rounded-xl border border-slate-900 p-6">
-            <div class="flex items-center gap-2">
-              <span class="text-slate-500 text-3xl font-bold">$</span>
-              <div class="cs-ticker-container" id="ticker">
-                <div class="cs-digit-col"><div class="cs-digit-reel"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span></div></div>
-                <div class="cs-digit-col"><div class="cs-digit-reel"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span></div></div>
-                <div class="cs-digit-col"><div class="cs-digit-reel"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span></div></div>
-                <div class="cs-digit-col"><div class="cs-digit-reel"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span></div></div>
-              </div>
-              <span class="text-slate-500 text-sm font-semibold">/mo</span>
+          <div class="h-36 flex flex-col items-center justify-center gap-4 bg-slate-950/60 rounded-xl border border-slate-900">
+            <div class="cs-ticker-container">
+              <div class="cs-digit-col"><div class="cs-digit-reel"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span></div></div>
+              <div class="cs-digit-col"><div class="cs-digit-reel"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span></div></div>
+              <div class="cs-digit-col"><div class="cs-digit-reel"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span></div></div>
+              <div class="cs-digit-col"><div class="cs-digit-reel"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span></div></div>
             </div>
-            <div class="flex items-center gap-2">
-              <button onclick="bumpTicker(1)" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-semibold rounded-lg border border-slate-700 transition">+1</button>
-              <button onclick="bumpTicker(25)" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-semibold rounded-lg border border-slate-700 transition">+25</button>
-              <button onclick="randomizeTicker()" class="px-3 py-1.5 bg-cyan-950/60 text-cyan-400 hover:bg-cyan-900/60 text-xs font-semibold rounded-lg border border-cyan-800/50 transition">Random</button>
-              <button onclick="resetTicker()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-semibold rounded-lg border border-slate-700 transition">Reset</button>
+            <div class="flex gap-2">
+              <button onclick="bumpTicker(1)" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-xs rounded border border-slate-700">+1</button>
+              <button onclick="bumpTicker(25)" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-xs rounded border border-slate-700">+25</button>
+              <button onclick="randomizeTicker()" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-xs rounded border border-slate-700">Random</button>
+              <button onclick="resetTicker()" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-xs rounded border border-slate-700">Reset</button>
             </div>
           </div>
         </div>
         <div class="flex justify-between items-center text-xs text-slate-500 pt-2 border-t border-slate-800/50">
-          <span>Tabular Nums · CSS Reels</span>
+          <span>Tabular Numerals · Easing: 0.16, 1, 0.3, 1</span>
           <button onclick="copySnippet('ticker')" class="text-cyan-400 hover:text-cyan-300 font-mono">Copy Code</button>
         </div>
       </section>
@@ -395,36 +627,24 @@
         <div>
           <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
             <h2 class="text-lg font-bold text-white flex items-center gap-2">
-              <span class="w-2.5 h-2.5 rounded-full bg-indigo-400"></span> 4. Multi-Layer Progressive Blur
+              <span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span> 4. Progressive Optical Blur
             </h2>
-            <span class="text-xs text-slate-400 uppercase tracking-wider">8-Layer Depth</span>
+            <span class="text-xs text-slate-400 uppercase tracking-wider">Exponential 8-Layer Stack</span>
           </div>
-          <p class="text-slate-400 text-sm mb-4">
-            8 stacked exponential backdrop-filters mimicking native camera optical depth. Scroll inside the frame below to see content melt into blur.
+          <p class="text-slate-400 text-sm mb-6">
+            Multi-stage backdrop filter with linear-gradient masks creating seamless native iOS/macOS depth of field over scrolling content.
           </p>
-          <div class="cs-blur-demo-box p-4 space-y-3" id="scroll-box">
-            <div class="p-3 bg-slate-900/80 rounded-lg border border-slate-800 flex justify-between items-center">
-              <span class="text-sm font-semibold text-slate-200">System Kernel v7.23.0</span>
-              <span class="text-xs text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded">Active</span>
+          <div class="cs-blur-wrapper">
+            <div class="p-4 space-y-3 text-xs text-slate-300">
+              <p class="font-bold text-cyan-400">SYSTEM FEED - SCROLLABLE LOGS</p>
+              <p>Initializing Code Scaffold micro-interactions engine...</p>
+              <p>Mounting kinetic DOM components with hardware acceleration...</p>
+              <p>Calibrating WebGL shader pipeline for ambient light-fields...</p>
+              <p>Binding tabular numeric reels for pricing tickers...</p>
+              <p>Applying 8-layer exponential backdrop blur mask...</p>
+              <p>Listening for magnetic pointer proximity coordinates...</p>
+              <p>Status: All primitives optimal and operational.</p>
             </div>
-            <div class="p-3 bg-slate-900/80 rounded-lg border border-slate-800 flex justify-between items-center">
-              <span class="text-sm font-semibold text-slate-200">Neural Graph Dispatcher</span>
-              <span class="text-xs text-cyan-400 bg-cyan-950/60 px-2 py-0.5 rounded">Standby</span>
-            </div>
-            <div class="p-3 bg-slate-900/80 rounded-lg border border-slate-800 flex justify-between items-center">
-              <span class="text-sm font-semibold text-slate-200">Async Channel Telemetry</span>
-              <span class="text-xs text-slate-400 bg-slate-800 px-2 py-0.5 rounded">Idle</span>
-            </div>
-            <div class="p-3 bg-slate-900/80 rounded-lg border border-slate-800 flex justify-between items-center">
-              <span class="text-sm font-semibold text-slate-200">Quantum Shard Matrix</span>
-              <span class="text-xs text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded">Synced</span>
-            </div>
-            <div class="p-3 bg-slate-900/80 rounded-lg border border-slate-800 flex justify-between items-center">
-              <span class="text-sm font-semibold text-slate-200">Memory Cache Cluster</span>
-              <span class="text-xs text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded">Optimal</span>
-            </div>
-
-            <!-- 8 Progressive Blur Layers Overlay -->
             <div class="cs-progressive-blur" id="blur-overlay">
               <div class="cs-blur-layer b-1"></div>
               <div class="cs-blur-layer b-2"></div>
@@ -433,7 +653,6 @@
               <div class="cs-blur-layer b-5"></div>
               <div class="cs-blur-layer b-6"></div>
               <div class="cs-blur-layer b-7"></div>
-              <div class="cs-blur-layer b-8"></div>
             </div>
           </div>
         </div>
@@ -458,7 +677,7 @@
           <div class="grid md:grid-cols-3 gap-6 items-center bg-slate-950/60 rounded-xl border border-slate-900 p-8">
             <div class="md:col-span-1 flex flex-col items-center justify-center gap-3">
               <canvas id="orbCanvas" width="160" height="160" class="rounded-full shadow-2xl"></canvas>
-              <span id="orb-status-text" class="cs-shimmer-text text-sm font-semibold">Agent Listening...</span>
+              <span id="orb-status-text" class="text-sm font-semibold text-cyan-400">Agent Listening...</span>
             </div>
             <div class="md:col-span-2 space-y-4">
               <h3 class="text-sm font-semibold text-slate-300 uppercase tracking-wider">Select Reasoning State:</h3>
@@ -474,15 +693,154 @@
           </div>
         </div>
         <div class="flex justify-between items-center text-xs text-slate-500 pt-2 border-t border-slate-800/50">
-          <span>60fps WebGL / 2D Canvas · Zero CPU Spikes</span>
+          <span>60fps 2D Canvas · Zero CPU Spikes</span>
           <button onclick="copySnippet('orb')" class="text-cyan-400 hover:text-cyan-300 font-mono">Copy Code</button>
+        </div>
+      </section>
+
+      <!-- 6. Motion Presentation Studio & The 6 Signature Looks -->
+      <section class="glass-card p-6 rounded-2xl flex flex-col justify-between gap-6 lg:col-span-2">
+        <div>
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+            <h2 class="text-lg font-bold text-white flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span> 6. Motion Presentation Studio & The 6 Signature Looks
+            </h2>
+            <span class="text-xs text-slate-400 uppercase tracking-wider">Cinematic Comparison Stage</span>
+          </div>
+          <p class="text-slate-400 text-sm mb-6">
+            Complete presentation framework featuring 6 signature production design looks, real-time WebGL chromatic light field wave shader, synchronized dual-stream comparison stages (Split, Stack, Spotlight), and multi-ratio viewport geometry.
+          </p>
+
+          <!-- Studio Toolbar Controls -->
+          <div class="space-y-4 mb-6">
+            <div>
+              <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-2">Choose Signature Look:</span>
+              <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2.5">
+                <button onclick="switchLook('studio')" class="cs-preset-card" data-look="studio" aria-pressed="true">
+                  <div class="cs-preset-art"><i></i><i></i><i></i></div>
+                  <strong>Studio</strong>
+                  <small>Violet glass</small>
+                </button>
+                <button onclick="switchLook('editorial')" class="cs-preset-card" data-look="editorial" aria-pressed="false">
+                  <div class="cs-preset-art"><i></i><i></i></div>
+                  <strong>Editorial</strong>
+                  <small>Cream & ink</small>
+                </button>
+                <button onclick="switchLook('signal')" class="cs-preset-card" data-look="signal" aria-pressed="false">
+                  <div class="cs-preset-art"><i></i><i></i></div>
+                  <strong>Signal</strong>
+                  <small>Acid lime</small>
+                </button>
+                <button onclick="switchLook('cobalt')" class="cs-preset-card" data-look="cobalt" aria-pressed="false">
+                  <div class="cs-preset-art"><i></i><i></i></div>
+                  <strong>Cobalt</strong>
+                  <small>Electric blue</small>
+                </button>
+                <button onclick="switchLook('peach')" class="cs-preset-card" data-look="peach" aria-pressed="false">
+                  <div class="cs-preset-art"><i></i><i></i></div>
+                  <strong>Peach</strong>
+                  <small>Warm poster</small>
+                </button>
+                <button onclick="switchLook('monochrome')" class="cs-preset-card" data-look="monochrome" aria-pressed="false">
+                  <div class="cs-preset-art"><i></i><i></i></div>
+                  <strong>Mono</strong>
+                  <small>Carbon black</small>
+                </button>
+              </div>
+            </div>
+
+            <!-- Layout and Aspect Ratio Selectors -->
+            <div class="flex flex-wrap items-center justify-between gap-4 pt-2 border-t border-slate-800">
+              <div class="flex items-center gap-3">
+                <span class="text-xs text-slate-400 font-semibold">Layout:</span>
+                <div class="flex bg-slate-900 p-1 rounded-lg border border-slate-800 text-xs">
+                  <button onclick="switchLayout('split')" id="btn-layout-split" class="px-2.5 py-1 rounded bg-slate-800 text-white font-medium">Split</button>
+                  <button onclick="switchLayout('stack')" id="btn-layout-stack" class="px-2.5 py-1 rounded text-slate-400 hover:text-white font-medium">Stack</button>
+                  <button onclick="switchLayout('spotlight')" id="btn-layout-spotlight" class="px-2.5 py-1 rounded text-slate-400 hover:text-white font-medium">Spotlight</button>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-3">
+                <span class="text-xs text-slate-400 font-semibold">Aspect Ratio:</span>
+                <div class="flex bg-slate-900 p-1 rounded-lg border border-slate-800 text-xs">
+                  <button onclick="switchFormat('16-9')" id="btn-format-16-9" class="px-2.5 py-1 rounded bg-slate-800 text-white font-medium">16:9</button>
+                  <button onclick="switchFormat('9-16')" id="btn-format-9-16" class="px-2.5 py-1 rounded text-slate-400 hover:text-white font-medium">9:16</button>
+                  <button onclick="switchFormat('1-1')" id="btn-format-1-1" class="px-2.5 py-1 rounded text-slate-400 hover:text-white font-medium">1:1</button>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2">
+                <button onclick="toggleShader()" id="shader-toggle-btn" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-cyan-400 border border-slate-700 font-medium">
+                  WebGL Light-Field: ON
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Interactive Live Motion Stage -->
+          <div class="cs-motion-stage" id="demo-motion-stage" data-motion-look="studio" data-format="16-9" data-layout="split">
+            <canvas class="cs-light-field-canvas" id="motionShaderCanvas"></canvas>
+            
+            <div class="cs-motion-viewport">
+              <!-- Primary Media Pane -->
+              <div class="cs-media-pane cs-media-primary">
+                <div class="cs-media-header">
+                  <span>Reconstructed Animation</span>
+                  <span class="text-xs opacity-75 font-mono">60 FPS</span>
+                </div>
+                <div class="cs-media-canvas">
+                  <div class="text-center space-y-2">
+                    <div class="w-12 h-12 mx-auto rounded-full bg-cyan-500/20 flex items-center justify-center border border-cyan-500/50 text-cyan-400">
+                      <svg class="w-6 h-6 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <div class="text-xs font-semibold tracking-wide uppercase">Active Composition</div>
+                    <div class="text-[10px] opacity-60 font-mono">1920x1080 @ 60fps</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Secondary Reference Pane -->
+              <div class="cs-media-pane cs-media-secondary">
+                <div class="cs-media-header">
+                  <span>Original Reference</span>
+                  <span class="text-xs opacity-75 font-mono">SOURCE</span>
+                </div>
+                <div class="cs-media-canvas">
+                  <div class="text-center space-y-2">
+                    <div class="w-12 h-12 mx-auto rounded-full bg-slate-800 flex items-center justify-center border border-slate-700 text-slate-400">
+                      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                    </div>
+                    <div class="text-xs font-semibold tracking-wide uppercase">Source Footage</div>
+                    <div class="text-[10px] opacity-60 font-mono">Synced Timecode</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Synchronized Transport Bar -->
+            <div class="cs-transport-bar">
+              <button type="button" onclick="toggleStagePlay()" id="stage-play-btn" class="px-2.5 py-1 rounded bg-slate-800 text-slate-200 hover:text-white border border-slate-700 font-sans text-xs">
+                Pause
+              </button>
+              <div class="cs-timecode" id="stage-timecode">00:04.2 / 00:15.0</div>
+              <div class="cs-scrub-track" id="stage-scrub-track" onclick="handleStageScrub(event)">
+                <div class="cs-scrub-progress" id="stage-scrub-progress"></div>
+              </div>
+              <div class="text-[10px] opacity-70">LOOP: ON</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-between items-center text-xs text-slate-500 pt-2 border-t border-slate-800/50">
+          <span>Press Space to Play/Pause · R to Restart</span>
+          <button onclick="copySnippet('motion-stage')" class="text-cyan-400 hover:text-cyan-300 font-mono">Copy Component</button>
         </div>
       </section>
 
     </div>
 
     <!-- Code Toast / Notification -->
-    <div id="toast" class="fixed bottom-6 right-6 bg-slate-900 text-cyan-400 border border-cyan-500/50 px-4 py-2.5 rounded-xl shadow-2xl text-xs font-semibold opacity-0 transition duration-300 pointer-events-none">
+    <div id="toast" class="fixed bottom-6 right-6 bg-slate-900 text-cyan-400 border border-cyan-500/50 px-4 py-2.5 rounded-xl shadow-2xl text-xs font-semibold opacity-0 transition duration-300 pointer-events-none z-50">
       Code snippet copied to clipboard!
     </div>
 
@@ -558,8 +916,8 @@
     }
 
     // 5. Quantum Thinking Orb Simulation
-    const canvas = document.getElementById('orbCanvas');
-    const ctx = canvas.getContext('2d');
+    const orbCanvas = document.getElementById('orbCanvas');
+    const orbCtx = orbCanvas.getContext('2d');
     let orbState = 'listening';
     let orbTime = 0;
 
@@ -576,58 +934,277 @@
       orbState = state;
       document.getElementById('orb-status-text').textContent = orbConfigs[state].label;
       document.querySelectorAll('.orb-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.textContent.toLowerCase() === state);
-        if (btn.textContent.toLowerCase() === state) {
-          btn.style.borderColor = '#38bdf8';
-          btn.style.backgroundColor = '#0f172a';
-        } else {
-          btn.style.borderColor = '#334155';
-          btn.style.backgroundColor = '#1e293b';
-        }
+        const isMatch = btn.textContent.toLowerCase() === state;
+        btn.classList.toggle('active', isMatch);
+        btn.style.borderColor = isMatch ? '#38bdf8' : '#334155';
+        btn.style.backgroundColor = isMatch ? '#0f172a' : '#1e293b';
       });
     }
 
     function drawOrb() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      orbCtx.clearRect(0, 0, orbCanvas.width, orbCanvas.height);
       const cfg = orbConfigs[orbState];
       orbTime += cfg.speed;
 
-      const centerX = canvas.width / 2;
-      const centerY = canvas.height / 2;
+      const centerX = orbCanvas.width / 2;
+      const centerY = orbCanvas.height / 2;
       const baseRadius = 46 + Math.sin(orbTime * 2) * (3 * cfg.pulse);
 
-      // Ambient outer glow
-      const glowGrad = ctx.createRadialGradient(centerX, centerY, baseRadius * 0.5, centerX, centerY, baseRadius * 1.5);
+      const glowGrad = orbCtx.createRadialGradient(centerX, centerY, baseRadius * 0.5, centerX, centerY, baseRadius * 1.5);
       glowGrad.addColorStop(0, cfg.colors[0] + '88');
-      glowGrad.addColorStop(0.5, cfg.colors[1] + '44');
       glowGrad.addColorStop(1, 'transparent');
-      ctx.fillStyle = glowGrad;
-      ctx.beginPath();
-      ctx.arc(centerX, centerY, baseRadius * 1.5, 0, Math.PI * 2);
-      ctx.fill();
+      orbCtx.fillStyle = glowGrad;
+      orbCtx.beginPath();
+      orbCtx.arc(centerX, centerY, baseRadius * 1.5, 0, Math.PI * 2);
+      orbCtx.fill();
 
-      // Fluid core
-      const coreGrad = ctx.createRadialGradient(
-        centerX + Math.cos(orbTime) * 12,
-        centerY + Math.sin(orbTime) * 12,
-        4,
-        centerX,
-        centerY,
-        baseRadius
-      );
-      coreGrad.addColorStop(0, '#ffffff');
-      coreGrad.addColorStop(0.3, cfg.colors[0]);
-      coreGrad.addColorStop(0.7, cfg.colors[1]);
-      coreGrad.addColorStop(1, cfg.colors[2]);
-
-      ctx.fillStyle = coreGrad;
-      ctx.beginPath();
-      ctx.arc(centerX, centerY, baseRadius, 0, Math.PI * 2);
-      ctx.fill();
+      for (let i = 0; i < 3; i++) {
+        orbCtx.beginPath();
+        const rot = orbTime * (i % 2 === 0 ? 1 : -1) + (i * Math.PI / 1.5);
+        orbCtx.ellipse(centerX, centerY, baseRadius, baseRadius * 0.65, rot, 0, Math.PI * 2);
+        orbCtx.strokeStyle = cfg.colors[i];
+        orbCtx.lineWidth = 2.5;
+        orbCtx.stroke();
+      }
 
       requestAnimationFrame(drawOrb);
     }
     requestAnimationFrame(drawOrb);
+
+    // ==========================================================================
+    // 6. WebGL Chromatic Wave Light-Field Shader
+    // ==========================================================================
+    class LightFieldMaterial {
+      constructor(canvas, options = {}) {
+        this.canvas = canvas;
+        this.options = Object.assign({
+          primaryColor: [0.44, 0.25, 0.82],
+          edgeColor: [0.16, 0.38, 0.49],
+          speed: 0.075
+        }, options);
+
+        this.gl = null;
+        this.program = null;
+        this.buffer = null;
+        this.animId = null;
+        this.startTime = performance.now();
+        this.init();
+      }
+
+      init() {
+        try {
+          this.gl = this.canvas.getContext('webgl', { alpha: true, antialias: false, depth: false, powerPreference: 'low-power' });
+        } catch (e) {}
+
+        if (!this.gl) return;
+        const gl = this.gl;
+
+        const compile = (type, src) => {
+          const s = gl.createShader(type);
+          gl.shaderSource(s, src);
+          gl.compileShader(s);
+          return s;
+        };
+
+        const vShader = compile(gl.VERTEX_SHADER, 'attribute vec2 p; void main() { gl_Position = vec4(p, 0.0, 1.0); }');
+        const fShader = compile(gl.FRAGMENT_SHADER, `
+          precision mediump float;
+          uniform vec2 resolution;
+          uniform float time;
+          uniform vec3 primaryColor;
+          uniform vec3 edgeColor;
+          void main() {
+            vec2 uv = gl_FragCoord.xy / resolution;
+            vec2 p = vec2(uv.x, 1.0 - uv.y);
+            float t = time;
+            float crest = 0.075 + 0.055 * sin(p.x * 5.5 + t) + 0.045 * cos(p.x * 9.0 - t * 0.6);
+            float d = abs(p.y - crest);
+            float ribbon = exp(-d * 27.0) * 0.22 + exp(-d * 110.0) * 0.18;
+            float ridges = 0.5 + 0.5 * sin(d * 200.0 - p.x * 8.0 + t);
+            float top = exp(-p.y * 7.0);
+            float glow = exp(-length((p - vec2(0.63 + 0.1 * sin(t), -0.03)) * vec2(1.7, 2.4)) * 3.0);
+            float edge = exp(-p.x * 11.0) * exp(-abs(p.y - 0.72) * 4.0);
+            vec3 color = primaryColor * (ribbon * (0.6 + 0.4 * ridges) + glow * 0.28);
+            color += edgeColor * edge * 0.18;
+            color += vec3(0.60, 0.45, 0.83) * pow(max(0.0, 1.0 - d * 90.0), 3.0) * 0.06;
+            float grain = fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453);
+            color += (grain - 0.5) * 0.015;
+            gl_FragColor = vec4(color, (top * 0.72 + edge * 0.2) * 0.95);
+          }
+        `);
+
+        this.program = gl.createProgram();
+        gl.attachShader(this.program, vShader);
+        gl.attachShader(this.program, fShader);
+        gl.linkProgram(this.program);
+
+        this.buffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+
+        this.uRes = gl.getUniformLocation(this.program, 'resolution');
+        this.uTime = gl.getUniformLocation(this.program, 'time');
+        this.uColor = gl.getUniformLocation(this.program, 'primaryColor');
+        this.uEdge = gl.getUniformLocation(this.program, 'edgeColor');
+
+        this.resize();
+        window.addEventListener('resize', () => this.resize());
+        this.render();
+      }
+
+      setColor(primary, edge = [0.16, 0.38, 0.49]) {
+        this.options.primaryColor = primary;
+        this.options.edgeColor = edge;
+      }
+
+      resize() {
+        if (!this.gl) return;
+        const rect = this.canvas.getBoundingClientRect();
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        this.canvas.width = Math.floor(rect.width * dpr) || 300;
+        this.canvas.height = Math.floor(rect.height * dpr) || 150;
+        this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
+      }
+
+      render() {
+        if (!this.gl) return;
+        const gl = this.gl;
+        const elapsed = (performance.now() - this.startTime) * 0.001 * this.options.speed;
+
+        gl.useProgram(this.program);
+        gl.uniform2f(this.uRes, this.canvas.width, this.canvas.height);
+        gl.uniform1f(this.uTime, elapsed);
+        gl.uniform3fv(this.uColor, this.options.primaryColor);
+        gl.uniform3fv(this.uEdge, this.options.edgeColor);
+
+        const posAttr = gl.getAttribLocation(this.program, 'p');
+        gl.enableVertexAttribArray(posAttr);
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer);
+        gl.vertexAttribPointer(posAttr, 2, gl.FLOAT, false, 0, 0);
+
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+        this.animId = requestAnimationFrame(() => this.render());
+      }
+    }
+
+    const shaderCanvas = document.getElementById('motionShaderCanvas');
+    const lightFieldShader = new LightFieldMaterial(shaderCanvas, {
+      primaryColor: [0.44, 0.25, 0.82]
+    });
+
+    // Look Palette Mappings
+    const lookPalettes = {
+      studio:     { primary: [0.44, 0.25, 0.82], edge: [0.16, 0.38, 0.49] },
+      editorial:  { primary: [0.75, 0.27, 0.16], edge: [0.22, 0.21, 0.18] },
+      signal:     { primary: [0.83, 0.96, 0.29], edge: [0.07, 0.11, 0.09] },
+      cobalt:     { primary: [0.09, 0.28, 0.93], edge: [0.60, 0.74, 1.00] },
+      peach:      { primary: [0.96, 0.73, 0.65], edge: [0.45, 0.22, 0.17] },
+      monochrome: { primary: [0.89, 0.89, 0.89], edge: [0.20, 0.20, 0.20] }
+    };
+
+    const stageEl = document.getElementById('demo-motion-stage');
+
+    function switchLook(look) {
+      stageEl.dataset.motionLook = look;
+      document.querySelectorAll('.cs-preset-card').forEach(card => {
+        card.setAttribute('aria-pressed', card.dataset.look === look ? 'true' : 'false');
+      });
+      if (lookPalettes[look]) {
+        lightFieldShader.setColor(lookPalettes[look].primary, lookPalettes[look].edge);
+      }
+    }
+
+    function switchLayout(layout) {
+      stageEl.dataset.layout = layout;
+      ['split', 'stack', 'spotlight'].forEach(l => {
+        const btn = document.getElementById(`btn-layout-${l}`);
+        if (btn) {
+          const active = l === layout;
+          btn.className = active ? 'px-2.5 py-1 rounded bg-slate-800 text-white font-medium' : 'px-2.5 py-1 rounded text-slate-400 hover:text-white font-medium';
+        }
+      });
+      lightFieldShader.resize();
+    }
+
+    function switchFormat(fmt) {
+      stageEl.dataset.format = fmt;
+      ['16-9', '9-16', '1-1'].forEach(f => {
+        const btn = document.getElementById(`btn-format-${f}`);
+        if (btn) {
+          const active = f === fmt;
+          btn.className = active ? 'px-2.5 py-1 rounded bg-slate-800 text-white font-medium' : 'px-2.5 py-1 rounded text-slate-400 hover:text-white font-medium';
+        }
+      });
+      setTimeout(() => lightFieldShader.resize(), 100);
+    }
+
+    let shaderEnabled = true;
+    function toggleShader() {
+      shaderEnabled = !shaderEnabled;
+      const btn = document.getElementById('shader-toggle-btn');
+      shaderCanvas.dataset.state = shaderEnabled ? 'active' : 'disabled';
+      btn.textContent = `WebGL Light-Field: ${shaderEnabled ? 'ON' : 'OFF'}`;
+    }
+
+    // Transport Bar Timecode Simulation
+    let stagePlaying = true;
+    let stageCurrentTime = 4.2;
+    const stageDuration = 15.0;
+    let stageLastTime = performance.now();
+
+    function updateStageTime() {
+      if (stagePlaying) {
+        const now = performance.now();
+        const delta = (now - stageLastTime) / 1000;
+        stageLastTime = now;
+        stageCurrentTime += delta;
+        if (stageCurrentTime >= stageDuration) {
+          stageCurrentTime = 0;
+        }
+        renderStageTime();
+      } else {
+        stageLastTime = performance.now();
+      }
+      requestAnimationFrame(updateStageTime);
+    }
+    requestAnimationFrame(updateStageTime);
+
+    function renderStageTime() {
+      const mins = Math.floor(stageCurrentTime / 60);
+      const secs = Math.floor(stageCurrentTime % 60);
+      const ms = Math.floor((stageCurrentTime % 1) * 10);
+      const formatted = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}.${ms}`;
+      document.getElementById('stage-timecode').textContent = `${formatted} / 00:15.0`;
+      const pct = (stageCurrentTime / stageDuration) * 100;
+      document.getElementById('stage-scrub-progress').style.width = `${pct}%`;
+    }
+
+    function toggleStagePlay() {
+      stagePlaying = !stagePlaying;
+      document.getElementById('stage-play-btn').textContent = stagePlaying ? 'Pause' : 'Play';
+    }
+
+    function handleStageScrub(e) {
+      const track = document.getElementById('stage-scrub-track');
+      const rect = track.getBoundingClientRect();
+      const clickX = Math.max(0, Math.min(e.clientX - rect.left, rect.width));
+      const ratio = clickX / rect.width;
+      stageCurrentTime = ratio * stageDuration;
+      renderStageTime();
+    }
+
+    // Global keyboard shortcuts for presentation stage
+    window.addEventListener('keydown', (e) => {
+      if (e.code === 'Space' && e.target === document.body) {
+        e.preventDefault();
+        toggleStagePlay();
+      }
+      if (e.code === 'KeyR' && e.target === document.body) {
+        e.preventDefault();
+        stageCurrentTime = 0;
+        renderStageTime();
+      }
+    });
 
     // Toast Utility
     function showToast(msg) {
@@ -642,8 +1219,9 @@
       'color-fill': `<button class="cs-btn-fill">\n  <div class="cs-btn-fill-wrapper">\n    <span class="cs-btn-fill-text">Discover More</span>\n  </div>\n</button>`,
       'slider': `<input type="range" min="0" max="100" value="65" class="cs-range-slider" style="--slider-pct: 65%;">`,
       'ticker': `<div class="cs-ticker-container">\n  <!-- 4 vertical reels with 0-9 spans -->\n</div>`,
-      'blur': `<div class="cs-progressive-blur">\n  <div class="cs-blur-layer b-1"></div>\n  <!-- layers 2 through 8 -->\n</div>`,
-      'orb': `<canvas id="orbCanvas" width="120" height="120"></canvas>`
+      'blur': `<div class="cs-progressive-blur">\n  <div class="cs-blur-layer b-1"></div>\n  <!-- layers 2 through 7 -->\n</div>`,
+      'orb': `<canvas id="orbCanvas" width="160" height="160"></canvas>`,
+      'motion-stage': `<div class="cs-motion-stage" data-motion-look="studio" data-format="16-9" data-layout="split">\n  <canvas class="cs-light-field-canvas"></canvas>\n  <div class="cs-motion-viewport">\n    <div class="cs-media-pane cs-media-primary">...</div>\n    <div class="cs-media-pane cs-media-secondary">...</div>\n  </div>\n  <div class="cs-transport-bar">...</div>\n</div>`
     };
 
     function copySnippet(key) {
@@ -654,7 +1232,7 @@
     }
 
     document.getElementById('copy-all-btn').addEventListener('click', () => {
-      navigator.clipboard.writeText('npx @code-scaffold/skills install ui-primitives');
+      navigator.clipboard.writeText('code-scaffold skills install ui-primitives');
       showToast('Install command copied!');
     });
   </script>

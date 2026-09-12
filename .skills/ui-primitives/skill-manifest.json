@@ -2,8 +2,8 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_ui_primitives_skill",
-  "version": "1",
-  "description": "High-fidelity interactive web UI components, kinetic buttons, range sliders, rolling number tickers, progressive blur, custom magnetic cursors, and stateful physics-driven micro-interactions.",
+  "version": "2",
+  "description": "High-fidelity interactive web UI components, kinetic buttons, range sliders, rolling number tickers, progressive blur, custom magnetic cursors, WebGL chromatic wave light-fields, synchronized comparison stages, and 6 signature motion looks.",
   "entryPoint": "./SKILL.md",
   "engines": {
     "node": ">=18.0.0"
@@ -25,7 +25,11 @@
     "range-sliders",
     "spring-physics",
     "web-ui",
-    "details-vault"
+    "motion-looks",
+    "light-field-shader",
+    "comparison-stage",
+    "synchronized-media",
+    "aspect-ratio-framing"
   ],
-  "integrity": "cs:sha256:4bf6ceb881f19cc21d8bcc9a3d6f49719d3c2711bab265216614482db8553d15"
+  "integrity": "cs:sha256:cbb6c472f7446deb13c62ea091632c6d59abee41ca07299d17ddb65b3a882bf0"
 }

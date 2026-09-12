@@ -1,0 +1,380 @@
+/**
+ * Motion Looks & Presentation Studio Primitives
+ * Code Scaffold Specification Schema: https://code-scaffold.com/spec/v1
+ * 
+ * Provides 6 signature production design looks, layout framing matrices (split, stack, spotlight),
+ * and aspect ratio wrappers for cinematic product demos and media comparisons.
+ */
+
+:root {
+  --motion-font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --motion-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+/* ==========================================================================
+   1. The 6 Signature Production Design Looks
+   ========================================================================== */
+
+/* Studio Look: Violet glass, ambient chromatic light, widescreen */
+[data-motion-look="studio"] {
+  --look-bg: #0b0713;
+  --look-surface: rgba(23, 16, 34, 0.85);
+  --look-surface-border: rgba(163, 140, 216, 0.25);
+  --look-ink: #f3effa;
+  --look-muted: #9f96b0;
+  --look-accent: #a38cd8;
+  --look-highlight: #d8c5ff;
+  --look-badge: rgba(163, 140, 216, 0.15);
+  --look-radius: 12px;
+}
+
+/* Editorial Look: Cream paper, stark black ink, crimson red accent */
+[data-motion-look="editorial"] {
+  --look-bg: #e5decf;
+  --look-surface: #f0eade;
+  --look-surface-border: #d4ccbd;
+  --look-ink: #1f1b16;
+  --look-muted: #6b6357;
+  --look-accent: #be442a;
+  --look-highlight: #d95d43;
+  --look-badge: rgba(190, 68, 42, 0.12);
+  --look-radius: 2px;
+}
+
+/* Signal Look: Electric acid lime, deep tactical ink, compact technical typography */
+[data-motion-look="signal"] {
+  --look-bg: #090e0c;
+  --look-surface: #121c17;
+  --look-surface-border: rgba(212, 244, 74, 0.25);
+  --look-ink: #eaff80;
+  --look-muted: #859c7a;
+  --look-accent: #d4f44a;
+  --look-highlight: #f0ff99;
+  --look-badge: rgba(212, 244, 74, 0.15);
+  --look-radius: 4px;
+}
+
+/* Cobalt Look: Electric royal blue, high-contrast white and ice-blue accents */
+[data-motion-look="cobalt"] {
+  --look-bg: #051036;
+  --look-surface: #0f36b8;
+  --look-surface-border: rgba(153, 182, 255, 0.3);
+  --look-ink: #ffffff;
+  --look-muted: #99b6ff;
+  --look-accent: #5e8cff;
+  --look-highlight: #e5eeff;
+  --look-badge: rgba(94, 140, 255, 0.2);
+  --look-radius: 14px;
+}
+
+/* Peach Look: Warm editorial poster aesthetic, terracotta ink */
+[data-motion-look="peach"] {
+  --look-bg: #e59d85;
+  --look-surface: #f4bba6;
+  --look-surface-border: #dca08a;
+  --look-ink: #481e16;
+  --look-muted: #73372c;
+  --look-accent: #8b3c2e;
+  --look-highlight: #a84b39;
+  --look-badge: rgba(115, 55, 44, 0.15);
+  --look-radius: 16px;
+}
+
+/* Monochrome Look: Razor-sharp carbon black, high-contrast silver */
+[data-motion-look="monochrome"] {
+  --look-bg: #0a0a0a;
+  --look-surface: #181818;
+  --look-surface-border: #333333;
+  --look-ink: #f5f5f5;
+  --look-muted: #8c8c8c;
+  --look-accent: #e4e4e4;
+  --look-highlight: #ffffff;
+  --look-badge: rgba(255, 255, 255, 0.1);
+  --look-radius: 0px;
+}
+
+/* ==========================================================================
+   2. Motion Stage & Viewport Framing
+   ========================================================================== */
+
+.cs-motion-stage {
+  position: relative;
+  background-color: var(--look-bg, #0b0713);
+  color: var(--look-ink, #f3effa);
+  border-radius: var(--look-radius, 12px);
+  border: 1px solid var(--look-surface-border, rgba(255, 255, 255, 0.1));
+  overflow: hidden;
+  transition: background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Aspect Ratio Modifiers */
+.cs-motion-stage[data-format="16-9"] {
+  aspect-ratio: 16 / 9;
+}
+.cs-motion-stage[data-format="9-16"] {
+  aspect-ratio: 9 / 16;
+  max-height: 720px;
+  margin-inline: auto;
+}
+.cs-motion-stage[data-format="1-1"] {
+  aspect-ratio: 1 / 1;
+  max-height: 600px;
+  margin-inline: auto;
+}
+
+/* ==========================================================================
+   3. Multi-Layout Presentation Matrix (Split, Stack, Spotlight)
+   ========================================================================== */
+
+.cs-motion-viewport {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  padding: 24px;
+  gap: 16px;
+  box-sizing: border-box;
+  z-index: 2;
+}
+
+/* Split Layout: Side-by-side synchronized comparison */
+.cs-motion-stage[data-layout="split"] .cs-motion-viewport {
+  flex-direction: row;
+}
+.cs-motion-stage[data-layout="split"] .cs-media-pane {
+  flex: 1;
+  height: 100%;
+}
+
+/* Stack Layout: Top-and-bottom stacked comparison */
+.cs-motion-stage[data-layout="stack"] .cs-motion-viewport {
+  flex-direction: column;
+}
+.cs-motion-stage[data-layout="stack"] .cs-media-pane {
+  flex: 1;
+  width: 100%;
+}
+
+/* Spotlight Layout: Primary hero media with inset picture-in-picture secondary pane */
+.cs-motion-stage[data-layout="spotlight"] .cs-motion-viewport {
+  position: relative;
+  display: block;
+}
+.cs-motion-stage[data-layout="spotlight"] .cs-media-primary {
+  width: 100%;
+  height: 100%;
+}
+.cs-motion-stage[data-layout="spotlight"] .cs-media-secondary {
+  position: absolute;
+  bottom: 32px;
+  right: 32px;
+  width: 32%;
+  aspect-ratio: 16 / 9;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45);
+  border: 2px solid var(--look-surface-border, rgba(255, 255, 255, 0.2));
+  z-index: 10;
+}
+
+/* Media Pane Containers */
+.cs-media-pane {
+  position: relative;
+  background-color: var(--look-surface);
+  border-radius: var(--look-radius);
+  border: 1px solid var(--look-surface-border);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.cs-media-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid var(--look-surface-border);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.cs-media-canvas {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  min-height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background: rgba(0, 0, 0, 0.15);
+}
+
+/* ==========================================================================
+   4. Preset Selector Grid with Miniature CSS Art Previews
+   ========================================================================== */
+
+.cs-presets-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
+  width: 100%;
+}
+
+.cs-preset-card {
+  position: relative;
+  padding: 8px 8px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(15, 23, 42, 0.6);
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+  color: inherit;
+}
+
+.cs-preset-card:hover {
+  border-color: rgba(56, 189, 248, 0.4);
+  transform: translateY(-2px);
+}
+
+.cs-preset-card[aria-pressed="true"] {
+  border-color: #38bdf8;
+  background: rgba(56, 189, 248, 0.08);
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.25);
+}
+
+.cs-preset-art {
+  height: 64px;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 8px;
+  display: grid;
+  padding: 8px;
+  gap: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.cs-preset-art i {
+  display: block;
+  border-radius: 2px;
+}
+
+/* Miniature Art Treatments */
+.cs-preset-card[data-look="studio"] .cs-preset-art {
+  background: #171022;
+  grid-template-columns: 1fr 1fr;
+}
+.cs-preset-card[data-look="studio"] .cs-preset-art i {
+  background: #d8c5ff;
+}
+.cs-preset-card[data-look="studio"] .cs-preset-art i:first-child {
+  grid-column: 1 / -1;
+  height: 4px;
+  background: #a38cd8;
+}
+
+.cs-preset-card[data-look="editorial"] .cs-preset-art {
+  background: #f0eade;
+  grid-template-columns: 1fr;
+}
+.cs-preset-card[data-look="editorial"] .cs-preset-art i {
+  background: #39352f;
+  border-radius: 0;
+}
+.cs-preset-card[data-look="editorial"] .cs-preset-art i:first-child {
+  height: 4px;
+  background: #be442a;
+}
+
+.cs-preset-card[data-look="signal"] .cs-preset-art {
+  background: #121c17;
+  grid-template-columns: 1fr;
+}
+.cs-preset-card[data-look="signal"] .cs-preset-art i {
+  background: #d4f44a;
+  border-radius: 1px;
+}
+
+.cs-preset-card[data-look="cobalt"] .cs-preset-art {
+  background: #0f36b8;
+  grid-template-columns: 2fr 1fr;
+}
+.cs-preset-card[data-look="cobalt"] .cs-preset-art i {
+  background: #e5eeff;
+}
+
+.cs-preset-card[data-look="peach"] .cs-preset-art {
+  background: #f4bba6;
+  grid-template-columns: 1fr;
+}
+.cs-preset-card[data-look="peach"] .cs-preset-art i {
+  background: #73372c;
+}
+
+.cs-preset-card[data-look="monochrome"] .cs-preset-art {
+  background: #181818;
+  grid-template-columns: 1fr 1fr;
+}
+.cs-preset-card[data-look="monochrome"] .cs-preset-art i {
+  background: #e4e4e4;
+  border-radius: 0;
+}
+
+.cs-preset-card strong {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.cs-preset-card small {
+  display: block;
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+/* ==========================================================================
+   5. Synchronized Transport Controls & Timecode Scrubber
+   ========================================================================== */
+
+.cs-transport-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid var(--look-surface-border, rgba(255, 255, 255, 0.1));
+  font-family: var(--motion-font-mono);
+  font-size: 12px;
+  z-index: 10;
+}
+
+.cs-timecode {
+  color: var(--look-highlight, #38bdf8);
+  font-variant-numeric: tabular-nums;
+  min-width: 80px;
+}
+
+.cs-scrub-track {
+  flex: 1;
+  position: relative;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.cs-scrub-progress {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background: var(--look-accent, #38bdf8);
+  border-radius: 999px;
+  width: 0%;
+}

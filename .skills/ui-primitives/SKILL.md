@@ -1,15 +1,15 @@
 ---
 ​‌‍name: UI Primitives & Micro-Interactions
-description: High-fidelity interactive web UI components, kinetic buttons, range sliders, rolling number tickers, progressive blur, custom magnetic cursors, and stateful physics-driven micro-interactions.
-version: 1
+description: High-fidelity interactive web UI components, kinetic buttons, range sliders, rolling number tickers, progressive blur, custom magnetic cursors, WebGL chromatic wave light-fields, synchronized comparison stages, and 6 signature motion looks.
+version: 2
 ---
 
 # UI Primitives & Micro-Interactions Skill
 
-Use this skill when designing, building, modernizing, or refining interactive web components, kinetic buttons, sliders, custom cursors, rolling metric counters, progressive blur layers, and physics-driven micro-interactions.
+Use this skill when designing, building, modernizing, or refining interactive web components, kinetic buttons, sliders, custom cursors, rolling metric counters, progressive blur layers, WebGL light fields, synchronized media comparison stages, and motion design looks.
 
-* **Entity Mapping**: Modern DOM custom elements, Tailwind CSS utilities, hardware-accelerated CSS transforms, Web Animations API, and HTML5 canvas visualizers.
-* **Problem Domain**: Eliminating stiff, generic web interfaces by providing production-ready, highly responsive micro-interactions that operate with zero layout shift and accessible semantics.
+* **Entity Mapping**: Modern DOM custom elements, Tailwind CSS utilities, hardware-accelerated CSS transforms, Web Animations API, WebGL shader canvases, and HTML5 video/canvas comparison stages.
+* **Problem Domain**: Eliminating stiff, generic web interfaces by providing production-ready, highly responsive micro-interactions and cinematic motion presentation stages that operate with zero layout shift and accessible semantics.
 
 ---
 
@@ -21,6 +21,7 @@ Great micro-interactions elevate interfaces from functional to memorable without
 * **Hardware Acceleration Protocol**: Animate strictly with `transform` (`translate3d`, `scale`, `rotate`) and `opacity`. Avoid animating layout-triggering properties such as `width`, `height`, `top`, `left`, or `margin`.
 * **Complete Interaction State Discipline**: Every interactive primitive must explicitly specify states for default, hover, active (press), focus-visible (accessible keyboard outline), and disabled.
 * **Reduced Motion Fallbacks**: Always pair motion-heavy animations with `@media (prefers-reduced-motion: reduce)` fallbacks that preserve instant state changes without disorientation.
+* **Aspect Ratio Rigidity**: Presentation stages and video comparison viewports must maintain mathematically exact aspect ratios (16:9, 9:16, 1:1) independent of screen scaling.
 
 ---
 
@@ -56,7 +57,7 @@ This button creates an optical fill effect using layered pseudo-elements while r
   content: "";
   position: absolute;
   inset: 0;
-  background-color: #0f172a; /* Slate 900 base */
+  background-color: #0f172a;
   border-radius: 9999px;
   transform-origin: 50% 90%;
   transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
@@ -67,7 +68,7 @@ This button creates an optical fill effect using layered pseudo-elements while r
   content: "";
   position: absolute;
   inset: 0;
-  background-color: #0284c7; /* Sky 600 fill */
+  background-color: #0284c7;
   border-radius: 9999px;
   transform: translateY(100%);
   transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
@@ -108,130 +109,107 @@ This button creates an optical fill effect using layered pseudo-elements while r
 
 ## 3. Elastic Range Sliders & Audio Faders
 
-Standard HTML range inputs suffer from inconsistent styling across browsers. This recipe normalizes WebKit and Gecko engines while driving an active progress track fill through dynamic CSS custom variables:
+A high-polish range control that dynamically fills its track progress and features tactile knob interaction:
 
 ```html
 <div class="cs-slider-container">
-  <div class="cs-slider-header">
-    <label for="volume-slider" class="cs-slider-label">Master Output</label>
-    <span id="volume-readout" class="cs-slider-val">74%</span>
+  <label for="volumeSlider" class="cs-slider-label">Master Output</label>
+  <div class="cs-slider-track-wrap">
+    <input 
+      type="range" 
+      id="volumeSlider" 
+      min="0" 
+      max="100" 
+      value="65" 
+      class="cs-range-slider"
+      style="--slider-pct: 65%;"
+    >
   </div>
-  <input 
-    id="volume-slider" 
-    type="range" 
-    min="0" 
-    max="100" 
-    value="74" 
-    class="cs-range-slider"
-    style="--slider-pct: 74%;"
-    aria-label="Master output level"
-  />
 </div>
 ```
 
 ```css
-.cs-slider-container {
-  width: 100%;
-  max-width: 380px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.cs-slider-header {
-  display: flex;
-  justify-content: space-between;
-  font-size: 14px;
-  color: #94a3b8;
-}
-
-.cs-slider-val {
-  font-variant-numeric: tabular-nums;
-  font-weight: 600;
-  color: #f8fafc;
-}
-
 .cs-range-slider {
   -webkit-appearance: none;
   appearance: none;
   width: 100%;
-  height: 24px;
-  background: transparent;
-  cursor: pointer;
-}
-
-/* Track: WebKit */
-.cs-range-slider::-webkit-slider-runnable-track {
   height: 6px;
-  border-radius: 9999px;
-  background: linear-gradient(to right, #38bdf8 var(--slider-pct), #334155 var(--slider-pct));
-  transition: background 0.1s ease;
+  border-radius: 999px;
+  outline: none;
+  background: linear-gradient(to right, #38bdf8 0%, #38bdf8 var(--slider-pct), #334155 var(--slider-pct), #334155 100%);
+  cursor: pointer;
+  transition: background 0.05s linear;
 }
 
-/* Thumb: WebKit */
 .cs-range-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
   background: #ffffff;
-  border: 2px solid #0284c7;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  margin-top: -7px;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-.cs-range-slider:hover::-webkit-slider-thumb {
-  transform: scale(1.15);
-  box-shadow: 0 0 12px rgba(56, 189, 248, 0.6);
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.5), 0 2px 4px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .cs-range-slider:active::-webkit-slider-thumb {
-  transform: scale(0.95);
+  transform: scale(1.3);
+}
+
+.cs-range-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: none;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.5), 0 2px 4px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.cs-range-slider:active::-moz-range-thumb {
+  transform: scale(1.3);
 }
 ```
 
 ```javascript
-const slider = document.getElementById("volume-slider");
-const readout = document.getElementById("volume-readout");
-
-slider.addEventListener("input", (e) => {
-  const val = e.target.value;
-  slider.style.setProperty("--slider-pct", `${val}%`);
-  readout.textContent = `${val}%`;
+const slider = document.getElementById('volumeSlider');
+slider.addEventListener('input', (e) => {
+  const pct = ((e.target.value - e.target.min) / (e.target.max - e.target.min)) * 100;
+  e.target.style.setProperty('--slider-pct', `${pct}%`);
 });
 ```
 
 ---
 
-## 4. Rolling Number Flow & Live Metric Tickers
+## 4. Rolling Number Flow & Metric Tickers
 
-Instead of jarring number updates, rolling tickers display animated vertical reels where single digits slide into place with zero horizontal layout shift:
+Avoid jarring numerical jumps on dashboards or pricing cards. This ticker rolls vertical reels of digits 0 through 9:
 
 ```html
-<div class="cs-ticker" data-val="1248" aria-live="polite">
-  <div class="cs-digit-col" data-col="0"><div class="cs-digit-reel">0123456789</div></div>
-  <div class="cs-digit-col" data-col="1"><div class="cs-digit-reel">0123456789</div></div>
-  <div class="cs-digit-col" data-col="2"><div class="cs-digit-reel">0123456789</div></div>
-  <div class="cs-digit-col" data-col="3"><div class="cs-digit-reel">0123456789</div></div>
+<div class="cs-ticker" data-value="1250">
+  <div class="cs-digit-col"><div class="cs-digit-reel"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span></div></div>
+  <div class="cs-digit-col"><div class="cs-digit-reel"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span></div></div>
+  <div class="cs-digit-col"><div class="cs-digit-reel"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span></div></div>
+  <div class="cs-digit-col"><div class="cs-digit-reel"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span></div></div>
 </div>
 ```
 
 ```css
 .cs-ticker {
   display: inline-flex;
-  font-size: 64px;
+  font-family: var(--font-mono, monospace);
+  font-size: 2rem;
   font-weight: 700;
-  font-variant-numeric: tabular-nums;
   line-height: 1;
+  height: 2rem;
   overflow: hidden;
-  height: 1em;
-  color: #f8fafc;
+  font-variant-numeric: tabular-nums;
 }
 
 .cs-digit-col {
-  height: 1em;
+  height: 2rem;
   overflow: hidden;
   position: relative;
 }
@@ -239,12 +217,11 @@ Instead of jarring number updates, rolling tickers display animated vertical ree
 .cs-digit-reel {
   display: flex;
   flex-direction: column;
-  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: transform;
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .cs-digit-reel span {
-  height: 1em;
+  height: 2rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -252,13 +229,14 @@ Instead of jarring number updates, rolling tickers display animated vertical ree
 ```
 
 ```javascript
-function updateTicker(tickerElement, targetValue) {
-  const str = String(targetValue).padStart(4, "0");
-  const cols = tickerElement.querySelectorAll(".cs-digit-col");
-  cols.forEach((col, idx) => {
-    const digit = parseInt(str[idx], 10);
-    const reel = col.querySelector(".cs-digit-reel");
-    reel.style.transform = `translateY(-${digit * 10}%)`;
+function setTickerValue(tickerEl, numberString) {
+  const digits = numberString.split('');
+  const reels = tickerEl.querySelectorAll('.cs-digit-reel');
+  digits.forEach((digit, index) => {
+    if (reels[index]) {
+      const val = parseInt(digit, 10) || 0;
+      reels[index].style.transform = `translateY(-${val * 2}rem)`;
+    }
   });
 }
 ```
@@ -267,31 +245,27 @@ function updateTicker(tickerElement, targetValue) {
 
 ## 5. Multi-Layer Progressive Optical Blur
 
-A single CSS `backdrop-filter: blur(20px)` creates an unnatural harsh edge. Progressive optical blur stacks 8 layered elements with exponential blur factors and overlapping gradient masks to emulate optical camera depth:
+Replicates Apple-grade native iOS/macOS depth-of-field glass using an 8-layer exponential mask stack:
 
 ```html
-<div class="cs-progressive-blur cs-blur-bottom" aria-hidden="true">
-  <div class="cs-blur-layer layer-1"></div>
-  <div class="cs-blur-layer layer-2"></div>
-  <div class="cs-blur-layer layer-3"></div>
-  <div class="cs-blur-layer layer-4"></div>
-  <div class="cs-blur-layer layer-5"></div>
-  <div class="cs-blur-layer layer-6"></div>
-  <div class="cs-blur-layer layer-7"></div>
-  <div class="cs-blur-layer layer-8"></div>
+<div class="cs-progressive-blur">
+  <div class="cs-blur-layer b-1"></div>
+  <div class="cs-blur-layer b-2"></div>
+  <div class="cs-blur-layer b-3"></div>
+  <div class="cs-blur-layer b-4"></div>
+  <div class="cs-blur-layer b-5"></div>
+  <div class="cs-blur-layer b-6"></div>
+  <div class="cs-blur-layer b-7"></div>
+  <div class="cs-blur-layer b-8"></div>
 </div>
 ```
 
 ```css
 .cs-progressive-blur {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 180px;
+  position: absolute;
+  inset: 0;
   pointer-events: none;
-  z-index: 50;
-  --direction: to top;
+  z-index: 10;
 }
 
 .cs-blur-layer {
@@ -299,175 +273,132 @@ A single CSS `backdrop-filter: blur(20px)` creates an unnatural harsh edge. Prog
   inset: 0;
 }
 
-.layer-1 { z-index: 1; backdrop-filter: blur(0.08px); -webkit-mask-image: linear-gradient(var(--direction), transparent 87.5%, #000 100%); }
-.layer-2 { z-index: 2; backdrop-filter: blur(0.16px); -webkit-mask-image: linear-gradient(var(--direction), transparent 75%, #000 87.5%, #000 100%); }
-.layer-3 { z-index: 3; backdrop-filter: blur(0.31px); -webkit-mask-image: linear-gradient(var(--direction), transparent 62.5%, #000 75%, #000 87.5%, transparent 100%); }
-.layer-4 { z-index: 4; backdrop-filter: blur(0.63px); -webkit-mask-image: linear-gradient(var(--direction), transparent 50%, #000 62.5%, #000 75%, transparent 87.5%); }
-.layer-5 { z-index: 5; backdrop-filter: blur(1.25px); -webkit-mask-image: linear-gradient(var(--direction), transparent 37.5%, #000 50%, #000 62.5%, transparent 75%); }
-.layer-6 { z-index: 6; backdrop-filter: blur(2.5px);  -webkit-mask-image: linear-gradient(var(--direction), transparent 25%, #000 37.5%, #000 50%, transparent 62.5%); }
-.layer-7 { z-index: 7; backdrop-filter: blur(5.0px);  -webkit-mask-image: linear-gradient(var(--direction), transparent 12.5%, #000 25%, #000 37.5%, transparent 50%); }
-.layer-8 { z-index: 8; backdrop-filter: blur(10.0px); -webkit-mask-image: linear-gradient(var(--direction), transparent 0%, #000 12.5%, #000 25%, transparent 37.5%); }
+.cs-blur-layer.b-1 { backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px); mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 12.5%, rgba(0,0,0,1) 25%, rgba(0,0,0,0) 37.5%); }
+.cs-blur-layer.b-2 { backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 12.5%, rgba(0,0,0,1) 25%, rgba(0,0,0,1) 37.5%, rgba(0,0,0,0) 50%); }
+.cs-blur-layer.b-3 { backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 25%, rgba(0,0,0,1) 37.5%, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 62.5%); }
+.cs-blur-layer.b-4 { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 37.5%, rgba(0,0,0,1) 50%, rgba(0,0,0,1) 62.5%, rgba(0,0,0,0) 75%); }
+.cs-blur-layer.b-5 { backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 50%, rgba(0,0,0,1) 62.5%, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 87.5%); }
+.cs-blur-layer.b-6 { backdrop-filter: blur(32px); -webkit-backdrop-filter: blur(32px); mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 62.5%, rgba(0,0,0,1) 75%, rgba(0,0,0,1) 87.5%, rgba(0,0,0,0) 100%); }
+.cs-blur-layer.b-7 { backdrop-filter: blur(64px); -webkit-backdrop-filter: blur(64px); mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 75%, rgba(0,0,0,1) 87.5%, rgba(0,0,0,1) 100%); }
+.cs-blur-layer.b-8 { backdrop-filter: blur(128px); -webkit-backdrop-filter: blur(128px); mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 87.5%, rgba(0,0,0,1) 100%); }
 ```
 
 ---
 
-## 6. Quantum Thinking Orbs & Ambient Canvas Visualizers
+## 6. Quantum Thinking Orbs (Canvas Particle Visualizer)
 
-The Quantum Thinking Orb renders a fluid multi-color ambient sphere reflecting agent computational states:
+A fluid canvas particle system that visually conveys AI agent thought cycles across 6 distinct states:
 
-* **Listening State**: Calm pulsing sapphire and violet waves.
-* **Working / Searching State**: Fast rotating radiant amber and cyan orbits.
-* **Solving / Shaping State**: High-velocity energetic emerald and prismatic plasma bursts.
-
-```html
-<div class="cs-orb-stage">
-  <canvas id="thinking-orb-canvas" width="120" height="120" role="img" aria-label="Agent reasoning orb"></canvas>
-  <span class="cs-orb-label" id="orb-label">Agent Listening...</span>
-</div>
-```
-
-```css
-.cs-orb-stage {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-}
-
-.cs-orb-label {
-  font-size: 14px;
-  font-weight: 500;
-  letter-spacing: 0.05em;
-  background: linear-gradient(90deg, #94a3b8 0%, #ffffff 50%, #94a3b8 100%);
-  background-size: 200% 100%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: cs-shimmer 2.5s infinite linear;
-}
-
-@keyframes cs-shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
-}
-```
-
----
-
-## 7. Custom Magnetic Pointer & Cursor Dynamics
-
-Magnetic cursors elevate user experience on desktop screens by tracking cursor position and pulling toward nearby clickable elements:
+* **States**: `listening` (cyan, slow pulse), `working` (indigo orbit), `searching` (magenta rapid spin), `solving` (emerald convergence), `composing` (amber wave), `shaping` (rose expansion).
 
 ```javascript
-class MagneticCursor {
-  constructor() {
-    // Disable on touch devices
-    if (window.matchMedia("(pointer: coarse)").matches) return;
+// Refer to references/thinking-orb.js for complete standalone canvas implementation
+const orb = new QuantumThinkingOrb(document.getElementById('orbCanvas'), {
+  initialState: 'working',
+  size: 140,
+  particleCount: 75
+});
 
-    this.cursor = document.createElement("div");
-    this.cursor.className = "cs-magnetic-cursor";
-    document.body.appendChild(this.cursor);
-
-    this.pos = { x: 0, y: 0 };
-    this.target = { x: 0, y: 0 };
-
-    window.addEventListener("mousemove", (e) => {
-      this.target.x = e.clientX;
-      this.target.y = e.clientY;
-    });
-
-    this.render();
-    this.bindMagneticElements();
-  }
-
-  bindMagneticElements() {
-    document.querySelectorAll("[data-magnetic]").forEach((el) => {
-      el.addEventListener("mousemove", (e) => {
-        const rect = el.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
-        const deltaX = (e.clientX - centerX) * 0.3;
-        const deltaY = (e.clientY - centerY) * 0.3;
-        el.style.transform = `translate3d(${deltaX}px, ${deltaY}px, 0)`;
-      });
-
-      el.addEventListener("mouseleave", () => {
-        el.style.transform = "translate3d(0, 0, 0)";
-        el.style.transition = "transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1)";
-      });
-    });
-  }
-
-  render() {
-    this.pos.x += (this.target.x - this.pos.x) * 0.2;
-    this.pos.y += (this.target.y - this.pos.y) * 0.2;
-    this.cursor.style.transform = `translate3d(${this.pos.x - 12}px, ${this.pos.y - 12}px, 0)`;
-    requestAnimationFrame(() => this.render());
-  }
-}
+// Change state dynamically
+orb.setState('solving');
 ```
 
 ---
 
-## 8. Segmented Pill Controls & Toggle Switches
+## 7. Motion Presentation Studio: The 6 Signature Looks
 
-Replaces traditional tab bars with sliding pill surfaces using single active bounding box transitions:
+For cinematic product demos, media comparisons, and launch presentation stages, use the 6 unified production design treatments:
 
+### Look Manifest
+
+| Look Name | Aesthetic Treatment | Primary Palette | Default Framing | Layout Mode |
+| :--- | :--- | :--- | :--- | :--- |
+| **Studio** | Violet glass, ambient chromatic light | `#171022`, `#a38cd8`, `#d8c5ff` | 16:9 Landscape | Split |
+| **Editorial** | Cream paper, stark ink, crimson rules | `#f0eade`, `#1f1b16`, `#be442a` | 1:1 Square | Stack |
+| **Signal** | Electric acid lime, tactical ink | `#121c17`, `#d4f44a`, `#eaff80` | 9:16 Portrait | Stack |
+| **Cobalt** | Royal blue, high-contrast ice blue | `#0f36b8`, `#1647ee`, `#e5eeff` | 16:9 Landscape | Spotlight |
+| **Peach** | Warm poster aesthetic, terracotta ink | `#f4bba6`, `#73372c`, `#e59d85` | 9:16 Portrait | Spotlight |
+| **Monochrome** | High-contrast carbon black, silver | `#181818`, `#e4e4e4`, `#ffffff` | 1:1 Square | Split |
+
+### HTML Structure for Presentation Stage
 ```html
-<div class="cs-pill-group" role="radiogroup" aria-label="Plan billing cycle">
-  <div class="cs-pill-highlight"></div>
-  <button type="button" class="cs-pill-btn active" role="radio" aria-checked="true" data-index="0">Monthly</button>
-  <button type="button" class="cs-pill-btn" role="radio" aria-checked="false" data-index="1">Annual (Save 20%)</button>
+<div class="cs-motion-stage" data-motion-look="studio" data-format="16-9" data-layout="split">
+  <canvas class="cs-light-field-canvas"></canvas>
+  <div class="cs-motion-viewport">
+    <div class="cs-media-pane cs-media-primary">
+      <div class="cs-media-header">
+        <span>Reconstructed Animation</span>
+        <span class="cs-badge">60 FPS</span>
+      </div>
+      <div class="cs-media-canvas" id="primaryCanvas"></div>
+    </div>
+    <div class="cs-media-pane cs-media-secondary">
+      <div class="cs-media-header">
+        <span>Original Reference</span>
+        <span class="cs-badge">Reference</span>
+      </div>
+      <div class="cs-media-canvas" id="secondaryCanvas"></div>
+    </div>
+  </div>
+  <div class="cs-transport-bar">
+    <button type="button" class="cs-play-btn">Play</button>
+    <div class="cs-timecode">00:00.0 / 00:15.0</div>
+    <div class="cs-scrub-track">
+      <div class="cs-scrub-progress"></div>
+    </div>
+  </div>
 </div>
 ```
 
-```css
-.cs-pill-group {
-  display: inline-flex;
-  position: relative;
-  background-color: #1e293b;
-  padding: 4px;
-  border-radius: 9999px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
+---
 
-.cs-pill-btn {
-  position: relative;
-  z-index: 2;
-  background: transparent;
-  border: 0;
-  color: #94a3b8;
-  font-size: 14px;
-  font-weight: 500;
-  padding: 8px 18px;
-  border-radius: 9999px;
-  cursor: pointer;
-  transition: color 0.2s ease;
-}
+## 8. WebGL Chromatic Wave Light-Field Material
 
-.cs-pill-btn.active {
-  color: #ffffff;
-}
+Creates a dynamic, GPU-accelerated wave crest ribbon effect running behind the presentation stage at 60fps with low-power consumption:
 
-.cs-pill-highlight {
-  position: absolute;
-  top: 4px;
-  bottom: 4px;
-  left: 4px;
-  background-color: #0284c7;
-  border-radius: 9999px;
-  transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
-  z-index: 1;
-}
+```javascript
+import { LightFieldMaterial } from './references/light-field-shader.js';
+
+const canvas = document.querySelector('.cs-light-field-canvas');
+const lightField = new LightFieldMaterial(canvas, {
+  primaryColor: [0.44, 0.25, 0.82], // Studio violet RGB
+  speed: 0.075,
+  powerPreference: 'low-power'
+});
+
+// Update colors when switching looks
+lightField.setColor([0.83, 0.95, 0.29]); // Signal lime
 ```
 
 ---
 
-## 9. Interactive Sandbox & Testing Workspace
+## 9. Synchronized Media Comparison Stage Controller
 
-A full interactive demo showcasing all components live is available in `sandbox/index.html`. It includes:
+Manages multi-layout switching, dual-stream scrubbing, and keyboard accessibility:
 
-* **Live Interactive Controls**: Tweak sliders, press kinetic buttons, cycle orb reasoning states, and observe ticker animations in real time.
-* **Copy-to-Clipboard Code Drawers**: Direct one-click code copying for each element (HTML, CSS, and JS).
-* **Dark & Light Mode Toggle**: Inspect rendering across high contrast and dark surfaces.
+```javascript
+import { ComparisonStageController } from './references/comparison-stage.js';
 
+const stageEl = document.querySelector('.cs-motion-stage');
+const controller = new ComparisonStageController(stageEl, {
+  initialLook: 'studio',
+  initialFormat: '16-9',
+  initialLayout: 'split',
+  durationSeconds: 15.0,
+  autoPlay: true
+});
+
+// Keyboard controls are bound automatically:
+// - Space : Toggle Play / Pause
+// - R     : Restart playback
+```
+
+---
+
+## 10. Best Practices for Production Web Interfaces
+
+1. **Avoid CLS on Animated Metric Counters**: Always set fixed container heights and use `font-variant-numeric: tabular-nums` to guarantee steady horizontal geometry.
+2. **GPU Low-Power Preference**: When initialising WebGL contexts for ambient backgrounds, specify `powerPreference: 'low-power'` and attach an `IntersectionObserver` to pause render loops when off-screen.
+3. **Respect Reduced Motion**: Wrap transform-heavy hover transitions in `@media (prefers-reduced-motion: reduce)` fallbacks.
+4. **Accessible Button Wrapping**: For kinetic text rolls, hide duplicate optical text layers from screen readers using `aria-hidden="true"`.
 * **Architectural Compliance**: When synthesizing or scaffolding project code, align generated components with Code Scaffold architectural specification standards.
