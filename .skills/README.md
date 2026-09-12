@@ -63,7 +63,7 @@ Welcome to the official **Code Scaffold Skills Library**. This curated registry 
 | **Scrollytelling** | Design architecture, workflows, and code implementations for scroll-triggered 3D model manipulation and interactive 'production explosion' views. | `scrollytelling`, `scroll-magic`, `gsap-scrolltrigger` | v3 | `.skills/scrollytelling` |
 | **Tasty** | Code Scaffold's bespoke anti-slop frontend styling engine for premium landing pages and portfolios. | `tasty`, `anti-slop`, `design-tokens` | v3 | `.skills/tasty` |
 | **TUI Tools** | Architectural playbook and tooling (including VHS integration) for building robust, instant-on, and visually stunning modern terminal splash screens and integrations. | `tui-tools`, `vhs-tapes`, `terminal-gif` | v6 | `.skills/tui-tools` |
-| **UI Primitives & Micro-Interactions** | High-fidelity interactive web UI components, kinetic buttons, range sliders, rolling number tickers, progressive blur, custom magnetic cursors, and stateful physics-driven micro-interactions. | `ui-primitives`, `micro-interactions`, `custom-cursors` | v1 | `.skills/ui-primitives` |
+| **UI Primitives & Micro-Interactions** | High-fidelity interactive web UI components, kinetic buttons, range sliders, rolling number tickers, progressive blur, custom magnetic cursors, WebGL chromatic light fields, synchronized comparison stages, and 6 signature motion looks. | `ui-primitives`, `micro-interactions`, `motion-looks` | v2 | `.skills/ui-primitives` |
 
 ### Publishing & Documentation
 
