@@ -2,8 +2,8 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "stealth-browser",
-  "version": "3",
-  "description": "Tri-engine ghost browser skill for AI agents, unifying Ghost Graph LLM extraction pipelines, FastMCP anti-detection automation, and the ultra-lightweight Ghost Core native CDP engine.",
+  "version": "4",
+  "description": "Multi-engine ghost browser automation skill for AI agents, unifying Ghost Graph LLM extraction pipelines, FastMCP anti-detection automation, Ghost Core native CDP micro-engine, visual takeover streaming, encrypted auth vaults, zero-token text perception, and cryptographic witness receipts.",
   "entryPoint": "./SKILL.md",
   "engines": {
     "node": ">=18.0.0"
@@ -27,7 +27,11 @@
     "smart-scraper",
     "hardware-randomization",
     "canvas-noise",
-    "micro-browser"
+    "visual-takeover",
+    "auth-vault",
+    "text-perception",
+    "witness-receipts",
+    "pii-scrubbing"
   ],
-  "integrity": "cs:sha256:6a127663021b04390ba1e0b17d4d4784214d2bdaa28e24dd818da034ba14ef92"
+  "integrity": "cs:sha256:db90841a1d1162e76b1ae338a745b5e19553ef1e4a1f311b07bd639d795d5ae0"
 }

@@ -4,7 +4,7 @@
   <!-- Code Scaffold Specification Schema: https://code-scaffold.com/spec/v1 -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stealth Browser MCP & Ghost Graph - Sandbox</title>
+    <title>Stealth Browser & Ghost Graph - Sandbox</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <style>
@@ -36,7 +36,7 @@
                 </div>
                 <h1 class="text-xl font-black uppercase tracking-widest text-white">Stealth Browser & Ghost Graph</h1>
             </div>
-            <span class="px-3 py-1 bg-cyan-500/10 text-cyan-400 text-xs font-bold rounded-full border border-cyan-500/30 uppercase tracking-widest">v3</span>
+            <span class="px-3 py-1 bg-cyan-500/10 text-cyan-400 text-xs font-bold rounded-full border border-cyan-500/30 uppercase tracking-widest">v4</span>
         </div>
     </header>
 
@@ -57,20 +57,14 @@
   ██╔══██╗██╔══██╗██║   ██║██║███╗██║╚════██║██╔══╝  ██╔══██╗  
   ██████╔╝██║  ██║╚██████╔╝╚███╔███╔╝███████║███████╗██║  ██║  
   ╚═════╝ ╚═╝  ╚═╝ ╚═════╝  ╚══╝╚══╝ ╚══════╝╚══════╝╚═╝  ╚═╝  
-  ███╗   ███╗ ██████╗██████╗                                   
-  ████╗ ████║██╔════╝██╔══██╗                                  
-  ██╔████╔██║██║     ██████╔╝                                  
-  ██║╚██╔╝██║██║     ██╔═══╝                                   
-  ██║ ╚═╝ ██║╚██████╗██║                                       
-  ╚═╝     ╚═╝ ╚═════╝╚═╝                                       
             </div>
             
             <p id="desc" class="text-lg md:text-xl text-slate-400 leading-relaxed opacity-0 translate-y-4">
-                Powerhouse tri-engine ghost browser skill for AI agents. Combines Ghost Graph LLM extraction pipelines, FastMCP undetectable browser automation, and the ultra-lightweight Ghost Core native CDP micro-engine.
+                Powerhouse multi-engine ghost browser automation platform for AI agents. Unifies Ghost Graph LLM extraction pipelines, FastMCP undetectable browser automation, Ghost Core ultra-lightweight CDP micro-engine, visual takeover, encrypted auth vaults, zero-token text perception, and cryptographic audit chains.
             </p>
         </section>
 
-        <!-- Tri Engine Architecture Cards -->
+        <!-- Architecture Cards Grid -->
         <section class="grid md:grid-cols-3 gap-6">
             <!-- Engine 1 -->
             <div class="glass-panel p-6 rounded-2xl flex flex-col gap-4 border-cyan-500/40">
@@ -124,6 +118,57 @@
             </div>
         </section>
 
+        <!-- New Capabilities Grid (Visual Takeover, Auth Vault, Perception & Witness) -->
+        <section class="grid md:grid-cols-3 gap-6">
+            <!-- Feature 1: Visual Takeover -->
+            <div class="glass-panel p-6 rounded-2xl flex flex-col gap-4 border-cyan-500/40">
+                <div class="flex items-center gap-3 border-b border-slate-800/50 pb-3">
+                    <span class="w-8 h-8 rounded-full bg-cyan-500/20 text-cyan-400 font-bold flex items-center justify-center border border-cyan-500/40">4</span>
+                    <h3 class="text-lg font-bold text-white tracking-wide">Visual Takeover (HITL)</h3>
+                </div>
+                <ul class="text-slate-300 space-y-2 text-xs">
+                    <li><strong class="text-cyan-400">Live Screencasting:</strong> Real-time frame streaming over WebSocket/CDP.</li>
+                    <li><strong class="text-cyan-400">2FA Interventions:</strong> Seamless operator takeover for SMS and TOTP.</li>
+                    <li><strong class="text-cyan-400">Zero Process Restart:</strong> Resumes autonomous execution without context loss.</li>
+                </ul>
+                <div class="mt-auto pt-3 bg-slate-950 p-2.5 rounded-lg border border-slate-800 font-mono text-[11px] text-cyan-300">
+                    ws://127.0.0.1:9223/takeover
+                </div>
+            </div>
+
+            <!-- Feature 2: Auth Vault -->
+            <div class="glass-panel p-6 rounded-2xl flex flex-col gap-4 border-cyan-500/40">
+                <div class="flex items-center gap-3 border-b border-slate-800/50 pb-3">
+                    <span class="w-8 h-8 rounded-full bg-cyan-500/20 text-cyan-400 font-bold flex items-center justify-center border border-cyan-500/40">5</span>
+                    <h3 class="text-lg font-bold text-white tracking-wide">Ghost Auth Vault</h3>
+                </div>
+                <ul class="text-slate-300 space-y-2 text-xs">
+                    <li><strong class="text-cyan-400">Login Once:</strong> Reuse encrypted session states across runs.</li>
+                    <li><strong class="text-cyan-400">Fernet Cryptography:</strong> Cookies and localStorage encrypted at rest.</li>
+                    <li><strong class="text-cyan-400">Detection Reduction:</strong> Eliminates repetitive login sequences.</li>
+                </ul>
+                <div class="mt-auto pt-3 bg-slate-950 p-2.5 rounded-lg border border-slate-800 font-mono text-[11px] text-cyan-300">
+                    python scripts/auth_vault.py --export
+                </div>
+            </div>
+
+            <!-- Feature 3: Perception & Witness -->
+            <div class="glass-panel p-6 rounded-2xl flex flex-col gap-4 border-cyan-500/40">
+                <div class="flex items-center gap-3 border-b border-slate-800/50 pb-3">
+                    <span class="w-8 h-8 rounded-full bg-cyan-500/20 text-cyan-400 font-bold flex items-center justify-center border border-cyan-500/40">6</span>
+                    <h3 class="text-lg font-bold text-white tracking-wide">Perception & Witness</h3>
+                </div>
+                <ul class="text-slate-300 space-y-2 text-xs">
+                    <li><strong class="text-cyan-400">Zero-Token Trees:</strong> Semantic accessibility outline saves 90% tokens.</li>
+                    <li><strong class="text-cyan-400">Query Inspector:</strong> Discovers elements with surrounding context.</li>
+                    <li><strong class="text-cyan-400">Ed25519 Receipts:</strong> Tamper-evident cryptographic audit hash chains.</li>
+                </ul>
+                <div class="mt-auto pt-3 bg-slate-950 p-2.5 rounded-lg border border-slate-800 font-mono text-[11px] text-cyan-300">
+                    python scripts/witness_audit.py --verify-chain
+                </div>
+            </div>
+        </section>
+
         <!-- Context & Details -->
         <section id="context" class="grid md:grid-cols-2 gap-8">
             <div class="glass-panel p-8 rounded-2xl flex flex-col gap-4">
@@ -145,7 +190,7 @@
                     <h3 class="text-xl font-bold text-white tracking-wide">CLI Deployment</h3>
                 </div>
                 <p class="text-slate-400 leading-relaxed text-sm mb-2">
-                    Deploy this tri-engine ghost browser payload ad-hoc using Code Scaffold:
+                    Deploy this multi-engine ghost browser payload ad-hoc using Code Scaffold:
                 </p>
                 <div class="relative flex items-center bg-slate-950 border border-slate-800 rounded-lg p-3 shadow-xl overflow-hidden font-mono text-xs text-cyan-400">
                     code-scaffold skills install stealth-browser<span class="cursor"></span>

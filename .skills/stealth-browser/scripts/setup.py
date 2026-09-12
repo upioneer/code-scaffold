@@ -58,7 +58,7 @@ def check_environment():
 
     # 4. Package Import Checks
     print("\n* Dependency Checks:")
-    deps = ["scrapegraphai", "playwright", "nodriver", "fastmcp", "pydantic"]
+    deps = ["scrapegraphai", "playwright", "nodriver", "fastmcp", "pydantic", "cryptography"]
     missing = []
     for dep in deps:
         try:
