@@ -3,9 +3,10 @@ use crate::components::nav_tree::Category;
 use crate::components::Component;
 use crate::theme::Theme;
 use anyhow::Result;
-use ratatui::prelude::Rect;
-use ratatui::style::Style;
-use ratatui::widgets::{Block, Borders, List, ListItem, ListState};
+use ratatui::prelude::{Constraint, Direction, Layout, Rect};
+use ratatui::style::{Modifier, Style};
+use ratatui::text::{Line, Span};
+use ratatui::widgets::{Block, Borders, List, ListItem, ListState, Paragraph};
 
 pub struct WorkspaceItem {
     pub label: String,
@@ -23,6 +24,7 @@ pub struct Workspace {
     pub selected_idx: usize,
     pub current_category: Category,
     pub state: ListState,
+    pub target_folder: String,
 }
 
 impl Workspace {
@@ -30,13 +32,47 @@ impl Workspace {
         let mut items = vec![];
 
         items.push(WorkspaceItem {
-            label: "Open Directory Browser (Press Enter or F)".into(),
+            label: "Continue with Current Path [Enter]".into(),
+            selected: true,
+            category: Category::DeploymentTarget,
+            description: Some("Confirm the current directory as the deployment target and proceed to Core Artifacts configuration. Recommended if you launched Code Scaffold from your target project directory.".into()),
+            version: None,
+            exists_in_target: false,
+            target_version: None,
+            logo: None,
+        });
+
+        items.push(WorkspaceItem {
+            label: "Browse for Another Folder [F]".into(),
             selected: false,
             category: Category::DeploymentTarget,
-            description: Some("Press Enter to launch the target directory browser. The selected directory will become the root folder where all project assets are initialized.".into()),
+            description: Some("Open the interactive file tree browser to navigate your filesystem and select an alternative target directory for project scaffolding.".into()),
             version: None,
-                    exists_in_target: false,
-                    target_version: None, logo: None,
+            exists_in_target: false,
+            target_version: None,
+            logo: None,
+        });
+
+        items.push(WorkspaceItem {
+            label: "Scaffold Connect (Remote / ACP) [Coming Soon]".into(),
+            selected: false,
+            category: Category::DeploymentTarget,
+            description: Some("Scaffold Connect remote agent pairing and ACP telemetry synchronization is currently in preview and will be available in an upcoming release.".into()),
+            version: None,
+            exists_in_target: false,
+            target_version: None,
+            logo: None,
+        });
+
+        items.push(WorkspaceItem {
+            label: "Reset to Launch Directory [R]".into(),
+            selected: false,
+            category: Category::DeploymentTarget,
+            description: Some("Reset the target folder back to the working directory from which Code Scaffold was originally launched.".into()),
+            version: None,
+            exists_in_target: false,
+            target_version: None,
+            logo: None,
         });
 
         items.extend(vec![
@@ -471,6 +507,7 @@ impl Workspace {
             selected_idx: 0,
             current_category: Category::DeploymentTarget,
             state: ListState::default(),
+            target_folder: String::new(),
         }
     }
 
@@ -528,6 +565,7 @@ impl Workspace {
     }
 
     pub fn detect_installed(&mut self, target_folder: &str) {
+        self.target_folder = target_folder.to_string();
         let target = std::path::PathBuf::from(target_folder);
         if !target.exists() || !target.is_dir() {
             return;
@@ -588,6 +626,153 @@ impl Workspace {
                 }
             }
         }
+    }
+
+    pub fn draw_deployment_target(
+        &mut self,
+        f: &mut ratatui::Frame<'_>,
+        area: Rect,
+        active: bool,
+        theme: &Theme,
+    ) -> Result<()> {
+        let border_color = if active {
+            theme.primary
+        } else {
+            theme.secondary
+        };
+        let border_style = Style::default().fg(border_color).bg(theme.bg);
+
+        let outer = Block::default()
+            .borders(Borders::ALL)
+            .title(" Deployment Target ")
+            .border_style(border_style)
+            .style(Style::default().bg(theme.bg));
+
+        let inner = outer.inner(area);
+        f.render_widget(outer, area);
+
+        if inner.height < 4 || inner.width < 10 {
+            return Ok(());
+        }
+
+        let clean_path = self.target_folder.replace("\\\\?\\", "");
+        let display_path = if clean_path.is_empty() {
+            "."
+        } else {
+            &clean_path
+        };
+
+        let has_room_for_header = inner.height >= 10;
+        let chunks = if has_room_for_header {
+            Layout::default()
+                .direction(Direction::Vertical)
+                .constraints([
+                    Constraint::Length(5),
+                    Constraint::Length(1),
+                    Constraint::Min(4),
+                ])
+                .split(inner)
+        } else {
+            Layout::default()
+                .direction(Direction::Vertical)
+                .constraints([Constraint::Length(2), Constraint::Min(3)])
+                .split(inner)
+        };
+
+        if has_room_for_header {
+            let is_cwd = std::env::current_dir()
+                .map(|d| d.to_string_lossy().to_string() == clean_path)
+                .unwrap_or(false);
+            let is_git = std::path::Path::new(&self.target_folder)
+                .join(".git")
+                .exists();
+            let has_scaffold = std::path::Path::new(&self.target_folder)
+                .join("manifest.json")
+                .exists();
+
+            let cwd_badge = if is_cwd {
+                Span::styled(
+                    " [Active CWD] ",
+                    Style::default()
+                        .fg(theme.primary)
+                        .add_modifier(Modifier::BOLD),
+                )
+            } else {
+                Span::styled(" [Custom Target] ", Style::default().fg(theme.secondary))
+            };
+
+            let git_badge = if is_git {
+                Span::styled(" [Git Repo] ", Style::default().fg(theme.accent))
+            } else {
+                Span::styled(" [Non-Git] ", Style::default().fg(theme.secondary))
+            };
+
+            let scaffold_badge = if has_scaffold {
+                Span::styled(" [Scaffold Found] ", Style::default().fg(theme.primary))
+            } else {
+                Span::styled(" [Clean Workspace] ", Style::default().fg(theme.text))
+            };
+
+            let path_lines = vec![
+                Line::from(Span::styled(
+                    " Target Directory:",
+                    Style::default()
+                        .fg(theme.secondary)
+                        .add_modifier(Modifier::BOLD),
+                )),
+                Line::from(Span::styled(
+                    format!(" {}", display_path),
+                    Style::default()
+                        .fg(theme.accent)
+                        .add_modifier(Modifier::BOLD),
+                )),
+                Line::from(vec![cwd_badge, git_badge, scaffold_badge]),
+            ];
+
+            let path_paragraph = Paragraph::new(path_lines).style(Style::default().bg(theme.bg));
+            f.render_widget(path_paragraph, chunks[0]);
+
+            let divider = Paragraph::new(Line::from(Span::styled(
+                "─".repeat(inner.width as usize),
+                Style::default().fg(theme.secondary),
+            )))
+            .style(Style::default().bg(theme.bg));
+            f.render_widget(divider, chunks[1]);
+        }
+
+        let visible = self.visible_indices();
+        let list_area = if has_room_for_header {
+            chunks[2]
+        } else {
+            chunks[1]
+        };
+        let mut list_items = Vec::new();
+
+        for (_i, actual_idx) in visible.iter().enumerate() {
+            let item = &self.items[*actual_idx];
+            let is_disabled = item.label.contains("[Coming Soon]");
+            let item_style = if is_disabled {
+                Style::default().fg(theme.secondary)
+            } else {
+                Style::default().fg(theme.text).bg(theme.bg)
+            };
+
+            list_items.push(ListItem::new(format!("  {}", item.label)).style(item_style));
+        }
+
+        let list = List::new(list_items).style(Style::default().bg(theme.bg));
+
+        let list = if active {
+            list.highlight_style(Style::default().bg(theme.primary).fg(theme.bg))
+                .highlight_symbol(">> ")
+        } else {
+            list.highlight_style(Style::default().fg(theme.primary))
+                .highlight_symbol("   ")
+        };
+
+        self.state.select(Some(self.selected_idx));
+        f.render_stateful_widget(list, list_area, &mut self.state);
+        Ok(())
     }
 }
 
@@ -754,6 +939,10 @@ impl Component for Workspace {
         active: bool,
         theme: &Theme,
     ) -> Result<()> {
+        if self.current_category == Category::DeploymentTarget {
+            return self.draw_deployment_target(f, area, active, theme);
+        }
+
         let border_color = if active {
             theme.primary
         } else {

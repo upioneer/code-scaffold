@@ -6,7 +6,9 @@ use ratatui::prelude::Rect;
 use ratatui::style::Style;
 use ratatui::widgets::{Block, Borders, List, ListItem, ListState};
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+use std::collections::HashMap;
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Category {
     DeploymentTarget,
     Artifacts,
@@ -17,8 +19,16 @@ pub enum Category {
     Deploy,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum StepStatus {
+    Pending,
+    Completed,
+    NotApplicable,
+}
+
 pub struct NavTree {
     pub categories: Vec<(Category, String)>,
+    pub step_statuses: HashMap<Category, StepStatus>,
     pub state: ListState,
     pub selected_idx: usize,
 }
@@ -27,6 +37,16 @@ impl NavTree {
     pub fn new() -> Self {
         let mut state = ListState::default();
         state.select(Some(0));
+
+        let mut step_statuses = HashMap::new();
+        step_statuses.insert(Category::DeploymentTarget, StepStatus::Pending);
+        step_statuses.insert(Category::Artifacts, StepStatus::Pending);
+        step_statuses.insert(Category::AgentPersona, StepStatus::Pending);
+        step_statuses.insert(Category::ContributingTemplate, StepStatus::NotApplicable);
+        step_statuses.insert(Category::AgentSkills, StepStatus::Pending);
+        step_statuses.insert(Category::License, StepStatus::Pending);
+        step_statuses.insert(Category::Deploy, StepStatus::Pending);
+
         Self {
             categories: vec![
                 (Category::DeploymentTarget, "Deployment Target".to_string()),
@@ -40,6 +60,7 @@ impl NavTree {
                 (Category::License, "License".to_string()),
                 (Category::Deploy, "Deploy".to_string()),
             ],
+            step_statuses,
             state,
             selected_idx: 0,
         }
@@ -54,6 +75,10 @@ impl NavTree {
             self.selected_idx = idx;
             self.state.select(Some(idx));
         }
+    }
+
+    pub fn set_status(&mut self, cat: Category, status: StepStatus) {
+        self.step_statuses.insert(cat, status);
     }
 }
 
@@ -91,9 +116,24 @@ impl Component for NavTree {
         let items: Vec<ListItem> = self
             .categories
             .iter()
-            .map(|(_, name)| {
-                ListItem::new(format!("  {}", name))
-                    .style(Style::default().fg(theme.text).bg(theme.bg))
+            .map(|(cat, name)| {
+                let status = self
+                    .step_statuses
+                    .get(cat)
+                    .copied()
+                    .unwrap_or(StepStatus::Pending);
+                let (bracket, style) = match status {
+                    StepStatus::Completed => ("[x]", Style::default().fg(theme.primary)),
+                    StepStatus::Pending => ("[ ]", Style::default().fg(theme.text)),
+                    StepStatus::NotApplicable => ("[-]", Style::default().fg(theme.secondary)),
+                };
+
+                let line = ratatui::text::Line::from(vec![
+                    ratatui::text::Span::styled(format!(" {} ", bracket), style),
+                    ratatui::text::Span::styled(name.clone(), style),
+                ]);
+
+                ListItem::new(line).style(Style::default().bg(theme.bg))
             })
             .collect();
 

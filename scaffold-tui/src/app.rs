@@ -4,7 +4,7 @@ use crate::components::{
     directory_browser::DirectoryBrowser,
     footer::Footer,
     header::Header,
-    nav_tree::{Category, NavTree},
+    nav_tree::{Category, NavTree, StepStatus},
     summary::SummaryPane,
     workspace::Workspace,
     Component,
@@ -133,7 +133,7 @@ impl App {
             WizardState::Welcome
         };
 
-        let app = Self {
+        let mut app = Self {
             should_quit: false,
             restart_requested: false,
             active_block: ActiveBlock::Workspace,
@@ -175,6 +175,7 @@ impl App {
             cancel_tx: None,
         };
         crate::updater::spawn_update_checker(app.tx.clone());
+        app.update_summary();
         app
     }
 
@@ -196,6 +197,101 @@ impl App {
                 | WizardState::ConfirmExit
         ) {
             return;
+        }
+
+        let has_agent = self
+            .workspace
+            .items
+            .iter()
+            .any(|i| i.selected && i.category == Category::Artifacts && i.label == "agent.md");
+        let has_contributing = self.workspace.items.iter().any(|i| {
+            i.selected && i.category == Category::Artifacts && i.label == "contributing.md"
+        });
+
+        // 1. Deployment Target
+        let target_status = match self.wizard_state {
+            WizardState::Welcome | WizardState::DeploymentTarget => StepStatus::Pending,
+            _ => StepStatus::Completed,
+        };
+        self.nav_tree
+            .set_status(Category::DeploymentTarget, target_status);
+
+        // 2. Artifacts
+        let artifacts_status = match self.wizard_state {
+            WizardState::Welcome | WizardState::DeploymentTarget | WizardState::Artifacts => {
+                StepStatus::Pending
+            }
+            _ => StepStatus::Completed,
+        };
+        self.nav_tree
+            .set_status(Category::Artifacts, artifacts_status);
+
+        // 3. Agent Persona (Conditional)
+        let persona_status = if !has_agent {
+            StepStatus::NotApplicable
+        } else {
+            match self.wizard_state {
+                WizardState::Welcome
+                | WizardState::DeploymentTarget
+                | WizardState::Artifacts
+                | WizardState::AgentPersona => StepStatus::Pending,
+                _ => StepStatus::Completed,
+            }
+        };
+        self.nav_tree
+            .set_status(Category::AgentPersona, persona_status);
+
+        // 4. Contributing Template (Conditional)
+        let contributing_status = if !has_contributing {
+            StepStatus::NotApplicable
+        } else {
+            match self.wizard_state {
+                WizardState::Welcome
+                | WizardState::DeploymentTarget
+                | WizardState::Artifacts
+                | WizardState::AgentPersona
+                | WizardState::ContributingTemplate => StepStatus::Pending,
+                _ => StepStatus::Completed,
+            }
+        };
+        self.nav_tree
+            .set_status(Category::ContributingTemplate, contributing_status);
+
+        // 5. Agent Skills
+        let skills_status = match self.wizard_state {
+            WizardState::License
+            | WizardState::Complete
+            | WizardState::Executing
+            | WizardState::UpdateComplete => StepStatus::Completed,
+            _ => StepStatus::Pending,
+        };
+        self.nav_tree
+            .set_status(Category::AgentSkills, skills_status);
+
+        // 6. License
+        let license_status = match self.wizard_state {
+            WizardState::Complete | WizardState::Executing | WizardState::UpdateComplete => {
+                StepStatus::Completed
+            }
+            _ => StepStatus::Pending,
+        };
+        self.nav_tree.set_status(Category::License, license_status);
+
+        // 7. Deploy
+        let deploy_status = match self.wizard_state {
+            WizardState::UpdateComplete => StepStatus::Completed,
+            _ => StepStatus::Pending,
+        };
+        self.nav_tree.set_status(Category::Deploy, deploy_status);
+
+        // Context-aware footer
+        if self.wizard_state == WizardState::DeploymentTarget {
+            self.footer.context_hint = Some(format!(
+                " [Enter] Continue | [F] Browse Folders | [T] Theme ({}) | [Esc] Quit ",
+                self.theme.name
+            ));
+        } else {
+            self.footer.context_hint = None;
         }
 
         let selected_artifacts = self
@@ -234,17 +330,23 @@ impl App {
                 }
                 WizardState::DeploymentTarget => {
                     let default_dir = Self::default_target_dir();
-                    let reset_text = if self.target_folder != default_dir {
-                        "\nPress [R] to reset default directory."
+                    let clean_path = self.target_folder.replace("\\\\?\\", "");
+                    let is_cwd = self.target_folder == default_dir;
+                    let location_badge = if is_cwd {
+                        "[Current Working Directory]"
+                    } else {
+                        "[Custom Target Directory]"
+                    };
+                    let reset_hint = if !is_cwd {
+                        " | [R] Reset Target"
                     } else {
                         ""
                     };
-                    let clean_path = self.target_folder.replace("\\\\?\\", "");
                     (
                         " Step 1: Deployment Target ",
                         format!(
-                            "{} The current deployment target is: {}\nPress [Enter] or [F] to browse for a folder.\nPress [C] for Scaffold Connect.{}\nPress [Tab] to keep current folder and proceed.\nPress [Shift+E] to launch custom theme engine.\nPress [W] to review the Welcome message.",
-                            BRAILLE_FRAMES[self.splash_frame_idx], clean_path, reset_text
+                            "{} TARGET: {} {}\n\n>>> Press [Enter] to CONTINUE with this target directory <<<\n    Press [F] to Browse Folders{} | [W] Welcome Screen",
+                            BRAILLE_FRAMES[self.splash_frame_idx], clean_path, location_badge, reset_hint
                         ),
                     )
                 }
@@ -1579,10 +1681,9 @@ impl App {
                         ActiveBlock::SummaryPane => ActiveBlock::NavTree,
                     };
                 } else if self.wizard_state == WizardState::DeploymentTarget {
-                    self.wizard_state = WizardState::Artifacts;
-                    self.workspace.set_category(Category::Artifacts);
-                    self.nav_tree.set_selected(Category::Artifacts);
-                    self.active_block = ActiveBlock::Workspace;
+                    // Tab is disabled as an advance key on Step 1 to eliminate confusion and accidental skips.
+                    // [Enter] is the explicit, intentional confirmation key.
+                    return Ok(());
                 } else {
                     let _ = self.update(Action::Enter)?;
                     return Ok(());
@@ -1792,6 +1893,9 @@ impl App {
                 }
             }
             Action::Char('c') | Action::Char('C') => {
+                if self.wizard_state == WizardState::DeploymentTarget {
+                    return Ok(());
+                }
                 self.copilot_timer_input = "60".to_string();
                 self.copilot_timer_error.clear();
                 if !crate::prefs::has_seen_copilot_welcome() {
@@ -1903,9 +2007,7 @@ impl App {
             }
             Action::Enter => {
                 if self.active_block == ActiveBlock::Workspace {
-                    if self.wizard_state == WizardState::DeploymentTarget
-                        || self.wizard_state == WizardState::License
-                    {
+                    if self.wizard_state == WizardState::License {
                         if let Some(idx) = self.workspace.state.selected() {
                             let visible = self.workspace.visible_indices();
                             if idx < visible.len() {
@@ -1926,7 +2028,34 @@ impl App {
                         crate::prefs::set_has_seen_welcome(true);
                     }
                     WizardState::DeploymentTarget => {
-                        self.directory_browser.open(&self.target_folder);
+                        let selected_action_idx = if self.active_block == ActiveBlock::Workspace {
+                            self.workspace.state.selected().unwrap_or(0)
+                        } else {
+                            0
+                        };
+                        match selected_action_idx {
+                            1 => {
+                                // Option 1: Browse for Another Folder
+                                self.directory_browser.open(&self.target_folder);
+                            }
+                            2 => {
+                                // Option 2: Scaffold Connect (Coming Soon teaser - no-op)
+                            }
+                            3 => {
+                                // Option 3: Reset to Launch Directory
+                                self.target_folder = Self::default_target_dir();
+                                self.workspace.detect_installed(&self.target_folder);
+                                self.update_summary();
+                            }
+                            _ => {
+                                // Default / Option 0: Continue with Current Path
+                                self.wizard_state = WizardState::Artifacts;
+                                self.workspace.set_category(Category::Artifacts);
+                                self.nav_tree.set_selected(Category::Artifacts);
+                                self.active_block = ActiveBlock::Workspace;
+                                self.update_summary();
+                            }
+                        }
                     }
                     WizardState::Artifacts => {
                         let has_agent = self
@@ -2010,6 +2139,34 @@ impl App {
                 self.update_summary();
             }
             Action::Char(' ') => {
+                if self.wizard_state == WizardState::DeploymentTarget {
+                    if self.active_block == ActiveBlock::Workspace {
+                        let selected_action_idx = self.workspace.state.selected().unwrap_or(0);
+                        match selected_action_idx {
+                            1 => {
+                                self.directory_browser.open(&self.target_folder);
+                                return Ok(());
+                            }
+                            2 => {
+                                return Ok(());
+                            }
+                            3 => {
+                                self.target_folder = Self::default_target_dir();
+                                self.workspace.detect_installed(&self.target_folder);
+                                self.update_summary();
+                                return Ok(());
+                            }
+                            _ => {
+                                self.wizard_state = WizardState::Artifacts;
+                                self.workspace.set_category(Category::Artifacts);
+                                self.nav_tree.set_selected(Category::Artifacts);
+                                self.active_block = ActiveBlock::Workspace;
+                                self.update_summary();
+                                return Ok(());
+                            }
+                        }
+                    }
+                }
                 if self.wizard_state == WizardState::Skills {
                     if let Some(idx) = self.workspace.state.selected() {
                         let visible = self.workspace.visible_indices();
@@ -2028,6 +2185,7 @@ impl App {
                 if self.wizard_state != WizardState::Complete {
                     self.active_block = ActiveBlock::Workspace;
                     let _ = self.workspace.update(action.clone())?;
+                    self.update_summary();
                 }
             }
             _ => {
@@ -2181,5 +2339,82 @@ mod visual_artifacts_tests {
         );
         assert!(cont_items.iter().any(|i| i.label == "open-source"));
         assert!(cont_items.iter().any(|i| i.label == "strict-ownership"));
+    }
+
+    #[tokio::test]
+    async fn test_step1_enter_advances_to_artifacts_with_target_preserved() {
+        let payload_dir = std::path::PathBuf::from("/nonexistent/dummy/path");
+        let mut app = App::new(payload_dir);
+        app.wizard_state = WizardState::DeploymentTarget;
+        app.update_summary();
+
+        let initial_target = app.target_folder.clone();
+        assert_eq!(app.wizard_state, WizardState::DeploymentTarget);
+
+        // Step 1: Action::Enter advances to Artifacts
+        let _ = app.update(Action::Enter);
+        assert_eq!(app.wizard_state, WizardState::Artifacts);
+        assert_eq!(app.target_folder, initial_target);
+        assert_eq!(app.workspace.current_category, Category::Artifacts);
+    }
+
+    #[tokio::test]
+    async fn test_step1_tab_does_not_advance() {
+        let payload_dir = std::path::PathBuf::from("/nonexistent/dummy/path");
+        let mut app = App::new(payload_dir);
+        app.wizard_state = WizardState::DeploymentTarget;
+        app.update_summary();
+
+        // Action::Tab should be ignored on Step 1
+        let _ = app.update(Action::Tab);
+        assert_eq!(app.wizard_state, WizardState::DeploymentTarget);
+    }
+
+    #[tokio::test]
+    async fn test_nav_tree_bracket_statuses() {
+        let payload_dir = std::path::PathBuf::from("/nonexistent/dummy/path");
+        let mut app = App::new(payload_dir);
+        app.wizard_state = WizardState::DeploymentTarget;
+        app.update_summary();
+
+        // On Step 1: DeploymentTarget is Pending
+        assert_eq!(
+            app.nav_tree
+                .step_statuses
+                .get(&Category::DeploymentTarget)
+                .copied(),
+            Some(StepStatus::Pending)
+        );
+
+        // Advance to Artifacts
+        let _ = app.update(Action::Enter);
+        assert_eq!(app.wizard_state, WizardState::Artifacts);
+
+        // Now DeploymentTarget is Completed ([x])
+        assert_eq!(
+            app.nav_tree
+                .step_statuses
+                .get(&Category::DeploymentTarget)
+                .copied(),
+            Some(StepStatus::Completed)
+        );
+
+        // Artifacts is Pending ([ ])
+        assert_eq!(
+            app.nav_tree
+                .step_statuses
+                .get(&Category::Artifacts)
+                .copied(),
+            Some(StepStatus::Pending)
+        );
+
+        // Contributing Template is NotApplicable ([-] by default since contributing.md is unselected)
+        assert_eq!(
+            app.nav_tree
+                .step_statuses
+                .get(&Category::ContributingTemplate)
+                .copied(),
+            Some(StepStatus::NotApplicable)
+        );
     }
 }

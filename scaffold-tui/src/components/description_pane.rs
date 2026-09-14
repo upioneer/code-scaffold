@@ -15,6 +15,14 @@ const SITE_URL: &str = "https://code-scaffold.com";
 /// A static description table mapping item labels to human-readable descriptions.
 fn item_description(label: &str) -> &'static str {
     match label {
+        "Continue with Current Path [Enter]" =>
+            "Target Deployment Overview:\n* Working Directory: Active directory where Code Scaffold CLI was launched.\n* Frictionless Start: Press [Enter] to immediately lock in this path and proceed to Core Artifacts.\n* Safe Scaffolding: Existing files are preserved; only selected artifacts and skills will be created or updated.\n* Change Target: Press [F] if you want to deploy to a different directory.",
+        "Browse for Another Folder [F]" =>
+            "Filesystem Directory Browser:\n* Interactive Navigation: Use arrow keys to explore local drives and directories.\n* Direct Access: Press [F] anytime from Step 1 to open the browser modal.\n* Path Selection: Press [Enter] on any directory to select it as the deployment root.",
+        "Scaffold Connect (Remote / ACP) [Coming Soon]" =>
+            "Scaffold Connect Remote Telemetry (Preview):\n* Agent Copilot: Future capability to stream scaffolding manifests directly into an active IDE or remote agent runtime.\n* Status: Currently in alpha preview; active pairing will be enabled in an upcoming release.",
+        "Reset to Launch Directory [R]" =>
+            "Reset Deployment Target:\n* Restores the target deployment directory back to the working directory where Code Scaffold was executed.\n* Direct Access: Press [R] anytime from Step 1 to reset.",
         "Deploy Base Artifacts" =>
             "Copies core project scaffolding files (AGENT.md, DESIGN.md, PLAN.md, etc.) into the target workspace. These artifacts serve as the foundational context layer for agent-driven development.",
         "Deploy Core Agent Skills" =>

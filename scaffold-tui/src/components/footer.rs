@@ -6,11 +6,13 @@ use ratatui::prelude::Rect;
 use ratatui::style::Style;
 use ratatui::widgets::{Block, Borders, Paragraph};
 
-pub struct Footer {}
+pub struct Footer {
+    pub context_hint: Option<String>,
+}
 
 impl Footer {
     pub fn new() -> Self {
-        Self {}
+        Self { context_hint: None }
     }
 }
 
@@ -26,13 +28,14 @@ impl Component for Footer {
         _active: bool,
         theme: &Theme,
     ) -> Result<()> {
-        let text_content = format!(
+        let default_content = format!(
             " [Tab] Focus | [Up/Down] Navigate | [T] Theme ({}) | [Esc] Quit ",
             theme.name
         );
+        let text_content = self.context_hint.as_deref().unwrap_or(&default_content);
 
         let mut spans = Vec::new();
-        let mut remaining = text_content.as_str();
+        let mut remaining = text_content;
 
         while let Some(start_idx) = remaining.find('[') {
             if let Some(end_idx) = remaining[start_idx..].find(']') {

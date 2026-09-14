@@ -1,0 +1,30 @@
+{
+  "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
+  "specification": "https://code-scaffold.com/spec/v1",
+  "name": "code_scaffold_docker_skill",
+  "version": "1",
+  "description": "Comprehensive container engineering arsenal featuring the Ephemeral Swapper Protocol for in-place zero-downtime updates, BuildKit cache optimization, and sidecar diagnostic injection.",
+  "entryPoint": "./SKILL.md",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "requiredPermissions": [
+    "fs:read",
+    "fs:write",
+    "net:connect"
+  ],
+  "category": "DevOps & Infrastructure",
+  "keywords": [
+    "docker",
+    "container-engine",
+    "ephemeral-swapper",
+    "in-place-updates",
+    "zero-downtime",
+    "buildkit",
+    "multi-stage-builds",
+    "distroless",
+    "sidecar-diagnostics",
+    "image-optimization"
+  ],
+  "integrity": "cs:sha256:e3d9b9e9ac6f9df906d8da9bcffd029ddf987ac78081b2fb0c69b2448073c855"
+}
