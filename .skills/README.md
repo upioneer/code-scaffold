@@ -44,7 +44,8 @@ Welcome to the official **Code Scaffold Skills Library**. This curated registry 
 | Skill | Description | Search Keywords | Version | Path |
 | :--- | :--- | :--- | :--- | :--- |
 | **Ansible** | Infrastructure automation, configuration management, and application deployment orchestration using Ansible. | `ansible`, `configuration-management`, `playbooks` | v2 | `.skills/ansible` |
-| **CyberSecurity Toolkit** | Comprehensive cybersecurity arsenal integrating MITRE and NIST framework methodologies, NVIDIA SkillSpector vulnerability scanning, and deep SAST secret detection. | `cybersecurity`, `security-audit`, `vulnerability-scan` | v6 | `.skills/cybersecurity-toolkit` |
+| **CyberSecurity Toolkit** | Autonomous cybersecurity arsenal integrating the Sentinel Multi-Agent Security Mesh, episodic attack surface mapping, MITRE and NIST methodologies, SkillSpector scanning, and ChainAST context compaction. | `cybersecurity`, `security-audit`, `vulnerability-scan`, `agentic-security` | v7 | `.skills/cybersecurity-toolkit` |
+| **Docker Engine** | Comprehensive container engineering arsenal featuring the Ephemeral Swapper Protocol for in-place zero-downtime updates, BuildKit cache optimization, and sidecar diagnostic injection. | `docker`, `container-engine`, `ephemeral-swapper` | v1 | `.skills/docker` |
 | **GitHub** | GitHub push workflow with .env-based identity configuration; merges github.md into the skill | `github`, `git`, `github-actions` | v5 | `.skills/github` |
 | **Proxmox** | Proxmox VE LXC toolbox for building reusable templates, baseline app deployments, and SSH hardening. | `proxmox`, `proxmox-ve`, `lxc-containers` | v2 | `.skills/proxmox` |
 | **Terraform** | Infrastructure as Code (IaC) provisioning and state management using Terraform or OpenTofu. | `terraform`, `opentofu`, `infrastructure-as-code` | v2 | `.skills/terraform` |
