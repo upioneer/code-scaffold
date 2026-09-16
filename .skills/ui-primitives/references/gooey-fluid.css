@@ -1,0 +1,83 @@
+/**
+ * Code Scaffold - Visceral Liquid Gooey Engine
+ * Organic fluid merging, button droplet morphing, and liquid tab indicators.
+ */
+
+.cs-gooey-container {
+  filter: url('#cs-gooey-filter');
+  display: inline-flex;
+  position: relative;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1rem;
+}
+
+.cs-gooey-bubble {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #06b6d4, #3b82f6);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-weight: bold;
+  user-select: none;
+}
+
+.cs-gooey-bubble:hover {
+  transform: scale(1.18);
+  background: linear-gradient(135deg, #22d3ee, #60a5fa);
+}
+
+.cs-gooey-bubble:active {
+  transform: scale(0.92);
+}
+
+/* Liquid coalescing button */
+.cs-gooey-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 2rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #ffffff;
+  background: #0284c7;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  filter: url('#cs-gooey-filter');
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.cs-gooey-btn::before,
+.cs-gooey-btn::after {
+  content: "";
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #0284c7;
+  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: -1;
+}
+
+.cs-gooey-btn::before {
+  left: 10px;
+}
+
+.cs-gooey-btn::after {
+  right: 10px;
+}
+
+.cs-gooey-btn:hover::before {
+  transform: translateX(-24px) scale(0.9);
+}
+
+.cs-gooey-btn:hover::after {
+  transform: translateX(24px) scale(0.9);
+}

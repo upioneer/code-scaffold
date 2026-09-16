@@ -32,7 +32,7 @@ Welcome to the official **Code Scaffold Skills Library**. This curated registry 
 | Skill | Description | Search Keywords | Version | Path |
 | :--- | :--- | :--- | :--- | :--- |
 | **Clerk Authentication Perimeter** | Authentication perimeter and identity management using Clerk. | `clerk`, `authentication`, `user-management` | v2 | `.skills/clerk` |
-| **Firebase** | Firebase authentication and database connectivity | `firebase`, `firestore`, `baas` | v3 | `.skills/firebase` |
+| **Firebase** | Autonomous project provisioning, clean URL naming, CLI lifecycle management, and Firestore multi-database operations. | `firebase`, `firestore`, `baas`, `automated-provisioning` | v5 | `.skills/firebase` |
 | **Resend** | Sends emails using the Resend API | `resend`, `transactional-email`, `react-email` | v2 | `.skills/resend` |
 | **Supabase** | Supabase database and authentication integration | `supabase`, `postgresql`, `row-level-security` | v2 | `.skills/supabase` |
 | **Telegram** | Telegram Bot API interactions | `telegram`, `telegram-bot-api`, `messaging-bot` | v2 | `.skills/telegram` |
@@ -64,7 +64,7 @@ Welcome to the official **Code Scaffold Skills Library**. This curated registry 
 | **Scrollytelling** | Design architecture, workflows, and code implementations for scroll-triggered 3D model manipulation and interactive 'production explosion' views. | `scrollytelling`, `scroll-magic`, `gsap-scrolltrigger` | v3 | `.skills/scrollytelling` |
 | **Tasty** | Code Scaffold's bespoke anti-slop frontend styling engine for premium landing pages and portfolios. | `tasty`, `anti-slop`, `design-tokens` | v3 | `.skills/tasty` |
 | **TUI Tools** | Architectural playbook and tooling (including VHS integration) for building robust, instant-on, and visually stunning modern terminal splash screens and integrations. | `tui-tools`, `vhs-tapes`, `terminal-gif` | v6 | `.skills/tui-tools` |
-| **UI Primitives & Micro-Interactions** | High-fidelity interactive web UI components, kinetic buttons, range sliders, rolling number tickers, progressive blur, custom magnetic cursors, WebGL chromatic light fields, synchronized comparison stages, and 6 signature motion looks. | `ui-primitives`, `micro-interactions`, `motion-looks` | v2 | `.skills/ui-primitives` |
+| **UI Primitives & Micro-Interactions** | Perimeter border beams, liquid gooey physics, spring magnification docks, spotlight bento grids, universal motion transitions, kinetic typography, atomic tokens, WebGL light fields, and 6 signature motion looks. | `ui-primitives`, `micro-interactions`, `border-beam`, `gooey-fluid`, `spring-dock`, `bento-grid`, `universal-transitions` | v3 | `.skills/ui-primitives` |
 
 ### Publishing & Documentation
 

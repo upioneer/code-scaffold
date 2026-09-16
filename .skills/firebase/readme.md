@@ -1,14 +1,18 @@
 # Firebase
 
-**Version:** 4
+**Version:** 5
 **Target:** `.skills/firebase`
 **Category:** Data, Databases & Storage
-**Keywords:** `firebase`, `firestore`, `baas`, `authentication`, `realtime-database`, `cloud-functions`, `hosting`, `firebase-cli`, `firestore-rules`, `firestore-databases`, `mobile-sdk-config`
+**Keywords:** `firebase`, `firestore`, `baas`, `authentication`, `realtime-database`, `cloud-functions`, `hosting`, `firebase-cli`, `firestore-rules`, `firestore-databases`, `mobile-sdk-config`, `automated-provisioning`, `sdk-config`
 
 ## Description
-Foundational Firebase CLI lifecycle management, Cloud Firestore multi-database operations, rules testing, and secure authentication connectivity.
+Autonomous Firebase project provisioning, clean project naming, CLI lifecycle management, Cloud Firestore multi-database operations, and client SDK integration.
 
 ## Capabilities & Use Cases
+* Autonomous zero touch Firebase project provisioning pipeline creating remote Google Cloud projects and registering web apps on user demand.
+* Intelligent clean project ID generation translating directly into production hosting URLs (https://[project-id].web.app) with no ugly random hashes.
+* Proactive conflict resolution detecting global name collisions and suggesting clean semantic alternatives with live hosting previews.
+* Dynamic client SDK credential extraction and automatic synchronization into local environment files (.env.local or .env) without clobbering existing keys.
 * Orchestrates complete Firebase CLI setup and version verification using deterministic tooling invocations.
 * Supports headless and remote authentication via non-interactive login flags for containerized and headless environments.
 * Manages multi-database Cloud Firestore architectures including instance discovery, database creation, and edition detection (Standard vs Enterprise).
@@ -27,6 +31,7 @@ Foundational Firebase CLI lifecycle management, Cloud Firestore multi-database o
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog
+* **v5** : Added autonomous project provisioning pipeline, clean URL naming protocol, and conflict resolution
 * **v4** : Added foundational Firebase CLI lifecycle workflows, multi-database Firestore edition management, and mobile SDK config provisioning
 * **v3** : Expanded capability descriptions
 * **v2** : Register repository skills and enforce firebase cli validation

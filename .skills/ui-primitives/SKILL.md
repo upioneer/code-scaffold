@@ -1,14 +1,14 @@
 ---
 ​‌‍name: UI Primitives & Micro-Interactions
-description: High-fidelity interactive web UI components, kinetic buttons, range sliders, rolling number tickers, progressive blur, custom magnetic cursors, WebGL chromatic wave light-fields, synchronized comparison stages, and 6 signature motion looks.
-version: 2
+description: High-fidelity interactive web UI components, perimeter border beams, liquid gooey physics, spring magnification docks, spotlight bento grids, universal motion transitions, kinetic typography, and atomic tokens.
+version: 3
 ---
 
 # UI Primitives & Micro-Interactions Skill
 
-Use this skill when designing, building, modernizing, or refining interactive web components, kinetic buttons, sliders, custom cursors, rolling metric counters, progressive blur layers, WebGL light fields, synchronized media comparison stages, and motion design looks.
+Use this skill when designing, building, modernizing, or refining interactive web components, kinetic buttons, perimeter border beams, liquid gooey physics, spring magnification docks, spotlight bento grids, universal motion transitions, kinetic typography, and atomic tokens.
 
-* **Entity Mapping**: Modern DOM custom elements, Tailwind CSS utilities, hardware-accelerated CSS transforms, Web Animations API, WebGL shader canvases, and HTML5 video/canvas comparison stages.
+* **Entity Mapping**: Modern DOM custom elements, Tailwind CSS utilities, hardware-accelerated CSS transforms, Web Animations API, SVG filter pipelines, WebGL shader canvases, and HTML5 video/canvas comparison stages.
 * **Problem Domain**: Eliminating stiff, generic web interfaces by providing production-ready, highly responsive micro-interactions and cinematic motion presentation stages that operate with zero layout shift and accessible semantics.
 
 ---
@@ -173,14 +173,6 @@ A high-polish range control that dynamically fills its track progress and featur
 }
 ```
 
-```javascript
-const slider = document.getElementById('volumeSlider');
-slider.addEventListener('input', (e) => {
-  const pct = ((e.target.value - e.target.min) / (e.target.max - e.target.min)) * 100;
-  e.target.style.setProperty('--slider-pct', `${pct}%`);
-});
-```
-
 ---
 
 ## 4. Rolling Number Flow & Metric Tickers
@@ -230,8 +222,8 @@ Avoid jarring numerical jumps on dashboards or pricing cards. This ticker rolls 
 
 ```javascript
 function setTickerValue(tickerEl, numberString) {
-  const digits = numberString.split('');
-  const reels = tickerEl.querySelectorAll('.cs-digit-reel');
+  const digits = numberString.split("");
+  const reels = tickerEl.querySelectorAll(".cs-digit-reel");
   digits.forEach((digit, index) => {
     if (reels[index]) {
       const val = parseInt(digit, 10) || 0;
@@ -245,7 +237,7 @@ function setTickerValue(tickerEl, numberString) {
 
 ## 5. Multi-Layer Progressive Optical Blur
 
-Replicates Apple-grade native iOS/macOS depth-of-field glass using an 8-layer exponential mask stack:
+Replicates native depth-of-field glass using an 8-layer exponential mask stack:
 
 ```html
 <div class="cs-progressive-blur">
@@ -293,23 +285,219 @@ A fluid canvas particle system that visually conveys AI agent thought cycles acr
 
 ```javascript
 // Refer to references/thinking-orb.js for complete standalone canvas implementation
-const orb = new QuantumThinkingOrb(document.getElementById('orbCanvas'), {
-  initialState: 'working',
+const orb = new QuantumThinkingOrb(document.getElementById("orbCanvas"), {
+  initialState: "working",
   size: 140,
   particleCount: 75
 });
 
 // Change state dynamically
-orb.setState('solving');
+orb.setState("solving");
 ```
 
 ---
 
-## 7. Motion Presentation Studio: The 6 Signature Looks
+## 7. Perimeter Border Beam & Photon Tracer Engine
+
+Renders continuous hardware accelerated glowing photon border tracers using CSS conic gradients and `@property --angle` rotation with zero layout shift:
+
+```html
+<div class="cs-border-beam-container">
+  <div class="cs-border-beam cs-border-beam-glow"></div>
+  <div class="p-8">
+    <h3 class="text-xl font-bold text-white">Autonomous Agent Matrix</h3>
+    <p class="text-slate-400 mt-2">Dynamic perimeter tracer operates on dedicated compositor thread.</p>
+  </div>
+</div>
+```
+
+```css
+@property --cs-beam-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes cs-beam-spin {
+  0% { --cs-beam-angle: 0deg; }
+  100% { --cs-beam-angle: 360deg; }
+}
+
+.cs-border-beam-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1rem;
+  background: #0f172a;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.cs-border-beam {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 2px solid transparent;
+  -webkit-mask: linear-gradient(transparent, transparent), linear-gradient(#fff, #fff);
+  -webkit-mask-composite: source-in, xor;
+  mask-composite: exclude;
+  background: conic-gradient(
+    from var(--cs-beam-angle) at 50% 50%,
+    transparent 0deg,
+    transparent 60deg,
+    #06b6d4 120deg,
+    #3b82f6 150deg,
+    #a855f7 180deg,
+    transparent 240deg,
+    transparent 360deg
+  );
+  animation: cs-beam-spin 4s linear infinite;
+  opacity: 0.85;
+}
+```
+
+---
+
+## 8. Visceral Liquid Gooey Fluid Engine
+
+Employs an organic SVG filter pipeline (`feGaussianBlur` + `feColorMatrix`) that generates fluid merging, droplet detachment, and coalescing buttons:
+
+```html
+<!-- Include the SVG Filter in the document -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none;">
+  <defs>
+    <filter id="cs-gooey-filter">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+      <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -10" result="gooey" />
+      <feComposite in="SourceGraphic" in2="gooey" operator="atop" />
+    </filter>
+  </defs>
+</svg>
+
+<div class="cs-gooey-container">
+  <div class="cs-gooey-bubble">A</div>
+  <div class="cs-gooey-bubble">B</div>
+  <button class="cs-gooey-btn">Execute Action</button>
+</div>
+```
+
+```css
+.cs-gooey-container {
+  filter: url("#cs-gooey-filter");
+  display: inline-flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.cs-gooey-bubble {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #06b6d4, #3b82f6);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.cs-gooey-bubble:hover {
+  transform: scale(1.2);
+}
+```
+
+---
+
+## 9. Dynamic Spring Magnification Dock & Spotlight Bento Grid
+
+### Dynamic Spring Dock
+Fluid navigation dock with continuous Gaussian distance falloff and spring scaling on pointer proximity:
+
+```html
+<nav class="cs-dock-wrapper" id="agentDock">
+  <div class="cs-dock-item" data-tooltip="Terminal">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+    <span class="cs-dock-tooltip">Terminal</span>
+  </div>
+  <div class="cs-dock-item" data-tooltip="Security">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+    <span class="cs-dock-tooltip">Security</span>
+  </div>
+</nav>
+```
+
+```javascript
+import { initSpringDock, initSpotlightCards } from "./references/dock-bento.js";
+
+// Initialize Spring Magnification on Dock
+initSpringDock(document.getElementById("agentDock"));
+
+// Initialize Mouse Coordinate Spotlight on Bento Cards
+initSpotlightCards(".cs-bento-card");
+```
+
+---
+
+## 10. Universal Motion Transition System
+
+Framework agnostic namespaced transition tokens, timing curves, and micro-state animators:
+
+* `--cs-ease-spring`: `cubic-bezier(0.175, 0.885, 0.32, 1.275)` for elastic overshoots.
+* `--cs-ease-out-quint`: `cubic-bezier(0.22, 1, 0.36, 1)` for immediate deceleration.
+* `--cs-dur-normal`: `250ms` for seamless interaction feedback.
+
+### Micro-State Utilities:
+* `.cs-shake-error`: Horizontal shake animation on validation errors.
+* `.cs-check-success`: Elastic scale bounce on successful confirmation.
+* `.cs-badge-indicator`: Concentric ping radar ring for live notifications.
+* `.cs-modal-backdrop` + `.cs-modal-dialog`: Coordinated scale and backdrop blur dialogs.
+
+---
+
+## 11. Kinetic Typography & 3D Perspective Tilt Card
+
+### A. Hacker Glyph Scramble Decoder
+Translates random characters into clean legible text with smooth progressive resolution:
+
+```javascript
+import { scrambleText, init3DTilt } from "./references/kinetic-text.js";
+
+const textEl = document.querySelector(".cs-scramble-text");
+scrambleText(textEl, "SYSTEM ONLINE // VERIFIED", 900);
+
+// Initialize 3D Gyroscopic Perspective Tilt with Dynamic Glare
+init3DTilt(document.querySelector(".cs-tilt-card"), 15);
+```
+
+### B. 3D Perspective Tilt HTML & CSS
+```html
+<div class="cs-tilt-card">
+  <div class="cs-tilt-card-content">
+    <h4 class="text-lg font-bold text-white">Autonomous Scaffolding</h4>
+    <p class="text-slate-400 text-sm mt-1">Multi-perspective gyroscopic tracking.</p>
+  </div>
+</div>
+```
+
+---
+
+## 12. Atomic Design Token Architecture & Agent Registry Protocol
+
+StyleX-grade type-safe tokens and accessible component contracts:
+
+* `--cs-color-surface-base`: Dark substrate base (`#030712`).
+* `--cs-color-surface-card`: Glass panel card background (`#0f172a`).
+* `--cs-color-accent-primary`: Brand cyan spotlight (`#06b6d4`).
+* `--cs-focus-ring`: WAI-ARIA accessible dual-ring focus outline (`0 0 0 2px #030712, 0 0 0 4px #06b6d4`).
+
+### Agent Component Discovery Protocol (`r/registry.json`)
+When building client interfaces, autonomous agents can query component recipes directly from the bundled references:
+* `border-beam`: Perimeter conic-gradient border tracer.
+* `gooey-fluid`: SVG filter fluid droplet merger.
+* `dock-bento`: Spring dock and spotlight card.
+* `kinetic-text`: Scramble typography and 3D card tilt.
+* `universal-transitions`: Reusable timing curves and micro-states.
+
+---
+
+## 13. Motion Presentation Studio: The 6 Signature Looks
 
 For cinematic product demos, media comparisons, and launch presentation stages, use the 6 unified production design treatments:
-
-### Look Manifest
 
 | Look Name | Aesthetic Treatment | Primary Palette | Default Framing | Layout Mode |
 | :--- | :--- | :--- | :--- | :--- |
@@ -320,50 +508,20 @@ For cinematic product demos, media comparisons, and launch presentation stages, 
 | **Peach** | Warm poster aesthetic, terracotta ink | `#f4bba6`, `#73372c`, `#e59d85` | 9:16 Portrait | Spotlight |
 | **Monochrome** | High-contrast carbon black, silver | `#181818`, `#e4e4e4`, `#ffffff` | 1:1 Square | Split |
 
-### HTML Structure for Presentation Stage
-```html
-<div class="cs-motion-stage" data-motion-look="studio" data-format="16-9" data-layout="split">
-  <canvas class="cs-light-field-canvas"></canvas>
-  <div class="cs-motion-viewport">
-    <div class="cs-media-pane cs-media-primary">
-      <div class="cs-media-header">
-        <span>Reconstructed Animation</span>
-        <span class="cs-badge">60 FPS</span>
-      </div>
-      <div class="cs-media-canvas" id="primaryCanvas"></div>
-    </div>
-    <div class="cs-media-pane cs-media-secondary">
-      <div class="cs-media-header">
-        <span>Original Reference</span>
-        <span class="cs-badge">Reference</span>
-      </div>
-      <div class="cs-media-canvas" id="secondaryCanvas"></div>
-    </div>
-  </div>
-  <div class="cs-transport-bar">
-    <button type="button" class="cs-play-btn">Play</button>
-    <div class="cs-timecode">00:00.0 / 00:15.0</div>
-    <div class="cs-scrub-track">
-      <div class="cs-scrub-progress"></div>
-    </div>
-  </div>
-</div>
-```
-
 ---
 
-## 8. WebGL Chromatic Wave Light-Field Material
+## 14. WebGL Chromatic Wave Light-Field Material
 
 Creates a dynamic, GPU-accelerated wave crest ribbon effect running behind the presentation stage at 60fps with low-power consumption:
 
 ```javascript
-import { LightFieldMaterial } from './references/light-field-shader.js';
+import { LightFieldMaterial } from "./references/light-field-shader.js";
 
-const canvas = document.querySelector('.cs-light-field-canvas');
+const canvas = document.querySelector(".cs-light-field-canvas");
 const lightField = new LightFieldMaterial(canvas, {
   primaryColor: [0.44, 0.25, 0.82], // Studio violet RGB
   speed: 0.075,
-  powerPreference: 'low-power'
+  powerPreference: "low-power"
 });
 
 // Update colors when switching looks
@@ -372,18 +530,18 @@ lightField.setColor([0.83, 0.95, 0.29]); // Signal lime
 
 ---
 
-## 9. Synchronized Media Comparison Stage Controller
+## 15. Synchronized Media Comparison Stage Controller
 
 Manages multi-layout switching, dual-stream scrubbing, and keyboard accessibility:
 
 ```javascript
-import { ComparisonStageController } from './references/comparison-stage.js';
+import { ComparisonStageController } from "./references/comparison-stage.js";
 
-const stageEl = document.querySelector('.cs-motion-stage');
+const stageEl = document.querySelector(".cs-motion-stage");
 const controller = new ComparisonStageController(stageEl, {
-  initialLook: 'studio',
-  initialFormat: '16-9',
-  initialLayout: 'split',
+  initialLook: "studio",
+  initialFormat: "16-9",
+  initialLayout: "split",
   durationSeconds: 15.0,
   autoPlay: true
 });
@@ -395,7 +553,7 @@ const controller = new ComparisonStageController(stageEl, {
 
 ---
 
-## 10. Best Practices for Production Web Interfaces
+## 16. Best Practices for Production Web Interfaces
 
 1. **Avoid CLS on Animated Metric Counters**: Always set fixed container heights and use `font-variant-numeric: tabular-nums` to guarantee steady horizontal geometry.
 2. **GPU Low-Power Preference**: When initialising WebGL contexts for ambient backgrounds, specify `powerPreference: 'low-power'` and attach an `IntersectionObserver` to pause render loops when off-screen.

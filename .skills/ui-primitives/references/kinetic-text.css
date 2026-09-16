@@ -1,0 +1,49 @@
+/**
+ * Code Scaffold - Kinetic Typography & 3D Tilt Styling
+ */
+
+.cs-scramble-text {
+  font-family: var(--font-mono, monospace);
+  letter-spacing: 0.05em;
+  color: #38bdf8;
+  display: inline-block;
+  user-select: none;
+}
+
+/* 3D Perspective Tilt Card with Dynamic Specular Glare */
+.cs-tilt-card {
+  position: relative;
+  border-radius: 1.25rem;
+  background: #0f172a;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 2rem;
+  transform-style: preserve-3d;
+  transition: transform 0.15s ease-out, box-shadow 0.2s ease;
+  will-change: transform;
+  overflow: hidden;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+}
+
+.cs-tilt-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle at var(--glare-pos, 50% 50%),
+    rgba(255, 255, 255, 0.15),
+    transparent 60%
+  );
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.cs-tilt-card:hover::after {
+  opacity: 1;
+}
+
+.cs-tilt-card-content {
+  transform: translateZ(30px);
+  transition: transform 0.2s ease-out;
+}

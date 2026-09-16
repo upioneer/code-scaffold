@@ -1,0 +1,42 @@
+/**
+ * Code Scaffold - Atomic Design Tokens & Semantic Contracts
+ * Type-safe CSS design tokens, zero-runtime variable contracts, and WAI-ARIA accessible focus states.
+ */
+
+:root {
+  /* Surface Layers */
+  --cs-color-surface-base: #030712;
+  --cs-color-surface-subtle: #0b0f19;
+  --cs-color-surface-card: #0f172a;
+  --cs-color-surface-elevated: #1e293b;
+
+  /* Brand Accents */
+  --cs-color-accent-primary: #06b6d4;
+  --cs-color-accent-hover: #22d3ee;
+  --cs-color-accent-active: #0891b2;
+  --cs-color-accent-glow: rgba(6, 182, 212, 0.35);
+
+  /* Border & Dividers */
+  --cs-border-subtle: rgba(255, 255, 255, 0.08);
+  --cs-border-default: rgba(255, 255, 255, 0.14);
+  --cs-border-active: rgba(6, 182, 212, 0.5);
+
+  /* Text Tiers */
+  --cs-text-primary: #f8fafc;
+  --cs-text-secondary: #94a3b8;
+  --cs-text-muted: #64748b;
+
+  /* Elevation Shadows */
+  --cs-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --cs-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --cs-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+
+  /* Accessible Focus Ring Contract */
+  --cs-focus-ring: 0 0 0 2px #030712, 0 0 0 4px #06b6d4;
+}
+
+/* WAI-ARIA Keyboard Focus Ring Trap */
+:focus-visible {
+  outline: none !important;
+  box-shadow: var(--cs-focus-ring) !important;
+}
