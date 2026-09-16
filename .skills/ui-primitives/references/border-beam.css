@@ -1,0 +1,67 @@
+/**
+ * Code Scaffold - Perimeter Border Beam & Photon Tracer
+ * Hardware-accelerated luminescent border tracer using CSS @property and conic-gradient.
+ */
+
+@property --cs-beam-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes cs-beam-spin {
+  0% {
+    --cs-beam-angle: 0deg;
+  }
+  100% {
+    --cs-beam-angle: 360deg;
+  }
+}
+
+.cs-border-beam-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1rem;
+  background: #0f172a;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.cs-border-beam {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 2px solid transparent;
+  [mask-clip:padding-box,border-box]
+  -webkit-mask: linear-gradient(transparent, transparent), linear-gradient(#fff, #fff);
+  -webkit-mask-composite: source-in, xor;
+  mask-composite: exclude;
+  background: conic-gradient(
+    from var(--cs-beam-angle) at 50% 50%,
+    transparent 0deg,
+    transparent 60deg,
+    #06b6d4 120deg,
+    #3b82f6 150deg,
+    #a855f7 180deg,
+    transparent 240deg,
+    transparent 360deg
+  );
+  animation: cs-beam-spin 4s linear infinite;
+  opacity: 0.85;
+}
+
+.cs-border-beam-fast {
+  animation-duration: 2.2s;
+}
+
+.cs-border-beam-glow {
+  filter: drop-shadow(0 0 12px rgba(6, 182, 212, 0.6));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cs-border-beam {
+    animation: none;
+    background: linear-gradient(135deg, #06b6d4, #3b82f6);
+    opacity: 0.4;
+  }
+}

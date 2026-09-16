@@ -1,7 +1,7 @@
 {
   "label": "Firebase",
   "description": "Firebase CLI lifecycle, Cloud Firestore multi-database management, and authentication connectivity",
-  "version": "4",
+  "version": "5",
   "target": ".skills/firebase",
   "logo": [
     "  ███████╗██╗██████╗ ███████╗██████╗  █████╗ ███████╗███████╗  ",

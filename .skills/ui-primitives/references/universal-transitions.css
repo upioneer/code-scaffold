@@ -1,0 +1,117 @@
+/**
+ * Code Scaffold - Universal Motion Transition System
+ * Framework-agnostic namespaced transition tokens, timing curves, and micro-state animators.
+ */
+
+:root {
+  /* Precision cubic-bezier motion tokens */
+  --cs-ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --cs-ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --cs-ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --cs-ease-in-out-cubic: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* Duration scale */
+  --cs-dur-fast: 150ms;
+  --cs-dur-normal: 250ms;
+  --cs-dur-moderate: 400ms;
+  --cs-dur-slow: 600ms;
+}
+
+/* 1. Micro-State: Error Shake */
+@keyframes cs-shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-6px); }
+  40%, 80% { transform: translateX(6px); }
+}
+
+.cs-shake-error {
+  animation: cs-shake var(--cs-dur-moderate) var(--cs-ease-out-quint);
+}
+
+/* 2. Micro-State: Success Bounce & Check Pop */
+@keyframes cs-pop-success {
+  0% { transform: scale(0.8); opacity: 0; }
+  60% { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.cs-check-success {
+  animation: cs-pop-success var(--cs-dur-moderate) var(--cs-ease-spring) forwards;
+}
+
+/* 3. Micro-State: Notification Badge Pulse */
+@keyframes cs-badge-ping {
+  0% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.4); opacity: 0; }
+  100% { transform: scale(1); opacity: 0; }
+}
+
+.cs-badge-indicator {
+  position: relative;
+  display: inline-flex;
+}
+
+.cs-badge-indicator::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: #06b6d4;
+  animation: cs-badge-ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+/* 4. Modal Spring Reveal */
+.cs-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--cs-dur-normal) ease;
+  z-index: 999;
+}
+
+.cs-modal-backdrop.cs-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.cs-modal-dialog {
+  background: #0f172a;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 1.25rem;
+  padding: 2rem;
+  max-width: 480px;
+  width: 90%;
+  transform: scale(0.92) translateY(12px);
+  transition: transform var(--cs-dur-moderate) var(--cs-ease-spring), opacity var(--cs-dur-normal) ease;
+  opacity: 0;
+}
+
+.cs-modal-backdrop.cs-open .cs-modal-dialog {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+}
+
+/* 5. Smooth FLIP Card Resize Container */
+.cs-flip-card {
+  transition: transform var(--cs-dur-moderate) var(--cs-ease-out-quint), height var(--cs-dur-moderate) var(--cs-ease-out-quint);
+  will-change: transform, height;
+}
+
+/* 6. Accessible Reduced Motion Override */
+@media (prefers-reduced-motion: reduce) {
+  .cs-shake-error,
+  .cs-check-success,
+  .cs-badge-indicator::after {
+    animation: none !important;
+  }
+  .cs-modal-dialog {
+    transition: opacity var(--cs-dur-fast) ease !important;
+    transform: none !important;
+  }
+}

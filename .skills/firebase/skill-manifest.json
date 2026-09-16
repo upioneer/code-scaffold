@@ -2,8 +2,8 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_firebase_skill",
-  "version": "4",
-  "description": "Foundational Firebase CLI lifecycle management, Cloud Firestore multi-database operations, rules testing, and secure authentication connectivity.",
+  "version": "5",
+  "description": "Autonomous Firebase project provisioning, clean project naming, CLI lifecycle management, Cloud Firestore multi-database operations, and client SDK integration.",
   "entryPoint": "./SKILL.md",
   "engines": {
     "node": ">=18.0.0"
@@ -25,7 +25,9 @@
     "firebase-cli",
     "firestore-rules",
     "firestore-databases",
-    "mobile-sdk-config"
+    "mobile-sdk-config",
+    "automated-provisioning",
+    "sdk-config"
   ],
-  "integrity": "cs:sha256:c41318d6dc2aefa1918a356c19af59c9db139848f4ca1149c11553c0f2aa005e"
+  "integrity": "cs:sha256:44a03454fefbf7d766b6de9c9ee89acde397909ba9abe0379849cd2264d74fa2"
 }
