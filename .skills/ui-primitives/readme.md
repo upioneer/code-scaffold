@@ -1,38 +1,54 @@
 # UI Primitives & Micro-Interactions
 
-**Version:** 3
+**Version:** 4
 **Target:** `.skills/ui-primitives`
 **Category:** Frontend & UI Design
-**Keywords:** `ui-primitives`, `micro-interactions`, `custom-cursors`, `color-fill-button`, `progressive-blur`, `number-flow`, `thinking-orb`, `range-sliders`, `spring-physics`, `web-ui`, `motion-looks`, `light-field-shader`, `comparison-stage`, `synchronized-media`, `aspect-ratio-framing`, `border-beam`, `gooey-fluid`, `spring-dock`, `bento-grid`, `universal-transitions`, `kinetic-typography`, `atomic-tokens`, `3d-tilt-card`
+**Keywords:** `ui-primitives`, `micro-interactions`, `gsap`, `scroll-trigger`, `threejs`, `webgpu-shader`, `cursor-trail`, `gradient-borders`, `css-alpha-masking`, `design-first-prompting`, `landing-page-architecture`, `border-beam`, `gooey-fluid`, `spring-dock`, `bento-grid`, `kinetic-typography`, `atomic-tokens`
 
 ## Description
-High-fidelity interactive web UI components, perimeter border beams, liquid gooey physics, spring magnification docks, spotlight bento grids, universal motion transitions, kinetic typography, and atomic tokens for modern web applications.
+
+The UI Primitives & Micro-Interactions skill is the complete high-fidelity web interface production engine for Code Scaffold agents: from atomic CSS tokens and kinetic component primitives through GSAP choreography timelines, WebGL Three.js 3D scene architecture, WebGPU halftone cursor shader trails, and structured landing page conversion frameworks.
 
 ## Capabilities & Use Cases
-* **Perimeter Border Beam & Luminescent Tracers**: Renders continuous hardware accelerated glowing photon border tracers using CSS conic gradients and @property angle rotation with zero layout shift and customizable velocity.
-* **Visceral Liquid Gooey Fluid Engine**: Implements an organic SVG filter pipeline (feGaussianBlur + feColorMatrix) enabling liquid droplet detachment, bubble coalescence, and cohesive morphing tab indicators.
-* **Spring Magnification Dynamic Dock**: Delivers macOS style floating navigation docks utilizing continuous Gaussian distance falloff and spring scaling for fluid icon magnification on pointer proximity.
-* **Interactive Spotlight Bento Grid**: Crafts responsive bento layouts featuring dynamic radial gradient cursor spotlight borders and ambient hover highlights.
-* **Universal Motion Transition System**: Provides framework agnostic namespaced micro-transition utilities (.cs-t-*) with cubic-bezier timing tokens, FLIP layout-shift-free card resizing, error shakes, and popover spring reveals.
-* **Kinetic Typography & Hacker Text Decoder**: Executes high-speed glyph scramble decoders, split-letter blur-in typography reveals, and 3D perspective cards with gyroscopic pointer tilt and specular glare reflections.
-* **Atomic Design Token Architecture**: Enforces StyleX-grade type-safe token mappings, zero runtime injection overhead, semantic color tiers, and strict WAI-ARIA accessible focus-visible keyboard rings.
-* **Autonomous Component Registry Architecture**: Enables AI coding agents to inspect, query, and synthesize drop-in component code blocks programmatically via standardized schema definitions.
-* **Motion Presentation Studio & Look Presets**: Implements 6 signature production design looks (Studio violet glass, Editorial cream paper and crimson ink, Signal tactical lime, Cobalt electric blue spotlight, Peach warm poster terracotta, and Monochrome carbon black) with complete CSS tokens and typographic pairings.
-* **WebGL Chromatic Wave Light-Field Material**: Renders an organic, undulating chromatic wave light-field on an HTML5 canvas featuring dynamic wave crests, exponential light ribbons, interference ridges, radial center glows, edge glints, and procedural analog grain with 60fps pacing and low-power GPU optimization.
-* **Synchronized Dual-Stream Media Comparison Stage**: Orchestrates multi-layout media comparison players supporting Split (side-by-side), Stack (vertical), and Spotlight (hero stage with floating picture-in-picture secondary pane) arrangements with frame-accurate timecode synchronization and keyboard controls (Space to toggle playback, R to restart).
-* **Multi-Ratio Viewport Geometry**: Enforces mathematically rigid, responsive framing wrappers for 16:9 Landscape (1920x1080), 9:16 Portrait (1080x1920), and 1:1 Square (1080x1080) presentation canvases.
-* **Color Fill & Kinetic Hover Buttons**: Implements multi-layer CSS pseudo-element fills with rolling vertical text-shadow transforms, directional hover reveals, tactile spring compressions, and active state feedback.
-* **Elastic Range Sliders & Audio Faders**: Crafts customizable cross-browser range controls featuring dynamic active track fills, custom thumb knobs, elastic drag resistance, and real-time numeric value sync.
-* **Rolling Number Flow & Metric Tickers**: Provides zero-layout-shift animated number transitions using tabular figures and vertical transform reels for real-time dashboards, pricing plan toggles, and countdown timers.
-* **Multi-Layer Progressive Optical Blur**: Engineers 8-layer exponential backdrop blur gradients with linear-gradient masks to replicate native Apple-grade depth of field and seamless scroll content occlusion.
-* **Quantum Thinking Orbs & Ambient Canvas**: Orchestrates interactive, multi-state canvas particle orbs representing AI reasoning cycles (Listening, Working, Searching, Solving, Composing, Shaping) with shimmer label typography.
-* **Magnetic Pointer & Interactive Cursors**: Delivers custom cursor experiences including magnetic element snapping, fluid trailing velocity dots, context-aware morphing icons, and inverted blend-mode rings.
-* **Live Interactive Showroom**: Bundles a standalone zero-dependency sandbox allowing developers and agents to visually inspect, test, and copy ready-to-ship HTML, CSS, and JavaScript elements.
+
+* **GSAP Choreography Engine**: Professional hero intro timeline composition, scroll-reveal stagger sequences, parallax depth layers, pinned scroll sections, and reduced-motion safe guards using `gsap.matchMedia`. Covers `gsap.to/from/fromTo`, timeline position parameter syntax (absolute, relative, overlap, label), `ease` catalogue (`power`, `expo`, `elastic`, `back`), and stagger patterns (`from: "start|center|end|random"`, `grid`).
+* **ScrollTrigger Scrub Architecture**: Scroll-driven storytelling with `trigger`, `start/end`, `scrub`, `pin`, `snap`, and `onUpdate` callbacks. Horizontal scroll sequences, image parallax depth, and `ScrollTrigger.refresh()` for dynamic content. SPA cleanup via `ctx.revert()`.
+* **WebGL Three.js 3D Scene Controller**: Full `SceneController` class with bootstrapped renderer, perspective camera, `OrbitControls` with damping, ambient and key lighting, GLTF/Draco model loading, `IntersectionObserver`-based off-screen render pause, pixel ratio clamping at `2`, and complete SPA memory disposal (geometry, material, texture, renderer, controls, RAF).
+* **WebGPU Halftone Cursor Shader Trail**: Progressive enhancement cursor effect with four-tier fallback chain: WebGPU halftone (ChromaFlow, DotGrid, ChromaticRipple, FilmGrain, Composite node graph) -> WebGL radial pointer glow -> CSS `mix-blend-mode` radial follower -> static decorative dot grid. Capability gated by `navigator.gpu` and `prefers-reduced-motion`.
+* **Premium Surface Gradient Borders**: `padding-box` / `border-box` linear-gradient pattern for dark glass, pricing panels, nav bars, modals, hero cards, and feature cards without loud glow. Masked `::before` pseudo-element variant for complex fills. Hero card variant with 2px width and multi-stop glow.
+* **CSS Alpha Channel Masking**: `mask-image` patterns for linear fade reveals, vignettes, circle crops, diamond SVG shapes, gradient text clipping, and animated wipe-reveal transitions. Reduced-motion override included.
+* **Perimeter Border Beam Engine**: Hardware-accelerated luminescent border tracers using CSS `@property --cs-beam-angle` and `conic-gradient` rotation on the compositor thread. Configurable velocity, color stops, and glow intensity with zero layout interference.
+* **Visceral Liquid Gooey Fluid Engine**: SVG filter pipeline (`feGaussianBlur` + `feColorMatrix`) enabling organic droplet detachment, bubble coalescence, and coalescing morphing tabs. Bubble cluster and liquid coalescing button included.
+* **Spring Magnification Dynamic Dock**: Gaussian distance falloff physics for pointer-proximity icon magnification, matching native application dock elasticity.
+* **Spotlight Bento Grid**: Responsive bento card layouts with CSS variable mouse-coordinate tracking (`--mouse-x`, `--mouse-y`) powering radial gradient ambient highlight borders.
+* **Universal Motion Transition System**: Framework-agnostic namespaced CSS timing tokens (`--cs-ease-spring`, `--cs-ease-out-quint`, `--cs-dur-normal`), error shake, success pop, notification badge ping, and modal spring reveal micro-state animators. FLIP-safe card resize included.
+* **Kinetic Typography & 3D Perspective Tilt**: Hacker glyph scramble decoder with configurable duration, and 3D gyroscopic tilt card with dynamic specular glare tracking via `perspective(1000px)` + `rotateX/Y`.
+* **Atomic Design Token Architecture**: StyleX-grade type-safe CSS token system covering surface layers, brand accents, border tiers, text hierarchy, elevation shadows, and WAI-ARIA dual-ring keyboard focus contracts.
+* **Design-First Constraint Specification Skeleton**: Typed GOAL, FORMAT, LAYOUT, TYPE SYSTEM, COLOR + MATERIAL, IMAGERY, COPY, CONSTRAINTS, and NEGATIVE PROMPT prompt template for consistent AI UI generation. Iteration rule: change at most 1 to 2 fields per round.
+* **High-Conversion Landing Page Architecture**: Pre-design checklist (primary action, ICP, proof, constraints), section architecture (above fold, argument, objection handling), layout archetypes (classic hero, long-form story, minimal conversion, comparison), message-source matching (ads, SEO, email), and conversion pitfalls (multiple CTAs, generic imagery, missing risk reversal, navigation leakage).
+* **Scroll-Driven Viewport Reveal**: Lightweight dependency-free `IntersectionObserver` pattern for one-shot `[data-reveal]` animations, with CSS-only fallback for reduced-motion.
+* **Multi-Layer Progressive Optical Blur**: 8-layer exponential `backdrop-filter` mask stack replicating native depth-of-field glass (top or bottom direction, configurable height and step count).
+* **Quantum Thinking Orbs**: Canvas particle system with 6 named AI agent states (listening, working, searching, solving, composing, shaping).
+* **Motion Presentation Studio**: 6 signature production design treatments (Studio, Editorial, Signal, Cobalt, Peach, Monochrome) with fixed palettes, default framings, and layout modes for cinematic product demo stages.
+* **WebGL Chromatic Wave Light-Field**: GPU-accelerated wave crest ribbon ambient background at 60fps with `low-power` preference and off-screen pause.
+* **Synchronized Media Comparison Stage**: Multi-layout switching (split, stack, spotlight), dual-stream scrubbing, keyboard controls (Space, R), and aspect ratio rigidity (16:9, 9:16, 1:1).
+* **Agent Component Discovery Protocol**: Bundled `references/` registry with 13 copy-paste modules (gsap-choreography, threejs-scene, cursor-shader, gradient-borders, css-masking, border-beam, gooey-fluid, dock-bento, kinetic-text, universal-transitions, atomic-tokens, progressive-blur, comparison-stage).
 
 ## Usage
-Activate this skill when designing or scaffolding web user interfaces, interactive landing page details, SaaS dashboard metrics, custom control panels, cinematic product launch presentations, or fluid pointer animations. Review `SKILL.md` for architectural patterns and consult `sandbox/index.html` for live interactive element previews.
+
+Invoke this skill when an agent is asked to:
+* Implement motion-rich hero sections, animated page intros, or scroll-driven storytelling
+* Build 3D product showcases, interactive hero scenes, or GLTF model viewers
+* Add cursor-reactive shader effects or WebGPU interactive backgrounds
+* Apply premium border gradients, glass card surfaces, or CSS mask reveal effects
+* Prompt an AI agent for UI generation using a consistent design-first spec skeleton
+* Design or critique a high-conversion SaaS, app, or service landing page
+* Implement any kinetic button, counter ticker, elastic slider, progress indicator, or notification ping
+* Build a motion presentation stage for product demos or marketing collateral
 
 ## Changelog
-* **v3** : Expanded with Perimeter Border Beams, Visceral Liquid Gooey Engine, Spring Magnification Docks, Spotlight Bento Grids, Universal Motion Transitions, Kinetic Scramble Typography, 3D Perspective Tilt, and Atomic Design Tokens
-* **v2** : Integrated the Motion Presentation Studio suite featuring 6 signature production design looks (Studio, Editorial, Signal, Cobalt, Peach, Monochrome), WebGL chromatic wave light-field canvas material with low-power optimization, synchronized dual-stream media comparison stage with split/stack/spotlight layouts, multi-ratio viewport geometry, and interactive preset selector pills
-* **v1** : Initial release of UI Primitives & Micro-Interactions skill with live interactive sandbox, kinetic buttons, range sliders, rolling number tickers, progressive blur layers, custom magnetic cursors, and quantum thinking orbs
+
+* **v4**: Added GSAP Choreography Engine (Section 13), WebGL Three.js Scene Architecture (Section 14), WebGPU Halftone Cursor Shader Trail (Section 15), Design-First Constraint Specification Skeleton (Section 16), High-Conversion Landing Page Architecture (Section 17), Scroll-Driven Viewport Reveal (Section 18), Premium Surface Gradient Borders (Section 9 expansion), CSS Alpha Channel Masking (Section 11 expansion). Four new reference files bundled: `gsap-choreography.js`, `threejs-scene.js`, `cursor-shader.js`, `gradient-borders.css`, `css-masking.css`. Skill now covers 22 sections and 13 reference files.
+* **v3**: Added Perimeter Border Beam Engine, Visceral Liquid Gooey Fluid Engine, Spring Magnification Dock, Spotlight Bento Grid, Universal Motion Transition System, Kinetic Typography and 3D Perspective Tilt, Atomic Token Architecture. Nine reference files bundled.
+* **v2**: Added Motion Presentation Studio (6 signature looks), WebGL Chromatic Wave Light-Field, Synchronized Media Comparison Stage.
+* **v1**: Initial release with Kinetic Buttons, Elastic Range Sliders, Rolling Number Tickers, Progressive Optical Blur, Quantum Thinking Orbs.

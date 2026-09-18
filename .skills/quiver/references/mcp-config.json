@@ -1,0 +1,35 @@
+{
+  "$comment": "Quiver AI Model Context Protocol (MCP) configuration samples across supported agent hosts",
+  "configurations": {
+    "cursor": {
+      "description": "Cursor MCP configuration (~/.cursor/mcp.json or workspace .cursor/mcp.json)",
+      "mcpServers": {
+        "quiverai": {
+          "url": "https://app.quiver.ai/mcp"
+        }
+      }
+    },
+    "vscode": {
+      "description": "VS Code MCP configuration (.vscode/mcp.json)",
+      "servers": {
+        "quiverai": {
+          "type": "http",
+          "url": "https://app.quiver.ai/mcp"
+        }
+      }
+    },
+    "stdioFallback": {
+      "description": "Clients supporting only stdio transport using mcp-remote bridge",
+      "mcpServers": {
+        "quiverai": {
+          "command": "npx",
+          "args": ["-y", "mcp-remote", "https://app.quiver.ai/mcp"]
+        }
+      }
+    },
+    "cliCommands": {
+      "codex": "codex mcp add quiverai --url https://app.quiver.ai/mcp",
+      "claudeCode": "claude mcp add --transport http quiverai https://app.quiver.ai/mcp"
+    }
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
+  "specification": "https://code-scaffold.com/spec/v1",
+  "name": "code_scaffold_ghostprint_skill",
+  "version": "1",
+  "description": "Cryptographic code provenance, 9-layer steganographic entanglement matrix, hierarchical deterministic key ceremony, and digital forensics suite.",
+  "entryPoint": "./SKILL.md",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "requiredPermissions": [
+    "fs:read",
+    "fs:write",
+    "net:connect"
+  ],
+  "category": "Security & Cryptography",
+  "keywords": [
+    "ghostprint",
+    "ghost-print",
+    "code-provenance",
+    "steganography",
+    "copyright-protection",
+    "digital-forensics",
+    "functional-entanglement",
+    "anti-tamper",
+    "zero-knowledge-proof",
+    "key-ceremony",
+    "entropy-meter",
+    "stylometry",
+    "ast-invariants",
+    "statistical-distribution",
+    "remote-oracle",
+    "daubert-standard",
+    "courtroom-admissible",
+    "dmca-evidence"
+  ],
+  "integrity": "cs:sha256:da41aa99e3cf494a83245585f0cb3fd58fe9eea4b14d6448a454476efecb99a2"
+}

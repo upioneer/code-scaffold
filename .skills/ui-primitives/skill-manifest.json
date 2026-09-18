@@ -2,8 +2,8 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_ui_primitives_skill",
-  "version": "3",
-  "description": "High-fidelity interactive web UI components, perimeter border beams, liquid gooey physics, spring magnification docks, spotlight bento grids, universal motion transitions, kinetic typography, and atomic tokens.",
+  "version": "4",
+  "description": "High-fidelity interactive web UI components, GSAP choreography timelines, WebGL Three.js 3D scenes, WebGPU halftone cursor trails, premium gradient borders, perimeter border beams, liquid gooey physics, spring magnification docks, spotlight bento grids, universal transitions, kinetic typography, atomic tokens, and high-conversion landing page architecture.",
   "entryPoint": "./SKILL.md",
   "engines": {
     "node": ">=18.0.0"
@@ -17,6 +17,19 @@
   "keywords": [
     "ui-primitives",
     "micro-interactions",
+    "gsap",
+    "scroll-trigger",
+    "scroll-driven-animation",
+    "threejs",
+    "webgl-3d-scene",
+    "webgpu-shader",
+    "cursor-trail",
+    "halftone-cursor",
+    "gradient-borders",
+    "css-alpha-masking",
+    "design-first-prompting",
+    "landing-page-architecture",
+    "conversion-optimization",
     "custom-cursors",
     "color-fill-button",
     "progressive-blur",
@@ -29,7 +42,6 @@
     "light-field-shader",
     "comparison-stage",
     "synchronized-media",
-    "aspect-ratio-framing",
     "border-beam",
     "gooey-fluid",
     "spring-dock",
@@ -39,5 +51,5 @@
     "atomic-tokens",
     "3d-tilt-card"
   ],
-  "integrity": "cs:sha256:ad9b6331c928f57d52d091dda2492022c472b08bf12e251954a16f04eb27e8e8"
+  "integrity": "cs:sha256:b591783a2fc58b302e7242b5de6f3918a5040bfd6428b478d6d7b3e665450c6c"
 }

@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiver AI Vector Studio Sandbox</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #020617;
+    color: #e2e8f0;
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    width: 100vw;
+    min-height: 100vh;
+    overflow-x: hidden;
+    line-height: 1.5;
+  }
+
+  code, pre, .mono {
+    font-family: ui-monospace, 'Cascadia Code', 'JetBrains Mono', 'Fira Code', monospace;
+  }
+
+  /* Header Bar */
+  .header {
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+    border-bottom: 1px solid rgba(99, 102, 241, 0.25);
+    padding: 24px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .header-title-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .header-logo-icon {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, #6366f1, #22d3ee);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #020617;
+    font-weight: 900;
+  }
+
+  .header h1 {
+    font-size: 1.25rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #ffffff;
+  }
+
+  .header p {
+    color: #94a3b8;
+    font-size: 0.8rem;
+  }
+
+  .badges {
+    display: flex;
+    gap: 8px;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    border-radius: 9999px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .badge-v { background: rgba(99,102,241,0.15); color: #a5b4fc; border: 1px solid rgba(99,102,241,0.35); }
+  .badge-cat { background: rgba(34,211,238,0.12); color: #22d3ee; border: 1px solid rgba(34,211,238,0.3); }
+
+  /* Navigation Tabs */
+  .nav-tabs {
+    display: flex;
+    gap: 4px;
+    padding: 16px 32px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    background: #090e1a;
+  }
+
+  .nav-tab-btn {
+    padding: 10px 20px;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: #64748b;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .nav-tab-btn:hover { color: #cbd5e1; }
+  .nav-tab-btn.active {
+    color: #22d3ee;
+    border-bottom-color: #22d3ee;
+    background: rgba(34,211,238,0.04);
+  }
+
+  /* Main Container */
+  .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 32px;
+  }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* Studio Layout: 2 Columns */
+  .studio-grid {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 24px;
+  }
+
+  @media (max-width: 960px) {
+    .studio-grid { grid-template-columns: 1fr; }
+  }
+
+  .panel {
+    background: #0f172a;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 24px;
+  }
+
+  .panel-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #94a3b8;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* Form Elements */
+  .form-group {
+    margin-bottom: 16px;
+  }
+
+  label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #cbd5e1;
+    margin-bottom: 6px;
+  }
+
+  textarea, select, input[type="text"] {
+    width: 100%;
+    background: #020617;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px;
+    padding: 10px 12px;
+    color: #e2e8f0;
+    font-size: 0.85rem;
+    transition: border-color 0.2s;
+  }
+
+  textarea:focus, select:focus, input[type="text"]:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 2px rgba(99,102,241,0.2);
+  }
+
+  .presets-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+  }
+
+  .preset-chip {
+    background: rgba(99,102,241,0.12);
+    color: #a5b4fc;
+    border: 1px solid rgba(99,102,241,0.25);
+    border-radius: 6px;
+    padding: 3px 8px;
+    font-size: 0.7rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .preset-chip:hover {
+    background: rgba(99,102,241,0.25);
+    color: #ffffff;
+  }
+
+  .btn-primary {
+    width: 100%;
+    background: linear-gradient(135deg, #6366f1 0%, #22d3ee 100%);
+    border: none;
+    border-radius: 8px;
+    color: #020617;
+    font-weight: 700;
+    font-size: 0.85rem;
+    padding: 12px;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+  }
+
+  .btn-primary:hover { opacity: 0.95; }
+  .btn-primary:active { transform: translateY(1px); }
+
+  /* Canvas Stage */
+  .canvas-stage {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .stage-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #090e1a;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-bottom: none;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    padding: 12px 18px;
+  }
+
+  .stage-toolbar-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .tool-btn {
+    background: #0f172a;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #94a3b8;
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .tool-btn:hover, .tool-btn.active {
+    color: #22d3ee;
+    border-color: rgba(34,211,238,0.4);
+  }
+
+  .viewport-box {
+    background: #000;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    min-height: 420px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    background-image: 
+      radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 0);
+    background-size: 24px 24px;
+    background-position: -19px -19px;
+  }
+
+  .viewport-svg-container {
+    width: 280px;
+    height: 280px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .viewport-svg-container svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 10px 25px rgba(34,211,238,0.15));
+  }
+
+  .viewport-svg-container.wireframe svg * {
+    fill: none !important;
+    stroke: #22d3ee !important;
+    stroke-width: 2px !important;
+    stroke-dasharray: 4, 4;
+  }
+
+  /* Code Tabs & Inspector */
+  .code-viewer {
+    margin-top: 24px;
+    background: #020617;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .code-header {
+    background: #090e1a;
+    padding: 8px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .code-tabs {
+    display: flex;
+    gap: 8px;
+  }
+
+  .code-tab {
+    background: transparent;
+    border: none;
+    color: #64748b;
+    font-size: 0.72rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+
+  .code-tab.active {
+    color: #a5b4fc;
+    background: rgba(99,102,241,0.15);
+  }
+
+  pre {
+    padding: 16px;
+    font-size: 0.75rem;
+    line-height: 1.6;
+    color: #cbd5e1;
+    overflow-x: auto;
+    max-height: 240px;
+  }
+
+  /* Model Spec Cards */
+  .models-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
+  }
+
+  .model-card {
+    background: #0f172a;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .model-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--model-accent, #6366f1);
+  }
+
+  .model-card.telos::before { --model-accent: #22d3ee; }
+  .model-card.arrow2::before { --model-accent: #818cf8; }
+  .model-card.arrow1::before { --model-accent: #38bdf8; }
+
+  .model-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+  }
+
+  .model-name {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #ffffff;
+  }
+
+  .model-id {
+    font-size: 0.7rem;
+    color: #64748b;
+  }
+
+  .model-pricing {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #22d3ee;
+    background: rgba(34,211,238,0.08);
+    padding: 3px 8px;
+    border-radius: 6px;
+  }
+
+  .model-desc {
+    font-size: 0.8rem;
+    color: #94a3b8;
+    margin-bottom: 16px;
+  }
+
+  .spec-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .spec-label { color: #64748b; }
+  .spec-val { color: #f1f5f9; font-weight: 600; }
+
+  /* MCP Flow Visualizer */
+  .mcp-flow {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .flow-step {
+    background: #090e1a;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .step-num {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(99,102,241,0.2);
+    border: 1px solid rgba(99,102,241,0.4);
+    color: #a5b4fc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .step-content h4 {
+    font-size: 0.85rem;
+    color: #f8fafc;
+    margin-bottom: 2px;
+  }
+
+  .step-content p {
+    font-size: 0.75rem;
+    color: #94a3b8;
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-title-group">
+    <div class="header-logo-icon">Q</div>
+    <div>
+      <h1>Quiver AI Vector Studio</h1>
+      <p>Arrow Foundation Models, Text-to-SVG Synthesis, Image Vectorization & MCP Agent Workflows</p>
+    </div>
+  </div>
+  <div class="badges">
+    <span class="badge badge-v">v1</span>
+    <span class="badge badge-cat">Animation & Graphics</span>
+  </div>
+</header>
+
+<nav class="nav-tabs">
+  <button class="nav-tab-btn active" onclick="switchNav('studio')">Vector Generation Studio</button>
+  <button class="nav-tab-btn" onclick="switchNav('models')">Arrow Foundation Models</button>
+  <button class="nav-tab-btn" onclick="switchNav('mcp')">MCP Agent Architecture</button>
+  <button class="nav-tab-btn" onclick="switchNav('integration')">API Integration & SDKs</button>
+</nav>
+
+<div class="container">
+
+  <!-- TAB 1: STUDIO -->
+  <div id="tab-studio" class="tab-content active">
+    <div class="studio-grid">
+      <!-- Controls Panel -->
+      <div class="panel">
+        <div class="panel-title">
+          <span>Prompt Parameters</span>
+          <span class="mono" style="font-size:0.7rem; color:#22d3ee;">POST /v1/svgs/generations</span>
+        </div>
+
+        <div class="form-group">
+          <label>Target Model</label>
+          <select id="model-select">
+            <option value="arrow-2">Arrow 2.0 (High Speed & Quality)</option>
+            <option value="arrow-2-telos">Arrow 2 Telos (Complex Detail & Long Context)</option>
+            <option value="arrow-1.1">Arrow 1.1 (Fixed-Credit General)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Text Prompt</label>
+          <textarea id="prompt-input" rows="3" placeholder="Describe vector artwork to generate...">Cybernetic neon shield emblem with geometric eagle wings, clean vector lines, dark mode contrast</textarea>
+          <div class="presets-row">
+            <span class="preset-chip" onclick="applyPreset('shield')">Cyber Shield</span>
+            <span class="preset-chip" onclick="applyPreset('compass')">Geometric Compass</span>
+            <span class="preset-chip" onclick="applyPreset('fintech')">Fintech Prism</span>
+            <span class="preset-chip" onclick="applyPreset('mascot')">Terminal Mascot</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Reasoning Effort</label>
+          <select id="reasoning-select">
+            <option value="medium">Medium (Standard)</option>
+            <option value="high" selected>High (Enhanced Geometric Symmetry)</option>
+            <option value="xhigh">XHigh (Max Geometric Precision)</option>
+            <option value="low">Low (Quick Draft)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>ViewBox Dimensions</label>
+          <input type="text" id="viewbox-input" value="0 0 512 512" class="mono" />
+        </div>
+
+        <button class="btn-primary" onclick="generateSimulatedSvg()">Synthesize Vector Asset</button>
+      </div>
+
+      <!-- Live Canvas & Code Inspector -->
+      <div class="canvas-stage">
+        <div class="stage-toolbar">
+          <div class="stage-toolbar-group">
+            <span class="mono" style="font-size:0.75rem; color:#f1f5f9;">Canvas Stage (512x512)</span>
+            <span id="gen-status-badge" class="badge badge-v" style="font-size:0.65rem;">Rendered</span>
+          </div>
+          <div class="stage-toolbar-group">
+            <button class="tool-btn" id="wireframe-btn" onclick="toggleWireframe()">Wireframe</button>
+            <button class="tool-btn" onclick="resetZoom()">Reset</button>
+            <button class="tool-btn" onclick="downloadSvg()">Export SVG</button>
+          </div>
+        </div>
+
+        <div class="viewport-box">
+          <div id="svg-viewport" class="viewport-svg-container">
+            <!-- Simulated Initial SVG: Cybernetic Shield -->
+            <svg id="active-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+              <defs>
+                <linearGradient id="glow" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#22d3ee"/>
+                  <stop offset="100%" stop-color="#6366f1"/>
+                </linearGradient>
+              </defs>
+              <polygon points="256,48 448,128 448,304 256,464 64,304 64,128" stroke="url(#glow)" stroke-width="12" stroke-linejoin="round" fill="rgba(99,102,241,0.06)"/>
+              <polygon points="256,108 392,168 392,288 256,396 120,288 120,168" stroke="#22d3ee" stroke-width="6" stroke-linejoin="round"/>
+              <circle cx="256" cy="256" r="48" stroke="#ffffff" stroke-width="8" fill="rgba(34,211,238,0.2)"/>
+              <line x1="256" y1="172" x2="256" y2="340" stroke="#22d3ee" stroke-width="4"/>
+              <line x1="172" y1="256" x2="340" y2="256" stroke="#22d3ee" stroke-width="4"/>
+              <polygon points="256,220 280,256 256,292 232,256" fill="#ffffff"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Code Inspector -->
+        <div class="code-viewer">
+          <div class="code-header">
+            <div class="code-tabs">
+              <button class="code-tab active" onclick="switchCodeView('svg')">Raw SVG</button>
+              <button class="code-tab" onclick="switchCodeView('react')">React JSX</button>
+              <button class="code-tab" onclick="switchCodeView('api')">Payload JSON</button>
+            </div>
+            <button class="tool-btn" onclick="copyActiveCode()">Copy</button>
+          </div>
+          <pre id="code-display" class="mono"></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2: MODELS -->
+  <div id="tab-models" class="tab-content">
+    <div class="models-grid">
+      <div class="model-card telos">
+        <div class="model-header">
+          <div>
+            <div class="model-name">Arrow 2 Telos</div>
+            <div class="model-id mono">arrow-2-telos</div>
+          </div>
+          <div class="model-pricing">$6 in / $30 out per 1M</div>
+        </div>
+        <p class="model-desc">Flagship reasoning model for complex multi-layered brand marks, intricate geometric compositions, and deep contextual guidance.</p>
+        <div class="spec-row"><span class="spec-label">Context Window</span><span class="spec-val">1,050,000 tokens</span></div>
+        <div class="spec-row"><span class="spec-label">Max Output</span><span class="spec-val">65,536 tokens</span></div>
+        <div class="spec-row"><span class="spec-label">Input Modalities</span><span class="spec-val">Text, Image, SVG</span></div>
+        <div class="spec-row"><span class="spec-label">Output Modality</span><span class="spec-val">Clean Semantic SVG</span></div>
+        <div class="spec-row"><span class="spec-label">Specialty</span><span class="spec-val">Highest Aesthetic Fidelity</span></div>
+      </div>
+
+      <div class="model-card arrow2">
+        <div class="model-header">
+          <div>
+            <div class="model-name">Arrow 2.0</div>
+            <div class="model-id mono">arrow-2</div>
+          </div>
+          <div class="model-pricing">$4 in / $20 out per 1M</div>
+        </div>
+        <p class="model-desc">Optimized for velocity and balanced visual craft. Ideal for web UI component icons, dashboard charts, and iterative design pipelines.</p>
+        <div class="spec-row"><span class="spec-label">Context Window</span><span class="spec-val">131,072 tokens</span></div>
+        <div class="spec-row"><span class="spec-label">Max Output</span><span class="spec-val">65,536 tokens</span></div>
+        <div class="spec-row"><span class="spec-label">Input Modalities</span><span class="spec-val">Text, Image, SVG</span></div>
+        <div class="spec-row"><span class="spec-label">Output Modality</span><span class="spec-val">Clean Semantic SVG</span></div>
+        <div class="spec-row"><span class="spec-label">Specialty</span><span class="spec-val">Speed & Balance</span></div>
+      </div>
+
+      <div class="model-card arrow1">
+        <div class="model-header">
+          <div>
+            <div class="model-name">Arrow 1.1</div>
+            <div class="model-id mono">arrow-1.1</div>
+          </div>
+          <div class="model-pricing">$0.20 / SVG Gen</div>
+        </div>
+        <p class="model-desc">General-purpose workhorse model providing fixed-cost vector generation and raster image vectorization.</p>
+        <div class="spec-row"><span class="spec-label">Context Window</span><span class="spec-val">131,072 tokens</span></div>
+        <div class="spec-row"><span class="spec-label">Max Output</span><span class="spec-val">65,536 tokens</span></div>
+        <div class="spec-row"><span class="spec-label">Pricing Mode</span><span class="spec-val">Fixed Credits ($0.01/credit)</span></div>
+        <div class="spec-row"><span class="spec-label">Vectorization Cost</span><span class="spec-val">$0.15 per bitmap</span></div>
+        <div class="spec-row"><span class="spec-label">Specialty</span><span class="spec-val">Predictable Unit Cost</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: MCP -->
+  <div id="tab-mcp" class="tab-content">
+    <div class="panel">
+      <div class="panel-title">
+        <span>Hosted MCP Server Orchestration</span>
+        <span class="mono" style="color:#22d3ee;">https://app.quiver.ai/mcp</span>
+      </div>
+      <p style="font-size:0.82rem; color:#94a3b8; margin-bottom: 24px;">
+        Quiver AI exposes a hosted Model Context Protocol (MCP) server over Streamable HTTP with OAuth. Connected agents use structured tool loops to query models, dispatch background tasks, poll lifecycles, and extract production vector assets.
+      </p>
+
+      <div class="mcp-flow">
+        <div class="flow-step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Catalog Handshake : list_models</h4>
+            <p>The agent discovers available Arrow foundation models and validates organizational authorization before invoking creation endpoints.</p>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Task Dispatch : create_generation / create_vectorization</h4>
+            <p>Agent provides natural language prompt or image reference. The MCP server returns a queued <code class="mono">taskId</code> and future <code class="mono">creationIds</code>.</p>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>Asynchronous Polling : get_task</h4>
+            <p>Agent checks the task lifecycle until the status transitions to <code class="mono">completed</code>. Never displays preview snapshots as final deliverables.</p>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h4>Asset Extraction : get_creation_content</h4>
+            <p>Agent extracts clean raw SVG code. When <code class="mono">includePng: true</code> is provided, an inline PNG preview is included for instant visual chat rendering.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 4: INTEGRATION -->
+  <div id="tab-integration" class="tab-content">
+    <div class="panel">
+      <div class="panel-title">
+        <span>Implementation Recipes</span>
+      </div>
+
+      <div class="code-viewer" style="margin-top:0;">
+        <div class="code-header">
+          <div class="code-tabs">
+            <button class="code-tab active" onclick="switchSnippet('fetch')">Node.js Fetch</button>
+            <button class="code-tab" onclick="switchSnippet('openai')">OpenAI SDK Client</button>
+            <button class="code-tab" onclick="switchSnippet('vectorize')">Image Vectorization</button>
+            <button class="code-tab" onclick="switchSnippet('mcpcfg')">Cursor MCP Config</button>
+          </div>
+          <button class="tool-btn" onclick="copySnippet()">Copy Snippet</button>
+        </div>
+        <pre id="snippet-display" class="mono"></pre>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const PRESETS = {
+  shield: {
+    prompt: 'Cybernetic neon shield emblem with geometric eagle wings, clean vector lines, dark mode contrast',
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs><linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#22d3ee"/><stop offset="100%" stop-color="#6366f1"/></linearGradient></defs>
+  <polygon points="256,48 448,128 448,304 256,464 64,304 64,128" stroke="url(#g1)" stroke-width="12" stroke-linejoin="round" fill="rgba(99,102,241,0.06)"/>
+  <polygon points="256,108 392,168 392,288 256,396 120,288 120,168" stroke="#22d3ee" stroke-width="6" stroke-linejoin="round"/>
+  <circle cx="256" cy="256" r="48" stroke="#ffffff" stroke-width="8" fill="rgba(34,211,238,0.2)"/>
+  <line x1="256" y1="172" x2="256" y2="340" stroke="#22d3ee" stroke-width="4"/>
+  <line x1="172" y1="256" x2="340" y2="256" stroke="#22d3ee" stroke-width="4"/>
+  <polygon points="256,220 280,256 256,292 232,256" fill="#ffffff"/>
+</svg>`
+  },
+  compass: {
+    prompt: 'Minimal geometric constellation compass with fine-line coordinates and celestial nodes',
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <circle cx="256" cy="256" r="200" stroke="#6366f1" stroke-width="4" stroke-dasharray="6, 6"/>
+  <circle cx="256" cy="256" r="160" stroke="#22d3ee" stroke-width="2"/>
+  <polygon points="256,76 276,236 436,256 276,276 256,436 236,276 76,256 236,236" fill="rgba(34,211,238,0.15)" stroke="#22d3ee" stroke-width="6"/>
+  <polygon points="256,76 276,236 256,256" fill="#ffffff"/>
+  <polygon points="256,436 236,276 256,256" fill="#6366f1"/>
+  <circle cx="256" cy="256" r="12" fill="#22d3ee"/>
+</svg>`
+  },
+  fintech: {
+    prompt: 'Isometric crystal prism representing financial analytics and growth vectors',
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <polygon points="256,64 432,168 256,272 80,168" fill="rgba(34,211,238,0.2)" stroke="#22d3ee" stroke-width="6"/>
+  <polygon points="80,168 256,272 256,448 80,344" fill="rgba(99,102,241,0.3)" stroke="#6366f1" stroke-width="6"/>
+  <polygon points="256,272 432,168 432,344 256,448" fill="rgba(129,140,248,0.4)" stroke="#818cf8" stroke-width="6"/>
+  <polyline points="140,300 256,210 372,250" stroke="#ffffff" stroke-width="8" stroke-linecap="round"/>
+</svg>`
+  },
+  mascot: {
+    prompt: 'Retro-futuristic terminal bot mascot icon with antenna and glowing monochrome eyes',
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <rect x="96" y="128" width="320" height="256" rx="36" fill="#0f172a" stroke="#22d3ee" stroke-width="12"/>
+  <rect x="136" y="168" width="240" height="176" rx="16" fill="#020617"/>
+  <circle cx="200" cy="256" r="28" fill="#22d3ee"/>
+  <circle cx="312" cy="256" r="28" fill="#22d3ee"/>
+  <line x1="256" y1="128" x2="256" y2="64" stroke="#6366f1" stroke-width="10"/>
+  <circle cx="256" cy="56" r="16" fill="#818cf8"/>
+  <rect x="224" y="310" width="64" height="10" rx="5" fill="#a5b4fc"/>
+</svg>`
+  }
+};
+
+let currentSvg = PRESETS.shield.svg;
+let activeCodeTab = 'svg';
+
+function switchNav(tabName) {
+  document.querySelectorAll('.nav-tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('tab-' + tabName).classList.add('active');
+}
+
+function applyPreset(key) {
+  const preset = PRESETS[key];
+  if (!preset) return;
+  document.getElementById('prompt-input').value = preset.prompt;
+  currentSvg = preset.svg;
+  document.getElementById('svg-viewport').innerHTML = currentSvg;
+  updateCodeDisplay();
+}
+
+function generateSimulatedSvg() {
+  const btn = document.querySelector('.btn-primary');
+  const badge = document.getElementById('gen-status-badge');
+  btn.textContent = 'Synthesizing with Arrow 2...';
+  badge.textContent = 'Generating...';
+  badge.style.color = '#fbbf24';
+
+  setTimeout(() => {
+    btn.textContent = 'Synthesize Vector Asset';
+    badge.textContent = 'Rendered 200 OK';
+    badge.style.color = '#22c55e';
+    updateCodeDisplay();
+  }, 400);
+}
+
+function toggleWireframe() {
+  const vp = document.getElementById('svg-viewport');
+  const btn = document.getElementById('wireframe-btn');
+  vp.classList.toggle('wireframe');
+  btn.classList.toggle('active');
+}
+
+function resetZoom() {
+  document.getElementById('svg-viewport').style.transform = 'scale(1)';
+}
+
+function downloadSvg() {
+  const blob = new Blob([currentSvg], { type: 'image/svg+xml' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'quiver-vector.svg';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function switchCodeView(view) {
+  activeCodeTab = view;
+  document.querySelectorAll('.code-tabs .code-tab').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  updateCodeDisplay();
+}
+
+function updateCodeDisplay() {
+  const display = document.getElementById('code-display');
+  if (activeCodeTab === 'svg') {
+    display.textContent = currentSvg;
+  } else if (activeCodeTab === 'react') {
+    display.textContent = `export const VectorGraphic = (props) => (
+  ${currentSvg.replace(/class=/g, 'className=')}
+);`;
+  } else {
+    display.textContent = JSON.stringify({
+      model: document.getElementById('model-select').value,
+      prompt: document.getElementById('prompt-input').value,
+      reasoning_effort: document.getElementById('reasoning-select').value,
+      attributes: { viewBox: { minX: 0, minY: 0, width: 512, height: 512 } }
+    }, null, 2);
+  }
+}
+
+function copyActiveCode() {
+  navigator.clipboard.writeText(document.getElementById('code-display').textContent);
+  alert('Copied to clipboard!');
+}
+
+const SNIPPETS = {
+  fetch: `// Direct Node.js Fetch to Quiver AI
+const res = await fetch('https://api.quiver.ai/v1/svgs/generations', {
+  method: 'POST',
+  headers: {
+    'Authorization': \`Bearer \${process.env.QUIVERAI_API_KEY}\`,
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    model: 'arrow-2',
+    prompt: 'Minimal geometric compass rose in blue and cyan',
+    attributes: { viewBox: { minX: 0, minY: 0, width: 512, height: 512 } }
+  })
+});
+const { data } = await res.json();
+console.log(data[0].svg);`,
+
+  openai: `// Drop-in OpenAI SDK compatibility
+import OpenAI from 'openai';
+
+const client = new OpenAI({
+  apiKey: process.env.QUIVERAI_API_KEY,
+  baseURL: 'https://api.quiver.ai/v1'
+});
+
+const response = await client.responses.create({
+  model: 'arrow-2',
+  input: [{ role: 'user', content: 'Generate a sleek dark-mode fintech icon' }]
+});`,
+
+  vectorize: `// Image-to-SVG Vectorization
+const res = await fetch('https://api.quiver.ai/v1/svgs/vectorizations', {
+  method: 'POST',
+  headers: {
+    'Authorization': \`Bearer \${process.env.QUIVERAI_API_KEY}\`,
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    model: 'arrow-2',
+    image: { url: 'https://example.com/logo-raster.png' },
+    auto_crop: true,
+    target_size: 1024
+  })
+});
+const { data } = await res.json();`,
+
+  mcpcfg: `// Cursor MCP Server Configuration (~/.cursor/mcp.json)
+{
+  "mcpServers": {
+    "quiverai": {
+      "url": "https://app.quiver.ai/mcp"
+    }
+  }
+}`
+};
+
+let activeSnippetKey = 'fetch';
+
+function switchSnippet(key) {
+  activeSnippetKey = key;
+  document.querySelectorAll('#tab-integration .code-tab').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('snippet-display').textContent = SNIPPETS[key];
+}
+
+function copySnippet() {
+  navigator.clipboard.writeText(SNIPPETS[activeSnippetKey]);
+  alert('Snippet copied to clipboard!');
+}
+
+// Initialize
+updateCodeDisplay();
+document.getElementById('snippet-display').textContent = SNIPPETS.fetch;
+</script>
+</body>
+</html>

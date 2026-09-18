@@ -26,6 +26,7 @@ Welcome to the official **Code Scaffold Skills Library**. This curated registry 
 | **PlayCanvas Editor** | Visual development environment for real-time 3D collaboration. | `playcanvas-editor`, `3d-engine`, `webgl` | v2 | `.skills/playcanvas-editor` |
 | **PlayCanvas Engine** | Modular 3D/2D game engine for the web supporting WebGL and WebGPU. | `playcanvas-engine`, `3d-rendering`, `shader-graph` | v2 | `.skills/playcanvas-engine` |
 | **PlayCanvas SuperSplat** | High-performance tool for editing and optimizing 3D Gaussian Splats. | `gaussian-splats`, `3d-splatting`, `point-cloud` | v2 | `.skills/playcanvas-supersplat` |
+| **Quiver AI Vector Studio** | Enterprise vector graphics generation, raster image vectorization, SVG editing, animation, and Model Context Protocol (MCP) agent integrations using Quiver AI Arrow foundation models and REST APIs. | `quiver`, `quiver-ai`, `vector-graphics`, `svg-generation`, `image-vectorization`, `arrow-2`, `mcp-server` | v1 | `.skills/quiver` |
 
 ### Data, Databases & Storage
 
@@ -47,10 +48,16 @@ Welcome to the official **Code Scaffold Skills Library**. This curated registry 
 | **CyberSecurity Toolkit** | Autonomous cybersecurity arsenal integrating the Sentinel Multi-Agent Security Mesh, episodic attack surface mapping, MITRE and NIST methodologies, SkillSpector scanning, and ChainAST context compaction. | `cybersecurity`, `security-audit`, `vulnerability-scan`, `agentic-security` | v7 | `.skills/cybersecurity-toolkit` |
 | **Docker Engine** | Comprehensive container engineering arsenal featuring the Ephemeral Swapper Protocol for in-place zero-downtime updates, BuildKit cache optimization, and sidecar diagnostic injection. | `docker`, `container-engine`, `ephemeral-swapper` | v1 | `.skills/docker` |
 | **GitHub** | GitHub push workflow with .env-based identity configuration; merges github.md into the skill | `github`, `git`, `github-actions` | v5 | `.skills/github` |
-| **Proxmox** | Proxmox VE LXC toolbox for building reusable templates, baseline app deployments, and SSH hardening. | `proxmox`, `proxmox-ve`, `lxc-containers` | v2 | `.skills/proxmox` |
+| **Proxmox VE Container Engineering** | Two-tier LXC helper script architecture with host orchestrator, in-container provisioner, whiptail dialogs, integer disk sizing, bootstrap isolation, V8 heap management, active health polling, ZFS/Ceph storage, cloud-init VM templating, PBS backup automation, Prometheus monitoring, and container hardening. | `proxmox`, `proxmox-ve`, `lxc`, `pct-create`, `cloud-init`, `zfs`, `proxmox-backup-server`, `homelab` | v2 | `.skills/proxmox` |
 | **Terraform** | Infrastructure as Code (IaC) provisioning and state management using Terraform or OpenTofu. | `terraform`, `opentofu`, `infrastructure-as-code` | v2 | `.skills/terraform` |
 | **Vercel Deployment Routine** | Configuration and deployment routines for Vercel hosting. | `vercel`, `edge-deployments`, `nextjs-hosting` | v2 | `.skills/vercel` |
 | **Website Deploy Linux** | Enterprise Linux Deployment Agent for deploying static sites and SPAs to Nginx locally or remotely via PuTTY CLI (plink/pscp) or SSH, featuring upfront architectural prompting, automatic .env setups, reference scripts, and non-destructive folder structures | `website-deploy-linux`, `nginx-deploy`, `putty-plink-pscp` | v6 | `.skills/website-deploy-linux` |
+
+### Security & Cryptography
+
+| Skill | Description | Search Keywords | Version | Path |
+| :--- | :--- | :--- | :--- | :--- |
+| **GhostPrint Engine** | Industrial grade cryptographic code provenance, 9-layer steganographic entanglement matrix, hierarchical deterministic key ceremony, and digital forensics suite. | `ghostprint`, `ghost-print`, `code-provenance`, `steganography`, `copyright-protection`, `digital-forensics`, `anti-tamper` | v1 | `.skills/ghostprint` |
 
 ### Frontend & UI Design
 
@@ -64,7 +71,7 @@ Welcome to the official **Code Scaffold Skills Library**. This curated registry 
 | **Scrollytelling** | Design architecture, workflows, and code implementations for scroll-triggered 3D model manipulation and interactive 'production explosion' views. | `scrollytelling`, `scroll-magic`, `gsap-scrolltrigger` | v3 | `.skills/scrollytelling` |
 | **Tasty** | Code Scaffold's bespoke anti-slop frontend styling engine for premium landing pages and portfolios. | `tasty`, `anti-slop`, `design-tokens` | v3 | `.skills/tasty` |
 | **TUI Tools** | Architectural playbook and tooling (including VHS integration) for building robust, instant-on, and visually stunning modern terminal splash screens and integrations. | `tui-tools`, `vhs-tapes`, `terminal-gif` | v6 | `.skills/tui-tools` |
-| **UI Primitives & Micro-Interactions** | Perimeter border beams, liquid gooey physics, spring magnification docks, spotlight bento grids, universal motion transitions, kinetic typography, atomic tokens, WebGL light fields, and 6 signature motion looks. | `ui-primitives`, `micro-interactions`, `border-beam`, `gooey-fluid`, `spring-dock`, `bento-grid`, `universal-transitions` | v3 | `.skills/ui-primitives` |
+| **UI Primitives & Micro-Interactions** | GSAP choreography timelines, Three.js 3D scenes, WebGPU halftone cursor trails, premium gradient borders, perimeter border beams, liquid gooey physics, spring docks, bento grids, kinetic typography, atomic tokens, design-first prompting, landing page architecture, and 6 signature motion looks. | `ui-primitives`, `gsap`, `threejs`, `webgpu-shader`, `gradient-borders`, `cursor-trail`, `border-beam`, `landing-page` | v4 | `.skills/ui-primitives` |
 
 ### Publishing & Documentation
 
