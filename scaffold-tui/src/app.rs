@@ -2417,4 +2417,95 @@ mod visual_artifacts_tests {
             Some(StepStatus::NotApplicable)
         );
     }
+
+    #[tokio::test]
+    async fn test_security_persona_auto_selects_ghostprint() {
+        let payload_dir = std::path::PathBuf::from("../.skills");
+        let mut app = App::new(payload_dir);
+
+        // Ensure ghostprint and cybersecurity-toolkit exist in workspace items for the test
+        if !app
+            .workspace
+            .items
+            .iter()
+            .any(|i| i.label == "ghostprint" && i.category == Category::AgentSkills)
+        {
+            app.workspace
+                .items
+                .push(crate::components::workspace::WorkspaceItem {
+                    label: "ghostprint".into(),
+                    selected: false,
+                    category: Category::AgentSkills,
+                    description: None,
+                    version: None,
+                    exists_in_target: false,
+                    target_version: None,
+                    logo: None,
+                });
+        }
+        if !app
+            .workspace
+            .items
+            .iter()
+            .any(|i| i.label == "cybersecurity-toolkit" && i.category == Category::AgentSkills)
+        {
+            app.workspace
+                .items
+                .push(crate::components::workspace::WorkspaceItem {
+                    label: "cybersecurity-toolkit".into(),
+                    selected: false,
+                    category: Category::AgentSkills,
+                    description: None,
+                    version: None,
+                    exists_in_target: false,
+                    target_version: None,
+                    logo: None,
+                });
+        }
+
+        // Switch to AgentPersona category
+        app.workspace.set_category(Category::AgentPersona);
+
+        // Find index of Security Analyst persona
+        let visible = app.workspace.visible_indices();
+        let sec_idx = visible
+            .iter()
+            .position(|&actual| app.workspace.items[actual].label == "Security Analyst")
+            .expect("Security Analyst persona not found");
+
+        app.workspace.selected_idx = sec_idx;
+        let _ = app.workspace.update(Action::Char(' '));
+
+        // Verify that Security Analyst is selected
+        let sec_item = app
+            .workspace
+            .items
+            .iter()
+            .find(|i| i.label == "Security Analyst" && i.category == Category::AgentPersona)
+            .unwrap();
+        assert!(sec_item.selected);
+
+        // Verify that ghostprint and cybersecurity-toolkit are auto-selected
+        let ghost_item = app
+            .workspace
+            .items
+            .iter()
+            .find(|i| i.label == "ghostprint" && i.category == Category::AgentSkills)
+            .unwrap();
+        assert!(
+            ghost_item.selected,
+            "ghostprint should be auto-selected when Security Analyst is selected"
+        );
+
+        let cyber_item = app
+            .workspace
+            .items
+            .iter()
+            .find(|i| i.label == "cybersecurity-toolkit" && i.category == Category::AgentSkills)
+            .unwrap();
+        assert!(
+            cyber_item.selected,
+            "cybersecurity-toolkit should be auto-selected when Security Analyst is selected"
+        );
+    }
 }

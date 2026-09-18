@@ -1,9 +1,9 @@
 {
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
-  "name": "proxmox-skill",
+  "name": "code_scaffold_proxmox_skill",
   "version": "2",
-  "description": "Proxmox VE LXC toolbox for building reusable templates, baseline app deployments, and SSH hardening.",
+  "description": "Design, build, and maintain turnkey Proxmox VE LXC helper scripts with two-tier host orchestrator and in-container provisioner architecture, whiptail dialogs, ZFS/Ceph storage integration, cloud-init VM templating, snapshot automation, Prometheus monitoring, and container hardening.",
   "entryPoint": "./SKILL.md",
   "engines": {
     "node": ">=18.0.0"
@@ -12,17 +12,41 @@
     "fs:read",
     "fs:write",
     "net:connect",
-    "sys:command"
+    "shell:exec"
   ],
-  "category": "DevOps & Infrastructure",
+  "category": "DevOps",
   "keywords": [
     "proxmox",
     "proxmox-ve",
-    "lxc-containers",
-    "qemu-vms",
-    "homelab",
+    "lxc",
+    "lxc-container",
+    "pct-create",
+    "pveam",
+    "pvesm",
+    "whiptail",
+    "container-provisioning",
+    "host-orchestrator",
+    "debian-12-bookworm",
+    "systemd-service",
+    "node-options-heap",
+    "zfs",
+    "ceph",
+    "lvm-thin",
+    "cloud-init",
+    "vm-template",
+    "qm",
+    "pve-backup",
+    "proxmox-backup-server",
+    "pct-snapshot",
+    "prometheus-pve-exporter",
     "hypervisor",
-    "virtualization"
+    "self-hosted",
+    "homelab",
+    "cluster-automation",
+    "vzdump",
+    "unprivileged-container",
+    "vlan-tagging",
+    "network-bridge"
   ],
-  "integrity": "cs:sha256:f359517190b08565a91da0ca8ec1be3849e1c92d7f1439e2aeb73b685c6265ba"
+  "integrity": "cs:sha256:e7b9acad07abcf75e59a32595bb28f8fcb97c7c44cc8d3f8c9d5129477efb249"
 }

@@ -1,0 +1,89 @@
+/**
+ * CSS Alpha Channel Masking Reference
+ * Code Scaffold :: UI Primitives & Micro-Interactions v4
+ * -------------------------------------------------------
+ * Hard-cut and gradient mask patterns for text-over-video
+ * revealer effects, image-clipped typography, and shaped
+ * hero overlays. All patterns use mask-image only.
+ */
+
+/* ─── Linear Gradient Reveal (text or image fading at edge) ─────────────── */
+
+.cs-mask-fade-right {
+  -webkit-mask-image: linear-gradient(to right, black 0%, black 65%, transparent 100%);
+  mask-image:         linear-gradient(to right, black 0%, black 65%, transparent 100%);
+}
+
+.cs-mask-fade-bottom {
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 70%, transparent 100%);
+  mask-image:         linear-gradient(to bottom, black 0%, black 70%, transparent 100%);
+}
+
+.cs-mask-fade-top {
+  -webkit-mask-image: linear-gradient(to top, black 0%, black 70%, transparent 100%);
+  mask-image:         linear-gradient(to top, black 0%, black 70%, transparent 100%);
+}
+
+/* ─── Vignette Mask (darkens edges, keeps center clear) ─────────────────── */
+
+.cs-mask-vignette {
+  -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 55%, transparent 100%);
+  mask-image:         radial-gradient(ellipse 80% 80% at 50% 50%, black 55%, transparent 100%);
+}
+
+/* ─── Hard-Edge Shape Mask (circle crop) ────────────────────────────────── */
+
+.cs-mask-circle {
+  -webkit-mask-image: radial-gradient(circle, black 48%, transparent 50%);
+  mask-image:         radial-gradient(circle, black 48%, transparent 50%);
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+}
+
+/* ─── Text Clipping (gradient fill text without extra elements) ──────────── */
+/* Apply to a <span> or heading. */
+
+.cs-gradient-text {
+  background: linear-gradient(135deg, #06b6d4 0%, #a855f7 60%, #ec4899 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* ─── Inline SVG Shape Mask ──────────────────────────────────────────────── */
+/* Replace the SVG data URI with your own shape path. */
+
+.cs-mask-diamond {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpolygon points='50,2 98,50 50,98 2,50' fill='black'/%3E%3C/svg%3E");
+  mask-image:         url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpolygon points='50,2 98,50 50,98 2,50' fill='black'/%3E%3C/svg%3E");
+  -webkit-mask-size: cover;
+  mask-size: cover;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+/* ─── Animated Reveal Mask (slide wipe-in) ──────────────────────────────── */
+
+@keyframes cs-mask-wipe {
+  from { -webkit-mask-size: 0% 100%; mask-size: 0% 100%; }
+  to   { -webkit-mask-size: 100% 100%; mask-size: 100% 100%; }
+}
+
+.cs-mask-wipe-reveal {
+  -webkit-mask-image: linear-gradient(to right, black, black);
+  mask-image:         linear-gradient(to right, black, black);
+  -webkit-mask-size: 0% 100%;
+  mask-size: 0% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  animation: cs-mask-wipe 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cs-mask-wipe-reveal {
+    animation: none;
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+  }
+}

@@ -846,9 +846,15 @@ impl Component for Workspace {
                             companion.selected = true;
                         }
                     }
-                    if label == "Security Analyst" && new_state {
+                    if (label == "Security Analyst" || label == "Security") && new_state {
                         if let Some(companion) = self.items.iter_mut().find(|i| {
                             i.label == "cybersecurity-toolkit"
+                                && i.category == Category::AgentSkills
+                        }) {
+                            companion.selected = true;
+                        }
+                        if let Some(companion) = self.items.iter_mut().find(|i| {
+                            (i.label == "ghostprint" || i.label == "ghost-print")
                                 && i.category == Category::AgentSkills
                         }) {
                             companion.selected = true;

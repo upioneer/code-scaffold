@@ -1,0 +1,85 @@
+/**
+ * Premium Surface Gradient Borders Reference
+ * Code Scaffold :: UI Primitives & Micro-Interactions v4
+ * -------------------------------------------------------
+ * padding-box / border-box linear-gradient pattern +
+ * masked variant for complex fill surfaces.
+ */
+
+/* ─── Base Pattern (solid or translucent fill) ──────────────────────────── */
+
+.cs-gradient-border {
+  --surface:  rgba(10, 14, 24, 0.72);
+  --border-a: rgba(255, 255, 255, 0.34);
+  --border-b: rgba(125, 92, 255, 0.36);
+  --border-c: rgba(255, 255, 255, 0.08);
+  --angle:    135deg;
+  --radius:   20px;
+
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  background:
+    linear-gradient(var(--surface), var(--surface)) padding-box,
+    linear-gradient(var(--angle), var(--border-a), var(--border-b), var(--border-c)) border-box;
+}
+
+/* Hover: amplify the accent stop slightly */
+.cs-gradient-border:hover {
+  --border-b: rgba(125, 92, 255, 0.52);
+}
+
+/* Active state: 2px width for emphasis */
+.cs-gradient-border.cs-gradient-border--active {
+  border-width: 2px;
+}
+
+/* ─── Masked Pattern (complex fill / backdrop-filter surfaces) ───────────── */
+/* Use when the element already has a complex background (glassmorphism etc.). */
+/* The ::before pseudo adds the gradient ring without interfering with fill.   */
+
+.cs-gradient-border-masked {
+  position: relative;
+  border-radius: 20px;
+  z-index: 0;
+}
+
+.cs-gradient-border-masked::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.30), rgba(125,92,255,0.32), rgba(255,255,255,0.06));
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* ─── Hero Card Variant (larger, stronger glow) ─────────────────────────── */
+
+.cs-gradient-border-hero {
+  border: 2px solid transparent;
+  border-radius: 24px;
+  background:
+    linear-gradient(rgba(15, 23, 42, 0.90), rgba(15, 23, 42, 0.90)) padding-box,
+    linear-gradient(160deg,
+      rgba(255, 255, 255, 0.40),
+      rgba(99,  102, 241, 0.45),
+      rgba(236, 72,  153, 0.30),
+      rgba(255, 255, 255, 0.10)
+    ) border-box;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.04), 0 8px 32px rgba(0,0,0,0.4);
+}
+
+/* ─── Defaults Reference ─────────────────────────────────────────────────── */
+/*
+  Width:  1px standard, 2px for large hero cards or active states only.
+  Radius: inherit from parent.
+  Angle:  135deg or 160deg.
+  Stops:  neutral highlight -> brand accent -> neutral fade.
+  Opacity: keep most stops below 0.4. Subtle beats shiny.
+*/
