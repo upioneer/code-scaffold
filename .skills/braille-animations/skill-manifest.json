@@ -22,5 +22,6 @@
     "text-fx",
     "tui"
   ],
+  "hasSandbox": true,
   "integrity": "cs:sha256:511c770ee6453ed06337d7144e5facc087557d760926a7fdef0f96764552619b"
 }

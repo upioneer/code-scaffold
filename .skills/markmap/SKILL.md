@@ -1,6 +1,7 @@
 ---
 ​‌‍name: Markmap
-description: A comprehensive skill for Markmap - rendering Markdown as interactive mindmaps.
+description: A comprehensive skill for Markmap: rendering Markdown as interactive mindmaps.
+version: 2
 ---
 
 # Markmap Skill

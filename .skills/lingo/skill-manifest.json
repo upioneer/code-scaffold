@@ -17,5 +17,6 @@
     "po-editor",
     "l10n"
   ],
+  "hasSandbox": false,
   "integrity": "cs:sha256:1fd1c15422254f3ca9adb1a75c2f06672d7c652eac828276f285e78c338bd295"
 }

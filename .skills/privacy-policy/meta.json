@@ -3,6 +3,7 @@
   "description": "Generates a customizable privacy policy tailored to the project (website/app) with optional Google Analytics integration.",
   "version": "5",
   "target": ".skills/privacy-policy",
+  "hasSandbox": false,
   "logo": [
     "  ██████╗ ██████╗ ██╗██╗   ██╗ █████╗  ██████╗██╗   ██╗                          ",
     "  ██╔══██╗██╔══██╗██║██║   ██║██╔══██╗██╔════╝╚██╗ ██╔╝                          ",

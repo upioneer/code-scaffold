@@ -22,5 +22,6 @@
     "component-library",
     "ui-ux"
   ],
+  "hasSandbox": false,
   "integrity": "cs:sha256:feeb0792ac7faa700200efae1f0671b2fbcb1c14aba7fdf310690950b1285b02"
 }

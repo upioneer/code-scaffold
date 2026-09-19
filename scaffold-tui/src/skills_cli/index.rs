@@ -110,6 +110,12 @@ impl SkillIndex {
                         .map(|m| m.logo.clone())
                         .unwrap_or_default();
 
+                    let has_sandbox = manifest_opt
+                        .as_ref()
+                        .map(|m| m.has_sandbox)
+                        .or_else(|| meta_opt.as_ref().map(|m| m.has_sandbox))
+                        .unwrap_or(false);
+
                     records.push(SkillRecord {
                         slug,
                         label,
@@ -121,6 +127,7 @@ impl SkillIndex {
                         engines,
                         entry_point,
                         target,
+                        has_sandbox,
                         source_path: dir,
                         logo,
                     });

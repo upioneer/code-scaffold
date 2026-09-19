@@ -22,5 +22,6 @@
     "structured-json",
     "data-extraction"
   ],
+  "hasSandbox": false,
   "integrity": "cs:sha256:fda6f52b7be44e57f0b90c7a39e19258e8c58d3357b2741176ef74677ee36809"
 }

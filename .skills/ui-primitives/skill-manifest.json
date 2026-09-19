@@ -51,5 +51,6 @@
     "atomic-tokens",
     "3d-tilt-card"
   ],
-  "integrity": "cs:sha256:b591783a2fc58b302e7242b5de6f3918a5040bfd6428b478d6d7b3e665450c6c"
+  "hasSandbox": true,
+  "integrity": "cs:sha256:7cea46d4faa13929ad5a5792eca61a7eda2ce6c7acd584b08e1f39c8c2012969"
 }

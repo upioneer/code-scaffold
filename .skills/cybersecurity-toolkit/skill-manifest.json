@@ -28,5 +28,6 @@
     "chainast-compactor",
     "mitre-attack"
   ],
-  "integrity": "cs:sha256:2e1226d60a65032aa5b196ec5798ef3740a5a85a16ed20492b82be02c2e26d6d"
+  "hasSandbox": false,
+  "integrity": "cs:sha256:e7153c981910f8c470056c70205615f08b7d395718febdb26a4c848eac25a5a7"
 }

@@ -22,5 +22,6 @@
     "agentic-workflow",
     "tui"
   ],
+  "hasSandbox": false,
   "integrity": "cs:sha256:fbcedd76f1c3f41cc3304ca30fd98fcd1c2c7b1e265719792dcc1b9b934fd9d2"
 }

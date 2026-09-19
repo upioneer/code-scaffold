@@ -3,6 +3,7 @@
   "description": "Configuration and deployment routines for Vercel hosting.",
   "version": "2",
   "target": ".skills/vercel",
+  "hasSandbox": false,
   "logo": [
     "  ██╗   ██╗███████╗██████╗  ██████╗███████╗██╗                                              ",
     "  ██║   ██║██╔════╝██╔══██╗██╔════╝██╔════╝██║                                              ",

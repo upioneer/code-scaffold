@@ -3,6 +3,7 @@
   "description": "Scientific and technical publishing system for dynamically generating books, websites, dashboards, and presentations using Python, R, Julia, and Observable JS.",
   "version": "1",
   "target": ".skills/quarto",
+  "hasSandbox": false,
   "logo": [
     "   ██████╗ ██╗   ██╗ █████╗ ██████╗ ████████╗ ██████╗                         ",
     "  ██╔═══██╗██║   ██║██╔══██╗██╔══██╗╚══██╔══╝██╔═══██╗                        ",

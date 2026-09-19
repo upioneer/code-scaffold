@@ -3,6 +3,7 @@
   "description": "Office suite purpose-built for AI agents to read, edit, and automate Word, Excel, and PowerPoint files.",
   "version": "1",
   "target": ".skills/officecli",
+  "hasSandbox": false,
   "logo": [
     "   ██████╗ ███████╗███████╗██╗ ██████╗███████╗ ██████╗██╗     ██╗  ",
     "  ██╔═══██╗██╔════╝██╔════╝██║██╔════╝██╔════╝██╔════╝██║     ██║  ",

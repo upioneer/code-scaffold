@@ -22,5 +22,6 @@
     "sequence-diagrams",
     "er-diagrams"
   ],
+  "hasSandbox": true,
   "integrity": "cs:sha256:0523227d68a00cca17d559862ac978e226fcc5a360797949fe8bcaa8ee309de9"
 }

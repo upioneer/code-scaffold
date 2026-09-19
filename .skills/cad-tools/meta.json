@@ -1,8 +1,9 @@
 {
   "label": "CAD Tools",
-  "description": "Comprehensive CAD/CAM engineering skill for AI agents — orchestrating parametric 3D modeling, multi-format conversion, mass property analysis, desktop CAD automation, and AI-generative geometry workflows using open-source and cloud toolchains.",
-  "version": "2",
+  "description": "Comprehensive CAD/CAM engineering skill for AI agents : orchestrating parametric 3D modeling, multi-format conversion, mass property analysis, desktop CAD automation, and AI-generative geometry workflows using open-source and cloud toolchains.",
+  "version": "3",
   "target": ".skills/cad-tools",
+  "hasSandbox": true,
   "logo": [
     "   ██████╗ █████╗ ██████╗                      ",
     "  ██╔════╝██╔══██╗██╔══██╗                     ",

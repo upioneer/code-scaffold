@@ -1,7 +1,8 @@
 [package]
 name = "scaffold-tui"
-version = "7.26.0"
+version = "7.27.0"
 edition = "2021"
+license-file = "../LICENSE.md"
 
 [dependencies]
 ratatui = "0.26"

@@ -3,6 +3,7 @@
   "description": "Authentication perimeter and identity management using Clerk.",
   "version": "2",
   "target": ".skills/clerk",
+  "hasSandbox": false,
   "logo": [
     "   ██████╗██╗     ███████╗██████╗ ██╗  ██╗                                                                         ",
     "  ██╔════╝██║     ██╔════╝██╔══██╗██║ ██╔╝                                                                         ",

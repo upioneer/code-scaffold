@@ -386,3 +386,6 @@ The API returns standardized JSON error payloads:
 * **Leverage Test Keys in CI**: Use `sk_test_` keys in automated regression pipelines to test end-to-end vector parsing without incurring billing charges.
 * **Handle Stream Completion**: In streaming mode (`stream: true`), listen for `data: [DONE]` before finalizing output, but verify that the final payload was successfully received.
 * **Preserve Request IDs**: Log `X-Request-ID` alongside failed operations for prompt customer support triage.
+
+
+* **Architectural Compliance**: When synthesizing or scaffolding project code, align generated components with Code Scaffold architectural specification standards.

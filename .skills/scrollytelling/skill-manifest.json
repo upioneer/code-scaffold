@@ -21,5 +21,6 @@
     "interactive-storytelling",
     "3d-product-view"
   ],
+  "hasSandbox": true,
   "integrity": "cs:sha256:8c8797205c31f30b529169b2df1832692aadeeb3aabd137fac797d935b0f022b"
 }

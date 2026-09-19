@@ -23,5 +23,6 @@
     "releases",
     "repo-management"
   ],
+  "hasSandbox": false,
   "integrity": "cs:sha256:b4ffb2619a0fd9ea091545f639752080ac19ded2a9608d63f8429088328dd8af"
 }

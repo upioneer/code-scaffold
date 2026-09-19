@@ -18,6 +18,8 @@ pub struct SkillManifest {
     pub category: String,
     #[serde(default)]
     pub keywords: Vec<String>,
+    #[serde(rename = "hasSandbox", default)]
+    pub has_sandbox: bool,
 }
 
 fn default_entry_point() -> String {
@@ -31,6 +33,8 @@ pub struct SkillMeta {
     pub description: String,
     pub version: String,
     pub target: String,
+    #[serde(rename = "hasSandbox", default)]
+    pub has_sandbox: bool,
     #[serde(default)]
     pub logo: Vec<String>,
 }
@@ -58,6 +62,8 @@ pub struct SkillRecord {
     pub entry_point: String,
     /// Installation target relative path
     pub target: String,
+    /// Whether the skill mounts an interactive visual sandbox or uses an architectural contract card
+    pub has_sandbox: bool,
     /// Absolute path to source directory in payload cache
     pub source_path: PathBuf,
     /// Multi-line ASCII block text logo

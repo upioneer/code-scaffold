@@ -3,6 +3,7 @@
   "description": "Generate, vectorize, edit, and animate production-ready editable SVGs using Quiver AI Arrow foundation models, REST APIs, and hosted MCP server integrations.",
   "version": "1",
   "target": ".skills/quiver",
+  "hasSandbox": true,
   "logo": [
     "   ██████╗ ██╗   ██╗██╗██╗   ██╗███████╗██████╗   ",
     "  ██╔═══██╗██║   ██║██║██║   ██║██╔════╝██╔══██╗  ",

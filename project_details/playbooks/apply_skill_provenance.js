@@ -53,6 +53,7 @@ for (const slug of skillDirs) {
         requiredPermissions: manifest.requiredPermissions || [],
         category: manifest.category || '',
         keywords: manifest.keywords || [],
+        hasSandbox: manifest.hasSandbox !== undefined ? manifest.hasSandbox : false,
         integrity: computeIntegrityToken(manifest.name, manifest.version)
       };
 

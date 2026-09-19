@@ -2,7 +2,7 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_manim_skill",
-  "version": "2",
+  "version": "3",
   "description": "Mathematical animations using the Manim library.",
   "entryPoint": "./SKILL.md",
   "engines": {
@@ -22,5 +22,6 @@
     "technical-animations",
     "scientific-viz"
   ],
-  "integrity": "cs:sha256:b61d76952ca2fcee7180817c79cd109ad15a5bd6356ce41c2e401e90198b9f5c"
+  "hasSandbox": true,
+  "integrity": "cs:sha256:5c43972db5e5a09fb73794e3350aba0ffebde220f704f28ab088028c03394de3"
 }

@@ -21,5 +21,6 @@
     "cookie-policy",
     "terms-of-service"
   ],
+  "hasSandbox": false,
   "integrity": "cs:sha256:d50ab6322b935668a2eb2c0473f9835f24f0844e90967940002cb2e3d51ccaf8"
 }

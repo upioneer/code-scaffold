@@ -22,5 +22,6 @@
     "canvas",
     "visuals"
   ],
+  "hasSandbox": true,
   "integrity": "cs:sha256:9a54cfaac5340a615c2b36c800fde4be8bf5ca8447239bc213e9a8dd924f6753"
 }

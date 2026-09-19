@@ -2,124 +2,430 @@
 <html lang="en">
 <head>
   <!-- Code Scaffold Specification Schema: https://code-scaffold.com/spec/v1 -->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CAD Tools - Sandbox</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <style>
-        body { margin: 0; padding: 0; width: 100vw; min-height: 100vh; overflow-x: hidden; background-color: #020617; color: #f8fafc; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
-        .glass-panel { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(34, 211, 238, 0.2); }
-        .ascii-logo { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; white-space: pre; line-height: 1.2; font-size: 0.6rem; }
-        @media (min-width: 768px) { .ascii-logo { font-size: 0.8rem; } }
-        .grid-bg { background-image: radial-gradient(rgba(34, 211, 238, 0.1) 1px, transparent 1px); background-size: 30px 30px; }
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: #0f172a; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #475569; }
-        
-        /* Pulse Animation for Terminal Cursor */
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-        .cursor { display: inline-block; width: 8px; height: 1.2em; background-color: #22d3ee; vertical-align: text-bottom; animation: blink 1s step-end infinite; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CAD Tools - Parametric 3D CAD Engineering Workbench</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body, html {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background-color: #020617;
+      color: #f8fafc;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      user-select: none;
+    }
+    .grid-bg {
+      background-image: radial-gradient(rgba(34, 211, 238, 0.08) 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(34, 211, 238, 0.2);
+    }
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      cursor: grab;
+    }
+    canvas:active {
+      cursor: grabbing;
+    }
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: #020617; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #334155; }
+  </style>
 </head>
-<body class="grid-bg relative antialiased selection:bg-cyan-500/30">
-    
-    <!-- Background Glow -->
-    <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-cyan-600/10 rounded-full blur-[150px] pointer-events-none"></div>
+<body class="grid-bg flex flex-col h-screen overflow-hidden">
 
-    <!-- Sticky Header -->
-    <header class="sticky top-0 z-50 glass-panel border-x-0 border-t-0 border-b-slate-800/80 px-6 py-4">
-        <div class="max-w-6xl mx-auto flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded bg-cyan-500/20 flex items-center justify-center border border-cyan-500/50 text-cyan-400 font-bold">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                </div>
-                <h1 class="text-xl font-black uppercase tracking-widest text-white">CAD Tools</h1>
-            </div>
-            <span class="px-3 py-1 bg-cyan-500/10 text-cyan-400 text-xs font-bold rounded-full border border-cyan-500/30 uppercase tracking-widest hidden sm:inline-block">v2</span>
+  <!-- Header Navigation -->
+  <header class="h-14 glass-panel px-6 flex items-center justify-between z-20 border-b border-slate-800">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 rounded-lg bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center text-cyan-400 font-black text-sm">
+        C
+      </div>
+      <div>
+        <h1 class="text-sm font-bold tracking-wider uppercase text-white flex items-center gap-2">
+          CAD Tools Workbench
+          <span class="text-[10px] bg-cyan-500/20 text-cyan-400 px-2 py-0.5 rounded border border-cyan-500/30">PARAMETRIC 3D CAD ENGINE</span>
+        </h1>
+        <p class="text-xs text-slate-400">WebGL Three.js Viewport &bull; B-Rep Solid Topology</p>
+      </div>
+    </div>
+
+    <!-- Active Model Selector -->
+    <div class="flex items-center gap-2 text-xs font-mono">
+      <button onclick="setModel('flange')" id="btn-model-flange" class="px-3 py-1.5 rounded-lg font-medium transition bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
+        Mechanical Flange
+      </button>
+      <button onclick="setModel('gear')" id="btn-model-gear" class="px-3 py-1.5 rounded-lg font-medium transition text-slate-400 hover:text-white border border-slate-800">
+        Planetary Gear
+      </button>
+      <button onclick="setModel('bracket')" id="btn-model-bracket" class="px-3 py-1.5 rounded-lg font-medium transition text-slate-400 hover:text-white border border-slate-800">
+        Mounting Bracket
+      </button>
+    </div>
+
+    <!-- Right Controls -->
+    <div class="flex items-center gap-2">
+      <button onclick="resetCamera()" class="px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg border border-slate-700 transition">
+        Reset View
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Viewport and Properties Inspector -->
+  <div class="flex-1 flex overflow-hidden relative">
+
+    <!-- 3D WebGL Canvas Stage -->
+    <div class="flex-1 relative bg-slate-950 overflow-hidden" id="canvas-container">
+      <div class="absolute top-4 left-4 glass-panel px-3 py-1.5 rounded-lg text-xs font-mono text-slate-400 flex items-center gap-3 z-10">
+        <span>VIEWPORT: <strong class="text-cyan-400" id="view-mode-label">SHADED SOLID</strong></span>
+        <span class="text-slate-600">|</span>
+        <span>GRID: <strong class="text-slate-200">10mm STEPS</strong></span>
+      </div>
+
+      <!-- Viewport Display Mode Toggles (Bottom Left) -->
+      <div class="absolute bottom-4 left-4 glass-panel p-1.5 rounded-xl flex items-center gap-1 z-10 border border-slate-800 text-xs font-mono">
+        <button onclick="setRenderMode('shaded')" id="btn-mode-shaded" class="px-2.5 py-1 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">Shaded</button>
+        <button onclick="setRenderMode('wireframe')" id="btn-mode-wireframe" class="px-2.5 py-1 rounded text-slate-400 hover:text-white">Wireframe</button>
+        <button onclick="setRenderMode('xray')" id="btn-mode-xray" class="px-2.5 py-1 rounded text-slate-400 hover:text-white">X-Ray</button>
+      </div>
+    </div>
+
+    <!-- Right Properties & Mass Analysis Inspector -->
+    <div class="w-84 glass-panel border-y-0 border-r-0 border-l border-slate-800 p-5 flex flex-col gap-5 overflow-y-auto z-10 text-xs">
+      <div>
+        <h2 class="text-xs font-bold uppercase tracking-wider text-cyan-400 mb-1">Parametric Dimensions</h2>
+        <p class="text-slate-400 text-[11px]">Directly mutate geometric features in real-time.</p>
+      </div>
+
+      <!-- Parametric Sliders -->
+      <div class="space-y-4 font-mono">
+        <div class="space-y-1">
+          <div class="flex justify-between">
+            <span class="text-slate-300">OUTER RADIUS (R1)</span>
+            <span class="text-cyan-400 font-bold" id="dim-val-r1">50 mm</span>
+          </div>
+          <input type="range" min="30" max="80" value="50" oninput="updateParam('r1', this.value)" class="w-full h-1 bg-slate-800 rounded accent-cyan-400 cursor-pointer">
         </div>
-    </header>
 
-    <main class="max-w-6xl mx-auto px-6 py-12 relative z-10 space-y-16">
-        
-        <!-- Hero Section -->
-        <section id="hero" class="text-center max-w-4xl mx-auto space-y-8">
-            <div id="logo-container" class="p-6 bg-slate-950 rounded-xl border border-slate-800 shadow-inner w-full overflow-x-auto text-cyan-400 ascii-logo text-left flex justify-center mx-auto opacity-0 translate-y-8">
-   ██████╗ █████╗ ██████╗                      
-  ██╔════╝██╔══██╗██╔══██╗                     
-  ██║     ███████║██║  ██║                     
-  ██║     ██╔══██║██║  ██║                     
-  ╚██████╗██║  ██║██████╔╝                     
-   ╚═════╝╚═╝  ╚═╝╚═════╝                      
-  ████████╗ ██████╗  ██████╗ ██╗     ███████╗  
-  ╚══██╔══╝██╔═══██╗██╔═══██╗██║     ██╔════╝  
-     ██║   ██║   ██║██║   ██║██║     ███████╗  
-     ██║   ██║   ██║██║   ██║██║     ╚════██║  
-     ██║   ╚██████╔╝╚██████╔╝███████╗███████║  
-     ╚═╝    ╚═════╝  ╚═════╝ ╚══════╝╚══════╝  
-            </div>
-            
-            <p id="desc" class="text-lg md:text-xl text-slate-400 leading-relaxed opacity-0 translate-y-4">
-                Comprehensive CAD/CAM engineering skill for AI agents — orchestrating parametric 3D modeling, multi-format conversion, mass property analysis, desktop CAD automation, and AI-generative geometry workflows using open-source and cloud toolchains.
-            </p>
-        </section>
+        <div class="space-y-1">
+          <div class="flex justify-between">
+            <span class="text-slate-300">INNER BORE (R2)</span>
+            <span class="text-cyan-400 font-bold" id="dim-val-r2">20 mm</span>
+          </div>
+          <input type="range" min="10" max="25" value="20" oninput="updateParam('r2', this.value)" class="w-full h-1 bg-slate-800 rounded accent-cyan-400 cursor-pointer">
+        </div>
 
-        <!-- Context & Details -->
-        <section id="context" class="grid md:grid-cols-2 gap-8 opacity-0 translate-y-8">
-            
-            <div class="glass-panel p-8 rounded-2xl flex flex-col gap-4">
-                <div class="flex items-center gap-3 border-b border-slate-800/50 pb-4">
-                    <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
-                    <h3 class="text-xl font-bold text-white tracking-wide">Skill Context</h3>
-                </div>
-                <p class="text-slate-400 leading-relaxed">
-                    This sandbox provides a high-fidelity presentation layer for the <strong class="text-slate-200">cad-tools</strong> skill. Whether this is an interactive GUI skill or a headless CI/CD backend integration, the Code Scaffold runtime seamlessly provisions its exact structural constraints directly into your workspace.
-                </p>
-            </div>
+        <div class="space-y-1">
+          <div class="flex justify-between">
+            <span class="text-slate-300">THICKNESS / HEIGHT</span>
+            <span class="text-cyan-400 font-bold" id="dim-val-h">25 mm</span>
+          </div>
+          <input type="range" min="10" max="50" value="25" oninput="updateParam('h', this.value)" class="w-full h-1 bg-slate-800 rounded accent-cyan-400 cursor-pointer">
+        </div>
+      </div>
 
-            <div class="glass-panel p-8 rounded-2xl flex flex-col gap-4">
-                <div class="flex items-center gap-3 border-b border-slate-800/50 pb-4">
-                    <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                    <h3 class="text-xl font-bold text-white tracking-wide">CLI Deployment</h3>
-                </div>
-                <p class="text-slate-400 leading-relaxed mb-2">
-                    To inject this specialized knowledge graph and scaffolding payload directly into your project architecture, run the following command in your terminal:
-                </p>
-                <div class="relative flex items-center bg-slate-950 border border-slate-800 rounded-lg p-4 shadow-xl group cursor-pointer overflow-hidden">
-                    <div class="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg blur opacity-20 group-hover:opacity-40 transition duration-500"></div>
-                    <code class="relative text-cyan-400 font-mono text-sm md:text-base text-left w-full">npx @code-scaffold/skills install cad-tools<span class="cursor"></span></code>
-                </div>
-            </div>
+      <!-- Mass Property Analysis Card -->
+      <div class="bg-slate-900/90 rounded-xl p-4 border border-slate-800 space-y-3 font-mono">
+        <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+          <span class="text-slate-400 font-bold text-[10px] uppercase tracking-wider">Mass Properties</span>
+          <span class="px-2 py-0.5 bg-emerald-950/60 text-emerald-400 border border-emerald-800/60 rounded text-[10px]">MANIFOLD SOLID</span>
+        </div>
 
-        </section>
-        
-        <div id="footer-spacer" class="h-12"></div>
-    </main>
+        <div class="space-y-2 text-[11px]">
+          <div class="flex justify-between">
+            <span class="text-slate-400">MATERIAL:</span>
+            <select onchange="updateMaterial(this.value)" id="material-select" class="bg-slate-950 border border-slate-800 rounded px-2 py-0.5 text-cyan-300 text-[11px]">
+              <option value="aluminum">Aluminum 6061 (2.70 g/cm³)</option>
+              <option value="steel">Stainless 304 (7.93 g/cm³)</option>
+              <option value="pla">PLA Plastic (1.24 g/cm³)</option>
+              <option value="titanium">Titanium Ti-6Al-4V (4.43 g/cm³)</option>
+            </select>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-400">SOLID VOLUME:</span>
+            <span class="text-slate-200 font-bold" id="prop-volume">82,460 mm³</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-400">SURFACE AREA:</span>
+            <span class="text-slate-200 font-bold" id="prop-area">34,120 mm²</span>
+          </div>
+          <div class="flex justify-between border-t border-slate-800/60 pt-1.5">
+            <span class="text-slate-400">TOTAL MASS:</span>
+            <span class="text-cyan-400 font-bold" id="prop-mass">222.6 g</span>
+          </div>
+        </div>
+      </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const tl = gsap.timeline();
-            
-            tl.to("#logo-container", {
-                y: 0,
-                opacity: 1,
-                duration: 0.8,
-                ease: "back.out(1.4)"
-            })
-            .to("#desc", {
-                y: 0,
-                opacity: 1,
-                duration: 0.6,
-                ease: "power3.out"
-            }, "-=0.5")
-            .to("#context", {
-                y: 0,
-                opacity: 1,
-                duration: 0.8,
-                ease: "power3.out"
-            }, "-=0.4");
+      <!-- Export Formats -->
+      <div class="bg-slate-900/90 rounded-xl p-4 border border-slate-800 space-y-2">
+        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Export Pipeline</span>
+        <div class="grid grid-cols-2 gap-1.5 font-mono text-[11px]">
+          <button class="px-2 py-1.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded text-cyan-300 text-left">.STEP (ISO 10303)</button>
+          <button class="px-2 py-1.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded text-purple-300 text-left">.STL (Binary)</button>
+          <button class="px-2 py-1.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded text-emerald-300 text-left">.DXF (CNC 2D)</button>
+          <button class="px-2 py-1.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded text-blue-300 text-left">.GLTF (3D Web)</button>
+        </div>
+      </div>
+
+      <div class="p-3 bg-cyan-950/20 border border-cyan-800/40 rounded-xl text-[11px] text-slate-400 space-y-1 mt-auto">
+        <span class="text-cyan-400 font-bold block">&bull; B-Rep Kernel</span>
+        <span>Parametric OpenCASCADE kernel integration via build123d Python pipelines with deterministic mesh export.</span>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const container = document.getElementById('canvas-container');
+    let scene, camera, renderer, controls;
+    let currentMesh = null;
+    let currentModelType = 'flange';
+    let renderMode = 'shaded';
+    let params = { r1: 50, r2: 20, h: 25 };
+    let materialDensity = 2.70; // Aluminum 6061 (g/cm^3)
+
+    function init() {
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x020617);
+
+      camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+      camera.position.set(120, 100, 140);
+
+      renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(container.clientWidth, container.clientHeight);
+      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.shadowMap.enabled = true;
+      container.appendChild(renderer.domElement);
+
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+
+      // Lights
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+      scene.add(ambientLight);
+
+      const dirLight1 = new THREE.DirectionalLight(0x22d3ee, 0.8);
+      dirLight1.position.set(100, 150, 100);
+      scene.add(dirLight1);
+
+      const dirLight2 = new THREE.DirectionalLight(0xffffff, 0.5);
+      dirLight2.position.set(-100, -50, -100);
+      scene.add(dirLight2);
+
+      // Grid Floor
+      const grid = new THREE.GridHelper(200, 20, 0x1e293b, 0x0f172a);
+      grid.position.y = -20;
+      scene.add(grid);
+
+      window.addEventListener('resize', onWindowResize);
+
+      buildModel();
+      animate();
+    }
+
+    function onWindowResize() {
+      camera.aspect = container.clientWidth / container.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(container.clientWidth, container.clientHeight);
+    }
+
+    function buildModel() {
+      if (currentMesh) scene.remove(currentMesh);
+
+      const group = new THREE.Group();
+
+      let mat;
+      if (renderMode === 'wireframe') {
+        mat = new THREE.MeshBasicMaterial({ color: 0x22d3ee, wireframe: true });
+      } else if (renderMode === 'xray') {
+        mat = new THREE.MeshPhysicalMaterial({
+          color: 0x38bdf8,
+          transparent: true,
+          opacity: 0.35,
+          roughness: 0.1,
+          transmission: 0.9,
+          ior: 1.5
         });
-    </script>
+      } else {
+        mat = new THREE.MeshStandardMaterial({
+          color: 0x334155,
+          metalness: 0.7,
+          roughness: 0.25,
+          wireframe: false
+        });
+      }
+
+      if (currentModelType === 'flange') {
+        // Main base disc
+        const baseGeo = new THREE.CylinderGeometry(params.r1, params.r1, params.h * 0.4, 48);
+        const baseMesh = new THREE.Mesh(baseGeo, mat);
+        group.add(baseMesh);
+
+        // Center hub
+        const hubGeo = new THREE.CylinderGeometry(params.r1 * 0.55, params.r1 * 0.55, params.h, 48);
+        hubGeo.translate(0, params.h * 0.3, 0);
+        const hubMesh = new THREE.Mesh(hubGeo, mat);
+        group.add(hubMesh);
+
+        // Center bore inner cylinder (carved visual representation)
+        const boreGeo = new THREE.CylinderGeometry(params.r2, params.r2, params.h * 1.1, 32);
+        boreGeo.translate(0, params.h * 0.3, 0);
+        const boreMat = new THREE.MeshBasicMaterial({ color: 0x090d16 });
+        const boreMesh = new THREE.Mesh(boreGeo, boreMat);
+        group.add(boreMesh);
+
+        // Bolt holes around perimeter
+        const boltCount = 6;
+        const boltRadius = (params.r1 + params.r1 * 0.55) / 2;
+        for (let i = 0; i < boltCount; i++) {
+          const angle = (i / boltCount) * Math.PI * 2;
+          const bx = Math.cos(angle) * boltRadius;
+          const bz = Math.sin(angle) * boltRadius;
+          const boltHole = new THREE.CylinderGeometry(4, 4, params.h * 0.45, 16);
+          boltHole.translate(bx, 0, bz);
+          const bMesh = new THREE.Mesh(boltHole, boreMat);
+          group.add(bMesh);
+        }
+      } else if (currentModelType === 'gear') {
+        // Gear body
+        const gearGeo = new THREE.CylinderGeometry(params.r1 * 0.9, params.r1 * 0.9, params.h * 0.6, 48);
+        const gearMesh = new THREE.Mesh(gearGeo, mat);
+        group.add(gearMesh);
+
+        // Gear teeth around perimeter
+        const teethCount = 18;
+        for (let i = 0; i < teethCount; i++) {
+          const angle = (i / teethCount) * Math.PI * 2;
+          const tooth = new THREE.BoxGeometry(params.r1 * 0.25, params.h * 0.6, params.r1 * 0.12);
+          tooth.rotateY(-angle);
+          tooth.translate(Math.cos(angle) * params.r1 * 0.95, 0, Math.sin(angle) * params.r1 * 0.95);
+          const tMesh = new THREE.Mesh(tooth, mat);
+          group.add(tMesh);
+        }
+
+        // Center bore
+        const boreGeo = new THREE.CylinderGeometry(params.r2, params.r2, params.h, 32);
+        const boreMesh = new THREE.Mesh(boreGeo, new THREE.MeshBasicMaterial({ color: 0x090d16 }));
+        group.add(boreMesh);
+      } else if (currentModelType === 'bracket') {
+        // Base plate
+        const base = new THREE.BoxGeometry(params.r1 * 1.6, params.h * 0.3, params.r1 * 1.2);
+        base.translate(0, -params.h * 0.15, 0);
+        group.add(new THREE.Mesh(base, mat));
+
+        // Vertical wall
+        const wall = new THREE.BoxGeometry(params.r1 * 1.6, params.h * 1.2, params.h * 0.3);
+        wall.translate(0, params.h * 0.6, -params.r1 * 0.45);
+        group.add(new THREE.Mesh(wall, mat));
+
+        // Center gusset rib
+        const rib = new THREE.BoxGeometry(params.h * 0.25, params.h * 0.9, params.r1 * 0.7);
+        rib.translate(0, params.h * 0.4, 0);
+        group.add(new THREE.Mesh(rib, mat));
+      }
+
+      currentMesh = group;
+      scene.add(currentMesh);
+
+      calculateProperties();
+    }
+
+    function calculateProperties() {
+      // Approximate physical properties based on geometric parameters
+      let volCm3 = 0;
+      let areaCm2 = 0;
+
+      if (currentModelType === 'flange') {
+        const discVol = Math.PI * Math.pow(params.r1 / 10, 2) * (params.h * 0.4 / 10);
+        const hubVol = Math.PI * Math.pow((params.r1 * 0.55) / 10, 2) * (params.h * 0.6 / 10);
+        const boreVol = Math.PI * Math.pow(params.r2 / 10, 2) * (params.h / 10);
+        volCm3 = Math.max(10, discVol + hubVol - boreVol);
+        areaCm2 = volCm3 * 0.42;
+      } else if (currentModelType === 'gear') {
+        volCm3 = Math.PI * Math.pow(params.r1 / 10, 2) * (params.h * 0.6 / 10) * 1.15;
+        areaCm2 = volCm3 * 0.55;
+      } else {
+        volCm3 = (params.r1 * 1.6 / 10) * (params.h / 10) * (params.r1 * 1.2 / 10) * 0.45;
+        areaCm2 = volCm3 * 0.48;
+      }
+
+      const massGrams = volCm3 * materialDensity;
+
+      document.getElementById('prop-volume').textContent = `${(volCm3 * 1000).toFixed(0)} mm³`;
+      document.getElementById('prop-area').textContent = `${(areaCm2 * 100).toFixed(0)} mm²`;
+      document.getElementById('prop-mass').textContent = `${massGrams.toFixed(1)} g`;
+    }
+
+    function setModel(type) {
+      currentModelType = type;
+      ['flange', 'gear', 'bracket'].forEach(m => {
+        const btn = document.getElementById(`btn-model-${m}`);
+        if (m === type) {
+          btn.className = "px-3 py-1.5 rounded-lg font-medium transition bg-cyan-500/20 text-cyan-300 border border-cyan-500/40";
+        } else {
+          btn.className = "px-3 py-1.5 rounded-lg font-medium transition text-slate-400 hover:text-white border border-slate-800";
+        }
+      });
+      buildModel();
+    }
+
+    function setRenderMode(mode) {
+      renderMode = mode;
+      ['shaded', 'wireframe', 'xray'].forEach(m => {
+        const btn = document.getElementById(`btn-mode-${m}`);
+        if (m === mode) {
+          btn.className = "px-2.5 py-1 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40";
+        } else {
+          btn.className = "px-2.5 py-1 rounded text-slate-400 hover:text-white";
+        }
+      });
+      document.getElementById('view-mode-label').textContent = mode.toUpperCase();
+      buildModel();
+    }
+
+    function updateParam(param, val) {
+      params[param] = parseFloat(val);
+      document.getElementById(`dim-val-${param}`).textContent = `${val} mm`;
+      buildModel();
+    }
+
+    function updateMaterial(val) {
+      const densities = {
+        aluminum: 2.70,
+        steel: 7.93,
+        pla: 1.24,
+        titanium: 4.43
+      };
+      materialDensity = densities[val] || 2.70;
+      calculateProperties();
+    }
+
+    function resetCamera() {
+      camera.position.set(120, 100, 140);
+      controls.target.set(0, 0, 0);
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      if (currentMesh) {
+        currentMesh.rotation.y += 0.003;
+      }
+      controls.update();
+      renderer.render(scene, camera);
+    }
+
+    init();
+  </script>
 </body>
 </html>

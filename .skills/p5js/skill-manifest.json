@@ -22,5 +22,6 @@
     "interactive-sketches",
     "webgl"
   ],
+  "hasSandbox": true,
   "integrity": "cs:sha256:3ae98176f98f0440f0a6b0eefbc319e530ebbb78431c8443ac81fda464357c5d"
 }

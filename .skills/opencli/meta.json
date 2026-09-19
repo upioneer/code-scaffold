@@ -3,6 +3,7 @@
   "description": "Bridge websites and the CLI for structured data extraction and browser automation",
   "version": "2",
   "target": ".skills/opencli",
+  "hasSandbox": false,
   "logo": [
     "   ██████╗ ██████╗ ███████╗███╗   ██╗ ██████╗██╗     ██╗  ",
     "  ██╔═══██╗██╔══██╗██╔════╝████╗  ██║██╔════╝██║     ██║  ",

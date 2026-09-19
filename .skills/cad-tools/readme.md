@@ -1,6 +1,6 @@
 # CAD Tools
 
-**Version:** 2
+**Version:** 3
 **Target:** `.skills/cad-tools`
 **Category:** Animation & Graphics
 **Keywords:** `cad`, `3d-modeling`, `step-files`, `stl`, `parametric-design`, `manufacturing`, `engineering`
@@ -11,6 +11,7 @@ A comprehensive CAD/CAM engineering skill that equips AI agents with the full de
 
 ## Capabilities & Use Cases
 
+* **Parametric 3D CAD Workbench** : WebGL Three.js interactive 3D solid modeling workbench with real-time dimension sliders, shaded/wireframe/x-ray modes, orbit controls, and live mass property telemetry
 * **Code-as-CAD Parametric Modeling** using `build123d` (Python) and the OpenCASCADE geometric kernel: agents write version-controlled, fully parametric Python scripts instead of generating opaque binary files, enabling exact edits, diffs, and reproducible compilation
 * **JSON-to-CAD Interoperability Engine:** Translates GhostPoly-inspired JSON schemas directly into B-Rep solid geometry for cross-platform and web UI database integrations
 * **Solid B-Rep geometry generation** producing engineering-grade STEP files from natural language or structured specs, with support for shells, fillets, chamfers, Boolean operations, and named-parameter architectures
@@ -31,16 +32,17 @@ A comprehensive CAD/CAM engineering skill that equips AI agents with the full de
 ## Usage
 
 Activate this skill for any task involving:
-- Designing 3D enclosures, brackets, mechanical parts, or assemblies
-- Translating JSON geometric schemas into compiled CAD files
-- Converting CAD files between engineering formats
-- Generating AI-driven 3D geometry from natural language descriptions
-- Automating drawing workflows in AutoCAD/ZWCAD via COM
-- Validating 3D print readiness or CNC machinability
-- Computing geometric mass properties for engineering analysis
-- Maintaining structured BOM documentation alongside CAD models
+* Designing 3D enclosures, brackets, mechanical parts, or assemblies
+* Translating JSON geometric schemas into compiled CAD files
+* Converting CAD files between engineering formats
+* Generating AI-driven 3D geometry from natural language descriptions
+* Automating drawing workflows in AutoCAD/ZWCAD via COM
+* Validating 3D print readiness or CNC machinability
+* Computing geometric mass properties for engineering analysis
+* Maintaining structured BOM documentation alongside CAD models
 
 ## Changelog
 
-* **v1** : Initial release covering build123d parametric modeling, Zoo.dev cloud API (text-to-CAD, format conversion, mass properties), Windows COM desktop automation (AutoCAD/ZWCAD/GstarCAD), VTK off-screen rendering, trimesh validation, CNC machinability checks, BOM management, and project structure conventions.
+* **v3** : Integrated interactive CAD Tools Parametric 3D CAD Workbench sandbox and updated manifest flags
 * **v2** : Added JSON-to-CAD interoperability engine.
+* **v1** : Initial release covering build123d parametric modeling, Zoo.dev cloud API (text-to-CAD, format conversion, mass properties), Windows COM desktop automation (AutoCAD/ZWCAD/GstarCAD), VTK off-screen rendering, trimesh validation, CNC machinability checks, BOM management, and project structure conventions.

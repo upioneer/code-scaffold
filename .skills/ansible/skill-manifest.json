@@ -23,5 +23,6 @@
     "automation",
     "yaml"
   ],
+  "hasSandbox": false,
   "integrity": "cs:sha256:11d009ad50cb549626cc7665e3fb7ffe7f0e74101ff02c8f4316f5ab8e0cb6a0"
 }

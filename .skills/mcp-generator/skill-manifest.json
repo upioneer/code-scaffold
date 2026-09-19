@@ -23,5 +23,6 @@
     "json-rpc",
     "agent-integrations"
   ],
+  "hasSandbox": false,
   "integrity": "cs:sha256:ef3b62c03f87768ea75fbae4cf606e7ebf9dc4edbb3d80176fe6170dc87361b5"
 }

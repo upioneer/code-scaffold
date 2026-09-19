@@ -3,6 +3,7 @@
   "description": "Agent harness for headlessly deploying Code Scaffold assets.",
   "version": "6",
   "target": ".skills/code-scaffold",
+  "hasSandbox": false,
   "logo": [
     "   ██████╗ ██████╗ ██████╗ ███████╗                                  ",
     "  ██╔════╝██╔═══██╗██╔══██╗██╔════╝                                  ",

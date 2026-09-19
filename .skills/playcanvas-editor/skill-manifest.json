@@ -23,5 +23,6 @@
     "gltf",
     "spatial-dev"
   ],
+  "hasSandbox": false,
   "integrity": "cs:sha256:a64a012317854659f8655bb97de21ae4359dcdbe70de6b6d37951ef72d3a95d1"
 }

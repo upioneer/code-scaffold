@@ -2,118 +2,332 @@
 <html lang="en">
 <head>
   <!-- Code Scaffold Specification Schema: https://code-scaffold.com/spec/v1 -->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Slidev - Sandbox</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <style>
-        body { margin: 0; padding: 0; width: 100vw; min-height: 100vh; overflow-x: hidden; background-color: #020617; color: #f8fafc; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
-        .glass-panel { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(34, 211, 238, 0.2); }
-        .ascii-logo { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; white-space: pre; line-height: 1.2; font-size: 0.6rem; }
-        @media (min-width: 768px) { .ascii-logo { font-size: 0.8rem; } }
-        .grid-bg { background-image: radial-gradient(rgba(34, 211, 238, 0.1) 1px, transparent 1px); background-size: 30px 30px; }
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: #0f172a; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #475569; }
-        
-        /* Pulse Animation for Terminal Cursor */
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-        .cursor { display: inline-block; width: 8px; height: 1.2em; background-color: #22d3ee; vertical-align: text-bottom; animation: blink 1s step-end infinite; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Slidev - Developer Presentation Deck Player</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body, html {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background-color: #020617;
+      color: #f8fafc;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      user-select: none;
+    }
+    .grid-bg {
+      background-image: radial-gradient(rgba(34, 211, 238, 0.08) 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(34, 211, 238, 0.2);
+    }
+    .slide-stage {
+      aspect-ratio: 16 / 9;
+      max-height: calc(100vh - 120px);
+      max-width: calc((100vh - 120px) * (16 / 9));
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8), 0 0 40px rgba(34, 211, 238, 0.1);
+    }
+    .slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(30px);
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(0);
+    }
+    .slide.prev {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(-30px);
+    }
+  </style>
 </head>
-<body class="grid-bg relative antialiased selection:bg-cyan-500/30">
-    
-    <!-- Background Glow -->
-    <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-cyan-600/10 rounded-full blur-[150px] pointer-events-none"></div>
+<body class="grid-bg flex flex-col h-screen overflow-hidden">
 
-    <!-- Sticky Header -->
-    <header class="sticky top-0 z-50 glass-panel border-x-0 border-t-0 border-b-slate-800/80 px-6 py-4">
-        <div class="max-w-6xl mx-auto flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded bg-cyan-500/20 flex items-center justify-center border border-cyan-500/50 text-cyan-400 font-bold">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                </div>
-                <h1 class="text-xl font-black uppercase tracking-widest text-white">Slidev</h1>
-            </div>
-            <span class="px-3 py-1 bg-cyan-500/10 text-cyan-400 text-xs font-bold rounded-full border border-cyan-500/30 uppercase tracking-widest hidden sm:inline-block">v2</span>
+  <!-- Top Slide Deck Header -->
+  <header class="h-12 glass-panel px-6 flex items-center justify-between z-20 border-b border-slate-800">
+    <div class="flex items-center gap-3">
+      <div class="w-6 h-6 rounded bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center text-cyan-400 font-bold text-xs">
+        S
+      </div>
+      <span class="text-xs font-bold uppercase tracking-wider text-slate-200">
+        Slidev Deck &bull; <span class="text-cyan-400">Code Scaffold Architecture</span>
+      </span>
+    </div>
+
+    <!-- Slide Index Tracker -->
+    <div class="flex items-center gap-2 text-xs font-mono text-slate-400">
+      <span class="text-white font-bold" id="current-slide-num">1</span>
+      <span>/</span>
+      <span id="total-slides-num">5</span>
+    </div>
+
+    <!-- Deck Controls -->
+    <div class="flex items-center gap-2">
+      <button onclick="toggleNotes()" id="btn-notes" class="px-2.5 py-1 text-xs rounded bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition">
+        Presenter Notes
+      </button>
+      <button onclick="toggleGrid()" id="btn-grid" class="px-2.5 py-1 text-xs rounded bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition">
+        Thumbnails
+      </button>
+    </div>
+  </header>
+
+  <!-- Progress Bar at Top -->
+  <div class="w-full bg-slate-900 h-1">
+    <div id="deck-progress" class="h-full bg-gradient-to-r from-cyan-500 to-blue-500 transition-all duration-300" style="width: 20%;"></div>
+  </div>
+
+  <!-- Main Viewport Arena -->
+  <main class="flex-1 flex items-center justify-center p-6 relative overflow-hidden">
+
+    <!-- 16:9 Slide Presentation Frame -->
+    <div class="slide-stage w-full bg-slate-950 rounded-2xl border border-slate-800 relative overflow-hidden flex flex-col">
+
+      <!-- SLIDE 1: TITLE -->
+      <div class="slide active p-12 flex flex-col justify-center gap-6" id="slide-1">
+        <div class="space-y-4 max-w-3xl">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono bg-cyan-950/60 border border-cyan-800/60 text-cyan-300">
+            <span>&bull; SLIDEV DEVELOPER ENGINE</span>
+            <span>|</span>
+            <span>VUE 3 + UNOCSS</span>
+          </div>
+          <h1 class="text-4xl md:text-5xl font-black text-white leading-tight">
+            High-Performance AI Agentic Scaffolding
+          </h1>
+          <p class="text-lg text-slate-400 leading-relaxed">
+            Deterministic code provenance, zero-brand-leak abstractions, and reactive multi-platform TUI execution.
+          </p>
         </div>
-    </header>
 
-    <main class="max-w-6xl mx-auto px-6 py-12 relative z-10 space-y-16">
-        
-        <!-- Hero Section -->
-        <section id="hero" class="text-center max-w-4xl mx-auto space-y-8">
-            <div id="logo-container" class="p-6 bg-slate-950 rounded-xl border border-slate-800 shadow-inner w-full overflow-x-auto text-cyan-400 ascii-logo text-left flex justify-center mx-auto opacity-0 translate-y-8">
-  ███████╗██╗     ██╗██████╗ ███████╗██╗   ██╗  
-  ██╔════╝██║     ██║██╔══██╗██╔════╝██║   ██║  
-  ███████╗██║     ██║██║  ██║█████╗  ██║   ██║  
-  ╚════██║██║     ██║██║  ██║██╔══╝  ╚██╗ ██╔╝  
-  ███████║███████╗██║██████╔╝███████╗ ╚████╔╝   
-  ╚══════╝╚══════╝╚═╝╚═════╝ ╚══════╝  ╚═══╝    
-            </div>
-            
-            <p id="desc" class="text-lg md:text-xl text-slate-400 leading-relaxed opacity-0 translate-y-4">
-                Comprehensive skill for building, configuring, and exporting Slidev markdown presentations.
-            </p>
-        </section>
+        <div class="pt-6 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400 font-mono">
+          <span>SPEAKER: CODE SCAFFOLD ARCHITECT</span>
+          <span class="text-cyan-400">PRESS [SPACE] OR [&rarr;] FOR NEXT SLIDE</span>
+        </div>
+      </div>
 
-        <!-- Context & Details -->
-        <section id="context" class="grid md:grid-cols-2 gap-8 opacity-0 translate-y-8">
-            
-            <div class="glass-panel p-8 rounded-2xl flex flex-col gap-4">
-                <div class="flex items-center gap-3 border-b border-slate-800/50 pb-4">
-                    <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
-                    <h3 class="text-xl font-bold text-white tracking-wide">Skill Context</h3>
-                </div>
-                <p class="text-slate-400 leading-relaxed">
-                    This sandbox provides a high-fidelity presentation layer for the <strong class="text-slate-200">slidev</strong> skill. Whether this is an interactive GUI skill or a headless CI/CD backend integration, the Code Scaffold runtime seamlessly provisions its exact structural constraints directly into your workspace.
-                </p>
-            </div>
+      <!-- SLIDE 2: ARCHITECTURE & CODE -->
+      <div class="slide p-12 flex flex-col justify-center gap-6" id="slide-2">
+        <div>
+          <span class="text-xs font-mono text-cyan-400 uppercase tracking-wider block mb-1">01 &bull; CORE PARADIGM</span>
+          <h2 class="text-2xl md:text-3xl font-bold text-white">Declarative Rust State Engine</h2>
+        </div>
 
-            <div class="glass-panel p-8 rounded-2xl flex flex-col gap-4">
-                <div class="flex items-center gap-3 border-b border-slate-800/50 pb-4">
-                    <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                    <h3 class="text-xl font-bold text-white tracking-wide">CLI Deployment</h3>
-                </div>
-                <p class="text-slate-400 leading-relaxed mb-2">
-                    To inject this specialized knowledge graph and scaffolding payload directly into your project architecture, run the following command in your terminal:
-                </p>
-                <div class="relative flex items-center bg-slate-950 border border-slate-800 rounded-lg p-4 shadow-xl group cursor-pointer overflow-hidden">
-                    <div class="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg blur opacity-20 group-hover:opacity-40 transition duration-500"></div>
-                    <code class="relative text-cyan-400 font-mono text-sm md:text-base text-left w-full">npx @code-scaffold/skills install slidev<span class="cursor"></span></code>
-                </div>
-            </div>
+        <!-- Code Block Preview -->
+        <div class="bg-slate-900 rounded-xl p-5 border border-slate-800 font-mono text-xs text-slate-300 overflow-x-auto">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-3 text-slate-500 text-[11px]">
+            <span>src/skills_cli/search.rs</span>
+            <span class="text-cyan-400">RUST 2024</span>
+          </div>
+          <pre class="leading-relaxed"><code><span class="text-purple-400">pub fn</span> <span class="text-blue-400">render_search_results</span>(results: &[<span class="text-cyan-400">SkillRecord</span>], query: &<span class="text-purple-400">str</span>) {
+    <span class="text-slate-500">// Zero-allocation streaming buffer formatting</span>
+    <span class="text-purple-400">for</span> record <span class="text-purple-400">in</span> results {
+        <span class="text-blue-400">println!</span>(<span class="text-emerald-300">"{} [{}] - {}"</span>, record.label, record.version, record.description);
+        <span class="text-purple-400">assert!</span>(record.integrity.<span class="text-blue-400">starts_with</span>(<span class="text-emerald-300">"cs:sha256:"</span>));
+    }
+}</code></pre>
+        </div>
 
-        </section>
-        
-        <div id="footer-spacer" class="h-12"></div>
-    </main>
+        <p class="text-xs text-slate-400 font-mono">
+          Every skill payload is cryptographically bound to its whole-number version string.
+        </p>
+      </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const tl = gsap.timeline();
-            
-            tl.to("#logo-container", {
-                y: 0,
-                opacity: 1,
-                duration: 0.8,
-                ease: "back.out(1.4)"
-            })
-            .to("#desc", {
-                y: 0,
-                opacity: 1,
-                duration: 0.6,
-                ease: "power3.out"
-            }, "-=0.5")
-            .to("#context", {
-                y: 0,
-                opacity: 1,
-                duration: 0.8,
-                ease: "power3.out"
-            }, "-=0.4");
-        });
-    </script>
+      <!-- SLIDE 3: BENTO FEATURE MATRIX -->
+      <div class="slide p-12 flex flex-col justify-center gap-6" id="slide-3">
+        <div>
+          <span class="text-xs font-mono text-cyan-400 uppercase tracking-wider block mb-1">02 &bull; DEPLOYMENT CAPABILITIES</span>
+          <h2 class="text-2xl md:text-3xl font-bold text-white">Autonomous Agent Features</h2>
+        </div>
+
+        <div class="grid grid-cols-3 gap-4 text-xs">
+          <div class="bg-slate-900/80 p-5 rounded-xl border border-slate-800 space-y-2">
+            <div class="w-8 h-8 rounded bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold">01</div>
+            <h3 class="font-bold text-white text-sm">Strict 5-File Anatomy</h3>
+            <p class="text-slate-400 leading-relaxed">Mandated SKILL.md, meta.json, manifest, readme.md, and high fidelity sandboxes.</p>
+          </div>
+          <div class="bg-slate-900/80 p-5 rounded-xl border border-slate-800 space-y-2">
+            <div class="w-8 h-8 rounded bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold">02</div>
+            <h3 class="font-bold text-white text-sm">Zero Brand Leak</h3>
+            <p class="text-slate-400 leading-relaxed">Aggressive proprietary rebranding under bespoke Code Scaffold identities.</p>
+          </div>
+          <div class="bg-slate-900/80 p-5 rounded-xl border border-slate-800 space-y-2">
+            <div class="w-8 h-8 rounded bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">03</div>
+            <h3 class="font-bold text-white text-sm">Multi-Platform Matrix</h3>
+            <p class="text-slate-400 leading-relaxed">Compiled natively across Windows, Linux, and macOS ARM64 and x64 architectures.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 4: CLI AD-HOC DISTRIBUTION -->
+      <div class="slide p-12 flex flex-col justify-center gap-6" id="slide-4">
+        <div>
+          <span class="text-xs font-mono text-cyan-400 uppercase tracking-wider block mb-1">03 &bull; AD-HOC CLI INSTALLATION</span>
+          <h2 class="text-2xl md:text-3xl font-bold text-white">Terminal Ecosystem Commands</h2>
+        </div>
+
+        <div class="space-y-3 font-mono text-xs">
+          <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 flex items-center justify-between">
+            <code class="text-cyan-300">code-scaffold skills list</code>
+            <span class="text-slate-500">List all 56 certified skills</span>
+          </div>
+          <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 flex items-center justify-between">
+            <code class="text-cyan-300">code-scaffold skills search "spatial"</code>
+            <span class="text-slate-500">Discover skills by keyword</span>
+          </div>
+          <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 flex items-center justify-between">
+            <code class="text-cyan-300">code-scaffold skills install slidev</code>
+            <span class="text-slate-500">Inject slidev into active workspace</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 5: CONCLUSION & METRICS -->
+      <div class="slide p-12 flex flex-col justify-center items-center text-center gap-6" id="slide-5">
+        <div class="w-16 h-16 rounded-2xl bg-cyan-500/20 border border-cyan-500/50 flex items-center justify-center text-cyan-400">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <div class="space-y-2 max-w-xl">
+          <h2 class="text-3xl font-black text-white">56 / 56 Skills 100% Compliant</h2>
+          <p class="text-sm text-slate-400 leading-relaxed">
+            Automated verification verified by SkillForge Gatekeeper with cryptographic SHA-256 provenance anchors.
+          </p>
+        </div>
+        <button onclick="goToSlide(1)" class="px-5 py-2.5 text-xs bg-cyan-500 text-slate-950 font-bold rounded-xl hover:bg-cyan-400 transition">
+          Restart Presentation
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Presenter Notes Drawer (Floating Overlay) -->
+    <div id="notes-drawer" class="absolute bottom-6 right-6 w-80 glass-panel rounded-2xl p-4 z-30 shadow-2xl border border-slate-800 hidden space-y-2 text-xs">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+        <span class="font-bold text-cyan-400">&bull; PRESENTER NOTES</span>
+        <span class="font-mono text-slate-500" id="notes-timer">00:00</span>
+      </div>
+      <p id="notes-text" class="text-slate-300 leading-relaxed text-[11px]">
+        Welcome the team and introduce Code Scaffold's strict cognitive invariants. Highlight whole-number versioning and zero brand leakage.
+      </p>
+    </div>
+
+  </main>
+
+  <!-- Bottom Nav Controls -->
+  <footer class="h-12 glass-panel px-6 flex items-center justify-between z-20 border-t border-slate-800">
+    <div class="flex items-center gap-2">
+      <button onclick="prevSlide()" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs rounded border border-slate-700 transition flex items-center gap-1">
+        <span>&larr;</span> Prev
+      </button>
+      <button onclick="nextSlide()" class="px-3 py-1 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs rounded transition flex items-center gap-1">
+        Next <span>&rarr;</span>
+      </button>
+    </div>
+
+    <div class="text-[11px] font-mono text-slate-500 hidden sm:block">
+      USE <kbd class="bg-slate-800 px-1 rounded text-slate-300">&larr;</kbd> <kbd class="bg-slate-800 px-1 rounded text-slate-300">&rarr;</kbd> KEYS TO PRESENT
+    </div>
+
+    <div class="flex items-center gap-1">
+      <span class="w-2 h-2 rounded-full bg-cyan-400 inline-block"></span>
+      <span class="text-xs font-mono text-slate-400">SLIDEV ENGINE LIVE</span>
+    </div>
+  </footer>
+
+  <script>
+    let currentSlide = 1;
+    const totalSlides = 5;
+
+    const presenterNotes = [
+      "Welcome the team and introduce Code Scaffold's strict cognitive invariants. Highlight whole-number versioning and zero brand leakage.",
+      "Explain the Rust MVU engine in scaffold-tui. Stress that all skills carry deterministic cs:sha256 tokens.",
+      "Showcase the bento capability grid: 5-file anatomy, brand leak protection, and cross-platform compilation matrix.",
+      "Demonstrate ad-hoc installation via CLI without requiring full scaffolding runs.",
+      "Conclude with gatekeeper verification: 56/56 skills passing all architectural rules."
+    ];
+
+    function updateDeck() {
+      for (let i = 1; i <= totalSlides; i++) {
+        const slide = document.getElementById(`slide-${i}`);
+        if (i === currentSlide) {
+          slide.className = "slide active p-12 flex flex-col justify-center gap-6";
+        } else if (i < currentSlide) {
+          slide.className = "slide prev p-12 flex flex-col justify-center gap-6";
+        } else {
+          slide.className = "slide p-12 flex flex-col justify-center gap-6";
+        }
+      }
+
+      document.getElementById('current-slide-num').textContent = currentSlide;
+      document.getElementById('deck-progress').style.width = `${(currentSlide / totalSlides) * 100}%`;
+      document.getElementById('notes-text').textContent = presenterNotes[currentSlide - 1];
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides) {
+        currentSlide++;
+        updateDeck();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 1) {
+        currentSlide--;
+        updateDeck();
+      }
+    }
+
+    function goToSlide(n) {
+      currentSlide = n;
+      updateDeck();
+    }
+
+    function toggleNotes() {
+      const drawer = document.getElementById('notes-drawer');
+      drawer.classList.toggle('hidden');
+    }
+
+    function toggleGrid() {
+      const target = prompt(`Jump to slide (1 - ${totalSlides}):`, currentSlide);
+      const parsed = parseInt(target);
+      if (parsed >= 1 && parsed <= totalSlides) {
+        goToSlide(parsed);
+      }
+    }
+
+    // Keyboard navigation
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        e.preventDefault();
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        e.preventDefault();
+        prevSlide();
+      } else if (e.key.toLowerCase() === 'p') {
+        toggleNotes();
+      }
+    });
+
+    // Timer for presenter notes
+    let elapsedSeconds = 0;
+    setInterval(() => {
+      elapsedSeconds++;
+      const mins = String(Math.floor(elapsedSeconds / 60)).padStart(2, '0');
+      const secs = String(elapsedSeconds % 60).padStart(2, '0');
+      document.getElementById('notes-timer').textContent = `${mins}:${secs}`;
+    }, 1000);
+
+    updateDeck();
+  </script>
 </body>
 </html>

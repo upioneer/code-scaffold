@@ -22,5 +22,6 @@
     "static-hosting",
     "spa-deploy"
   ],
+  "hasSandbox": false,
   "integrity": "cs:sha256:9491e536feaadd0c36d39e5c7734e9b184c96b34ff985839e7b54e42cc3cea86"
 }

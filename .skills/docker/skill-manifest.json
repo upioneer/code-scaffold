@@ -26,5 +26,6 @@
     "sidecar-diagnostics",
     "image-optimization"
   ],
-  "integrity": "cs:sha256:e3d9b9e9ac6f9df906d8da9bcffd029ddf987ac78081b2fb0c69b2448073c855"
+  "hasSandbox": false,
+  "integrity": "cs:sha256:df4ce329141f181df06eb179cb4f44e352479cc0fe9538d05582c67dbaaf2f0f"
 }

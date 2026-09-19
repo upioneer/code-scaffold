@@ -3,6 +3,7 @@
   "description": "Renders and embeds Excalidraw whiteboards",
   "version": "3",
   "target": ".skills/excalidraw",
+  "hasSandbox": true,
   "logo": [
     "  ███████╗██╗  ██╗ ██████╗ █████╗ ██╗     ██╗██████╗ ██████╗  █████╗ ██╗    ██╗  ",
     "  ██╔════╝╚██╗██╔╝██╔════╝██╔══██╗██║     ██║██╔══██╗██╔══██╗██╔══██╗██║    ██║  ",

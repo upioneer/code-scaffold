@@ -282,7 +282,7 @@ impl Workspace {
                     label: "None".into(),
                     selected: false,
                     category: Category::License,
-                    description: Some("No license file will be written to the project. All default copyright laws apply — the code is implicitly \"All Rights Reserved\" until a license is chosen.\n\nTypical Use Cases:\n* Early-stage private projects not yet ready for public licensing\n* Internal tooling never intended for distribution\n* Projects pending legal review before going public".into()),
+                    description: Some("No license file will be written to the project. All default copyright laws apply: the code is implicitly \"All Rights Reserved\" until a license is chosen.\n\nTypical Use Cases:\n* Early-stage private projects not yet ready for public licensing\n* Internal tooling never intended for distribution\n* Projects pending legal review before going public".into()),
                     version: None,
                     exists_in_target: false,
                     target_version: None,
@@ -291,7 +291,7 @@ impl Workspace {
                 for name in lic_names {
                     let description = match name.as_str() {
                         "All Rights Reserved" => Some(
-                            "Full copyright protection with NO permissions granted. The copyright holder retains all exclusive rights — redistribution, modification, sublicensing, and commercial use are all prohibited without express written consent.\n\nTypical Use Cases:\n* Commercial SaaS products or proprietary desktop software\n* Paid plugins, themes, or tools with restricted distribution\n* Internal enterprise codebases not intended for external sharing\n* Pre-launch projects protecting IP before a public release strategy is decided".to_string()
+                            "Proprietary license granting permitted personal, non-commercial self-hosting and private source review while strictly prohibiting redistribution, public forks, commercial exploitation, and SaaS hosting without prior written consent.\n\nTypical Use Cases:\n* Personal home automation or self-hosted developer tools\n* Commercial SaaS and proprietary products guarding against unauthorized forks\n* Source-available software protecting IP while allowing user self-hosting\n* Projects with reserved commercial rights and enterprise licensing models".to_string()
                         ),
                         "MIT License" => Some(
                             "A short, permissive license with minimal restrictions. Anyone can use, copy, modify, merge, publish, distribute, sublicense, and/or sell the software — provided the copyright notice is retained.\n\nTypical Use Cases:\n* Open-source libraries and frameworks intended for maximum adoption\n* Developer tools, CLIs, and utilities where contribution is encouraged\n* Academic and research projects intended to be widely built upon\n* Any project where your goal is maximum permissiveness and simplicity".to_string()

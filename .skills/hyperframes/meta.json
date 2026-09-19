@@ -3,6 +3,7 @@
   "description": "Video rendering framework for AI agents to create videos using HTML, CSS, and JS.",
   "version": "2",
   "target": ".skills/hyperframes",
+  "hasSandbox": false,
   "logo": [
     "  ██╗  ██╗██╗   ██╗██████╗ ███████╗██████╗ ███████╗██████╗  █████╗ ███╗   ███╗███████╗███████╗  ",
     "  ██║  ██║╚██╗ ██╔╝██╔══██╗██╔════╝██╔══██╗██╔════╝██╔══██╗██╔══██╗████╗ ████║██╔════╝██╔════╝  ",

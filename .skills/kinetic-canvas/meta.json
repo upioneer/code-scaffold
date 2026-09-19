@@ -3,6 +3,7 @@
   "description": "Ultra-fast, zero-dependency WebGL shaders and interactive HTML canvases wrapped as native React components.",
   "version": 6,
   "target": ".skills/kinetic-canvas",
+  "hasSandbox": true,
   "logo": [
     "  ██╗  ██╗██╗███╗   ██╗███████╗████████╗██╗ ██████╗    ",
     "  ██║ ██╔╝██║████╗  ██║██╔════╝╚══██╔══╝██║██╔════╝    ",

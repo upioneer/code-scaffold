@@ -3,6 +3,7 @@
   "description": "Creative coding and visual animations using the p5.js library.",
   "version": "3",
   "target": ".skills/p5js",
+  "hasSandbox": true,
   "logo": [
     "  ██████╗ ███████╗        ██╗███████╗                            ",
     "  ██╔══██╗██╔════╝        ██║██╔════╝                            ",

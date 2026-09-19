@@ -21,5 +21,6 @@
     "serverless-functions",
     "domain-management"
   ],
+  "hasSandbox": false,
   "integrity": "cs:sha256:c4f1ead8653fb4a9937ad7f4b2543fc5ce320e758d65c7f7022646d3cf94e302"
 }

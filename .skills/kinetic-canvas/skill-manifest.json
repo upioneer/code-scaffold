@@ -21,5 +21,6 @@
     "particles",
     "webgl"
   ],
+  "hasSandbox": true,
   "integrity": "cs:sha256:e0061552565a25693b52624637fd77e2601b29c88a257a574ecf959807ee695b"
 }
