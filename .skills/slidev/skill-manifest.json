@@ -2,7 +2,7 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "slidev",
-  "version": "2",
+  "version": "3",
   "description": "Comprehensive skill for building, configuring, and exporting Slidev markdown presentations.",
   "entryPoint": "./SKILL.md",
   "engines": {
@@ -23,5 +23,6 @@
     "unocss",
     "live-code-demos"
   ],
-  "integrity": "cs:sha256:b239e0ee11160002349fed74bb8052f96b06c82bf51cf20db9e155076fbedb12"
+  "hasSandbox": true,
+  "integrity": "cs:sha256:b60abf773afc7d74efb0c3132f7ee291d6ab0c95f8480143f0ece63bc7f482c7"
 }

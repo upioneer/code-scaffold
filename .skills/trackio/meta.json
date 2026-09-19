@@ -3,6 +3,7 @@
   "description": "Integration with Trackio for ML experiment tracking, dashboard deployments, and Hugging Face Spaces sync.",
   "version": "2",
   "target": ".skills/trackio",
+  "hasSandbox": false,
   "logo": [
     "  ████████╗██████╗  █████╗  ██████╗██╗  ██╗██╗ ██████╗             ",
     "  ╚══██╔══╝██╔══██╗██╔══██╗██╔════╝██║ ██╔╝██║██╔═══██╗            ",

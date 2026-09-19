@@ -32,13 +32,22 @@ When generating a *new* skill, agents MUST strictly follow this pipeline without
    - *Declarative Workflows:* For rigid, identical processes. Author and bundle declarative YAML workflows (e.g., `workflow.yaml`) inside a `workflows/` subdirectory within the skill. These workflows must use typed models and expressions to orchestrate method executions across jobs and steps, completely replacing raw bash/PowerShell scripts. The `SKILL.md` must instruct future agents to execute these YAML definitions via the core engine rather than reasoning through steps manually.
 3. **AI Value-Add:** Do not just write a wrapper. Brainstorm and embed workflows optimized specifically for headless AI operations (e.g., bypassing Cloudflare, silent testing loops, pre-configured GitHub Actions).
 4. **Scaffolding Compliance:**
-   - Provision a strictly validated `meta.json`.
-   - Provision an ad-hoc distribution `skill-manifest.json` with functional `category` and granular search `keywords`.
-   - Generate a `readme.md` strictly following the unified Code Scaffold typographic rules (NO en/em dashes, NO hyphens as punctuation) including category and keyword badges.
-5. **Sandbox & Demo Generation:**
-   - You MUST generate a live interactive sandbox or "demo" page for the skill in `project_details/proof/<skill-name>-sandbox`.
-   - The sandbox must comply strictly with the constraints defined in `project_details/sandbox-architecure.md` (e.g., single-file bundle via Vite, relative paths, dark mode presentation, heavy asset fallbacks).
-   - Once the sandbox is built and verified, deploy it to `.skills/<skill-name>/sandbox/index.html` using the provided playbook script `project_details/playbooks/build_sandbox.ps1 <skill-name>`.
+   * Provision a strictly validated `meta.json` adhering to the Code Scaffold schema (including `hasSandbox: boolean`).
+   * Provision an ad-hoc distribution `skill-manifest.json` with functional `category`, granular search `keywords`, and `hasSandbox: boolean` matching `meta.json`.
+   * Generate a `readme.md` strictly following the unified Code Scaffold typographic rules (NO en/em dashes, NO hyphens as punctuation) including category and keyword badges.
+5. **Sandbox & Demo Generation Decision Matrix (`hasSandbox`):**
+   * The Code Scaffold web platform automatically parses `hasSandbox` to decide whether to mount a live interactive WebGL/DOM canvas or render the standard Architectural Contract card. Agents must evaluate visual value using the following decision rubric:
+   * **Interactive Visual Sandboxes (`hasSandbox: true`):**
+     * *Direct Rendering Output:* The skill renders graphical output, canvas diagrams, animations, 3D scenes, or custom UI components (e.g. Mermaid diagram rendering, P5.js physics canvases, Kinetic Canvas WebGL shaders, Braille animation players, Scrollytelling, Excalidraw, UI Primitives).
+     * *Interactive Simulations & Virtual Labs:* The skill orchestrates complex environments where live testing adds immense value (e.g. Smart Home entity bus and device simulation lab, Proxmox VE engineering terminal).
+     * *Visual Cryptographic & Security Suites:* The skill benefits from visual feedback loops like real-time entropy calculation meters and forensics verification simulators (e.g. GhostPrint Spectral Cyan Studio).
+     * *Latent Visual Candidates for Upgrades:* Skills like Markmap (interactive mindmaps) and Manim (mathematical animations) naturally produce visual payloads. While currently set to `hasSandbox: false`, they should be upgraded to `hasSandbox: true` whenever an interactive DOM renderer (e.g. D3 tree for Markmap, HTML5 canvas/video player for Manim) is bundled.
+   * **Architectural Contract Cards (`hasSandbox: false`):**
+     * *Headless Infrastructure & Cloud Engines:* Cloud deployment targets, container runtimes, infrastructure-as-code, and serverless backends (Docker, Terraform, Ansible, Vercel, Supabase, Firebase, Upstash, Resend, Clerk). A graphical canvas provides zero functional utility over the clean Architectural Contract card detailing CLI installation syntax, configuration schemas, and permission models.
+     * *Language Runtimes & Background Scrapers:* Pure language runtimes (Node.js, Rust) and headless scrapers/daemons (Firecrawl, Trackio).
+   * **Build & Verification:**
+     * When building an interactive sandbox, comply strictly with `project_details/sandbox-architecure.md`.
+     * Deploy the built sandbox to `.skills/<skill-name>/sandbox/index.html` via `project_details/playbooks/build_sandbox.ps1 <skill-name>`.
 6. **Payload Crafting:** Write a deep, technically advanced `SKILL.md` with keyword-rich YAML frontmatter that serves as the cognitive blueprint for future agents.
 
 ### Phase 4: Skill SEO, GEO & Discovery Standardization
@@ -51,7 +60,7 @@ Every skill must be systematically audited and optimized for search engine and A
 ### Phase 5: Zero Brand Leak & Automated Compliance Gatekeeper
 Before any skill creation or modification is considered complete:
 1. **Zero External Brand Leak Rule:** NEVER name, credit, or leak upstream open-source package names, third-party authors, or external corporate trademarks in user-facing skill titles, descriptions, manifests, documentation, CLI messages, logs, or diagrams. Aggressively rebrand every technology under Code Scaffold proprietary identity (e.g. *Ghost Graph*, *Stealth Browser Engine*, *Tasty Styling Engine*, *TUI Tools Tape Engine*).
-2. **Automated Verification:** Execute `node project_details/playbooks/verify_skills.js`. You MUST guarantee a 0 exit code and 100% compliance across all 51 skills (5-file anatomy, whole-number version synchronization, manifest schema, meta schema, typography, and brand leak protection).
+2. **Automated Verification:** Execute `node project_details/playbooks/verify_skills.js`. You MUST guarantee a 0 exit code and 100% compliance across all 56 skills (5-file anatomy, whole-number version synchronization, manifest schema including `hasSandbox`, meta schema including `hasSandbox`, typography, and brand leak protection).
 
 ### Phase 6: Ecosystem Provenance & Attribution Watermarking
 To ensure that all Code Scaffold skills maintain permanent attribution and traceability across public codebases and forks:

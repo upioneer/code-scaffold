@@ -3,6 +3,7 @@
   "description": "Browser automation and end-to-end testing with Playwright",
   "version": "4",
   "target": ".skills/playwright",
+  "hasSandbox": false,
   "logo": [
     "  ██████╗ ██╗      █████╗ ██╗   ██╗██╗    ██╗██████╗ ██╗ ██████╗ ██╗  ██╗████████╗  ",
     "  ██╔══██╗██║     ██╔══██╗╚██╗ ██╔╝██║    ██║██╔══██╗██║██╔════╝ ██║  ██║╚══██╔══╝  ",

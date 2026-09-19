@@ -85,23 +85,32 @@ function checkSkill(skillName) {
     skillErrors.push(`Version mismatch: meta.json (${metaVer}) != skill-manifest.json (${manifestVer})`);
   }
 
-  // 4. Meta Schema Validation (Exact keys: label, description, version, target, logo)
-  const requiredMetaKeys = ['label', 'description', 'version', 'target', 'logo'];
+  // 4. Meta Schema Validation (Exact keys: label, description, version, target, hasSandbox, logo)
+  const requiredMetaKeys = ['label', 'description', 'version', 'target', 'hasSandbox', 'logo'];
   for (const k of requiredMetaKeys) {
     if (meta[k] === undefined) {
       skillErrors.push(`meta.json missing required key: "${k}"`);
     }
+  }
+  if (typeof meta.hasSandbox !== 'boolean') {
+    skillErrors.push('meta.json "hasSandbox" must be a boolean (true or false)');
   }
   if (!Array.isArray(meta.logo) || meta.logo.length === 0) {
     skillErrors.push('meta.json "logo" must be a non-empty string array of ASCII art');
   }
 
   // 5. Manifest Schema Validation
-  const requiredManifestKeys = ['name', 'version', 'description', 'category', 'keywords', 'entryPoint', 'engines', 'requiredPermissions'];
+  const requiredManifestKeys = ['name', 'version', 'description', 'category', 'keywords', 'entryPoint', 'engines', 'requiredPermissions', 'hasSandbox'];
   for (const k of requiredManifestKeys) {
     if (manifest[k] === undefined) {
       skillErrors.push(`skill-manifest.json missing required key: "${k}"`);
     }
+  }
+  if (typeof manifest.hasSandbox !== 'boolean') {
+    skillErrors.push('skill-manifest.json "hasSandbox" must be a boolean (true or false)');
+  }
+  if (meta.hasSandbox !== manifest.hasSandbox) {
+    skillErrors.push(`hasSandbox synchronization mismatch: meta.json (${meta.hasSandbox}) != skill-manifest.json (${manifest.hasSandbox})`);
   }
   if (!Array.isArray(manifest.keywords) || manifest.keywords.length === 0) {
     skillErrors.push('skill-manifest.json "keywords" must be a non-empty array of search tags');

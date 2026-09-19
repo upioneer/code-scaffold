@@ -22,5 +22,6 @@
     "document-automation",
     "pdf-generation"
   ],
+  "hasSandbox": false,
   "integrity": "cs:sha256:cd3db8b528e1f5393c40612802d4c0c73fca94cb364673dc7b667d2b19613fc5"
 }

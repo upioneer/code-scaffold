@@ -1,6 +1,6 @@
 # Slidev
 
-**Version:** 2
+**Version:** 3
 **Target:** `.skills/slidev`
 **Category:** Publishing & Documentation
 **Keywords:** `slidev`, `developer-slides`, `vue-slides`, `markdown-presentations`, `unocss`, `live-code-demos`
@@ -9,6 +9,7 @@
 Comprehensive skill for building, configuring, and exporting Slidev markdown presentations.
 
 ## Capabilities & Use Cases
+* **Interactive Presentation Player** : Embedded interactive 16:9 slide presentation deck player with slide transitions, syntax highlighted code viewer, presenter notes with timer, and thumbnail grid
 * **Markdown Deck Authoring & Syntax**: Deep understanding of Slidev's extended Markdown format, including headmatter vs. frontmatter YAML configurations and slide separation logic.
 * **Vue Component Integration & Animation**: Manages custom Vue 3 components globally, implements UnoCSS styling, and orchestrates granular click animations (`v-click`, `v-after`, `v-click.hide`) natively within slides.
 * **Directory Structure Convention**: Adheres to strict Slidev directory routing conventions (`components/`, `layouts/`, `snippets/`) to ensure clean architectural scaffolding.
@@ -19,5 +20,6 @@ Comprehensive skill for building, configuring, and exporting Slidev markdown pre
 This skill is designed to guide AI agents in generating, configuring, and exporting slide decks using Slidev. Slidev relies on a Markdown based syntax to generate beautiful, interactive, and code friendly presentations. When invoked, refer to `SKILL.md` for complete technical limitations, known issues, workflows, and advanced configurations.
 
 ## Changelog
+* **v3** : Integrated interactive Slidev Developer Presentation Deck Player sandbox and updated manifest flags
 * **v2** : Expanded capability descriptions
 * **v1** : Initial creation of the Slidev skill.

@@ -29,5 +29,6 @@
     "automated-provisioning",
     "sdk-config"
   ],
-  "integrity": "cs:sha256:44a03454fefbf7d766b6de9c9ee89acde397909ba9abe0379849cd2264d74fa2"
+  "hasSandbox": false,
+  "integrity": "cs:sha256:7f206bb9bc837be7a7c1807a02b46d49a8722f19cc9467a1c38094dd2af2c3e2"
 }

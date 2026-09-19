@@ -22,5 +22,6 @@
     "dynamic-forms",
     "design-system"
   ],
+  "hasSandbox": false,
   "integrity": "cs:sha256:33e5700ba89dfcba3df7b0ed4a28ec562e8c37d06cc61277c4cfa0d9b35ef9b3"
 }

@@ -1,8 +1,9 @@
 {
   "label": "Manim Math Animations",
   "description": "Mathematical animations using the Manim library.",
-  "version": "2",
+  "version": "3",
   "target": ".skills/manim",
+  "hasSandbox": true,
   "logo": [
     "  ███╗   ███╗ █████╗ ███╗   ██╗██╗███╗   ███╗                                      ",
     "  ████╗ ████║██╔══██╗████╗  ██║██║████╗ ████║                                      ",

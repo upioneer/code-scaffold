@@ -21,5 +21,6 @@
     "cross-window-messaging",
     "web-components"
   ],
+  "hasSandbox": false,
   "integrity": "cs:sha256:606b83ce0e65381d2bc282909e4511c287e673abda7c3fc251034fc4c1ab0dbb"
 }

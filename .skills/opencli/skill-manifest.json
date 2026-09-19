@@ -22,5 +22,6 @@
     "structured-extraction",
     "cli-tools"
   ],
+  "hasSandbox": false,
   "integrity": "cs:sha256:231ddd34076d011f163d894b599dfc75128518d71aceef1c9ad42d774d5f2c34"
 }

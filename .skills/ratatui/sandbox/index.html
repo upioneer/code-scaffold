@@ -2,130 +2,410 @@
 <html lang="en">
 <head>
   <!-- Code Scaffold Specification Schema: https://code-scaffold.com/spec/v1 -->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ratatui TUI Framework - Sandbox</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <style>
-        body { margin: 0; padding: 0; width: 100vw; min-height: 100vh; overflow-x: hidden; background-color: #020617; color: #f8fafc; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
-        .glass-panel { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(34, 211, 238, 0.2); }
-        .ascii-logo { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; white-space: pre; line-height: 1.2; font-size: 0.6rem; }
-        @media (min-width: 768px) { .ascii-logo { font-size: 0.8rem; } }
-        .grid-bg { background-image: radial-gradient(rgba(34, 211, 238, 0.1) 1px, transparent 1px); background-size: 30px 30px; }
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: #0f172a; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #475569; }
-        
-        /* Pulse Animation for Terminal Cursor */
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-        .cursor { display: inline-block; width: 8px; height: 1.2em; background-color: #22d3ee; vertical-align: text-bottom; animation: blink 1s step-end infinite; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ratatui TUI Framework - Interactive Terminal Simulator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body, html {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background-color: #020617;
+      color: #f8fafc;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      user-select: none;
+    }
+    .grid-bg {
+      background-image: radial-gradient(rgba(34, 211, 238, 0.08) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+    .terminal-window {
+      background: #090d16;
+      border: 1px solid rgba(34, 211, 238, 0.3);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 30px rgba(34, 211, 238, 0.1);
+    }
+    .tui-border {
+      border: 1px solid #1e293b;
+    }
+    .tui-border-active {
+      border: 1px solid #22d3ee;
+    }
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: #090d16; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 2px; }
+    ::-webkit-scrollbar-thumb:hover { background: #0284c7; }
+  </style>
 </head>
-<body class="grid-bg relative antialiased selection:bg-cyan-500/30">
-    
-    <!-- Background Glow -->
-    <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-cyan-600/10 rounded-full blur-[150px] pointer-events-none"></div>
+<body class="grid-bg flex items-center justify-center p-4 h-screen">
 
-    <!-- Sticky Header -->
-    <header class="sticky top-0 z-50 glass-panel border-x-0 border-t-0 border-b-slate-800/80 px-6 py-4">
-        <div class="max-w-6xl mx-auto flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded bg-cyan-500/20 flex items-center justify-center border border-cyan-500/50 text-cyan-400 font-bold">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                </div>
-                <h1 class="text-xl font-black uppercase tracking-widest text-white">Ratatui TUI Framework</h1>
+  <!-- Main Terminal Enclosure -->
+  <div class="terminal-window w-full max-w-6xl h-[90vh] rounded-xl flex flex-col overflow-hidden relative">
+
+    <!-- Terminal Titlebar Chrome -->
+    <div class="bg-slate-900/90 border-b border-slate-800 px-4 py-2.5 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="w-3 h-3 rounded-full bg-red-500/80 inline-block"></span>
+        <span class="w-3 h-3 rounded-full bg-yellow-500/80 inline-block"></span>
+        <span class="w-3 h-3 rounded-full bg-green-500/80 inline-block"></span>
+        <span class="ml-3 text-xs font-mono text-slate-400 font-bold tracking-wider">
+          ratatui-rust-simulator &bull; 120 &times; 38 &bull; utf8
+        </span>
+      </div>
+      <div class="flex items-center gap-3 text-xs font-mono">
+        <span class="text-cyan-400 bg-cyan-950/60 px-2 py-0.5 rounded border border-cyan-800/60">BACKEND: CROSSTERM</span>
+        <span class="text-slate-400" id="fps-badge">60 FPS</span>
+      </div>
+    </div>
+
+    <!-- TUI Tab Header Bar -->
+    <div class="bg-slate-950 px-4 py-2 flex items-center gap-2 border-b border-slate-800 text-xs font-mono overflow-x-auto">
+      <button onclick="setTab(1)" id="tab-btn-1" class="px-3 py-1 bg-cyan-500 text-slate-950 font-bold rounded flex items-center gap-1.5 transition">
+        <span>[1]</span> OVERVIEW
+      </button>
+      <button onclick="setTab(2)" id="tab-btn-2" class="px-3 py-1 text-slate-400 hover:text-white rounded flex items-center gap-1.5 transition">
+        <span>[2]</span> PROCESS TABLE
+      </button>
+      <button onclick="setTab(3)" id="tab-btn-3" class="px-3 py-1 text-slate-400 hover:text-white rounded flex items-center gap-1.5 transition">
+        <span>[3]</span> GAUGES & METRICS
+      </button>
+      <button onclick="setTab(4)" id="tab-btn-4" class="px-3 py-1 text-slate-400 hover:text-white rounded flex items-center gap-1.5 transition">
+        <span>[4]</span> EVENT LOG BUFFER
+      </button>
+
+      <div class="ml-auto text-slate-500 text-[11px] hidden md:block">
+        PRESS <span class="text-cyan-400">[1-4]</span> OR <span class="text-cyan-400">[TAB]</span> TO NAVIGATE
+      </div>
+    </div>
+
+    <!-- TUI Stage Content -->
+    <div class="flex-1 p-4 flex flex-col gap-3 overflow-hidden bg-slate-950/80 font-mono text-xs">
+
+      <!-- TAB 1: OVERVIEW -->
+      <div id="tab-view-1" class="flex-1 grid grid-cols-1 md:grid-cols-3 gap-3 h-full overflow-hidden">
+        
+        <!-- Left: System Metrics & Sparklines -->
+        <div class="md:col-span-2 flex flex-col gap-3 h-full overflow-hidden">
+          <!-- Sparkline 1: CPU -->
+          <div class="bg-slate-900/60 p-3 rounded-lg border border-slate-800/80 flex flex-col gap-1.5">
+            <div class="flex justify-between items-center text-slate-300">
+              <span class="text-cyan-400 font-bold">&bull; CPU CORE ACTIVITY (SPARKLINE)</span>
+              <span class="text-slate-400 font-mono" id="cpu-percent">52.4%</span>
             </div>
-            <span class="px-3 py-1 bg-cyan-500/10 text-cyan-400 text-xs font-bold rounded-full border border-cyan-500/30 uppercase tracking-widest hidden sm:inline-block">v5</span>
+            <div class="text-cyan-300 text-sm tracking-widest overflow-hidden whitespace-nowrap" id="spark-cpu">
+              ░ ▂▃▄▅▆▇█▇▆▅▄▃▂ ▂▃▄▅▆▇█▇▆▅▄▃▂ ▂▃▄▅▆▇█▇▆▅▄▃▂ ▂▃▄▅▆▇
+            </div>
+          </div>
+
+          <!-- Sparkline 2: Memory Heap -->
+          <div class="bg-slate-900/60 p-3 rounded-lg border border-slate-800/80 flex flex-col gap-1.5">
+            <div class="flex justify-between items-center text-slate-300">
+              <span class="text-purple-400 font-bold">&bull; V8 HEAP ALLOCATION (SPARKLINE)</span>
+              <span class="text-slate-400 font-mono" id="mem-percent">68.1%</span>
+            </div>
+            <div class="text-purple-300 text-sm tracking-widest overflow-hidden whitespace-nowrap" id="spark-mem">
+              ▄▅▆▇██▇▆▅▄▃▃▄▅▆▇██▇▆▅▄▃▃▄▅▆▇██▇▆▅▄▃▃▄▅▆▇██▇▆▅▄▃▃
+            </div>
+          </div>
+
+          <!-- Sparkline 3: Network I/O -->
+          <div class="bg-slate-900/60 p-3 rounded-lg border border-slate-800/80 flex flex-col gap-1.5">
+            <div class="flex justify-between items-center text-slate-300">
+              <span class="text-emerald-400 font-bold">&bull; TOKIO ASYNC I/O DISPATCH (SPARKLINE)</span>
+              <span class="text-slate-400 font-mono" id="io-rate">1,420 pkts/s</span>
+            </div>
+            <div class="text-emerald-300 text-sm tracking-widest overflow-hidden whitespace-nowrap" id="spark-io">
+              ▂ ▃ ▄ ▅ ▆ ▇ █ ▇ ▆ ▅ ▄ ▃ ▂   ▂ ▃ ▄ ▅ ▆ ▇ █ ▇ ▆ ▅ ▄ ▃
+            </div>
+          </div>
+
+          <!-- Architecture Contract Status Card -->
+          <div class="bg-slate-900/40 p-3 rounded-lg border border-slate-800/80 flex-1 flex flex-col justify-between">
+            <div class="space-y-1">
+              <span class="text-slate-400 font-bold text-[11px] uppercase tracking-wider block">&bull; MVU State Synchronization</span>
+              <p class="text-slate-300 leading-relaxed">
+                Ratatui separates terminal UI state into clean Model-View-Update cycles. Asynchronous events streamed through Tokio channels are processed deterministically by pure rendering routines.
+              </p>
+            </div>
+            <div class="flex gap-4 pt-2 border-t border-slate-800/60 text-slate-400 text-[11px]">
+              <span>CROSSTERM: <strong class="text-green-400">ONLINE</strong></span>
+              <span>BUFFER MODE: <strong class="text-cyan-400">ALTERNATE SCREEN</strong></span>
+              <span>CURSOR: <strong class="text-yellow-400">HIDDEN</strong></span>
+            </div>
+          </div>
         </div>
-    </header>
 
-    <main class="max-w-6xl mx-auto px-6 py-12 relative z-10 space-y-16">
-        
-        <!-- Hero Section -->
-        <section id="hero" class="text-center max-w-4xl mx-auto space-y-8">
-            <div id="logo-container" class="p-6 bg-slate-950 rounded-xl border border-slate-800 shadow-inner w-full overflow-x-auto text-cyan-400 ascii-logo text-left flex justify-center mx-auto opacity-0 translate-y-8">
-  ██████╗  █████╗ ████████╗ █████╗ ████████╗██╗   ██╗██╗                          
-  ██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗╚══██╔══╝██║   ██║██║                          
-  ██████╔╝███████║   ██║   ███████║   ██║   ██║   ██║██║                          
-  ██╔══██╗██╔══██║   ██║   ██╔══██║   ██║   ██║   ██║██║                          
-  ██║  ██║██║  ██║   ██║   ██║  ██║   ██║   ╚██████╔╝██║                          
-  ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝                          
-  ████████╗██╗   ██╗██╗                                                           
-  ╚══██╔══╝██║   ██║██║                                                           
-     ██║   ██║   ██║██║                                                           
-     ██║   ██║   ██║██║                                                           
-     ██║   ╚██████╔╝██║                                                           
-     ╚═╝    ╚═════╝ ╚═╝                                                           
-  ███████╗██████╗  █████╗ ███╗   ███╗███████╗██╗    ██╗ ██████╗ ██████╗ ██╗  ██╗  
-  ██╔════╝██╔══██╗██╔══██╗████╗ ████║██╔════╝██║    ██║██╔═══██╗██╔══██╗██║ ██╔╝  
-  █████╗  ██████╔╝███████║██╔████╔██║█████╗  ██║ █╗ ██║██║   ██║██████╔╝█████╔╝   
-  ██╔══╝  ██╔══██╗██╔══██║██║╚██╔╝██║██╔══╝  ██║███╗██║██║   ██║██╔══██╗██╔═██╗   
-  ██║     ██║  ██║██║  ██║██║ ╚═╝ ██║███████╗╚███╔███╔╝╚██████╔╝██║  ██║██║  ██╗  
-  ╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝ ╚══╝╚══╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝  
-            </div>
-            
-            <p id="desc" class="text-lg md:text-xl text-slate-400 leading-relaxed opacity-0 translate-y-4">
-                Build high-performance, robust Terminal User Interfaces (TUI) with modern Ratatui architecture, safe terminal lifecycle handling, async event loops, and rich component pipelines in Rust.
-            </p>
-        </section>
+        <!-- Right: Real-Time Stream -->
+        <div class="bg-slate-900/60 p-3 rounded-lg border border-slate-800/80 flex flex-col gap-2 overflow-hidden">
+          <div class="flex justify-between items-center pb-2 border-b border-slate-800 text-slate-300">
+            <span class="text-cyan-400 font-bold">&bull; MVU ACTION DISPATCH</span>
+            <span class="text-[10px] text-slate-500">LIVE BUS</span>
+          </div>
+          <div id="action-stream" class="flex-1 overflow-y-auto space-y-1 text-[11px] font-mono text-slate-400">
+            <!-- Injected via JS -->
+          </div>
+        </div>
+      </div>
 
-        <!-- Context & Details -->
-        <section id="context" class="grid md:grid-cols-2 gap-8 opacity-0 translate-y-8">
-            
-            <div class="glass-panel p-8 rounded-2xl flex flex-col gap-4">
-                <div class="flex items-center gap-3 border-b border-slate-800/50 pb-4">
-                    <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
-                    <h3 class="text-xl font-bold text-white tracking-wide">Skill Context</h3>
-                </div>
-                <p class="text-slate-400 leading-relaxed">
-                    This sandbox provides a high-fidelity presentation layer for the <strong class="text-slate-200">ratatui</strong> skill. Whether this is an interactive GUI skill or a headless CI/CD backend integration, the Code Scaffold runtime seamlessly provisions its exact structural constraints directly into your workspace.
-                </p>
-            </div>
+      <!-- TAB 2: PROCESS TABLE -->
+      <div id="tab-view-2" class="flex-1 flex flex-col bg-slate-900/60 rounded-lg border border-slate-800/80 overflow-hidden hidden">
+        <div class="bg-slate-900 px-4 py-2 border-b border-slate-800 grid grid-cols-12 text-slate-400 font-bold text-[11px]">
+          <span class="col-span-2">PID</span>
+          <span class="col-span-4">COMMAND / SERVICE</span>
+          <span class="col-span-2">CPU%</span>
+          <span class="col-span-2">MEMORY</span>
+          <span class="col-span-2">STATUS</span>
+        </div>
+        <div id="process-list" class="flex-1 overflow-y-auto divide-y divide-slate-800/40">
+          <!-- Process rows populated via JS -->
+        </div>
+      </div>
 
-            <div class="glass-panel p-8 rounded-2xl flex flex-col gap-4">
-                <div class="flex items-center gap-3 border-b border-slate-800/50 pb-4">
-                    <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                    <h3 class="text-xl font-bold text-white tracking-wide">CLI Deployment</h3>
-                </div>
-                <p class="text-slate-400 leading-relaxed mb-2">
-                    To inject this specialized knowledge graph and scaffolding payload directly into your project architecture, run the following command in your terminal:
-                </p>
-                <div class="relative flex items-center bg-slate-950 border border-slate-800 rounded-lg p-4 shadow-xl group cursor-pointer overflow-hidden">
-                    <div class="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg blur opacity-20 group-hover:opacity-40 transition duration-500"></div>
-                    <code class="relative text-cyan-400 font-mono text-sm md:text-base text-left w-full">npx @code-scaffold/skills install ratatui<span class="cursor"></span></code>
-                </div>
-            </div>
+      <!-- TAB 3: GAUGES & METRICS -->
+      <div id="tab-view-3" class="flex-1 flex flex-col gap-4 bg-slate-900/60 p-5 rounded-lg border border-slate-800/80 overflow-y-auto hidden">
+        <div class="space-y-2">
+          <div class="flex justify-between text-slate-300">
+            <span class="font-bold text-cyan-400">RATATUI GAUGE: THREAD POOL OCCUPANCY</span>
+            <span class="font-mono text-cyan-300" id="gauge-val-1">74%</span>
+          </div>
+          <div class="bg-slate-950 p-1.5 rounded-lg border border-slate-800">
+            <div id="gauge-bar-1" class="h-4 bg-gradient-to-r from-cyan-500 to-blue-500 rounded transition-all duration-300" style="width: 74%;"></div>
+          </div>
+        </div>
 
-        </section>
-        
-        <div id="footer-spacer" class="h-12"></div>
-    </main>
+        <div class="space-y-2">
+          <div class="flex justify-between text-slate-300">
+            <span class="font-bold text-purple-400">RATATUI GAUGE: BUFFER RENDER ALLOCATION</span>
+            <span class="font-mono text-purple-300" id="gauge-val-2">88%</span>
+          </div>
+          <div class="bg-slate-950 p-1.5 rounded-lg border border-slate-800">
+            <div id="gauge-bar-2" class="h-4 bg-gradient-to-r from-purple-500 to-pink-500 rounded transition-all duration-300" style="width: 88%;"></div>
+          </div>
+        </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const tl = gsap.timeline();
-            
-            tl.to("#logo-container", {
-                y: 0,
-                opacity: 1,
-                duration: 0.8,
-                ease: "back.out(1.4)"
-            })
-            .to("#desc", {
-                y: 0,
-                opacity: 1,
-                duration: 0.6,
-                ease: "power3.out"
-            }, "-=0.5")
-            .to("#context", {
-                y: 0,
-                opacity: 1,
-                duration: 0.8,
-                ease: "power3.out"
-            }, "-=0.4");
-        });
-    </script>
+        <div class="space-y-2">
+          <div class="flex justify-between text-slate-300">
+            <span class="font-bold text-emerald-400">RATATUI GAUGE: TOKIO EVENT QUEUE DEPTH</span>
+            <span class="font-mono text-emerald-300" id="gauge-val-3">38%</span>
+          </div>
+          <div class="bg-slate-950 p-1.5 rounded-lg border border-slate-800">
+            <div id="gauge-bar-3" class="h-4 bg-gradient-to-r from-emerald-500 to-teal-500 rounded transition-all duration-300" style="width: 38%;"></div>
+          </div>
+        </div>
+
+        <div class="bg-slate-950 p-4 rounded-lg border border-slate-800 mt-auto">
+          <span class="text-slate-400 text-xs font-bold block mb-1">Code Snippet: Ratatui Gauge Construction</span>
+          <pre class="text-cyan-300 text-[11px] leading-relaxed"><code>let gauge = Gauge::default()
+    .block(Block::default().borders(Borders::ALL).title("CPU Queue"))
+    .gauge_style(Style::default().fg(Color::Cyan).bg(Color::Black))
+    .ratio(current_ratio);
+frame.render_widget(gauge, chunks[0]);</code></pre>
+        </div>
+      </div>
+
+      <!-- TAB 4: EVENT LOG BUFFER -->
+      <div id="tab-view-4" class="flex-1 flex flex-col bg-slate-900/60 p-3 rounded-lg border border-slate-800/80 overflow-hidden hidden">
+        <div class="flex justify-between items-center pb-2 border-b border-slate-800 text-slate-400">
+          <span class="font-bold text-cyan-400">&bull; CIRCULAR LOG BUFFER (RINGBUFFER)</span>
+          <button onclick="clearLogs()" class="px-2 py-0.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-[10px]">Clear</button>
+        </div>
+        <div id="log-buffer" class="flex-1 overflow-y-auto space-y-1 pt-2 text-[11px] font-mono text-slate-400">
+          <!-- Log entries populated via JS -->
+        </div>
+      </div>
+
+    </div>
+
+    <!-- TUI Bottom Status & Hotkey Bar -->
+    <div class="bg-slate-900 px-4 py-2 border-t border-slate-800 flex items-center justify-between text-xs font-mono text-slate-400">
+      <div class="flex items-center gap-4">
+        <span class="px-2 py-0.5 bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 rounded font-bold">NORMAL MODE</span>
+        <span>STATE: <strong class="text-green-400" id="status-running">ACTIVE</strong></span>
+        <span>CYCLES: <strong class="text-slate-200" id="cycle-count">0</strong></span>
+      </div>
+      <div class="flex items-center gap-3 text-[11px]">
+        <span><kbd class="bg-slate-800 px-1.5 py-0.5 rounded text-slate-300">[1-4]</kbd> Tabs</span>
+        <span><kbd class="bg-slate-800 px-1.5 py-0.5 rounded text-slate-300">[&uarr;/&darr;]</kbd> Select</span>
+        <span><kbd class="bg-slate-800 px-1.5 py-0.5 rounded text-slate-300">[SPACE]</kbd> Pause</span>
+        <span><kbd class="bg-slate-800 px-1.5 py-0.5 rounded text-slate-300">[Q]</kbd> Reset</span>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    let activeTab = 1;
+    let isPaused = false;
+    let cycles = 0;
+    let selectedProcIndex = 0;
+
+    const sparkBlocks = [' ', '▂', '▃', '▄', '▅', '▆', '▇', '█'];
+    let cpuHistory = Array(35).fill(4);
+    let memHistory = Array(35).fill(5);
+    let ioHistory = Array(35).fill(3);
+
+    const processes = [
+      { pid: "0101", cmd: "scaffold-tui::engine", cpu: 14.2, mem: "36.4 MB", status: "RUNNING" },
+      { pid: "0102", cmd: "tokio-event-loop-0", cpu: 6.8, mem: "18.2 MB", status: "IDLE" },
+      { pid: "0103", cmd: "crossterm::input-rx", cpu: 1.1, mem: "8.1 MB", status: "WAITING" },
+      { pid: "0104", cmd: "ghostprint::hasher", cpu: 22.5, mem: "48.6 MB", status: "RUNNING" },
+      { pid: "0105", cmd: "ratatui::frame-draw", cpu: 8.4, mem: "14.0 MB", status: "RUNNING" },
+      { pid: "0106", cmd: "skillforge::gatekeeper", cpu: 3.0, mem: "12.2 MB", status: "IDLE" }
+    ];
+
+    function setTab(tabId) {
+      activeTab = tabId;
+      for (let i = 1; i <= 4; i++) {
+        const btn = document.getElementById(`tab-btn-${i}`);
+        const view = document.getElementById(`tab-view-${i}`);
+        if (i === tabId) {
+          btn.className = "px-3 py-1 bg-cyan-500 text-slate-950 font-bold rounded flex items-center gap-1.5 transition";
+          view.classList.remove('hidden');
+        } else {
+          btn.className = "px-3 py-1 text-slate-400 hover:text-white rounded flex items-center gap-1.5 transition";
+          view.classList.add('hidden');
+        }
+      }
+    }
+
+    function renderProcesses() {
+      const container = document.getElementById('process-list');
+      container.innerHTML = processes.map((p, idx) => `
+        <div onclick="selectProcess(${idx})" class="px-4 py-2 grid grid-cols-12 cursor-pointer transition ${idx === selectedProcIndex ? 'bg-cyan-500/20 text-cyan-200 border-l-2 border-cyan-400' : 'hover:bg-slate-800/40 text-slate-300'}">
+          <span class="col-span-2 font-mono">${p.pid}</span>
+          <span class="col-span-4 font-mono font-bold">${p.cmd}</span>
+          <span class="col-span-2 font-mono text-cyan-400">${p.cpu.toFixed(1)}%</span>
+          <span class="col-span-2 font-mono text-slate-400">${p.mem}</span>
+          <span class="col-span-2 font-mono ${p.status === 'RUNNING' ? 'text-green-400' : 'text-slate-400'}">${p.status}</span>
+        </div>
+      `).join('');
+    }
+
+    function selectProcess(idx) {
+      selectedProcIndex = idx;
+      renderProcesses();
+    }
+
+    function addAction(actionText, color = 'text-cyan-400') {
+      const stream = document.getElementById('action-stream');
+      const time = new Date().toISOString().substring(11, 19);
+      const row = document.createElement('div');
+      row.className = "flex gap-2";
+      row.innerHTML = `<span class="text-slate-600">${time}</span> <span class="${color}">${actionText}</span>`;
+      stream.prepend(row);
+      if (stream.children.length > 20) stream.removeChild(stream.lastChild);
+    }
+
+    function addLog(msg, level = 'INFO') {
+      const buffer = document.getElementById('log-buffer');
+      const time = new Date().toISOString().substring(11, 19);
+      const row = document.createElement('div');
+      const levelColor = level === 'ERROR' ? 'text-red-400' : level === 'WARN' ? 'text-yellow-400' : 'text-slate-400';
+      row.innerHTML = `<span class="text-slate-600">[${time}]</span> <strong class="${levelColor}">[${level}]</strong> <span class="text-slate-300">${msg}</span>`;
+      buffer.appendChild(row);
+      if (buffer.children.length > 50) buffer.removeChild(buffer.firstChild);
+      buffer.scrollTop = buffer.scrollHeight;
+    }
+
+    function clearLogs() {
+      document.getElementById('log-buffer').innerHTML = '';
+    }
+
+    // Main Simulation Tick
+    setInterval(() => {
+      if (isPaused) return;
+
+      cycles++;
+      document.getElementById('cycle-count').textContent = cycles;
+
+      // Update Sparklines
+      const nextCpu = Math.floor(Math.random() * 8);
+      cpuHistory.shift();
+      cpuHistory.push(nextCpu);
+      document.getElementById('spark-cpu').textContent = cpuHistory.map(v => sparkBlocks[v]).join('');
+      document.getElementById('cpu-percent').textContent = `${(nextCpu * 12 + 10 + Math.random() * 5).toFixed(1)}%`;
+
+      const nextMem = Math.min(7, Math.max(0, memHistory[memHistory.length - 1] + Math.floor(Math.random() * 3 - 1)));
+      memHistory.shift();
+      memHistory.push(nextMem);
+      document.getElementById('spark-mem').textContent = memHistory.map(v => sparkBlocks[v]).join('');
+      document.getElementById('mem-percent').textContent = `${(nextMem * 10 + 25 + Math.random() * 4).toFixed(1)}%`;
+
+      const nextIo = Math.floor(Math.random() * 8);
+      ioHistory.shift();
+      ioHistory.push(nextIo);
+      document.getElementById('spark-io').textContent = ioHistory.map(v => sparkBlocks[v]).join('');
+      document.getElementById('io-rate').textContent = `${Math.floor(1000 + Math.random() * 800)} pkts/s`;
+
+      // Update Gauges
+      const g1 = Math.floor(65 + Math.random() * 25);
+      const g2 = Math.floor(80 + Math.random() * 15);
+      const g3 = Math.floor(25 + Math.random() * 40);
+
+      document.getElementById('gauge-val-1').textContent = `${g1}%`;
+      document.getElementById('gauge-bar-1').style.width = `${g1}%`;
+      document.getElementById('gauge-val-2').textContent = `${g2}%`;
+      document.getElementById('gauge-bar-2').style.width = `${g2}%`;
+      document.getElementById('gauge-val-3').textContent = `${g3}%`;
+      document.getElementById('gauge-bar-3').style.width = `${g3}%`;
+
+      // Update Actions
+      const actions = [
+        "Action::Tick",
+        "Action::FrameRender(60fps)",
+        "Action::KeyboardInput('j')",
+        "Action::TokioChannelPoll",
+        "Action::TableStateUpdate(selected: 2)",
+        "Action::WindowResize(120, 38)"
+      ];
+      if (Math.random() > 0.4) {
+        const action = actions[Math.floor(Math.random() * actions.length)];
+        addAction(action);
+      }
+
+      if (Math.random() > 0.6) {
+        addLog(`Processed Tokio message packet #${cycles}`);
+      }
+
+      // Randomly tweak process stats
+      processes.forEach(p => {
+        p.cpu = Math.max(0.5, p.cpu + (Math.random() * 2 - 1));
+      });
+      if (activeTab === 2) renderProcesses();
+
+    }, 300);
+
+    // Keyboard Event Listener
+    window.addEventListener('keydown', (e) => {
+      if (e.key === '1') setTab(1);
+      else if (e.key === '2') setTab(2);
+      else if (e.key === '3') setTab(3);
+      else if (e.key === '4') setTab(4);
+      else if (e.key === 'Tab') {
+        e.preventDefault();
+        setTab(activeTab % 4 + 1);
+      } else if (e.key === ' ') {
+        e.preventDefault();
+        isPaused = !isPaused;
+        document.getElementById('status-running').textContent = isPaused ? 'PAUSED' : 'ACTIVE';
+        document.getElementById('status-running').className = isPaused ? 'text-yellow-400' : 'text-green-400';
+      } else if (e.key === 'ArrowDown') {
+        selectedProcIndex = Math.min(processes.length - 1, selectedProcIndex + 1);
+        renderProcesses();
+      } else if (e.key === 'ArrowUp') {
+        selectedProcIndex = Math.max(0, selectedProcIndex - 1);
+        renderProcesses();
+      } else if (e.key.toLowerCase() === 'q') {
+        cycles = 0;
+        clearLogs();
+        addLog('Terminal simulator buffer reset.');
+      }
+    });
+
+    renderProcesses();
+    addLog('Ratatui terminal emulator initialized.');
+    addLog('Crossterm raw mode enabled.');
+  </script>
 </body>
 </html>

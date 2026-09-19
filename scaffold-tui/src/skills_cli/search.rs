@@ -145,6 +145,7 @@ mod tests {
             engines: HashMap::new(),
             entry_point: "./SKILL.md".to_string(),
             target: ".skills/playwright".to_string(),
+            has_sandbox: false,
             source_path: PathBuf::from("/mock/playwright"),
             logo: vec![],
         }

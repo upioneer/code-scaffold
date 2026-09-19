@@ -1,6 +1,6 @@
 # Tasty
 
-**Version:** 3
+**Version:** 4
 **Target:** `.skills/tasty`
 **Category:** Frontend & UI Design
 **Keywords:** `tasty`, `anti-slop`, `design-tokens`, `landing-page`, `typography`, `micro-animations`, `curated-ui`
@@ -9,6 +9,7 @@
 Tasty is Code Scaffold's bespoke, native anti-slop frontend orchestration engine. It acts as a strict cognitive enforcer that overrides default LLM aesthetic biases, ensuring AI agents ship premium, high-fidelity user interfaces instead of generic templates.
 
 ## Capabilities & Use Cases
+* **Interactive Design Token Playground** : Real-time CSS custom property token studio with live sliders for hue, corner radius, glass blur, perimeter glow, and anti-slop component showroom
 * **Aesthetic Trajectory Parsing:** Automatically interprets user intent from plain-text briefs (e.g., minimalist, public-sector, editorial, brutalist) and translates them into actionable frontend methodologies.
 * **Command Vocabulary & Verbs:** Provides a suite of direct agent commands (/tasty init, /tasty polish, /tasty study, /tasty redesign, /tasty audit, etc.) to extract DNA from screenshots, execute in-place redesigns, and procedurally refine existing codebases.
 * **Macrostructural Diversification:** Eliminates the 'AI template' look by forcing the engine to explicitly pick and rotate between distinct macrostructures (e.g., Marquee Hero, Workbench, Manifesto) and logging them in project memory (.tasty/log.json).
@@ -25,6 +26,7 @@ Tasty is Code Scaffold's bespoke, native anti-slop frontend orchestration engine
 Agents should read and abide by `SKILL.md` when acting in a frontend or web-development capacity. The engine's principles should be applied silently during DOM generation and CSS architecture scaffolding. Users can invoke specific `/tasty` commands in prompts to steer agent output.
 
 ## Changelog
+* **4** : Integrated interactive Tasty Anti-Slop Studio sandbox and updated manifest flags
 * **3** : Merged the deep architectural principles of the SkillForge aesthetic protocol into the Tasty engine via SkillForge. Added macrostructures, project memory (.tasty/log.json), pre-flight scanning, 8-state component discipline, pre-emit self-critiques, and four new strict anti-patterns (no redrawn chrome, no fabricated copy, locked tokens, typography purity).
 * **2** : Integrated the advanced /tasty command vocabulary...
 * **1** : Initial incubation of the Tasty skill using the SkillForge R&D protocol, heavily expanding on legacy open-source visual heuristics to better support Code Scaffold headless mechanics.

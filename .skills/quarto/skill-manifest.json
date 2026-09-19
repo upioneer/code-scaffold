@@ -22,5 +22,6 @@
     "dashboards",
     "academic-docs"
   ],
+  "hasSandbox": false,
   "integrity": "cs:sha256:1da2b1c98ccb022e0eff9cc8ba9b4b9d4dd471676bad07bfb096134b0b2d3148"
 }

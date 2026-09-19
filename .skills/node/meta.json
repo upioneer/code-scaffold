@@ -3,6 +3,7 @@
   "description": "Bootstraps a Node.js runtime environment",
   "version": "4",
   "target": ".skills/node",
+  "hasSandbox": false,
   "logo": [
     "  ███╗   ██╗ ██████╗ ██████╗ ███████╗  ",
     "  ████╗  ██║██╔═══██╗██╔══██╗██╔════╝  ",

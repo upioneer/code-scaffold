@@ -1,6 +1,6 @@
 # Manim Math Animations
 
-**Version:** 2
+**Version:** 3
 **Target:** `.skills/manim`
 **Category:** Animation & Graphics
 **Keywords:** `manim`, `math-animation`, `python-video`, `3b1b`, `technical-animations`, `scientific-viz`
@@ -10,6 +10,7 @@ Mathematical animations using the Manim library.
 
 ## Capabilities & Use Cases
 * **Mathematical Animation Generation** : Create high quality programmatic animations for math, science, and technical explanations using the Manim Python library
+* **Interactive Mathematical Studio** : Real-time Canvas 2D simulation studio featuring Fourier epicycles, Euler phase plane projection, and Riemann partition definite integration
 * **Scene Scaffolding** : Easily initialize new animation projects using provided scene templates
 * **Local Rendering Engine** : Render complex scenes to high quality video using FFmpeg encoding and Python pipelines
 * **LaTeX Integration** : Render complex mathematical formulas seamlessly natively using LaTeX dependencies
@@ -20,5 +21,6 @@ Mathematical animations using the Manim library.
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog
+* **v3** : Integrated interactive Manim Mathematical Animation Studio sandbox and updated manifest flags
 * **v2** : Expanded capability descriptions
 * **v1** : Add p5js and manim skills and bump version to v3.1.0

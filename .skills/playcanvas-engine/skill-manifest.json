@@ -22,5 +22,6 @@
     "webgl2",
     "webgpu-games"
   ],
+  "hasSandbox": false,
   "integrity": "cs:sha256:7dadd0944997974de41d5b91d44a64a16eb3b5d9217b337c6f156b1b92e2f531"
 }

@@ -2,7 +2,7 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "markmap",
-  "version": "1",
+  "version": "2",
   "description": "Interactive hierarchical mindmaps derived directly from standard markdown syntax.",
   "entryPoint": "./SKILL.md",
   "engines": {
@@ -21,5 +21,6 @@
     "d3-visualization",
     "hierarchy"
   ],
-  "integrity": "cs:sha256:f8a6b7e7c37d071c3816b9efd05cacc5315a78c546c6d75e6b7cc8b183aff539"
+  "hasSandbox": true,
+  "integrity": "cs:sha256:cfa326a6558217f66f4de7be256c987f89e3a24bf78dfd8637560ab1fddaa53e"
 }

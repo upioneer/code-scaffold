@@ -23,5 +23,6 @@
     "runtime",
     "package-management"
   ],
+  "hasSandbox": false,
   "integrity": "cs:sha256:cce8cf776466d6751487d8a7d555d1b133fe432160ae044d6857b36b9262e310"
 }

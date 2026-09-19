@@ -22,5 +22,6 @@
     "qstash",
     "vector-db"
   ],
+  "hasSandbox": false,
   "integrity": "cs:sha256:93de3b48c3278a0f67dda78112699d96196fe8ef5a91c9daffd9eba402ba2cb3"
 }

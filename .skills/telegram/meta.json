@@ -3,6 +3,7 @@
   "description": "Telegram Bot API interactions",
   "version": "2",
   "target": ".skills/telegram",
+  "hasSandbox": false,
   "logo": [
     "  ████████╗███████╗██╗     ███████╗ ██████╗ ██████╗  █████╗ ███╗   ███╗  ",
     "  ╚══██╔══╝██╔════╝██║     ██╔════╝██╔════╝ ██╔══██╗██╔══██╗████╗ ████║  ",

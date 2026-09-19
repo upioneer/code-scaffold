@@ -29,5 +29,6 @@
     "hass-rest-api",
     "hass-websocket"
   ],
+  "hasSandbox": true,
   "integrity": "cs:sha256:91299a2befde92053cae5ede15f6ae19c8baa87d5f46de7db760b43f6dc431d5"
 }

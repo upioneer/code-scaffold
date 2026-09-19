@@ -22,5 +22,6 @@
     "radiance-fields",
     "ply-optimizer"
   ],
+  "hasSandbox": false,
   "integrity": "cs:sha256:2b8edbd4ce97c609ff68a9ce23e3b3bf2cbb03e9a35949b8d08b468ed63a643e"
 }

@@ -3,6 +3,7 @@
   "description": "Design architecture, workflows, and code implementations for scroll-triggered 3D model manipulation and interactive 'production explosion' views.",
   "version": "3",
   "target": ".skills/scrollytelling",
+  "hasSandbox": true,
   "logo": [
     "  ███████╗ ██████╗██████╗  ██████╗ ██╗     ██╗  ██╗   ██╗████████╗███████╗██╗     ██╗     ██╗███╗   ██╗ ██████╗   ",
     "  ██╔════╝██╔════╝██╔══██╗██╔═══██╗██║     ██║  ╚██╗ ██╔╝╚══██╔══╝██╔════╝██║     ██║     ██║████╗  ██║██╔════╝   ",

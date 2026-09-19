@@ -22,5 +22,6 @@
     "markdown-slides",
     "interactive-talks"
   ],
+  "hasSandbox": false,
   "integrity": "cs:sha256:5eba936c42a0df5ba5fb8d131fc430196342649840e04331a829f99b8a9e64ca"
 }

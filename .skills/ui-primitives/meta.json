@@ -3,6 +3,7 @@
   "description": "High-fidelity web UI components, GSAP choreography timelines, WebGL Three.js 3D scenes, WebGPU halftone cursor trails, premium gradient borders, perimeter border beams, liquid gooey physics, spring docks, spotlight bento grids, universal transitions, kinetic typography, and atomic tokens.",
   "version": "4",
   "target": ".skills/ui-primitives",
+  "hasSandbox": true,
   "logo": [
     "  ██╗   ██╗██╗                                                            ",
     "  ██║   ██║██║                                                            ",

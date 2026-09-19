@@ -21,5 +21,6 @@
     "metrics-logging",
     "huggingface-spaces"
   ],
+  "hasSandbox": false,
   "integrity": "cs:sha256:6876fe46dea436d3be823d19d124421f3c10b463fa63d878e73b9aea633c7058"
 }

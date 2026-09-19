@@ -22,5 +22,6 @@
     "email-api",
     "deliverability"
   ],
+  "hasSandbox": false,
   "integrity": "cs:sha256:e70b7699d6f1526dffe3adb2637a1d9c59f286d1ce60baab231e07f5013074ad"
 }

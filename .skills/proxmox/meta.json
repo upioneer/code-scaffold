@@ -3,6 +3,7 @@
   "description": "Design, build, and maintain turnkey Proxmox VE LXC helper scripts with two-tier host orchestrator and in-container provisioner architecture, whiptail dialogs, ZFS/Ceph storage, cloud-init VM templating, snapshot automation, Prometheus monitoring, and container hardening.",
   "version": "2",
   "target": ".skills/proxmox",
+  "hasSandbox": true,
   "logo": [
     "  ██████╗ ██████╗  ██████╗ ██╗  ██╗███╗   ███╗ ██████╗ ██╗  ██╗  ",
     "  ██╔══██╗██╔══██╗██╔═══██╗╚██╗██╔╝████╗ ████║██╔═══██╗╚██╗██╔╝  ",

@@ -1,6 +1,6 @@
 # GhostPrint Engine
 
-**Version:** 1
+**Version:** 2
 **Target:** `.skills/ghostprint`
 **Category:** Security & Cryptography
 **Keywords:** `ghostprint`, `ghost-print`, `code-provenance`, `steganography`, `copyright-protection`, `digital-forensics`, `functional-entanglement`, `anti-tamper`, `zero-knowledge-proof`, `key-ceremony`, `entropy-meter`, `stylometry`, `ast-invariants`, `statistical-distribution`, `remote-oracle`, `daubert-standard`, `courtroom-admissible`, `dmca-evidence`
@@ -53,4 +53,5 @@ AI agents and developers invoke the GhostPrint Engine via conversational natural
 * Sealed Legal Dossier Generation: `node .skills/ghostprint/scripts/ghostprint.js export --target /path/to/suspect-repo --format all`
 
 ## Changelog
+* **v2** : Corrected box-drawing table column alignment for Layer 0 steganographic gradient in SKILL.md.
 * **v1** : Initial release of the GhostPrint Engine featuring the 9-layer steganographic defense-in-depth architecture, Hierarchical Deterministic (HD) Ratchet Key Tree, interactive Spectral Cyan Key Ceremony with real-time entropy progress bar, Anti-Correlation Gatekeeper, Project-Segmented Vault Topology, Forensic Infringement Auditor, Remote Black-Box Oracle Probes, and court-admissible legal dossier generator.

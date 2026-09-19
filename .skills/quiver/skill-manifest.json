@@ -33,5 +33,6 @@
     "logo-generator",
     "icon-generator"
   ],
-  "integrity": "cs:sha256:810a8e6c2c20eb050e922a9a16ebe2b5e950dfa7ff2f292e6fabeecf980de825"
+  "hasSandbox": true,
+  "integrity": "cs:sha256:141a69c3b59d66c81f99861a05a74499382d23ae78c54d955bfd46f11109c949"
 }

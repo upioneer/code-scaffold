@@ -33,5 +33,6 @@
     "witness-receipts",
     "pii-scrubbing"
   ],
-  "integrity": "cs:sha256:db90841a1d1162e76b1ae338a745b5e19553ef1e4a1f311b07bd639d795d5ae0"
+  "hasSandbox": false,
+  "integrity": "cs:sha256:16b976110a118a71153ffc75e79376f71a6c13ffa25162fc051bc2d1ea0432f8"
 }

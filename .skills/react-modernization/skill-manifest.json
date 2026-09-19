@@ -22,5 +22,6 @@
     "nextjs",
     "state-management"
   ],
+  "hasSandbox": false,
   "integrity": "cs:sha256:f7f1bd2b25cb831fb49358338ed0d78dc3a0c2c0034a3998c478a00f4670c0a1"
 }

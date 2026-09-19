@@ -2,118 +2,281 @@
 <html lang="en">
 <head>
   <!-- Code Scaffold Specification Schema: https://code-scaffold.com/spec/v1 -->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Markmap - Sandbox</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <style>
-        body { margin: 0; padding: 0; width: 100vw; min-height: 100vh; overflow-x: hidden; background-color: #020617; color: #f8fafc; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
-        .glass-panel { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(34, 211, 238, 0.2); }
-        .ascii-logo { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; white-space: pre; line-height: 1.2; font-size: 0.6rem; }
-        @media (min-width: 768px) { .ascii-logo { font-size: 0.8rem; } }
-        .grid-bg { background-image: radial-gradient(rgba(34, 211, 238, 0.1) 1px, transparent 1px); background-size: 30px 30px; }
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: #0f172a; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #475569; }
-        
-        /* Pulse Animation for Terminal Cursor */
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-        .cursor { display: inline-block; width: 8px; height: 1.2em; background-color: #22d3ee; vertical-align: text-bottom; animation: blink 1s step-end infinite; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Markmap Studio - Interactive Mindmap Engine</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <script src="https://cdn.jsdelivr.net/npm/markmap-view@0.17.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/markmap-lib@0.17.0"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body, html {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background-color: #020617;
+      color: #f8fafc;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    .grid-bg {
+      background-image: radial-gradient(rgba(34, 211, 238, 0.08) 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(34, 211, 238, 0.2);
+    }
+    .markmap-svg {
+      width: 100%;
+      height: 100%;
+      cursor: grab;
+    }
+    .markmap-svg:active {
+      cursor: grabbing;
+    }
+    /* Custom Mindmap Node Styling */
+    .markmap text {
+      fill: #f1f5f9 !important;
+      font-family: ui-sans-serif, system-ui, sans-serif !important;
+      font-size: 13px !important;
+      font-weight: 500 !important;
+    }
+    .markmap-link {
+      stroke-width: 2px !important;
+    }
+    .markmap-circle {
+      cursor: pointer;
+      fill: #020617 !important;
+      stroke-width: 2px !important;
+    }
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0b0f19; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #0284c7; }
+  </style>
 </head>
-<body class="grid-bg relative antialiased selection:bg-cyan-500/30">
-    
-    <!-- Background Glow -->
-    <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-cyan-600/10 rounded-full blur-[150px] pointer-events-none"></div>
+<body class="grid-bg flex flex-col h-screen">
 
-    <!-- Sticky Header -->
-    <header class="sticky top-0 z-50 glass-panel border-x-0 border-t-0 border-b-slate-800/80 px-6 py-4">
-        <div class="max-w-6xl mx-auto flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded bg-cyan-500/20 flex items-center justify-center border border-cyan-500/50 text-cyan-400 font-bold">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                </div>
-                <h1 class="text-xl font-black uppercase tracking-widest text-white">Markmap</h1>
-            </div>
-            <span class="px-3 py-1 bg-cyan-500/10 text-cyan-400 text-xs font-bold rounded-full border border-cyan-500/30 uppercase tracking-widest hidden sm:inline-block">v1</span>
-        </div>
-    </header>
+  <!-- Top Header Navigation -->
+  <header class="glass-panel px-5 py-3 flex items-center justify-between z-20 border-b border-slate-800">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 rounded-lg bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center text-cyan-400 font-black text-sm">
+        M
+      </div>
+      <div>
+        <h1 class="text-sm font-bold tracking-wider uppercase text-white flex items-center gap-2">
+          Markmap Studio
+          <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cyan-950 text-cyan-400 border border-cyan-800">Interactive Canvas</span>
+        </h1>
+        <p class="text-[11px] text-slate-400">Live Markdown to Hierarchical Mindmap Engine</p>
+      </div>
+    </div>
 
-    <main class="max-w-6xl mx-auto px-6 py-12 relative z-10 space-y-16">
-        
-        <!-- Hero Section -->
-        <section id="hero" class="text-center max-w-4xl mx-auto space-y-8">
-            <div id="logo-container" class="p-6 bg-slate-950 rounded-xl border border-slate-800 shadow-inner w-full overflow-x-auto text-cyan-400 ascii-logo text-left flex justify-center mx-auto opacity-0 translate-y-8">
-  ███╗   ███╗ █████╗ ██████╗ ██╗  ██╗███╗   ███╗ █████╗ ██████╗   
-  ████╗ ████║██╔══██╗██╔══██╗██║ ██╔╝████╗ ████║██╔══██╗██╔══██╗  
-  ██╔████╔██║███████║██████╔╝█████╔╝ ██╔████╔██║███████║██████╔╝  
-  ██║╚██╔╝██║██╔══██║██╔══██╗██╔═██╗ ██║╚██╔╝██║██╔══██║██╔═══╝   
-  ██║ ╚═╝ ██║██║  ██║██║  ██║██║  ██╗██║ ╚═╝ ██║██║  ██║██║       
-  ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝     ╚═╝╚═╝  ╚═╝╚═╝       
-            </div>
-            
-            <p id="desc" class="text-lg md:text-xl text-slate-400 leading-relaxed opacity-0 translate-y-4">
-                Interactive hierarchical mindmaps derived directly from standard markdown syntax.
-            </p>
-        </section>
+    <div class="flex items-center gap-2">
+      <!-- Template Selector -->
+      <select id="templateSelect" onchange="loadTemplate(this.value)" class="bg-slate-900 border border-slate-700 text-slate-300 text-xs rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-cyan-400">
+        <option value="scaffold">Preset: Code Scaffold Mesh</option>
+        <option value="security">Preset: Zero-Trust Security</option>
+        <option value="devops">Preset: Cloud CI/CD Matrix</option>
+      </select>
 
-        <!-- Context & Details -->
-        <section id="context" class="grid md:grid-cols-2 gap-8 opacity-0 translate-y-8">
-            
-            <div class="glass-panel p-8 rounded-2xl flex flex-col gap-4">
-                <div class="flex items-center gap-3 border-b border-slate-800/50 pb-4">
-                    <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
-                    <h3 class="text-xl font-bold text-white tracking-wide">Skill Context</h3>
-                </div>
-                <p class="text-slate-400 leading-relaxed">
-                    This sandbox provides a high-fidelity presentation layer for the <strong class="text-slate-200">markmap</strong> skill. Whether this is an interactive GUI skill or a headless CI/CD backend integration, the Code Scaffold runtime seamlessly provisions its exact structural constraints directly into your workspace.
-                </p>
-            </div>
+      <!-- Fit View Button -->
+      <button onclick="fitView()" title="Fit to Screen" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-200 transition flex items-center gap-1.5">
+        <svg class="w-3.5 h-3.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
+        <span>Fit View</span>
+      </button>
 
-            <div class="glass-panel p-8 rounded-2xl flex flex-col gap-4">
-                <div class="flex items-center gap-3 border-b border-slate-800/50 pb-4">
-                    <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                    <h3 class="text-xl font-bold text-white tracking-wide">CLI Deployment</h3>
-                </div>
-                <p class="text-slate-400 leading-relaxed mb-2">
-                    To inject this specialized knowledge graph and scaffolding payload directly into your project architecture, run the following command in your terminal:
-                </p>
-                <div class="relative flex items-center bg-slate-950 border border-slate-800 rounded-lg p-4 shadow-xl group cursor-pointer overflow-hidden">
-                    <div class="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg blur opacity-20 group-hover:opacity-40 transition duration-500"></div>
-                    <code class="relative text-cyan-400 font-mono text-sm md:text-base text-left w-full">npx @code-scaffold/skills install markmap<span class="cursor"></span></code>
-                </div>
-            </div>
+      <!-- Zoom In Button -->
+      <button onclick="zoomStep(1.2)" title="Zoom In" class="w-8 h-8 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-200 flex items-center justify-center font-bold text-sm">
+        +
+      </button>
 
-        </section>
-        
-        <div id="footer-spacer" class="h-12"></div>
-    </main>
+      <!-- Zoom Out Button -->
+      <button onclick="zoomStep(0.8)" title="Zoom Out" class="w-8 h-8 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-200 flex items-center justify-center font-bold text-sm">
+        &minus;
+      </button>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const tl = gsap.timeline();
-            
-            tl.to("#logo-container", {
-                y: 0,
-                opacity: 1,
-                duration: 0.8,
-                ease: "back.out(1.4)"
-            })
-            .to("#desc", {
-                y: 0,
-                opacity: 1,
-                duration: 0.6,
-                ease: "power3.out"
-            }, "-=0.5")
-            .to("#context", {
-                y: 0,
-                opacity: 1,
-                duration: 0.8,
-                ease: "power3.out"
-            }, "-=0.4");
-        });
-    </script>
+      <!-- Toggle Editor Pane -->
+      <button onclick="toggleEditor()" id="toggleBtn" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/40 transition">
+        Toggle Editor
+      </button>
+    </div>
+  </header>
+
+  <!-- Workspace Container (Split Pane) -->
+  <main class="flex-1 flex overflow-hidden relative">
+
+    <!-- Left: Markdown Input Editor -->
+    <section id="editorPane" class="w-1/3 min-w-[320px] max-w-[500px] h-full bg-slate-950/90 border-r border-slate-800 flex flex-col z-10 transition-all duration-300">
+      <div class="px-4 py-2 border-b border-slate-800 flex items-center justify-between text-xs text-slate-400">
+        <span class="font-mono text-cyan-400 flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+          markdown_source.md
+        </span>
+        <span class="text-[11px] text-slate-500">Auto-syncs on edit</span>
+      </div>
+      <textarea id="markdownInput" oninput="renderMindmap()" spellcheck="false" class="w-full flex-1 p-4 bg-transparent text-slate-300 font-mono text-xs leading-relaxed focus:outline-none resize-none selection:bg-cyan-500/30"></textarea>
+      <div class="p-3 border-t border-slate-800/80 bg-slate-900/50 flex items-center justify-between text-[11px] text-slate-400">
+        <span>Click node circles to collapse/expand branches</span>
+        <span id="nodeStats" class="font-mono text-cyan-400 text-[10px]">Active Tree</span>
+      </div>
+    </section>
+
+    <!-- Right: Interactive SVG Canvas -->
+    <section class="flex-1 h-full relative overflow-hidden bg-slate-950/40">
+      <svg id="mindmapSvg" class="markmap-svg"></svg>
+
+      <!-- Floating Controls Indicator -->
+      <div class="absolute bottom-4 right-4 glass-panel px-3 py-1.5 rounded-lg text-[11px] text-slate-400 pointer-events-none flex items-center gap-2">
+        <span class="text-cyan-400">Drag</span> to Pan &bull; <span class="text-cyan-400">Scroll</span> to Zoom &bull; <span class="text-cyan-400">Click</span> to Collapse
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const TEMPLATES = {
+      scaffold: `# Code Scaffold Architecture
+## CLI & Engine
+- Ratatui Terminal User Interface
+  - Responsive layout engine
+  - Live preview cards
+  - Real-time event loop
+- Headless ACP Daemon
+  - Stdio JSON-RPC transport
+  - In-memory manifest generator
+  - Dynamic skill injector
+## Skillforge Ecosystem
+- 56 Specialized Domain Skills
+  - WebGL Shaders & Canvas (Kinetic Canvas, P5.js)
+  - Cryptographic Provenance (GhostPrint Engine)
+  - Interactive Diagrams (Mermaid, Markmap, tldraw)
+  - Autonomous Testing (Playwright, Sentinel)
+- Deterministic Provenance Anchors
+  - cs:sha256 integrity tokens
+  - Zero-width attribution signatures
+## Deployment Pipeline
+- Cross-Platform Release Matrix
+  - Windows x64 & ARM64
+  - Linux x64 & ARM64
+  - macOS Apple Silicon (Darwin)
+- Automated OTA Channels
+  - Semantic whole-number versioning
+  - GitHub Releases & NPM registry`,
+
+      security: `# Zero-Trust Security Mesh
+## Perimeter Defense
+- Dynamic OTP Gatekeeper
+  - Out-of-band mobile verification
+  - 5-minute deadman switch TTL
+- Ephemeral Reverse Tunneling
+  - Localhost loopback isolation
+  - Randomized ephemeral ports
+## Cryptographic Provenance
+- GhostPrint Engine
+  - 9-layer steganographic gradient
+  - Hierarchical Deterministic (HD) key tree
+  - Public pre-image constants (HKDF-SHA256)
+- Digital Forensics Dossier
+  - Federal Daubert standard compliance
+  - Court-admissible mathematical proofs
+## Identity & Governance
+- Authenticated RBAC
+  - Session state encryption at rest
+  - Zero plaintext secrets in storage`,
+
+      devops: `# Cloud Native Infrastructure
+## Compute & Orchestration
+- Docker Container Arsenal
+  - Ephemeral Swapper Protocol
+  - Multi-stage BuildKit caching
+- Proxmox VE Virtualization
+  - LXC Alpine micro-containers
+  - Hardware GPU passthrough
+## Cloud Platform Integrations
+- Vercel Edge Runtime
+  - Serverless route rewriting
+  - Global edge middleware caching
+- Supabase & Firebase
+  - Row Level Security (RLS) policies
+  - Real-time WebSocket replication`
+    };
+
+    let mm = null;
+    let transformer = null;
+
+    function initMarkmap() {
+      const markdownArea = document.getElementById('markdownInput');
+      markdownArea.value = TEMPLATES.scaffold;
+
+      if (window.markmap && window.markmap.Transformer) {
+        transformer = new window.markmap.Transformer();
+        const { root } = transformer.transform(markdownArea.value);
+        mm = window.markmap.Markmap.create('#mindmapSvg', {
+          autoFit: true,
+          duration: 350,
+          color: (node) => {
+            const colors = ['#00f0ff', '#38bdf8', '#818cf8', '#34d399', '#f59e0b', '#f43f5e'];
+            return colors[(node.depth || 0) % colors.length];
+          }
+        }, root);
+        setTimeout(() => mm.fit(), 300);
+      } else {
+        // Fallback if CDN blocked
+        console.warn('Markmap library loading in progress...');
+        setTimeout(initMarkmap, 500);
+      }
+    }
+
+    function renderMindmap() {
+      if (!mm || !transformer) return;
+      const md = document.getElementById('markdownInput').value;
+      try {
+        const { root } = transformer.transform(md);
+        mm.setData(root);
+      } catch (err) {
+        console.error('Markmap render error:', err);
+      }
+    }
+
+    function loadTemplate(key) {
+      if (TEMPLATES[key]) {
+        document.getElementById('markdownInput').value = TEMPLATES[key];
+        renderMindmap();
+        setTimeout(() => fitView(), 200);
+      }
+    }
+
+    function fitView() {
+      if (mm) mm.fit();
+    }
+
+    function zoomStep(factor) {
+      if (mm) {
+        const svg = d3.select('#mindmapSvg');
+        svg.transition().duration(250).call(mm.zoom.scaleBy, factor);
+      }
+    }
+
+    function toggleEditor() {
+      const pane = document.getElementById('editorPane');
+      const btn = document.getElementById('toggleBtn');
+      if (pane.classList.contains('hidden')) {
+        pane.classList.remove('hidden');
+        btn.classList.replace('text-slate-400', 'text-cyan-300');
+      } else {
+        pane.classList.add('hidden');
+        btn.classList.replace('text-cyan-300', 'text-slate-400');
+      }
+      setTimeout(() => fitView(), 350);
+    }
+
+    window.addEventListener('DOMContentLoaded', initMarkmap);
+    window.addEventListener('resize', () => {
+      if (mm) mm.fit();
+    });
+  </script>
 </body>
 </html>

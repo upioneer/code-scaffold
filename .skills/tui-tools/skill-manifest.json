@@ -16,5 +16,6 @@
     "figlet-ascii",
     "cli-branding"
   ],
+  "hasSandbox": false,
   "integrity": "cs:sha256:1c615841286c274d0f4608b39fd5008ea22b5c1223b539a960035193770f4fb4"
 }

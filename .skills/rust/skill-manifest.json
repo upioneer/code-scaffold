@@ -24,5 +24,6 @@
     "systems-programming",
     "wasm"
   ],
+  "hasSandbox": false,
   "integrity": "cs:sha256:a8d6ef474957988a0f4e33c64c529241df54e3cb098e4a70348505f9215eaa1b"
 }

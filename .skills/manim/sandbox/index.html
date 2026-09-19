@@ -2,130 +2,570 @@
 <html lang="en">
 <head>
   <!-- Code Scaffold Specification Schema: https://code-scaffold.com/spec/v1 -->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manim Math Animations - Sandbox</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <style>
-        body { margin: 0; padding: 0; width: 100vw; min-height: 100vh; overflow-x: hidden; background-color: #020617; color: #f8fafc; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
-        .glass-panel { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(34, 211, 238, 0.2); }
-        .ascii-logo { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; white-space: pre; line-height: 1.2; font-size: 0.6rem; }
-        @media (min-width: 768px) { .ascii-logo { font-size: 0.8rem; } }
-        .grid-bg { background-image: radial-gradient(rgba(34, 211, 238, 0.1) 1px, transparent 1px); background-size: 30px 30px; }
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: #0f172a; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #475569; }
-        
-        /* Pulse Animation for Terminal Cursor */
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-        .cursor { display: inline-block; width: 8px; height: 1.2em; background-color: #22d3ee; vertical-align: text-bottom; animation: blink 1s step-end infinite; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manim Studio - Interactive Mathematical Animation Engine</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body, html {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background-color: #020617;
+      color: #f8fafc;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    .grid-bg {
+      background-image: radial-gradient(rgba(34, 211, 238, 0.08) 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(34, 211, 238, 0.2);
+    }
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0b0f19; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #0284c7; }
+  </style>
 </head>
-<body class="grid-bg relative antialiased selection:bg-cyan-500/30">
-    
-    <!-- Background Glow -->
-    <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-cyan-600/10 rounded-full blur-[150px] pointer-events-none"></div>
+<body class="grid-bg flex flex-col h-screen">
 
-    <!-- Sticky Header -->
-    <header class="sticky top-0 z-50 glass-panel border-x-0 border-t-0 border-b-slate-800/80 px-6 py-4">
-        <div class="max-w-6xl mx-auto flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded bg-cyan-500/20 flex items-center justify-center border border-cyan-500/50 text-cyan-400 font-bold">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                </div>
-                <h1 class="text-xl font-black uppercase tracking-widest text-white">Manim Math Animations</h1>
-            </div>
-            <span class="px-3 py-1 bg-cyan-500/10 text-cyan-400 text-xs font-bold rounded-full border border-cyan-500/30 uppercase tracking-widest hidden sm:inline-block">v2</span>
+  <!-- Header Navigation -->
+  <header class="glass-panel px-5 py-3 flex items-center justify-between z-20 border-b border-slate-800">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 rounded-lg bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center text-cyan-400 font-black text-sm">
+        M
+      </div>
+      <div>
+        <h1 class="text-sm font-bold tracking-wider uppercase text-white flex items-center gap-2">
+          Manim Studio
+          <span class="text-[10px] bg-cyan-500/20 text-cyan-400 px-2 py-0.5 rounded border border-cyan-500/30">MATHEMATICAL ANIMATION ENGINE</span>
+        </h1>
+        <p class="text-xs text-slate-400">Interactive Canvas Visualizer &bull; Scene Simulation</p>
+      </div>
+    </div>
+
+    <!-- Scene Selector Tabs -->
+    <div class="flex items-center gap-2 bg-slate-900/90 p-1 rounded-lg border border-slate-800 text-xs">
+      <button id="tab-fourier" onclick="switchScene('fourier')" class="px-3 py-1.5 rounded-md font-medium transition bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
+        Fourier Epicycles
+      </button>
+      <button id="tab-euler" onclick="switchScene('euler')" class="px-3 py-1.5 rounded-md font-medium transition text-slate-400 hover:text-white">
+        Euler Phase Plane
+      </button>
+      <button id="tab-riemann" onclick="switchScene('riemann')" class="px-3 py-1.5 rounded-md font-medium transition text-slate-400 hover:text-white">
+        Riemann Partitions
+      </button>
+    </div>
+
+    <!-- Right Actions -->
+    <div class="flex items-center gap-3">
+      <span class="text-xs font-mono text-slate-400 hidden sm:inline" id="fps-counter">60 FPS</span>
+      <button onclick="resetScene()" class="px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700 transition">
+        Reset
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Viewport and Sidebar Layout -->
+  <div class="flex-1 flex overflow-hidden relative">
+
+    <!-- Canvas Simulation Stage -->
+    <div class="flex-1 relative flex flex-col items-center justify-center bg-slate-950/60 overflow-hidden">
+      <canvas id="manim-canvas"></canvas>
+
+      <!-- Bottom Playback Scrub Bar Overlay -->
+      <div class="absolute bottom-4 left-6 right-6 glass-panel p-3 rounded-xl flex items-center gap-4 z-10 border border-slate-800">
+        <!-- Play / Pause Toggle -->
+        <button id="btn-play" onclick="togglePlay()" class="w-8 h-8 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold flex items-center justify-center transition">
+          <svg id="icon-pause" class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/></svg>
+          <svg id="icon-play" class="w-4 h-4 hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </button>
+
+        <!-- Progress Scrub Bar -->
+        <div class="flex-1 flex flex-col gap-1">
+          <div class="flex justify-between text-[11px] font-mono text-slate-400">
+            <span id="time-display">00:00.00</span>
+            <span id="scene-label">Fourier Square Wave Synthesis</span>
+          </div>
+          <input id="timeline-slider" type="range" min="0" max="1000" value="0" oninput="scrubTimeline(this.value)" class="w-full accent-cyan-400 h-1.5 bg-slate-800 rounded-lg cursor-pointer">
         </div>
-    </header>
 
-    <main class="max-w-6xl mx-auto px-6 py-12 relative z-10 space-y-16">
-        
-        <!-- Hero Section -->
-        <section id="hero" class="text-center max-w-4xl mx-auto space-y-8">
-            <div id="logo-container" class="p-6 bg-slate-950 rounded-xl border border-slate-800 shadow-inner w-full overflow-x-auto text-cyan-400 ascii-logo text-left flex justify-center mx-auto opacity-0 translate-y-8">
-  ███╗   ███╗ █████╗ ███╗   ██╗██╗███╗   ███╗                                      
-  ████╗ ████║██╔══██╗████╗  ██║██║████╗ ████║                                      
-  ██╔████╔██║███████║██╔██╗ ██║██║██╔████╔██║                                      
-  ██║╚██╔╝██║██╔══██║██║╚██╗██║██║██║╚██╔╝██║                                      
-  ██║ ╚═╝ ██║██║  ██║██║ ╚████║██║██║ ╚═╝ ██║                                      
-  ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝     ╚═╝                                      
-  ███╗   ███╗ █████╗ ████████╗██╗  ██╗                                             
-  ████╗ ████║██╔══██╗╚══██╔══╝██║  ██║                                             
-  ██╔████╔██║███████║   ██║   ███████║                                             
-  ██║╚██╔╝██║██╔══██║   ██║   ██╔══██║                                             
-  ██║ ╚═╝ ██║██║  ██║   ██║   ██║  ██║                                             
-  ╚═╝     ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝                                             
-   █████╗ ███╗   ██╗██╗███╗   ███╗ █████╗ ████████╗██╗ ██████╗ ███╗   ██╗███████╗  
-  ██╔══██╗████╗  ██║██║████╗ ████║██╔══██╗╚══██╔══╝██║██╔═══██╗████╗  ██║██╔════╝  
-  ███████║██╔██╗ ██║██║██╔████╔██║███████║   ██║   ██║██║   ██║██╔██╗ ██║███████╗  
-  ██╔══██║██║╚██╗██║██║██║╚██╔╝██║██╔══██║   ██║   ██║██║   ██║██║╚██╗██║╚════██║  
-  ██║  ██║██║ ╚████║██║██║ ╚═╝ ██║██║  ██║   ██║   ██║╚██████╔╝██║ ╚████║███████║  
-  ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝     ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚══════╝  
+        <!-- Speed Selector -->
+        <div class="flex items-center gap-1 text-xs">
+          <button onclick="setSpeed(0.5)" class="speed-btn px-2 py-1 rounded bg-slate-800/80 text-slate-400 hover:text-white" data-speed="0.5">0.5x</button>
+          <button onclick="setSpeed(1.0)" class="speed-btn px-2 py-1 rounded bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/30" data-speed="1.0">1.0x</button>
+          <button onclick="setSpeed(2.0)" class="speed-btn px-2 py-1 rounded bg-slate-800/80 text-slate-400 hover:text-white" data-speed="2.0">2.0x</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Properties & Formula Inspector Panel -->
+    <div class="w-80 glass-panel border-y-0 border-r-0 border-l border-slate-800 p-5 flex flex-col gap-5 overflow-y-auto z-10">
+      <div>
+        <h2 class="text-xs font-bold uppercase tracking-wider text-cyan-400 mb-1">Scene Parameters</h2>
+        <p class="text-xs text-slate-400" id="panel-desc">Interactive harmonics and epicycle controls.</p>
+      </div>
+
+      <!-- Scene-Specific Controls Container -->
+      <div id="controls-container" class="space-y-4 text-xs">
+        <!-- Injected via JS based on active scene -->
+      </div>
+
+      <!-- Formula Card -->
+      <div class="bg-slate-900/90 rounded-xl p-4 border border-slate-800/80 space-y-2">
+        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Governing Equation</span>
+        <div id="formula-display" class="font-mono text-cyan-300 text-sm py-1 bg-slate-950/80 px-3 rounded border border-slate-800 break-words">
+          f(t) = 4/π Σ (1/n) sin(nωt)
+        </div>
+        <p id="formula-caption" class="text-[11px] text-slate-400 leading-relaxed">
+          Synthesizes an odd square pulse wave through harmonic circular phasor decomposition.
+        </p>
+      </div>
+
+      <!-- Scene Telemetry -->
+      <div class="bg-slate-900/90 rounded-xl p-4 border border-slate-800/80 space-y-2">
+        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Scene Telemetry</span>
+        <div class="grid grid-cols-2 gap-2 text-xs font-mono">
+          <div class="bg-slate-950 p-2 rounded border border-slate-800">
+            <span class="text-slate-500 block text-[10px]">HARMONICS</span>
+            <span id="telemetry-param1" class="text-cyan-400 font-bold">5</span>
+          </div>
+          <div class="bg-slate-950 p-2 rounded border border-slate-800">
+            <span class="text-slate-500 block text-[10px]">WAVE SAMPLES</span>
+            <span id="telemetry-param2" class="text-emerald-400 font-bold">420</span>
+          </div>
+          <div class="bg-slate-950 p-2 rounded border border-slate-800">
+            <span class="text-slate-500 block text-[10px]">TOTAL PHASORS</span>
+            <span id="telemetry-param3" class="text-purple-400 font-bold">5</span>
+          </div>
+          <div class="bg-slate-950 p-2 rounded border border-slate-800">
+            <span class="text-slate-500 block text-[10px]">RENDER LOOP</span>
+            <span class="text-blue-400 font-bold">Canvas2D</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Tips -->
+      <div class="p-3 bg-cyan-950/20 border border-cyan-800/40 rounded-xl text-[11px] text-slate-400 space-y-1">
+        <span class="text-cyan-400 font-bold block">&bull; Manim Engine Reference</span>
+        <span>Use <code class="text-cyan-300 font-mono">self.play(Create(...))</code> and <code class="text-cyan-300 font-mono">Transform()</code> primitives in Python to export these scenes into vector MP4 videos.</span>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const canvas = document.getElementById('manim-canvas');
+    const ctx = canvas.getContext('2d');
+
+    let currentScene = 'fourier';
+    let isPlaying = true;
+    let animTime = 0;
+    let playbackSpeed = 1.0;
+    let fourierOrder = 5;
+    let wavePoints = [];
+    let riemannPartitions = 16;
+    let riemannMode = 'midpoint';
+
+    function resizeCanvas() {
+      const rect = canvas.parentElement.getBoundingClientRect();
+      canvas.width = rect.width * window.devicePixelRatio;
+      canvas.height = rect.height * window.devicePixelRatio;
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function switchScene(scene) {
+      currentScene = scene;
+      animTime = 0;
+      wavePoints = [];
+
+      ['fourier', 'euler', 'riemann'].forEach(s => {
+        const tab = document.getElementById(`tab-${s}`);
+        if (s === scene) {
+          tab.className = "px-3 py-1.5 rounded-md font-medium transition bg-cyan-500/20 text-cyan-300 border border-cyan-500/40";
+        } else {
+          tab.className = "px-3 py-1.5 rounded-md font-medium transition text-slate-400 hover:text-white";
+        }
+      });
+
+      renderControls();
+    }
+
+    function renderControls() {
+      const container = document.getElementById('controls-container');
+      const desc = document.getElementById('panel-desc');
+      const formulaDisplay = document.getElementById('formula-display');
+      const formulaCaption = document.getElementById('formula-caption');
+      const sceneLabel = document.getElementById('scene-label');
+
+      if (currentScene === 'fourier') {
+        desc.textContent = "Harmonics and epicycle circle decomposition.";
+        formulaDisplay.textContent = "f(t) = 4/π Σ (1/n) sin(nωt), n ∈ odd";
+        formulaCaption.textContent = "Synthesizes an odd square pulse wave through harmonic circular phasor decomposition.";
+        sceneLabel.textContent = "Fourier Epicycles Simulation";
+
+        container.innerHTML = `
+          <div class="space-y-1">
+            <div class="flex justify-between">
+              <span class="text-slate-300">Epicycle Order (Harmonics)</span>
+              <span class="text-cyan-400 font-mono font-bold" id="order-val">${fourierOrder}</span>
             </div>
-            
-            <p id="desc" class="text-lg md:text-xl text-slate-400 leading-relaxed opacity-0 translate-y-4">
-                Mathematical animations using the Manim library.
-            </p>
-        </section>
+            <input type="range" min="1" max="15" value="${fourierOrder}" oninput="updateFourierOrder(this.value)" class="w-full accent-cyan-400 h-1 bg-slate-800 rounded cursor-pointer">
+          </div>
+          <div class="space-y-1">
+            <span class="text-slate-300 block">Target Waveform</span>
+            <select class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-slate-200">
+              <option>Square Pulse Wave</option>
+              <option>Sawtooth Wave</option>
+            </select>
+          </div>
+        `;
+        document.getElementById('telemetry-param1').textContent = fourierOrder;
+        document.getElementById('telemetry-param3').textContent = fourierOrder;
+      } else if (currentScene === 'euler') {
+        desc.textContent = "Complex plane projection and rotation.";
+        formulaDisplay.textContent = "e^(iθ) = cos(θ) + i·sin(θ)";
+        formulaCaption.textContent = "Projects circular rotation in the complex plane into dual real and imaginary sinusoidal waves.";
+        sceneLabel.textContent = "Euler Complex Phase Plane";
 
-        <!-- Context & Details -->
-        <section id="context" class="grid md:grid-cols-2 gap-8 opacity-0 translate-y-8">
-            
-            <div class="glass-panel p-8 rounded-2xl flex flex-col gap-4">
-                <div class="flex items-center gap-3 border-b border-slate-800/50 pb-4">
-                    <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
-                    <h3 class="text-xl font-bold text-white tracking-wide">Skill Context</h3>
-                </div>
-                <p class="text-slate-400 leading-relaxed">
-                    This sandbox provides a high-fidelity presentation layer for the <strong class="text-slate-200">manim</strong> skill. Whether this is an interactive GUI skill or a headless CI/CD backend integration, the Code Scaffold runtime seamlessly provisions its exact structural constraints directly into your workspace.
-                </p>
+        container.innerHTML = `
+          <div class="space-y-1">
+            <span class="text-slate-300 block">Phase Angle θ</span>
+            <span class="text-cyan-400 font-mono font-bold block" id="euler-theta">0.00 rad</span>
+          </div>
+          <div class="space-y-1">
+            <span class="text-slate-300 block">Vector Radius R</span>
+            <span class="text-purple-400 font-mono font-bold block">1.00 (Normalized)</span>
+          </div>
+        `;
+        document.getElementById('telemetry-param1').textContent = "1.00";
+        document.getElementById('telemetry-param3').textContent = "e^(iθ)";
+      } else if (currentScene === 'riemann') {
+        desc.textContent = "Definite integral approximation via area partitions.";
+        formulaDisplay.textContent = "∫ f(x)dx ≈ Σ f(x_i*) · Δx";
+        formulaCaption.textContent = "Demonstrates convergence of discrete rectangular partitions toward the exact analytical integral.";
+        sceneLabel.textContent = "Riemann Partitioning Integration";
+
+        container.innerHTML = `
+          <div class="space-y-1">
+            <div class="flex justify-between">
+              <span class="text-slate-300">Partition Count (N)</span>
+              <span class="text-cyan-400 font-mono font-bold" id="part-val">${riemannPartitions}</span>
             </div>
-
-            <div class="glass-panel p-8 rounded-2xl flex flex-col gap-4">
-                <div class="flex items-center gap-3 border-b border-slate-800/50 pb-4">
-                    <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                    <h3 class="text-xl font-bold text-white tracking-wide">CLI Deployment</h3>
-                </div>
-                <p class="text-slate-400 leading-relaxed mb-2">
-                    To inject this specialized knowledge graph and scaffolding payload directly into your project architecture, run the following command in your terminal:
-                </p>
-                <div class="relative flex items-center bg-slate-950 border border-slate-800 rounded-lg p-4 shadow-xl group cursor-pointer overflow-hidden">
-                    <div class="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg blur opacity-20 group-hover:opacity-40 transition duration-500"></div>
-                    <code class="relative text-cyan-400 font-mono text-sm md:text-base text-left w-full">npx @code-scaffold/skills install manim<span class="cursor"></span></code>
-                </div>
+            <input type="range" min="4" max="48" step="2" value="${riemannPartitions}" oninput="updateRiemannPartitions(this.value)" class="w-full accent-cyan-400 h-1 bg-slate-800 rounded cursor-pointer">
+          </div>
+          <div class="space-y-1">
+            <span class="text-slate-300 block">Sample Point</span>
+            <div class="grid grid-cols-3 gap-1">
+              <button onclick="setRiemannMode('left')" class="px-2 py-1 rounded ${riemannMode === 'left' ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40' : 'bg-slate-900 text-slate-400'}">Left</button>
+              <button onclick="setRiemannMode('midpoint')" class="px-2 py-1 rounded ${riemannMode === 'midpoint' ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40' : 'bg-slate-900 text-slate-400'}">Mid</button>
+              <button onclick="setRiemannMode('right')" class="px-2 py-1 rounded ${riemannMode === 'right' ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40' : 'bg-slate-900 text-slate-400'}">Right</button>
             </div>
+          </div>
+        `;
+        document.getElementById('telemetry-param1').textContent = riemannPartitions;
+        document.getElementById('telemetry-param3').textContent = riemannMode;
+      }
+    }
 
-        </section>
-        
-        <div id="footer-spacer" class="h-12"></div>
-    </main>
+    function updateFourierOrder(val) {
+      fourierOrder = parseInt(val);
+      document.getElementById('order-val').textContent = val;
+      document.getElementById('telemetry-param1').textContent = val;
+      document.getElementById('telemetry-param3').textContent = val;
+      wavePoints = [];
+    }
 
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const tl = gsap.timeline();
-            
-            tl.to("#logo-container", {
-                y: 0,
-                opacity: 1,
-                duration: 0.8,
-                ease: "back.out(1.4)"
-            })
-            .to("#desc", {
-                y: 0,
-                opacity: 1,
-                duration: 0.6,
-                ease: "power3.out"
-            }, "-=0.5")
-            .to("#context", {
-                y: 0,
-                opacity: 1,
-                duration: 0.8,
-                ease: "power3.out"
-            }, "-=0.4");
-        });
-    </script>
+    function updateRiemannPartitions(val) {
+      riemannPartitions = parseInt(val);
+      document.getElementById('part-val').textContent = val;
+      document.getElementById('telemetry-param1').textContent = val;
+    }
+
+    function setRiemannMode(mode) {
+      riemannMode = mode;
+      renderControls();
+    }
+
+    function togglePlay() {
+      isPlaying = !isPlaying;
+      document.getElementById('icon-pause').classList.toggle('hidden', !isPlaying);
+      document.getElementById('icon-play').classList.toggle('hidden', isPlaying);
+    }
+
+    function resetScene() {
+      animTime = 0;
+      wavePoints = [];
+    }
+
+    function scrubTimeline(val) {
+      animTime = (val / 1000) * (Math.PI * 8);
+    }
+
+    function setSpeed(speed) {
+      playbackSpeed = speed;
+      document.querySelectorAll('.speed-btn').forEach(btn => {
+        if (parseFloat(btn.getAttribute('data-speed')) === speed) {
+          btn.className = "speed-btn px-2 py-1 rounded bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/30";
+        } else {
+          btn.className = "speed-btn px-2 py-1 rounded bg-slate-800/80 text-slate-400 hover:text-white";
+        }
+      });
+    }
+
+    function draw() {
+      const rect = canvas.parentElement.getBoundingClientRect();
+      const w = rect.width;
+      const h = rect.height;
+
+      ctx.clearRect(0, 0, w, h);
+
+      if (isPlaying) {
+        animTime += 0.02 * playbackSpeed;
+      }
+
+      const slider = document.getElementById('timeline-slider');
+      slider.value = ((animTime % (Math.PI * 8)) / (Math.PI * 8)) * 1000;
+      document.getElementById('time-display').textContent = `t = ${animTime.toFixed(2)}s`;
+
+      if (currentScene === 'fourier') {
+        drawFourier(w, h);
+      } else if (currentScene === 'euler') {
+        drawEuler(w, h);
+      } else if (currentScene === 'riemann') {
+        drawRiemann(w, h);
+      }
+
+      requestAnimationFrame(draw);
+    }
+
+    function drawFourier(w, h) {
+      const centerX = Math.min(260, w * 0.28);
+      const centerY = h * 0.5;
+      const baseRadius = Math.min(90, h * 0.22);
+
+      let x = centerX;
+      let y = centerY;
+
+      ctx.lineWidth = 1.5;
+
+      for (let i = 0; i < fourierOrder; i++) {
+        const prevX = x;
+        const prevY = y;
+        const n = i * 2 + 1;
+        const radius = baseRadius * (4 / (n * Math.PI));
+
+        x += radius * Math.cos(n * animTime);
+        y += radius * Math.sin(n * animTime);
+
+        ctx.strokeStyle = `rgba(34, 211, 238, ${0.4 - i * 0.02})`;
+        ctx.beginPath();
+        ctx.arc(prevX, prevY, Math.max(1, radius), 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.strokeStyle = '#38bdf8';
+        ctx.beginPath();
+        ctx.moveTo(prevX, prevY);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+
+        ctx.fillStyle = '#22d3ee';
+        ctx.beginPath();
+        ctx.arc(x, y, 2.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      wavePoints.unshift(y);
+      if (wavePoints.length > 500) wavePoints.pop();
+      document.getElementById('telemetry-param2').textContent = wavePoints.length;
+
+      const waveStartX = centerX + baseRadius * 1.5 + 40;
+      ctx.strokeStyle = 'rgba(168, 85, 247, 0.6)';
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(waveStartX, wavePoints[0]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.lineWidth = 2.5;
+      ctx.strokeStyle = '#22d3ee';
+      ctx.beginPath();
+      for (let i = 0; i < wavePoints.length; i++) {
+        const px = waveStartX + i * 1.2;
+        if (i === 0) ctx.moveTo(px, wavePoints[i]);
+        else ctx.lineTo(px, wavePoints[i]);
+      }
+      ctx.stroke();
+
+      ctx.strokeStyle = 'rgba(71, 85, 105, 0.4)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(waveStartX - 10, centerY);
+      ctx.lineTo(w - 20, centerY);
+      ctx.stroke();
+    }
+
+    function drawEuler(w, h) {
+      const centerX = Math.min(280, w * 0.32);
+      const centerY = h * 0.5;
+      const radius = Math.min(130, h * 0.28);
+
+      const theta = animTime % (Math.PI * 2);
+      const thetaElem = document.getElementById('euler-theta');
+      if (thetaElem) thetaElem.textContent = `${theta.toFixed(2)} rad (${((theta * 180) / Math.PI).toFixed(0)}°)`;
+
+      ctx.strokeStyle = 'rgba(71, 85, 105, 0.5)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(centerX - radius - 30, centerY);
+      ctx.lineTo(centerX + radius + 30, centerY);
+      ctx.moveTo(centerX, centerY - radius - 30);
+      ctx.lineTo(centerX, centerY + radius + 30);
+      ctx.stroke();
+
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '11px monospace';
+      ctx.fillText('Re', centerX + radius + 35, centerY + 4);
+      ctx.fillText('Im', centerX - 8, centerY - radius - 35);
+
+      ctx.strokeStyle = 'rgba(34, 211, 238, 0.3)';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+      ctx.stroke();
+
+      const vx = centerX + radius * Math.cos(theta);
+      const vy = centerY - radius * Math.sin(theta);
+
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(centerX, centerY);
+      ctx.lineTo(vx, centerY);
+      ctx.stroke();
+
+      ctx.strokeStyle = '#c084fc';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(vx, centerY);
+      ctx.lineTo(vx, vy);
+      ctx.stroke();
+
+      ctx.strokeStyle = '#22d3ee';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.moveTo(centerX, centerY);
+      ctx.lineTo(vx, vy);
+      ctx.stroke();
+
+      ctx.fillStyle = '#f8fafc';
+      ctx.beginPath();
+      ctx.arc(vx, vy, 4, 0, Math.PI * 2);
+      ctx.fill();
+
+      wavePoints.unshift(vy);
+      if (wavePoints.length > 450) wavePoints.pop();
+
+      const waveStartX = centerX + radius + 60;
+      ctx.strokeStyle = 'rgba(192, 132, 252, 0.4)';
+      ctx.setLineDash([3, 3]);
+      ctx.beginPath();
+      ctx.moveTo(vx, vy);
+      ctx.lineTo(waveStartX, vy);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.strokeStyle = '#c084fc';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      for (let i = 0; i < wavePoints.length; i++) {
+        const px = waveStartX + i * 1.3;
+        if (i === 0) ctx.moveTo(px, wavePoints[i]);
+        else ctx.lineTo(px, wavePoints[i]);
+      }
+      ctx.stroke();
+    }
+
+    function drawRiemann(w, h) {
+      const leftPad = 80;
+      const rightPad = 40;
+      const bottomPad = 120;
+      const plotWidth = w - leftPad - rightPad;
+      const plotHeight = h - 160;
+      const originY = h - bottomPad;
+
+      ctx.strokeStyle = 'rgba(71, 85, 105, 0.6)';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(leftPad, originY);
+      ctx.lineTo(w - rightPad, originY);
+      ctx.moveTo(leftPad, originY - plotHeight);
+      ctx.lineTo(leftPad, originY + 10);
+      ctx.stroke();
+
+      const xMin = 0;
+      const xMax = Math.PI * 2;
+      const dx = (xMax - xMin) / riemannPartitions;
+      const rectWidthPx = plotWidth / riemannPartitions;
+
+      function f(x) {
+        return Math.sin(x + animTime * 0.5) * 0.4 + Math.cos(2 * (x + animTime * 0.5)) * 0.2 + 0.8;
+      }
+
+      let riemannSum = 0;
+
+      for (let i = 0; i < riemannPartitions; i++) {
+        let sampleX;
+        if (riemannMode === 'left') sampleX = xMin + i * dx;
+        else if (riemannMode === 'right') sampleX = xMin + (i + 1) * dx;
+        else sampleX = xMin + (i + 0.5) * dx;
+
+        const val = f(sampleX);
+        riemannSum += val * dx;
+        const rectHeightPx = val * (plotHeight * 0.55);
+        const rectX = leftPad + i * rectWidthPx;
+        const rectY = originY - rectHeightPx;
+
+        ctx.fillStyle = 'rgba(34, 211, 238, 0.15)';
+        ctx.fillRect(rectX, rectY, rectWidthPx - 2, rectHeightPx);
+
+        ctx.strokeStyle = 'rgba(34, 211, 238, 0.6)';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(rectX, rectY, rectWidthPx - 2, rectHeightPx);
+      }
+
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      const steps = 300;
+      for (let s = 0; s <= steps; s++) {
+        const xVal = xMin + (s / steps) * (xMax - xMin);
+        const yVal = f(xVal);
+        const px = leftPad + (s / steps) * plotWidth;
+        const py = originY - yVal * (plotHeight * 0.55);
+        if (s === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+
+      document.getElementById('telemetry-param2').textContent = riemannSum.toFixed(3);
+    }
+
+    renderControls();
+    draw();
+  </script>
 </body>
 </html>

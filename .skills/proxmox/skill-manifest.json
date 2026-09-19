@@ -48,5 +48,6 @@
     "vlan-tagging",
     "network-bridge"
   ],
-  "integrity": "cs:sha256:e7b9acad07abcf75e59a32595bb28f8fcb97c7c44cc8d3f8c9d5129477efb249"
+  "hasSandbox": true,
+  "integrity": "cs:sha256:d62be817a18840feacec0029b5e817fa750cf6f43c1c40dee376c8d30c130072"
 }
