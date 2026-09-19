@@ -2,7 +2,7 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_seo_geo_aeo_auditor_skill",
-  "version": "3",
+  "version": "4",
   "description": "Unified model-agnostic Search Engine, Generative Engine, and Answer Engine Optimization auditor to analyze traditional visibility, AI engine discoverability, and snippet answers.",
   "entryPoint": "./SKILL.md",
   "engines": {
@@ -25,5 +25,5 @@
     "mobile-viewport"
   ],
   "hasSandbox": false,
-  "integrity": "cs:sha256:1661c0844c668b03cea8523ba08ae13088bdff00f90d5f7c9f8e044057800251"
+  "integrity": "cs:sha256:df848ac8301d82291b0249a1c4fc2de3b44bae861d5136de3a4147414aeaccc9"
 }

@@ -2,7 +2,7 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_open_design_skill",
-  "version": "2",
+  "version": "3",
   "description": "Create production-grade UI design prototypes using the open-source Open Design system",
   "entryPoint": "./SKILL.md",
   "engines": {
@@ -23,5 +23,5 @@
     "ui-ux"
   ],
   "hasSandbox": false,
-  "integrity": "cs:sha256:feeb0792ac7faa700200efae1f0671b2fbcb1c14aba7fdf310690950b1285b02"
+  "integrity": "cs:sha256:9c7e8f40b68deecbd8b6135f2375ae152580322f65c0bdf80862d2c13bcf1f6a"
 }

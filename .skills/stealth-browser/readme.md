@@ -1,6 +1,6 @@
 # Stealth Browser
 
-**Version:** 4
+**Version:** 5
 **Target:** `.skills/stealth-browser`
 **Category:** Web Automation & Scraping
 **Keywords:** `stealth-browser`, `ghost-graph`, `ghost-core`, `lightweight-cdp`, `nodriver`, `cloudflare-bypass`, `antibot`, `fastmcp`, `smart-scraper`, `hardware-randomization`, `canvas-noise`, `visual-takeover`, `auth-vault`, `text-perception`, `witness-receipts`, `pii-scrubbing`
@@ -32,6 +32,7 @@ A powerhouse multi-engine ghost browser automation platform for AI agents. Unifi
 AI agents should invoke this skill when a user requests advanced ghost browser automation, web scraping on protected sites, prompt-driven structured data extraction, ultra-lightweight headless browsing, encrypted session persistence, or zero-token text perception. Agents can run standalone graph scripts (`scripts/scrape.py`, `scripts/search.py`), manage persistent session credentials (`scripts/auth_vault.py`), inspect accessibility trees (`scripts/text_perception.py`), verify cryptographic audit receipts (`scripts/witness_audit.py`), launch the Ghost Core micro-engine daemon (`scripts/ghost_core.py`), or attach the FastMCP server to their preferred client.
 
 ## Changelog
+* **v5** : Standardized ASCII art logo to uniform 6-line ANSI Shadow format.
 * **v4** : Introduced Ghost Visual Takeover live streaming for human-in-the-loop intervention, Ghost Vault encrypted persistent auth profiles with Fernet security, Ghost Perception zero-token accessibility pipelines saving up to 90% in token consumption, Ghost Query context inspector, Ghost Witness Ed25519 cryptographic audit chains, and automated Ghost Shield PII scrubbing.
 * **v3** : Introduced Ghost Core ultra-lightweight native CDP micro-engine featuring ~30MB memory footprint, hardware fingerprint randomization (GPU/Canvas/Audio), and drop-in CDP compatibility for high-concurrency agent scraping loops.
 * **v2** : Unified Ghost Graph LLM extraction pipelines with the FastMCP stealth browser engine, adding multi-model support (Gemini, Claude, OpenAI, Ollama, Groq) and standalone CLI runners.

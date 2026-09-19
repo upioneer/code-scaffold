@@ -1,6 +1,6 @@
 # Braille Animations
 
-**Version:** 3
+**Version:** 4
 **Target:** `.skills/braille-animations`
 **Category:** Animation & Graphics
 **Keywords:** `braille-art`, `terminal-animations`, `ascii-art`, `cli-spinners`, `text-fx`, `tui`
@@ -21,6 +21,7 @@ Create and manage unicode braille animations and spinners for CLIs and web apps.
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog
+* **v4** : Standardized ASCII art logo to uniform 6-line ANSI Shadow format.
 * **v3** : Deployed custom interactive React/Vite sandbox demonstrating live unicode animations
 * **v2** : Expanded capability descriptions
 * **v1** : Core skill implementation

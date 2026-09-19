@@ -97,6 +97,23 @@ function checkSkill(skillName) {
   }
   if (!Array.isArray(meta.logo) || meta.logo.length === 0) {
     skillErrors.push('meta.json "logo" must be a non-empty string array of ASCII art');
+  } else {
+    if (meta.logo.length !== 6) {
+      skillErrors.push(`meta.json "logo" must be strictly 6 lines high for ANSI Shadow uniformity (got ${meta.logo.length})`);
+    }
+    const widths = meta.logo.map(l => l.length);
+    const maxW = Math.max(...widths);
+    const minW = Math.min(...widths);
+    if (maxW !== minW) {
+      skillErrors.push(`meta.json "logo" lines have non-uniform lengths (min=${minW}, max=${maxW})`);
+    }
+    if (maxW > 88) {
+      skillErrors.push(`meta.json "logo" width (${maxW}) exceeds the maximum allowed width of 88 columns`);
+    }
+    const badPadding = meta.logo.some(l => !l.startsWith('  ') || !l.endsWith('  '));
+    if (badPadding) {
+      skillErrors.push('meta.json "logo" lines must have uniform 2-space leading and trailing margins ("  ...  ")');
+    }
   }
 
   // 5. Manifest Schema Validation

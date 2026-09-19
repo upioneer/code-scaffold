@@ -2,7 +2,7 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_vercel_skill",
-  "version": "2",
+  "version": "3",
   "description": "Configuration and deployment routines for Vercel hosting.",
   "entryPoint": "./SKILL.md",
   "engines": {
@@ -22,5 +22,5 @@
     "domain-management"
   ],
   "hasSandbox": false,
-  "integrity": "cs:sha256:c4f1ead8653fb4a9937ad7f4b2543fc5ce320e758d65c7f7022646d3cf94e302"
+  "integrity": "cs:sha256:687a4a236009d3243c47cd3aa06c3e8a74dc100c2545e344405cf90d6f36d5f5"
 }

@@ -28,14 +28,26 @@ When an AI agent is instructed to "Run the SkillForge Protocol", it must adhere 
 When generating a *new* skill, agents MUST strictly follow this pipeline without skipping steps:
 1. **Deep Ingestion:** Read all available OEM documentation.
 2. **Execution Paradigm Routing:** Before writing any logic, evaluate if the workflow requires highly repeatable, identical deterministic outcomes. You MUST either explicitly prompt the user for their preference, or use deep reasoning to route the skill into one of two paths:
-   - *Soft Agent Instructions:* For fluid, context-dependent workflows where the agent operates autonomously based on `SKILL.md` cognitive guidelines.
-   - *Declarative Workflows:* For rigid, identical processes. Author and bundle declarative YAML workflows (e.g., `workflow.yaml`) inside a `workflows/` subdirectory within the skill. These workflows must use typed models and expressions to orchestrate method executions across jobs and steps, completely replacing raw bash/PowerShell scripts. The `SKILL.md` must instruct future agents to execute these YAML definitions via the core engine rather than reasoning through steps manually.
+   * *Soft Agent Instructions:* For fluid, context-dependent workflows where the agent operates autonomously based on `SKILL.md` cognitive guidelines.
+   * *Declarative Workflows:* For rigid, identical processes. Author and bundle declarative YAML workflows (e.g., `workflow.yaml`) inside a `workflows/` subdirectory within the skill. These workflows must use typed models and expressions to orchestrate method executions across jobs and steps, completely replacing raw bash/PowerShell scripts. The `SKILL.md` must instruct future agents to execute these YAML definitions via the core engine rather than reasoning through steps manually.
 3. **AI Value-Add:** Do not just write a wrapper. Brainstorm and embed workflows optimized specifically for headless AI operations (e.g., bypassing Cloudflare, silent testing loops, pre-configured GitHub Actions).
 4. **Scaffolding Compliance:**
-   * Provision a strictly validated `meta.json` adhering to the Code Scaffold schema (including `hasSandbox: boolean`).
+   * Provision a strictly validated `meta.json` adhering to the Code Scaffold schema (including `hasSandbox: boolean` and uniform 6-line ANSI Shadow `logo`).
+   * **Mandatory 6-Line ANSI Shadow Logo Uniformity**: Every skill `meta.json` MUST include an ASCII art logo generated exclusively via `./project_details/playbooks/generate_skill_logo.ps1 "<Brand Slug>"`. The logo MUST be strictly 6 lines high, derived from a concise brand slug (e.g. `Docker`, `Clerk`, `SEO`, `Skeleton`, `Ansible`), have a maximum width <= 88 columns, and feature uniform 2-character leading and trailing margins (`'  ...  '`). Multi-word vertical stacking is strictly forbidden.
    * Provision an ad-hoc distribution `skill-manifest.json` with functional `category`, granular search `keywords`, and `hasSandbox: boolean` matching `meta.json`.
    * Generate a `readme.md` strictly following the unified Code Scaffold typographic rules (NO en/em dashes, NO hyphens as punctuation) including category and keyword badges.
-5. **Sandbox & Demo Generation Decision Matrix (`hasSandbox`):**
+5. **Inception SEO, GEO & Discovery Engineering (Mandatory at Inception):**
+   * Before finalizing any new skill, agents MUST execute a rigorous Search Engine Optimization (SEO), Generative Engine Optimization (GEO), and Answer Engine Optimization (AEO) routine to maximize discovery across search engines, LLM routing layers, and developer search queries:
+   * **Semantic Trigger Intent Synthesis**: The `SKILL.md` YAML frontmatter `description` must never be a generic one-liner. It must explicitly formulate conversational trigger clauses ("Trigger when...", "Activate when...", "Use when the user requests..."), framework synonyms, problem domain keywords, and high-intent action verbs.
+   * **Multi-Tier Granular Search Lexicon**: Author a rich keyword array of 15 to 30 distinct terms across `skill-manifest.json` and `readme.md`, covering four discovery dimensions:
+     * *Core Domain & Capability Tokens*: Precise functional tags and branded identifiers.
+     * *Performance & Pain-Point Metrics*: Real-world developer search queries (e.g. `cumulative-layout-shift`, `core-web-vitals`, `cls-zero`, `perceived-performance`).
+     * *Framework & Ecosystem Synonyms*: Technology and tooling integration aliases.
+     * *Agent Workflow Routing Tokens*: Contextual action phrases that autonomous agents evaluate when selecting tools.
+   * **Entity Clarity & Generative Engine Optimization (GEO)**: The skill's `readme.md` must clearly articulate entity mappings, architectural mechanics, concrete pain points solved, and deep technical capability bullets so generative engines (ChatGPT Search, Perplexity, Gemini) can cite and summarize the skill with pinpoint accuracy.
+   * **Answer Engine Optimization (AEO) Formatting**: Structure documentation headings and usage patterns so that standard queries (e.g. "How to prevent layout shifts during page loads?") resolve into direct, extractable code blocks and markdown answers.
+   * **Global Registry Propagation**: Immediately register the new skill in `/.skills/README.md` under its appropriate category, ensuring full visibility in `code-scaffold skills search <keyword>` and web directory indexing.
+6. **Sandbox & Demo Generation Decision Matrix (`hasSandbox`):**
    * The Code Scaffold web platform automatically parses `hasSandbox` to decide whether to mount a live interactive WebGL/DOM canvas or render the standard Architectural Contract card. Agents must evaluate visual value using the following decision rubric:
    * **Interactive Visual Sandboxes (`hasSandbox: true`):**
      * *Direct Browser-Native Canvas Output:* Set `hasSandbox: true` ONLY for skills that provide a genuine, high-value, browser-native interactive canvas, real diagram engine, or live UI component showroom (e.g. Kinetic Canvas WebGL shaders, Mermaid diagram rendering, Excalidraw whiteboard, P5.js generative canvas, Braille animation player, Markmap hierarchical mindmaps, Scrollytelling, and UI Primitives showroom).
@@ -45,14 +57,15 @@ When generating a *new* skill, agents MUST strictly follow this pipeline without
    * **Build & Verification:**
      * When building an interactive sandbox, comply strictly with `project_details/sandbox-architecure.md`.
      * Deploy the built sandbox to `.skills/<skill-name>/sandbox/index.html` via `project_details/playbooks/build_sandbox.ps1 <skill-name>`.
-6. **Payload Crafting:** Write a deep, technically advanced `SKILL.md` with keyword-rich YAML frontmatter that serves as the cognitive blueprint for future agents.
+7. **Payload Crafting:** Write a deep, technically advanced `SKILL.md` with keyword-rich YAML frontmatter that serves as the cognitive blueprint for future agents.
 
-### Phase 4: Skill SEO, GEO & Discovery Standardization
+### Phase 4: Skill SEO, GEO & Discovery Standardization & Ecosystem Auditing
 Every skill must be systematically audited and optimized for search engine and AI agent discoverability:
 1. **Semantic Trigger Intents:** Ensure `SKILL.md` frontmatter descriptions contain specific trigger phrases, problem domains, and technology keywords.
 2. **Distribution Manifest Discovery:** Ensure `skill-manifest.json` contains `category` and a rich `keywords` array to power CLI search and package discovery.
 3. **Structured Entity Readmes:** Ensure `readme.md` clearly defines entity domains, capabilities, usage patterns, and keywords.
 4. **Global Index Synchronization:** Keep `/.skills/readme.md` organized by domain with searchable tags.
+5. **Periodic Discoverability Audits:** Run cross-skill keyword evaluations to prevent keyword collisions, close taxonomy blindspots, and update outdated framework aliases.
 
 ### Phase 5: Zero Brand Leak & Automated Compliance Gatekeeper
 Before any skill creation or modification is considered complete:

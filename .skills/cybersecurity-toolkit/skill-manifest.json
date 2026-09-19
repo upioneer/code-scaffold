@@ -2,7 +2,7 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_cybersecurity_toolkit_skill",
-  "version": "7",
+  "version": "8",
   "description": "Autonomous cybersecurity arsenal integrating the Sentinel Multi-Agent Security Mesh, episodic attack surface mapping, MITRE and NIST methodologies, SkillSpector scanning, and ChainAST context compaction.",
   "entryPoint": "./SKILL.md",
   "engines": {
@@ -29,5 +29,5 @@
     "mitre-attack"
   ],
   "hasSandbox": false,
-  "integrity": "cs:sha256:e7153c981910f8c470056c70205615f08b7d395718febdb26a4c848eac25a5a7"
+  "integrity": "cs:sha256:0e76cb25c6dc0c186cca1115420f09d4d43796efab79a4e4553b6bc7e01f50e2"
 }

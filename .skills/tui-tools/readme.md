@@ -1,6 +1,6 @@
 # TUI Tools
 
-**Version:** 6
+**Version:** 7
 **Target:** `.skills/tui-tools`
 **Category:** Frontend & UI Design
 **Keywords:** `tui-tools`, `vhs-tapes`, `terminal-gif`, `ratatui-helpers`, `figlet-ascii`, `cli-branding`
@@ -21,6 +21,7 @@ Architectural playbook and tooling (including VHS integration) for building robu
 Agents can invoke this skill when a user requests a high-quality CLI application or modern terminal UI that requires a robust, flicker-free splash screen, or when the user requires automated screenshot documentation pipelines via VHS.
 
 ## Changelog
+* **v7** : Standardized ASCII art logo to uniform 6-line ANSI Shadow format.
 * **v6** : Enforced strict native FIGlet character geometry rules and uniform rectangular 2-character frame margins (`'  ' + line.padEnd(maxLen, ' ') + '  '`).
 * **v2** : Renamed from "TUI Splash" to "TUI Tools" and injected comprehensive architectural support for `vhs` headless automated documentation captures.
 * **v1** : Initial implementation of the modern TUI splash screen architectural playbook.

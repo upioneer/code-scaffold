@@ -1,6 +1,6 @@
 # Trackio ML Tracking
 
-**Version:** 2
+**Version:** 3
 **Target:** `.skills/trackio`
 **Category:** Data, Databases & Storage
 **Keywords:** `trackio`, `ml-experiment-tracking`, `hyperparameters`, `metrics-logging`, `huggingface-spaces`
@@ -19,5 +19,6 @@ Integration with Trackio for ML experiment tracking, dashboard deployments, and 
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog
+* **v3** : Standardized ASCII art logo to uniform 6-line ANSI Shadow format.
 * **v2** : Expanded capability descriptions
 * **v1** : Introduce Trackio ML Tracking Skill

@@ -1,6 +1,6 @@
 # Code Scaffold Harness
 
-**Version:** 6
+**Version:** 7
 **Target:** `.skills/code-scaffold`
 **Category:** AI, MCP & Developer Tools
 **Keywords:** `code-scaffold`, `scaffolding-engine`, `project-generator`, `templates`, `agentic-workflow`, `tui`
@@ -22,6 +22,7 @@ Agent harness instructions for interacting with the Code Scaffold CLI headlessly
 Agents can interrogate the application natively by running `code-scaffold.exe /help` to retrieve a comprehensive JSON object outlining all available scaffolding assets. Deployments can be triggered programmatically via `code-scaffold.exe --headless --target <DIR> --json-output`.
 
 ## Changelog
+* **v7** : Standardized ASCII art logo to uniform 6-line ANSI Shadow format.
 * **v6** : Extracted the Python websocket client out of the markdown instructions and natively embedded it into the skill's scripts directory for frictionless agent execution.
 * **v5** : Added explicit warnings against executing non-existent scaffold-connect binaries to resolve agent failure states.
 * **v4** : Hardcoded a robust, drop-in Python websocket client script for Scaffold Connect to significantly improve execution efficiency and accuracy for open-weight agent models.

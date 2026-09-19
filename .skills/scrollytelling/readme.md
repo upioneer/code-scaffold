@@ -1,6 +1,6 @@
 # Scrollytelling
 
-**Version:** 3
+**Version:** 4
 **Target:** `.skills/scrollytelling`
 **Category:** Frontend & UI Design
 **Keywords:** `scrollytelling`, `scroll-magic`, `gsap-scrolltrigger`, `interactive-storytelling`, `3d-product-view`
@@ -25,6 +25,7 @@ Design architecture, workflows, and code implementations for scroll-triggered 3D
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog
+* **v4** : Standardized ASCII art logo to uniform 6-line ANSI Shadow format.
 * **v3** : Massive expansion incorporating cinematic WebGL environmental storytelling patterns derived from the Kage project (procedural scenes, continuous camera paths, alpha-preserving WebP foregrounds, and editorial layering).
 * **v2** : Expanded capability descriptions
 * **v1** : Add Scrollytelling skill for high fidelity 3D web animations

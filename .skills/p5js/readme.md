@@ -1,6 +1,6 @@
 # p5.js Creative Coding
 
-**Version:** 4
+**Version:** 5
 **Target:** `.skills/p5js`
 **Category:** Animation & Graphics
 **Keywords:** `p5js`, `creative-coding`, `canvas2d`, `generative-art`, `interactive-sketches`, `webgl`
@@ -25,3 +25,6 @@ This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md`
 * **v3** : Deployed custom interactive visual sandbox
 * **v2** : Expanded capability descriptions
 * **v1** : Add p5js and manim skills and bump version to v3.1.0
+
+## Changelog
+* **v5** : Standardized ASCII art logo to uniform 6-line ANSI Shadow format.

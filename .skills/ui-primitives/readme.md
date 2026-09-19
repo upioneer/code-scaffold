@@ -1,6 +1,6 @@
 # UI Primitives & Micro-Interactions
 
-**Version:** 4
+**Version:** 5
 **Target:** `.skills/ui-primitives`
 **Category:** Frontend & UI Design
 **Keywords:** `ui-primitives`, `micro-interactions`, `gsap`, `scroll-trigger`, `threejs`, `webgpu-shader`, `cursor-trail`, `gradient-borders`, `css-alpha-masking`, `design-first-prompting`, `landing-page-architecture`, `border-beam`, `gooey-fluid`, `spring-dock`, `bento-grid`, `kinetic-typography`, `atomic-tokens`
@@ -47,6 +47,7 @@ Invoke this skill when an agent is asked to:
 * Build a motion presentation stage for product demos or marketing collateral
 
 ## Changelog
+* **v5** : Standardized ASCII art logo to uniform 6-line ANSI Shadow format.
 
 * **v4**: Added GSAP Choreography Engine (Section 13), WebGL Three.js Scene Architecture (Section 14), WebGPU Halftone Cursor Shader Trail (Section 15), Design-First Constraint Specification Skeleton (Section 16), High-Conversion Landing Page Architecture (Section 17), Scroll-Driven Viewport Reveal (Section 18), Premium Surface Gradient Borders (Section 9 expansion), CSS Alpha Channel Masking (Section 11 expansion). Four new reference files bundled: `gsap-choreography.js`, `threejs-scene.js`, `cursor-shader.js`, `gradient-borders.css`, `css-masking.css`. Skill now covers 22 sections and 13 reference files.
 * **v3**: Added Perimeter Border Beam Engine, Visceral Liquid Gooey Fluid Engine, Spring Magnification Dock, Spotlight Bento Grid, Universal Motion Transition System, Kinetic Typography and 3D Perspective Tilt, Atomic Token Architecture. Nine reference files bundled.

@@ -1,6 +1,6 @@
 # SEO GEO AEO Auditor
 
-**Version:** 3
+**Version:** 4
 **Target:** `.skills/seo-geo-aeo-auditor`
 **Category:** Web Automation & Scraping
 **Keywords:** `seo`, `geo`, `aeo`, `schema-org`, `json-ld`, `generative-engine`, `answer-engine`, `mobile-viewport`
@@ -21,6 +21,7 @@ Unified model agnostic Search Engine, Generative Engine, and Answer Engine Optim
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog
+* **v4** : Standardized ASCII art logo to uniform 6-line ANSI Shadow format.
 * **v3** : Added automated zero-dependency Node.js CLI auditor (`scripts/audit.js`) with mobile viewport compliance and touch-target validation.
 * **v2** : Expanded capability descriptions
 * **v1** : Add SEO GEO AEO Auditor and Website Deploy Linux skills

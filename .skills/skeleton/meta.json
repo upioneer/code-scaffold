@@ -1,0 +1,15 @@
+{
+  "label": "Skeleton Performance Studio",
+  "description": "Zero-CLS layout reservation engine, pure CSS shimmer mechanics, and multi-framework skeleton screens for instant perceived performance.",
+  "version": 1,
+  "target": ".skills/skeleton",
+  "hasSandbox": false,
+  "logo": [
+    "  ███████╗██╗  ██╗███████╗██╗     ███████╗████████╗ ██████╗ ███╗   ██╗  ",
+    "  ██╔════╝██║ ██╔╝██╔════╝██║     ██╔════╝╚══██╔══╝██╔═══██╗████╗  ██║  ",
+    "  ███████╗█████╔╝ █████╗  ██║     █████╗     ██║   ██║   ██║██╔██╗ ██║  ",
+    "  ╚════██║██╔═██╗ ██╔══╝  ██║     ██╔══╝     ██║   ██║   ██║██║╚██╗██║  ",
+    "  ███████║██║  ██╗███████╗███████╗███████╗   ██║   ╚██████╔╝██║ ╚████║  ",
+    "  ╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝  "
+  ]
+}

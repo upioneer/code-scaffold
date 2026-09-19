@@ -1,6 +1,6 @@
 # Open Design Prototypes
 
-**Version:** 2
+**Version:** 3
 **Target:** `.skills/open-design`
 **Category:** Frontend & UI Design
 **Keywords:** `open-design`, `design-system`, `figma-tokens`, `tailwind-tokens`, `component-library`, `ui-ux`
@@ -20,5 +20,6 @@ Create production grade UI design prototypes using the open source Open Design s
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog
+* **v3** : Standardized ASCII art logo to uniform 6-line ANSI Shadow format.
 * **v2** : Expanded capability descriptions
 * **v1** : Add Open Design skill and register in manifest (v3.4.1)
