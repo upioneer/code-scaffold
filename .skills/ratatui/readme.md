@@ -1,6 +1,6 @@
 # Ratatui TUI Framework
 
-**Version:** 7
+**Version:** 8
 **Target:** `.skills/ratatui`
 **Category:** Frontend & UI Design
 **Keywords:** `ratatui`, `rust-tui`, `terminal-ui`, `crossterm`, `cli-dashboard`, `console-app`, `tui-architecture`, `terminal-widgets`, `mvu-elm`, `tokio-event-loop`
@@ -31,3 +31,6 @@ This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md`
 * **v3** : Standardize ratatui meta.json and manifest
 * **v2** : Add Description Pane and Prioritize Deployment Target
 * **v1** : UX cleanups, theme hotkey, and web dev security (v3.14.0)
+
+## Changelog
+* **v8** : Standardized ASCII art logo to uniform 6-line ANSI Shadow format.

@@ -1,6 +1,6 @@
 # Docker Engine
 
-**Version:** 1
+**Version:** 2
 **Target:** `.skills/docker`
 **Category:** DevOps & Infrastructure
 **Keywords:** `docker`, `container-engine`, `ephemeral-swapper`, `in-place-updates`, `zero-downtime`, `buildkit`, `multi-stage-builds`, `distroless`, `sidecar-diagnostics`, `image-optimization`
@@ -22,4 +22,5 @@ Comprehensive container engineering arsenal featuring the Ephemeral Swapper Prot
 Activate this skill whenever designing, building, optimizing, or automating containerized applications, implementing in-place self-updating container architectures, or configuring high-performance Docker build workflows.
 
 ## Changelog
+* **v2** : Standardized ASCII art logo to uniform 6-line ANSI Shadow format.
 * **v1** : Initial release featuring the Ephemeral Swapper Protocol, multi-tier capability detection, BuildKit cache mounts, distroless patterns, and sidecar diagnostic injection

@@ -2508,4 +2508,65 @@ mod visual_artifacts_tests {
             "cybersecurity-toolkit should be auto-selected when Security Analyst is selected"
         );
     }
+
+    #[tokio::test]
+    async fn test_web_dev_persona_auto_selects_skeleton() {
+        let payload_dir = std::path::PathBuf::from("../.skills");
+        let mut app = App::new(payload_dir);
+
+        // Ensure skeleton exists in workspace items for the test
+        if !app
+            .workspace
+            .items
+            .iter()
+            .any(|i| i.label == "skeleton" && i.category == Category::AgentSkills)
+        {
+            app.workspace
+                .items
+                .push(crate::components::workspace::WorkspaceItem {
+                    label: "skeleton".into(),
+                    selected: false,
+                    category: Category::AgentSkills,
+                    description: None,
+                    version: None,
+                    exists_in_target: false,
+                    target_version: None,
+                    logo: None,
+                });
+        }
+
+        // Switch to AgentPersona category
+        app.workspace.set_category(Category::AgentPersona);
+
+        // Find index of Web Dev persona
+        let visible = app.workspace.visible_indices();
+        let web_idx = visible
+            .iter()
+            .position(|&actual| app.workspace.items[actual].label == "Web Dev")
+            .expect("Web Dev persona not found");
+
+        app.workspace.selected_idx = web_idx;
+        let _ = app.workspace.update(Action::Char(' '));
+
+        // Verify that Web Dev is selected
+        let web_item = app
+            .workspace
+            .items
+            .iter()
+            .find(|i| i.label == "Web Dev" && i.category == Category::AgentPersona)
+            .unwrap();
+        assert!(web_item.selected);
+
+        // Verify that skeleton is auto-selected
+        let skeleton_item = app
+            .workspace
+            .items
+            .iter()
+            .find(|i| i.label == "skeleton" && i.category == Category::AgentSkills)
+            .unwrap();
+        assert!(
+            skeleton_item.selected,
+            "skeleton should be auto-selected when Web Dev is selected"
+        );
+    }
 }

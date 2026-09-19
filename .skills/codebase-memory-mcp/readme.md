@@ -1,6 +1,6 @@
 # Codebase Memory MCP
 
-**Version:** 1
+**Version:** 2
 **Target:** `.skills/codebase-memory-mcp`
 **Category:** AI, MCP & Developer Tools
 **Keywords:** `codebase-memory`, `mcp-server`, `vector-embeddings`, `ast-index`, `semantic-search`, `rag`
@@ -18,4 +18,5 @@ High-performance code intelligence MCP server that indexes codebases into a pers
 Agents can install the binary dynamically, hook it into their local MCP configuration, and immediately dispatch queries against the local repository graph to dramatically reduce context window usage (99% fewer tokens compared to file-by-file grepping).
 
 ## Changelog
+* **v2** : Standardized ASCII art logo to uniform 6-line ANSI Shadow format.
 * **v1** : Initial creation via the SkillForge Protocol.

@@ -2,7 +2,7 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "tui-tools",
-  "version": "6",
+  "version": "7",
   "description": "Architectural playbook and tooling (including VHS integration) for building robust, instant-on, and visually stunning modern terminal splash screens and integrations.",
   "entryPoint": "./SKILL.md",
   "engines": {},
@@ -17,5 +17,5 @@
     "cli-branding"
   ],
   "hasSandbox": false,
-  "integrity": "cs:sha256:1c615841286c274d0f4608b39fd5008ea22b5c1223b539a960035193770f4fb4"
+  "integrity": "cs:sha256:6b3e3eeb0374010f2d618aa0ef97e1be7da66c009d141a688bcb2ba49199e3e7"
 }

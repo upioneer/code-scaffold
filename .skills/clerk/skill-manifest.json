@@ -2,7 +2,7 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_clerk_skill",
-  "version": "2",
+  "version": "3",
   "description": "Authentication perimeter and identity management using Clerk.",
   "entryPoint": "./SKILL.md",
   "engines": {
@@ -24,5 +24,5 @@
     "security"
   ],
   "hasSandbox": false,
-  "integrity": "cs:sha256:44bd8dc2c2695d3199e34590437485137418a5967a357e884304fe1eab0878ec"
+  "integrity": "cs:sha256:ee26f17318fb082812a979985583b4826399c7fdcc3281b47a0f364f71ede782"
 }

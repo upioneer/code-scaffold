@@ -1,6 +1,6 @@
 # Upstash Redis Management
 
-**Version:** 2
+**Version:** 3
 **Target:** `.skills/upstash`
 **Category:** Data, Databases & Storage
 **Keywords:** `upstash`, `serverless-redis`, `rate-limiting`, `edge-caching`, `qstash`, `vector-db`
@@ -19,5 +19,6 @@ Serverless Redis management and rate limiting using Upstash.
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog
+* **v3** : Standardized ASCII art logo to uniform 6-line ANSI Shadow format.
 * **v2** : Expanded capability descriptions
 * **v1** : Introduce Clerk Auth, Upstash Redis, and Vercel Deployment skills and templates v3.7.0

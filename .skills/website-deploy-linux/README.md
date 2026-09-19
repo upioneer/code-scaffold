@@ -1,6 +1,6 @@
 # Website Deploy Linux
 
-**Version:** 6
+**Version:** 7
 **Target:** `.skills/website-deploy-linux`
 **Category:** DevOps & Infrastructure
 **Keywords:** `website-deploy-linux`, `nginx-deploy`, `putty-plink-pscp`, `ssh-deployment`, `static-hosting`, `spa-deploy`
@@ -21,6 +21,7 @@ Enterprise Linux Deployment Agent for deploying static sites and SPAs to Nginx l
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog
+* **v7** : Standardized ASCII art logo to uniform 6-line ANSI Shadow format.
 * **v6** : Expanded capability descriptions
 * **v5** : Restore remote changes lost in bad merge (env parsing + success message)
 * **v4** : Improve environment variable handling and success message

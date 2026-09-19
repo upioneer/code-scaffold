@@ -2,7 +2,7 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_firecrawl_skill",
-  "version": "2",
+  "version": "3",
   "description": "Crawl and scrape websites to clean markdown or structured data with Firecrawl API & CLI",
   "entryPoint": "./SKILL.md",
   "engines": {
@@ -23,5 +23,5 @@
     "data-extraction"
   ],
   "hasSandbox": false,
-  "integrity": "cs:sha256:fda6f52b7be44e57f0b90c7a39e19258e8c58d3357b2741176ef74677ee36809"
+  "integrity": "cs:sha256:295c2159b57134f0b8c72ccab213a1b548ee8a93e7a35f5bf1b2f42cea4097aa"
 }

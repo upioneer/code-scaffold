@@ -2,7 +2,7 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_playcanvas_supersplat_skill",
-  "version": "2",
+  "version": "3",
   "description": "High-performance tool for editing and optimizing 3D Gaussian Splats.",
   "entryPoint": "./SKILL.md",
   "engines": {
@@ -23,5 +23,5 @@
     "ply-optimizer"
   ],
   "hasSandbox": false,
-  "integrity": "cs:sha256:2b8edbd4ce97c609ff68a9ce23e3b3bf2cbb03e9a35949b8d08b468ed63a643e"
+  "integrity": "cs:sha256:5a6141f8b8ef8347eaf667961478eeff6c76117f306e1e51645e7eb7b1b11bc0"
 }

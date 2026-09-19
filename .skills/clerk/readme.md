@@ -1,6 +1,6 @@
 # Clerk Authentication Perimeter
 
-**Version:** 2
+**Version:** 3
 **Target:** `.skills/clerk`
 **Category:** Data, Databases & Storage
 **Keywords:** `clerk`, `authentication`, `user-management`, `jwt`, `oauth`, `nextjs-auth`, `security`
@@ -22,5 +22,6 @@ Authentication perimeter and identity management using Clerk.
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog
+* **v3** : Standardized ASCII art logo to uniform 6-line ANSI Shadow format.
 * **v2** : Expanded capability descriptions
 * **v1** : Introduce Clerk Auth, Upstash Redis, and Vercel Deployment skills and templates v3.7.0

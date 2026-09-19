@@ -1,6 +1,6 @@
 # PlayCanvas Editor
 
-**Version:** 2
+**Version:** 3
 **Target:** `.skills/playcanvas-editor`
 **Category:** Animation & Graphics
 **Keywords:** `playcanvas-editor`, `3d-engine`, `webgl`, `webgpu`, `scene-editor`, `gltf`, `spatial-dev`
@@ -19,5 +19,6 @@ Visual development environment for real time 3D collaboration.
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog
+* **v3** : Standardized ASCII art logo to uniform 6-line ANSI Shadow format.
 * **v2** : Expanded capability descriptions
 * **v1** : Core skill implementation

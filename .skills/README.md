@@ -72,6 +72,7 @@ Welcome to the official **Code Scaffold Skills Library**. This curated registry 
 | **Tasty** | Code Scaffold's bespoke anti-slop frontend styling engine for premium landing pages and portfolios. | `tasty`, `anti-slop`, `design-tokens` | v5 | `.skills/tasty` |
 | **TUI Tools** | Architectural playbook and tooling (including VHS integration) for building robust, instant-on, and visually stunning modern terminal splash screens and integrations. | `tui-tools`, `vhs-tapes`, `terminal-gif` | v6 | `.skills/tui-tools` |
 | **UI Primitives & Micro-Interactions** | GSAP choreography timelines, Three.js 3D scenes, WebGPU halftone cursor trails, premium gradient borders, perimeter border beams, liquid gooey physics, spring docks, bento grids, kinetic typography, atomic tokens, design-first prompting, landing page architecture, and 6 signature motion looks. | `ui-primitives`, `gsap`, `threejs`, `webgpu-shader`, `gradient-borders`, `cursor-trail`, `border-beam`, `landing-page` | v4 | `.skills/ui-primitives` |
+| **Skeleton Performance Studio** | High-performance skeleton loading states, layout stability patterns, and perceptual performance engineering to eliminate Cumulative Layout Shift (CLS) and accelerate perceived page load speeds. | `skeleton`, `loading-states`, `cumulative-layout-shift`, `perceived-performance`, `cls-zero`, `shimmer-effect`, `react-skeleton`, `nextjs-loading` | v1 | `.skills/skeleton` |
 
 ### Publishing & Documentation
 

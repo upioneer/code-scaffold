@@ -1,6 +1,6 @@
 # Firecrawl Scraper
 
-**Version:** 2
+**Version:** 3
 **Target:** `.skills/firecrawl`
 **Category:** Web Automation & Scraping
 **Keywords:** `firecrawl`, `web-crawler`, `llm-scraping`, `clean-markdown`, `structured-json`, `data-extraction`
@@ -21,5 +21,6 @@ Crawl and scrape websites to clean markdown or structured data with Firecrawl AP
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog
+* **v3** : Standardized ASCII art logo to uniform 6-line ANSI Shadow format.
 * **v2** : Expanded capability descriptions
 * **v1** : Add Firecrawl skill and implement smart Playwright QoL / screenshot integration (v3.4.0)

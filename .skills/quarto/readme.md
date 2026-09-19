@@ -1,6 +1,6 @@
 # Quarto Scientific Publishing
 
-**Version:** 1
+**Version:** 2
 **Target:** `.skills/quarto`
 **Category:** Publishing & Documentation
 **Keywords:** `quarto`, `scientific-publishing`, `computational-notebooks`, `r-python-julia`, `dashboards`, `academic-docs`
@@ -20,4 +20,5 @@ A comprehensive automation skill for Quarto, the open source scientific and tech
 Activate this skill when an agent needs to generate high fidelity data reports, build scientific documentation websites, scaffold interactive data dashboards, or publish computational notebooks using the Quarto CLI.
 
 ## Changelog
+* **v2** : Standardized ASCII art logo to uniform 6-line ANSI Shadow format.
 * **v1** : Initial implementation of the curated Quarto skill, including CI/CD templates and AI optimized workflow instructions.
