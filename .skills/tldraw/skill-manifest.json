@@ -2,7 +2,7 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "tldraw-skill",
-  "version": "2",
+  "version": "3",
   "description": "Transforms tldraw into an advanced spatial computing engine. Beyond whiteboarding, this skill orchestrates cinematic scrollytelling, live-mutating data dashboards, multiplayer AI cursors, and Matter.js physics integrations for hyper-creative web experiences.",
   "entryPoint": "./SKILL.md",
   "engines": {
@@ -21,6 +21,6 @@
     "canvas-sdk",
     "live-collaboration"
   ],
-  "hasSandbox": true,
-  "integrity": "cs:sha256:0b9654f39958f9729b1b162d058369ac0de5deca25ec17dd26978ce00c6a6730"
+  "hasSandbox": false,
+  "integrity": "cs:sha256:90542a10540698e9d7910f64efbec1e261f43312d451e654dc6c3b92979d528e"
 }

@@ -1,9 +1,9 @@
 {
   "label": "Markmap",
   "description": "Interactive hierarchical mindmaps derived directly from standard markdown syntax.",
-  "version": "2",
+  "version": 3,
   "target": ".skills/markmap",
-  "hasSandbox": true,
+  "hasSandbox": false,
   "logo": [
     "  ███╗   ███╗ █████╗ ██████╗ ██╗  ██╗███╗   ███╗ █████╗ ██████╗   ",
     "  ████╗ ████║██╔══██╗██╔══██╗██║ ██╔╝████╗ ████║██╔══██╗██╔══██╗  ",

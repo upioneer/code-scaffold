@@ -19,14 +19,14 @@ Welcome to the official **Code Scaffold Skills Library**. This curated registry 
 | Skill | Description | Search Keywords | Version | Path |
 | :--- | :--- | :--- | :--- | :--- |
 | **Braille Animations** | Create and manage unicode braille animations and spinners for CLIs and web apps. | `braille-art`, `terminal-animations`, `ascii-art` | v3 | `.skills/braille-animations` |
-| **CAD Tools** | Comprehensive CAD/CAM engineering skill for AI agents :  orchestrating parametric 3D modeling, multi-format conversion, mass property analysis, desktop CAD automation, and AI-generative geometry workflows using open-source and cloud toolchains. | `cad`, `3d-modeling`, `step-files` | v3 | `.skills/cad-tools` |
+| **CAD Tools** | Comprehensive CAD/CAM engineering skill for AI agents :  orchestrating parametric 3D modeling, multi-format conversion, mass property analysis, desktop CAD automation, and AI-generative geometry workflows using open-source and cloud toolchains. | `cad`, `3d-modeling`, `step-files` | v4 | `.skills/cad-tools` |
 | **Kinetic Canvas** | Ultra-fast, zero-dependency WebGL shaders and interactive HTML canvases wrapped as native React components. | `kinetic-canvas`, `canvas-api`, `physics-simulation` | v6 | `.skills/kinetic-canvas` |
-| **Manim Math Animations** | Mathematical animations using the Manim library. | `manim`, `math-animation`, `python-video` | v3 | `.skills/manim` |
-| **p5.js Creative Coding** | Creative coding and visual animations using the p5.js library. | `p5js`, `creative-coding`, `canvas2d` | v3 | `.skills/p5js` |
+| **Manim Math Animations** | Mathematical animations using the Manim library. | `manim`, `math-animation`, `python-video` | v4 | `.skills/manim` |
+| **p5.js Creative Coding** | Creative coding and visual animations using the p5.js library. | `p5js`, `creative-coding`, `canvas2d` | v4 | `.skills/p5js` |
 | **PlayCanvas Editor** | Visual development environment for real-time 3D collaboration. | `playcanvas-editor`, `3d-engine`, `webgl` | v2 | `.skills/playcanvas-editor` |
 | **PlayCanvas Engine** | Modular 3D/2D game engine for the web supporting WebGL and WebGPU. | `playcanvas-engine`, `3d-rendering`, `shader-graph` | v2 | `.skills/playcanvas-engine` |
 | **PlayCanvas SuperSplat** | High-performance tool for editing and optimizing 3D Gaussian Splats. | `gaussian-splats`, `3d-splatting`, `point-cloud` | v2 | `.skills/playcanvas-supersplat` |
-| **Quiver AI Vector Studio** | Enterprise vector graphics generation, raster image vectorization, SVG editing, animation, and Model Context Protocol (MCP) agent integrations using Quiver AI Arrow foundation models and REST APIs. | `quiver`, `quiver-ai`, `vector-graphics`, `svg-generation`, `image-vectorization`, `arrow-2`, `mcp-server` | v1 | `.skills/quiver` |
+| **Quiver AI Vector Studio** | Enterprise vector graphics generation, raster image vectorization, SVG editing, animation, and Model Context Protocol (MCP) agent integrations using Quiver AI Arrow foundation models and REST APIs. | `quiver`, `quiver-ai`, `vector-graphics`, `svg-generation`, `image-vectorization`, `arrow-2`, `mcp-server` | v2 | `.skills/quiver` |
 
 ### Data, Databases & Storage
 
@@ -48,7 +48,7 @@ Welcome to the official **Code Scaffold Skills Library**. This curated registry 
 | **CyberSecurity Toolkit** | Autonomous cybersecurity arsenal integrating the Sentinel Multi-Agent Security Mesh, episodic attack surface mapping, MITRE and NIST methodologies, SkillSpector scanning, and ChainAST context compaction. | `cybersecurity`, `security-audit`, `vulnerability-scan`, `agentic-security` | v7 | `.skills/cybersecurity-toolkit` |
 | **Docker Engine** | Comprehensive container engineering arsenal featuring the Ephemeral Swapper Protocol for in-place zero-downtime updates, BuildKit cache optimization, and sidecar diagnostic injection. | `docker`, `container-engine`, `ephemeral-swapper` | v1 | `.skills/docker` |
 | **GitHub** | GitHub push workflow with .env-based identity configuration; merges github.md into the skill | `github`, `git`, `github-actions` | v5 | `.skills/github` |
-| **Proxmox VE Container Engineering** | Two-tier LXC helper script architecture with host orchestrator, in-container provisioner, whiptail dialogs, integer disk sizing, bootstrap isolation, V8 heap management, active health polling, ZFS/Ceph storage, cloud-init VM templating, PBS backup automation, Prometheus monitoring, and container hardening. | `proxmox`, `proxmox-ve`, `lxc`, `pct-create`, `cloud-init`, `zfs`, `proxmox-backup-server`, `homelab` | v2 | `.skills/proxmox` |
+| **Proxmox VE Container Engineering** | Two-tier LXC helper script architecture with host orchestrator, in-container provisioner, whiptail dialogs, integer disk sizing, bootstrap isolation, V8 heap management, active health polling, ZFS/Ceph storage, cloud-init VM templating, PBS backup automation, Prometheus monitoring, and container hardening. | `proxmox`, `proxmox-ve`, `lxc`, `pct-create`, `cloud-init`, `zfs`, `proxmox-backup-server`, `homelab` | v3 | `.skills/proxmox` |
 | **Terraform** | Infrastructure as Code (IaC) provisioning and state management using Terraform or OpenTofu. | `terraform`, `opentofu`, `infrastructure-as-code` | v2 | `.skills/terraform` |
 | **Vercel Deployment Routine** | Configuration and deployment routines for Vercel hosting. | `vercel`, `edge-deployments`, `nextjs-hosting` | v2 | `.skills/vercel` |
 | **Website Deploy Linux** | Enterprise Linux Deployment Agent for deploying static sites and SPAs to Nginx locally or remotely via PuTTY CLI (plink/pscp) or SSH, featuring upfront architectural prompting, automatic .env setups, reference scripts, and non-destructive folder structures | `website-deploy-linux`, `nginx-deploy`, `putty-plink-pscp` | v6 | `.skills/website-deploy-linux` |
@@ -57,7 +57,7 @@ Welcome to the official **Code Scaffold Skills Library**. This curated registry 
 
 | Skill | Description | Search Keywords | Version | Path |
 | :--- | :--- | :--- | :--- | :--- |
-| **GhostPrint Engine** | Industrial grade cryptographic code provenance, 9-layer steganographic entanglement matrix, hierarchical deterministic key ceremony, and digital forensics suite. | `ghostprint`, `ghost-print`, `code-provenance`, `steganography`, `copyright-protection`, `digital-forensics`, `anti-tamper` | v2 | `.skills/ghostprint` |
+| **GhostPrint Engine** | Industrial grade cryptographic code provenance, 9-layer steganographic entanglement matrix, hierarchical deterministic key ceremony, and digital forensics suite. | `ghostprint`, `ghost-print`, `code-provenance`, `steganography`, `copyright-protection`, `digital-forensics`, `anti-tamper` | v4 | `.skills/ghostprint` |
 
 ### Frontend & UI Design
 
@@ -66,10 +66,10 @@ Welcome to the official **Code Scaffold Skills Library**. This curated registry 
 | **A2UI** | Agent-to-User Interface (A2UI) protocol implementation and client renderer scaffolding. | `a2ui`, `declarative-ui`, `json-to-ui` | v1 | `.skills/a2ui` |
 | **Hyperframes** | Video rendering framework for AI agents to create videos using HTML, CSS, and JS. | `hyperframes`, `micro-frontends`, `iframe-orchestration` | v2 | `.skills/hyperframes` |
 | **Open Design Prototypes** | Create production-grade UI design prototypes using the open-source Open Design system | `open-design`, `design-system`, `figma-tokens` | v2 | `.skills/open-design` |
-| **Ratatui TUI Framework** | Build Terminal User Interfaces (TUI) using Ratatui in Rust. | `ratatui`, `rust-tui`, `terminal-ui` | v6 | `.skills/ratatui` |
+| **Ratatui TUI Framework** | Build Terminal User Interfaces (TUI) using Ratatui in Rust. | `ratatui`, `rust-tui`, `terminal-ui` | v7 | `.skills/ratatui` |
 | **React Modernization** | Comprehensive guide and references for modern React 19 development, best practices, validatons, and UI styling using HeroUI, Radix, shadcn/ui, and Framer Motion. | `react-19`, `react-server-components`, `server-actions` | v1 | `.skills/react-modernization` |
 | **Scrollytelling** | Design architecture, workflows, and code implementations for scroll-triggered 3D model manipulation and interactive 'production explosion' views. | `scrollytelling`, `scroll-magic`, `gsap-scrolltrigger` | v3 | `.skills/scrollytelling` |
-| **Tasty** | Code Scaffold's bespoke anti-slop frontend styling engine for premium landing pages and portfolios. | `tasty`, `anti-slop`, `design-tokens` | v4 | `.skills/tasty` |
+| **Tasty** | Code Scaffold's bespoke anti-slop frontend styling engine for premium landing pages and portfolios. | `tasty`, `anti-slop`, `design-tokens` | v5 | `.skills/tasty` |
 | **TUI Tools** | Architectural playbook and tooling (including VHS integration) for building robust, instant-on, and visually stunning modern terminal splash screens and integrations. | `tui-tools`, `vhs-tapes`, `terminal-gif` | v6 | `.skills/tui-tools` |
 | **UI Primitives & Micro-Interactions** | GSAP choreography timelines, Three.js 3D scenes, WebGPU halftone cursor trails, premium gradient borders, perimeter border beams, liquid gooey physics, spring docks, bento grids, kinetic typography, atomic tokens, design-first prompting, landing page architecture, and 6 signature motion looks. | `ui-primitives`, `gsap`, `threejs`, `webgpu-shader`, `gradient-borders`, `cursor-trail`, `border-beam`, `landing-page` | v4 | `.skills/ui-primitives` |
 
@@ -77,23 +77,23 @@ Welcome to the official **Code Scaffold Skills Library**. This curated registry 
 
 | Skill | Description | Search Keywords | Version | Path |
 | :--- | :--- | :--- | :--- | :--- |
-| **Excalidraw** | Renders and embeds Excalidraw whiteboards | `excalidraw`, `virtual-whiteboard`, `hand-drawn-diagrams` | v3 | `.skills/excalidraw` |
+| **Excalidraw** | Renders and embeds Excalidraw whiteboards | `excalidraw`, `virtual-whiteboard`, `hand-drawn-diagrams` | v4 | `.skills/excalidraw` |
 | **Lingo** | Deterministic shorthand glossary that maps user lingo, acronyms, and abbreviations to their full meanings for faster, unambiguous communication. | `lingo`, `localization`, `i18n` | v4 | `.skills/lingo` |
 | **Markmap** | Interactive hierarchical mindmaps derived directly from standard markdown syntax. | `markmap`, `mindmaps`, `markdown-to-mindmap` | v2 | `.skills/markmap` |
 | **Marp** | Generates Marp presentation slides from Markdown | `marp`, `markdown-presentations`, `slide-deck` | v2 | `.skills/marp` |
-| **Mermaid** | Mermaid diagram creation and rendering | `mermaid`, `mermaid-cli`, `diagrams-as-code` | v3 | `.skills/mermaid` |
+| **Mermaid** | Mermaid diagram creation and rendering | `mermaid`, `mermaid-cli`, `diagrams-as-code` | v4 | `.skills/mermaid` |
 | **OfficeCLI** | Office suite purpose-built for AI agents to read, edit, and automate Word, Excel, and PowerPoint files. | `officecli`, `docx`, `pptx` | v1 | `.skills/officecli` |
 | **Privacy Policy Generator** | Generates a customizable privacy policy tailored to the project (website/app) with optional Google Analytics integration. | `privacy-policy`, `gdpr`, `ccpa` | v5 | `.skills/privacy-policy` |
 | **Quarto Scientific Publishing** | Scientific and technical publishing system for dynamically generating books, websites, dashboards, and presentations using Python, R, Julia, and Observable JS. | `quarto`, `scientific-publishing`, `computational-notebooks` | v1 | `.skills/quarto` |
 | **Reveal.js** | Comprehensive toolkit and knowledge base for scaffolding, configuring, and exporting Reveal.js presentations. | `revealjs`, `html-presentations`, `3d-transitions` | v2 | `.skills/revealjs` |
-| **Slidev** | Comprehensive skill for building, configuring, and exporting Slidev markdown presentations. | `slidev`, `developer-slides`, `vue-slides` | v3 | `.skills/slidev` |
-| **tldraw** | Transforms tldraw into an advanced spatial computing engine. Beyond whiteboarding, this skill orchestrates cinematic scrollytelling, live-mutating data dashboards, multiplayer AI cursors, and Matter.js physics integrations for hyper-creative web experiences. | `tldraw`, `infinite-canvas`, `spatial-computing` | v2 | `.skills/tldraw` |
+| **Slidev** | Comprehensive skill for building, configuring, and exporting Slidev markdown presentations. | `slidev`, `developer-slides`, `vue-slides` | v4 | `.skills/slidev` |
+| **tldraw** | Transforms tldraw into an advanced spatial computing engine. Beyond whiteboarding, this skill orchestrates cinematic scrollytelling, live-mutating data dashboards, multiplayer AI cursors, and Matter.js physics integrations for hyper-creative web experiences. | `tldraw`, `infinite-canvas`, `spatial-computing` | v3 | `.skills/tldraw` |
 
 ### Smart Home & IoT Automation
 
 | Skill | Description | Search Keywords | Version | Path |
 | :--- | :--- | :--- | :--- | :--- |
-| **Smart Home** | Unified smart home and IoT automation orchestrator bridging Home Assistant, Apple HomeKit, Amazon Alexa, Google Home, and Matter ecosystems. | `smart-home`, `home-assistant`, `homekit` | v1 | `.skills/smart-home` |
+| **Smart Home** | Unified smart home and IoT automation orchestrator bridging Home Assistant, Apple HomeKit, Amazon Alexa, Google Home, and Matter ecosystems. | `smart-home`, `home-assistant`, `homekit` | v2 | `.skills/smart-home` |
 
 ### Web Automation & Scraping
 

@@ -1,6 +1,6 @@
 # Markmap
 
-**Version:** 2
+**Version:** 3
 **Target:** `.skills/markmap`
 **Category:** Publishing & Documentation
 **Keywords:** `markmap`, `mindmaps`, `markdown-to-mindmap`, `interactive-tree`, `d3-visualization`, `hierarchy`
@@ -21,6 +21,6 @@ A highly robust standalone skill for Markmap, enabling the transformation of sta
 ## Usage
 AI agents and developers can utilize this skill to rapidly scaffold Markmap files, configure jsonOptions frontmatter, or orchestrate CLI commands to export interactive HTML mindmaps.
 
-## Changelog
+* **v3** : Standardized hasSandbox to false to mount the clean Architectural Contract card on code-scaffold.com.
 * **v2** : Provisioned interactive Markmap Studio visual sandbox with live markdown editor, zoomable SVG tree, and preset architectures.
 * **v1** : Initial implementation of the Markmap skill payload

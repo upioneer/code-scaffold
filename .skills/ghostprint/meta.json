@@ -1,9 +1,9 @@
 {
   "label": "GhostPrint Engine",
   "description": "Cryptographic code provenance, 9-layer steganographic entanglement matrix, hierarchical deterministic key ceremony, and digital forensics suite.",
-  "version": "2",
+  "version": 4,
   "target": ".skills/ghostprint",
-  "hasSandbox": true,
+  "hasSandbox": false,
   "logo": [
     "   ██████╗ ██╗  ██╗ ██████╗ ███████╗████████╗██████╗ ██████╗ ██╗███╗   ██╗████████╗  ",
     "  ██╔════╝ ██║  ██║██╔═══██╗██╔════╝╚══██╔══╝██╔══██╗██╔══██╗██║████╗  ██║╚══██╔══╝  ",

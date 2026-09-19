@@ -1,9 +1,9 @@
 {
   "label": "Ratatui TUI Framework",
   "description": "Build high-performance, robust Terminal User Interfaces (TUI) with modern Ratatui architecture, safe terminal lifecycle handling, async event loops, and rich component pipelines in Rust.",
-  "version": "6",
+  "version": 7,
   "target": ".skills/ratatui",
-  "hasSandbox": true,
+  "hasSandbox": false,
   "logo": [
     "  ██████╗  █████╗ ████████╗ █████╗ ████████╗██╗   ██╗██╗                          ",
     "  ██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗╚══██╔══╝██║   ██║██║                          ",

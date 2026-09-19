@@ -2,7 +2,7 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "cad-tools",
-  "version": "3",
+  "version": "4",
   "description": "Comprehensive CAD/CAM engineering skill for AI agents : orchestrating parametric 3D modeling, multi-format conversion, mass property analysis, desktop CAD automation, and AI-generative geometry workflows using open-source and cloud toolchains.",
   "entryPoint": "./SKILL.md",
   "engines": {
@@ -25,6 +25,6 @@
     "manufacturing",
     "engineering"
   ],
-  "hasSandbox": true,
-  "integrity": "cs:sha256:a67af44ca441f5ff604c53a8e6ea741c34c4ee2ea36808176376a3b56ad0ad29"
+  "hasSandbox": false,
+  "integrity": "cs:sha256:d18eff8345a2604587d02b3b76e2350a987409ba8521a5301591f2c94bc1eac1"
 }

@@ -2,7 +2,7 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_mermaid_skill",
-  "version": "3",
+  "version": "4",
   "description": "Mermaid diagram creation and rendering",
   "entryPoint": "./SKILL.md",
   "engines": {
@@ -22,6 +22,6 @@
     "sequence-diagrams",
     "er-diagrams"
   ],
-  "hasSandbox": true,
-  "integrity": "cs:sha256:0523227d68a00cca17d559862ac978e226fcc5a360797949fe8bcaa8ee309de9"
+  "hasSandbox": false,
+  "integrity": "cs:sha256:eefc901754b66def96241625e80c56f834b272922b64f02065e1097f74f0b339"
 }

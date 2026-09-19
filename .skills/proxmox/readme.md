@@ -1,6 +1,6 @@
 # Proxmox VE Container Engineering
 
-**Version:** 2
+**Version:** 3
 **Target:** `.skills/proxmox`
 **Category:** DevOps
 **Keywords:** `proxmox`, `proxmox-ve`, `lxc`, `pct-create`, `whiptail`, `container-provisioning`, `zfs`, `cloud-init`, `vm-template`, `proxmox-backup-server`, `prometheus-pve-exporter`, `homelab`, `cluster-automation`
@@ -42,7 +42,6 @@ Invoke this skill when an agent is asked to:
 * Harden LXC containers with AppArmor and cgroup resource limits
 * Automate Proxmox cluster operations via the REST API or Terraform
 
-## Changelog
-
+* **v3** : Standardized hasSandbox to false to mount the clean Architectural Contract card on code-scaffold.com.
 * **v2**: Major expansion with two-tier architecture templates, 6 critical engineering rules (integer disk sizing, bootstrap isolation, V8 heap ceiling, pipe-safe dialogs, active health verification, idempotent updates), ZFS/Ceph/LVM-thin storage integration, cloud-init VM templating, snapshot and backup automation with rollback, cluster resource discovery, Proxmox REST API and Terraform automation, Prometheus PVE exporter monitoring stack, AppArmor and cgroup v2 container hardening, VLAN network configuration patterns, and comprehensive debug triage playbook.
 * **v1**: Initial release with basic LXC templates, SSH hardening, and baseline app deployment patterns.
