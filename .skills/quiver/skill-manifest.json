@@ -2,7 +2,7 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_quiver_skill",
-  "version": "1",
+  "version": "2",
   "description": "Generate, vectorize, edit, and animate production-ready editable SVGs using Quiver AI Arrow foundation models, REST APIs, and hosted MCP server integrations.",
   "entryPoint": "./SKILL.md",
   "engines": {
@@ -33,6 +33,6 @@
     "logo-generator",
     "icon-generator"
   ],
-  "hasSandbox": true,
-  "integrity": "cs:sha256:141a69c3b59d66c81f99861a05a74499382d23ae78c54d955bfd46f11109c949"
+  "hasSandbox": false,
+  "integrity": "cs:sha256:7729c358eaa03dbf556f6f1e663e9938db2adb55a16aefa55089f3ef87a9572a"
 }

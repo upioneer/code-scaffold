@@ -1,9 +1,9 @@
 {
   "label": "Excalidraw",
   "description": "Renders and embeds Excalidraw whiteboards",
-  "version": "3",
+  "version": 4,
   "target": ".skills/excalidraw",
-  "hasSandbox": true,
+  "hasSandbox": false,
   "logo": [
     "  ███████╗██╗  ██╗ ██████╗ █████╗ ██╗     ██╗██████╗ ██████╗  █████╗ ██╗    ██╗  ",
     "  ██╔════╝╚██╗██╔╝██╔════╝██╔══██╗██║     ██║██╔══██╗██╔══██╗██╔══██╗██║    ██║  ",

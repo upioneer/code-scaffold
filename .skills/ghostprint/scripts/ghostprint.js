@@ -396,40 +396,125 @@ function askQuestion(rl, query) {
   return new Promise(resolve => rl.question(query, resolve));
 }
 
-// ── CLI COMMAND: KEY CEREMONY (INIT) ────────────────────────────────
-async function runKeyCeremony(metadata) {
+// ── SHIELDS.IO README BADGE GENERATOR & GATEKEEPER ─────────────────
+function generateBadgeMarkdown(metadata = {}) {
+  const url = 'https://img.shields.io/badge/GhostPrint-Protected-00f0ff?style=flat-square&logo=shield&logoColor=06090e';
+  const targetUrl = 'https://code-scaffold.com';
+  return `[![GhostPrint Protected](${url})](${targetUrl})`;
+}
+
+function generateBadgeHtml(metadata = {}) {
+  const url = 'https://img.shields.io/badge/GhostPrint-Protected-00f0ff?style=flat-square&logo=shield&logoColor=06090e';
+  const targetUrl = 'https://code-scaffold.com';
+  return `<a href="${targetUrl}"><img src="${url}" alt="GhostPrint Protected" /></a>`;
+}
+
+function assertReadmeBadge(projectDir = process.cwd(), options = {}) {
+  const badgeMarkdown = generateBadgeMarkdown(options.metadata);
+
+  // Find README.md or readme.md
+  let targetFile = 'README.md';
+  let fullPath = path.join(projectDir, 'README.md');
+  if (!fs.existsSync(fullPath)) {
+    const altPath = path.join(projectDir, 'readme.md');
+    if (fs.existsSync(altPath)) {
+      targetFile = 'readme.md';
+      fullPath = altPath;
+    }
+  }
+
+  // If no readme exists, create a clean README.md
+  if (!fs.existsSync(fullPath)) {
+    const projectName = (options.metadata && options.metadata.project) || path.basename(projectDir);
+    const content = `# ${projectName}\n\n${badgeMarkdown}\n`;
+    fs.writeFileSync(fullPath, content, 'utf8');
+    return { created: true, modified: true, alreadyPresent: false, fullPath, fileName: targetFile, badgeMarkdown };
+  }
+
+  const content = fs.readFileSync(fullPath, 'utf8');
+
+  // Check if GhostPrint badge is already present
+  if (
+    content.includes('badge/GhostPrint') ||
+    content.includes('GhostPrint-Protected') ||
+    content.includes('[![GhostPrint')
+  ) {
+    return { created: false, modified: false, alreadyPresent: true, fullPath, fileName: targetFile, badgeMarkdown };
+  }
+
+  // Insert badge directly below primary # header or within existing badge block
+  const headerMatch = content.match(/^(#\s+[^\r\n]+(?:\r?\n|$))/m);
+  let newContent = '';
+
+  if (headerMatch) {
+    const headerEndIndex = headerMatch.index + headerMatch[0].length;
+    const rest = content.slice(headerEndIndex);
+
+    // If rest immediately starts with badge links (e.g. [![)
+    if (/^\r?\n\[!\[/.test(rest)) {
+      const newlineMatch = rest.match(/^(\r?\n)/);
+      const nl = newlineMatch ? newlineMatch[1] : '\n';
+      newContent = content.slice(0, headerEndIndex) + nl + badgeMarkdown + rest;
+    } else if (/^\r?\n\r?\n\[!\[/.test(rest)) {
+      // Separated by double newline
+      const newlineMatch = rest.match(/^(\r?\n\r?\n)/);
+      const nl = newlineMatch ? newlineMatch[1] : '\n\n';
+      newContent = content.slice(0, headerEndIndex) + nl + badgeMarkdown + '\n' + rest.slice(nl.length);
+    } else {
+      const nl = content.includes('\r\n') ? '\r\n' : '\n';
+      const trimmedRest = rest.replace(/^(\r?\n)+/, '');
+      newContent = content.slice(0, headerEndIndex) + nl + badgeMarkdown + nl + nl + trimmedRest;
+    }
+  } else {
+    const nl = content.includes('\r\n') ? '\r\n' : '\n';
+    newContent = badgeMarkdown + nl + nl + content;
+  }
+
+  fs.writeFileSync(fullPath, newContent, 'utf8');
+  return { created: false, modified: true, alreadyPresent: false, fullPath, fileName: targetFile, badgeMarkdown };
+}
+
+// ── CLI COMMAND: KEY CEREMONY (INIT / PROTECT) ──────────────────────
+async function runKeyCeremony(metadata, options = {}) {
   printBanner();
-  const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+  const isAuto = Boolean(options.auto);
+  const isInteractive = Boolean(process.stdin.isTTY && !isAuto);
+  const rl = isInteractive ? readline.createInterface({ input: process.stdin, output: process.stdout }) : null;
 
   console.log(`${C.silver}Initializing GhostPrint Key Ceremony for:${C.reset}`);
   console.log(`* ${C.cyan}Project:${C.reset} ${metadata.project}`);
   console.log(`* ${C.cyan}Author:${C.reset}  ${metadata.author}`);
   console.log(`* ${C.cyan}Repo:${C.reset}    ${metadata.repo}\n`);
 
-  console.log(`${C.bold}${C.cyan}Select Cryptographic Security Profile (Up to 24 Words):${C.reset}`);
-  console.log(`  ${C.emerald}[1] 160-Bit Quantum-Resistant (15 words) [Recommended]${C.reset}`);
-  console.log(`      A supercomputer guessing 1 trillion keys/sec would take:`);
-  console.log(`      100 Quintillion × Age of Universe (Immune to quantum Grover search).`);
-  console.log(`  ${C.cyan}[2] 128-Bit Standard Financial (12 words)${C.reset}`);
-  console.log(`      A supercomputer guessing 1 trillion keys/sec would take:`);
-  console.log(`      1.2 Trillion × Age of Universe (17 Sextillion years; universal crypto standard).`);
-  console.log(`  ${C.violet}[3] 192-Bit Intermediate Fortress (18 words)${C.reset}`);
-  console.log(`      A supercomputer guessing 1 trillion keys/sec would take:`);
-  console.log(`      80 Nonillion × Age of Universe (Military-grade defense).`);
-  console.log(`  ${C.violet}[4] 224-Bit Advanced Sovereign (21 words)${C.reset}`);
-  console.log(`      A supercomputer guessing 1 trillion keys/sec would take:`);
-  console.log(`      700 Undecillion × Age of Universe (Multi-generational archival proof).`);
-  console.log(`  ${C.violet}[5] 256-Bit Maximum Sovereign (24 words)${C.reset}`);
-  console.log(`      A supercomputer guessing 1 trillion keys/sec would take:`);
-  console.log(`      Effectively Infinite (Exceeds estimated Heat Death of the Cosmos).`);
-  console.log(`  ${C.silver}[6] 99-Bit Rapid Lightweight (9 words)${C.reset}`);
-  console.log(`      A supercomputer guessing 1 trillion keys/sec would take:`);
-  console.log(`      20 Million Years (1,500 × all of recorded human history).`);
-  console.log(`  ${C.amber}[7] Custom Manual Sentence (Interactive Real-Time Cosmic Meter)${C.reset}\n`);
+  let choice = '1';
+  if (isInteractive) {
+    console.log(`${C.bold}${C.cyan}Select Cryptographic Security Profile (Up to 24 Words):${C.reset}`);
+    console.log(`  ${C.emerald}[1] 160-Bit Quantum-Resistant (15 words) [Recommended]${C.reset}`);
+    console.log(`      A supercomputer guessing 1 trillion keys/sec would take:`);
+    console.log(`      100 Quintillion × Age of Universe (Immune to quantum Grover search).`);
+    console.log(`  ${C.cyan}[2] 128-Bit Standard Financial (12 words)${C.reset}`);
+    console.log(`      A supercomputer guessing 1 trillion keys/sec would take:`);
+    console.log(`      1.2 Trillion × Age of Universe (17 Sextillion years; universal crypto standard).`);
+    console.log(`  ${C.violet}[3] 192-Bit Intermediate Fortress (18 words)${C.reset}`);
+    console.log(`      A supercomputer guessing 1 trillion keys/sec would take:`);
+    console.log(`      80 Nonillion × Age of Universe (Military-grade defense).`);
+    console.log(`  ${C.violet}[4] 224-Bit Advanced Sovereign (21 words)${C.reset}`);
+    console.log(`      A supercomputer guessing 1 trillion keys/sec would take:`);
+    console.log(`      700 Undecillion × Age of Universe (Multi-generational archival proof).`);
+    console.log(`  ${C.violet}[5] 256-Bit Maximum Sovereign (24 words)${C.reset}`);
+    console.log(`      A supercomputer guessing 1 trillion keys/sec would take:`);
+    console.log(`      Effectively Infinite (Exceeds estimated Heat Death of the Cosmos).`);
+    console.log(`  ${C.silver}[6] 99-Bit Rapid Lightweight (9 words)${C.reset}`);
+    console.log(`      A supercomputer guessing 1 trillion keys/sec would take:`);
+    console.log(`      20 Million Years (1,500 × all of recorded human history).`);
+    console.log(`  ${C.amber}[7] Custom Manual Sentence (Interactive Real-Time Cosmic Meter)${C.reset}\n`);
 
-  const choice = (await askQuestion(rl, `${C.cyan}Enter selection [1-7] (default: 1): ${C.reset}`)).trim() || '1';
+    choice = (await askQuestion(rl, `${C.cyan}Enter selection [1-7] (default: 1): ${C.reset}`)).trim() || '1';
+  } else {
+    console.log(`${C.emerald}[✓] Automated Key Ceremony: using 160-Bit Quantum-Resistant (15 words) profile.${C.reset}`);
+  }
+
   let words = [];
-
   if (choice === '1') {
     words = generateMnemonic(15);
   } else if (choice === '2') {
@@ -444,8 +529,9 @@ async function runKeyCeremony(metadata) {
     words = generateMnemonic(9);
   } else if (choice === '7') {
     console.log(`\n${C.silver}Enter your custom high-entropy pass-sentence:${C.reset}`);
-    const customLine = await askQuestion(rl, `> `);
+    const customLine = isInteractive ? await askQuestion(rl, `> `) : '';
     words = customLine.trim().split(/\s+/).filter(Boolean);
+    if (words.length === 0) words = generateMnemonic(15);
   } else {
     words = generateMnemonic(15);
   }
@@ -469,16 +555,21 @@ async function runKeyCeremony(metadata) {
     console.log(`    Matched project terms: ${antiCorr.matched.join(', ')}`);
     console.log(`    At least 75% of your words must be external dictionary terms to prevent`);
     console.log(`    adversaries from dictionary-attacking known project metadata.\n`);
-    rl.close();
+    if (rl) rl.close();
     process.exit(1);
   }
 
-  console.log(`${C.bold}${C.cyan}Select Storage Target:${C.reset}`);
-  console.log(`  ${C.emerald}[1] Secure Project Vault: ~/.ghostprint/projects/${getProjectSlug(metadata)}.vault.json.enc (Recommended: isolated outside git)${C.reset}`);
-  console.log(`  ${C.cyan}[2] Local Project .env (Automatic .gitignore assertion enforced)${C.reset}`);
-  console.log(`  ${C.silver}[3] Ephemeral Memory Only (Prompt on every release build)${C.reset}\n`);
+  let storeChoice = '1';
+  if (isInteractive) {
+    console.log(`${C.bold}${C.cyan}Select Storage Target:${C.reset}`);
+    console.log(`  ${C.emerald}[1] Secure Project Vault: ~/.ghostprint/projects/${getProjectSlug(metadata)}.vault.json.enc (Recommended: isolated outside git)${C.reset}`);
+    console.log(`  ${C.cyan}[2] Local Project .env (Automatic .gitignore assertion enforced)${C.reset}`);
+    console.log(`  ${C.silver}[3] Ephemeral Memory Only (Prompt on every release build)${C.reset}\n`);
 
-  const storeChoice = (await askQuestion(rl, `${C.cyan}Enter storage selection [1-3] (default: 1): ${C.reset}`)).trim() || '1';
+    storeChoice = (await askQuestion(rl, `${C.cyan}Enter storage selection [1-3] (default: 1): ${C.reset}`)).trim() || '1';
+  } else {
+    console.log(`${C.emerald}[✓] Automated Storage Selection: using Secure Project Vault (~/.ghostprint/projects/).${C.reset}`);
+  }
 
   const masterKey = deriveMasterKey(words, metadata);
   const masterHash = crypto.createHash('sha256').update(masterKey).digest('hex');
@@ -518,9 +609,22 @@ async function runKeyCeremony(metadata) {
   console.log(`* Layer 1 Word 0:  ${layerConstants.layer1.word0}`);
   console.log(`* Layer 2 Ratio:   ${layerConstants.layer2.expectedRatio} (${layerConstants.layer2.jitterCoeff} / ${layerConstants.layer2.refillEpsilon})`);
   console.log(`* Layer 6 Cluster: ${layerConstants.layer6SoftClusterCount} soft numerical constants calculated`);
+
+  // Assert README badge unless explicitly opted out
+  if (!options.noBadge) {
+    const badgeRes = assertReadmeBadge(options.targetDir || process.cwd(), { metadata });
+    if (badgeRes.created) {
+      console.log(`* README Badge:    ${C.emerald}Created ${badgeRes.fileName} with [GhostPrint Protected] badge${C.reset}`);
+    } else if (badgeRes.modified) {
+      console.log(`* README Badge:    ${C.emerald}Injected [GhostPrint Protected] badge into ${badgeRes.fileName}${C.reset}`);
+    } else if (badgeRes.alreadyPresent) {
+      console.log(`* README Badge:    ${C.silver}[GhostPrint Protected] badge verified in ${badgeRes.fileName}${C.reset}`);
+    }
+  }
+
   console.log(`\n${C.emerald}${C.bold}✅ GHOSTPRINT KEY CEREMONY COMPLETE!${C.reset}\n`);
 
-  rl.close();
+  if (rl) rl.close();
 }
 
 // ── NATURAL LANGUAGE PARSER & COMMAND DISPATCHER ────────────────────
@@ -528,6 +632,11 @@ async function main() {
   const args = process.argv.slice(2);
   const rawInput = args.join(' ').toLowerCase();
   const metadata = discoverProjectMetadata();
+
+  const isAuto = args.includes('--auto') || args.includes('-y') || args.includes('--yes');
+  const noBadge = args.includes('--no-badge');
+  const targetDirIndex = args.indexOf('--target');
+  const targetDir = targetDirIndex !== -1 && args[targetDirIndex + 1] ? path.resolve(args[targetDirIndex + 1]) : process.cwd();
 
   if (args.includes('--json')) {
     // Machine readable agent mode
@@ -542,6 +651,26 @@ async function main() {
 
   // Natural Language Intent Matching
   if (
+    rawInput.includes('badge') ||
+    rawInput.includes('shields')
+  ) {
+    printBanner();
+    const badgeRes = assertReadmeBadge(targetDir, { metadata });
+    console.log(`${C.bold}${C.cyan}╔════════════════════════════════════════════════════════════════════════════╗${C.reset}`);
+    console.log(`${C.bold}${C.cyan}║                   GHOSTPRINT README BADGE GENERATOR                        ║${C.reset}`);
+    console.log(`${C.bold}${C.cyan}╚════════════════════════════════════════════════════════════════════════════╝${C.reset}\n`);
+    console.log(`${C.silver}Markdown Badge:${C.reset}`);
+    console.log(`  ${badgeRes.badgeMarkdown}\n`);
+    console.log(`${C.silver}HTML Badge:${C.reset}`);
+    console.log(`  ${generateBadgeHtml(metadata)}\n`);
+    if (badgeRes.created) {
+      console.log(`${C.emerald}[✓] Created ${badgeRes.fileName} with GhostPrint Protected badge.${C.reset}\n`);
+    } else if (badgeRes.modified) {
+      console.log(`${C.emerald}[✓] Injected GhostPrint Protected badge into ${badgeRes.fileName}.${C.reset}\n`);
+    } else {
+      console.log(`${C.silver}[✓] GhostPrint Protected badge is already present in ${badgeRes.fileName}.${C.reset}\n`);
+    }
+  } else if (
     rawInput.includes('list') ||
     rawInput.includes('show projects') ||
     rawInput.includes('registered') ||
@@ -566,6 +695,10 @@ async function main() {
     }
   } else if (
     rawInput.includes('init') ||
+    rawInput.includes('protect') ||
+    rawInput.includes('seal') ||
+    rawInput.includes('enroll') ||
+    rawInput.includes('guard') ||
     rawInput.includes('create key') ||
     rawInput.includes('generate key') ||
     rawInput.includes('generate passphrase') ||
@@ -573,7 +706,7 @@ async function main() {
     rawInput.includes('setup') ||
     rawInput.includes('new key')
   ) {
-    await runKeyCeremony(metadata);
+    await runKeyCeremony(metadata, { auto: isAuto, noBadge, targetDir });
   } else if (
     rawInput.includes('audit') ||
     rawInput.includes('check') ||
@@ -604,17 +737,19 @@ async function main() {
     // Default interactive dashboard
     printBanner();
     console.log(`${C.silver}Natural Language Command Interface:${C.reset}`);
-    console.log(`  node ghostprint.js "list my registered projects"`);
+    console.log(`  node ghostprint.js "protect this repository"`);
     console.log(`  node ghostprint.js "generate a new 15-word passphrase for this repo"`);
+    console.log(`  node ghostprint.js "add ghostprint badge to readme"`);
     console.log(`  node ghostprint.js "audit ../competitor-repo against my master secret"`);
     console.log(`  node ghostprint.js "probe https://suspect-saas.com for my watermark"`);
     console.log(`  node ghostprint.js "export court-admissible legal dossier"\n`);
     console.log(`${C.cyan}Direct Subcommands:${C.reset}`);
-    console.log(`  ${C.bold}init${C.reset}   : Run the interactive Spectral Cyan Key Ceremony`);
-    console.log(`  ${C.bold}list${C.reset}   : Display all registered projects and active encrypted vaults`);
-    console.log(`  ${C.bold}audit${C.reset}  : Scan a target repository for 9-layer cryptographic fingerprints`);
-    console.log(`  ${C.bold}probe${C.reset}  : Execute a remote black-box oracle probe against a cloud SaaS URL`);
-    console.log(`  ${C.bold}export${C.reset} : Generate court-admissible forensic PDF and Markdown evidence dossiers\n`);
+    console.log(`  ${C.bold}init / protect${C.reset} : Run Key Ceremony & assert README protection badge`);
+    console.log(`  ${C.bold}badge${C.reset}          : Generate and assert the Shields.io GhostPrint badge in README.md`);
+    console.log(`  ${C.bold}list${C.reset}           : Display all registered projects and active encrypted vaults`);
+    console.log(`  ${C.bold}audit${C.reset}          : Scan a target repository for 9-layer cryptographic fingerprints`);
+    console.log(`  ${C.bold}probe${C.reset}          : Execute a remote black-box oracle probe against a cloud SaaS URL`);
+    console.log(`  ${C.bold}export${C.reset}         : Generate court-admissible forensic PDF and Markdown evidence dossiers\n`);
   }
 }
 
@@ -640,5 +775,8 @@ module.exports = {
   getProjectSlug,
   getProjectVaultPath,
   listRegisteredProjects,
-  assertGitIgnore
+  assertGitIgnore,
+  generateBadgeMarkdown,
+  generateBadgeHtml,
+  assertReadmeBadge
 };

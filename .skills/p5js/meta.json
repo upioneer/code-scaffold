@@ -1,9 +1,9 @@
 {
   "label": "p5.js Creative Coding",
   "description": "Creative coding and visual animations using the p5.js library.",
-  "version": "3",
+  "version": 4,
   "target": ".skills/p5js",
-  "hasSandbox": true,
+  "hasSandbox": false,
   "logo": [
     "  ██████╗ ███████╗        ██╗███████╗                            ",
     "  ██╔══██╗██╔════╝        ██║██╔════╝                            ",

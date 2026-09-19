@@ -2,7 +2,7 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "tasty",
-  "version": "4",
+  "version": "5",
   "description": "Code Scaffold's bespoke anti-slop frontend styling engine for premium landing pages and portfolios.",
   "entryPoint": "./SKILL.md",
   "engines": {
@@ -22,6 +22,6 @@
     "micro-animations",
     "curated-ui"
   ],
-  "hasSandbox": true,
-  "integrity": "cs:sha256:36305dc372ee0898e92f07d5674a08768034a6b71c8bcb9e325b2216e355f594"
+  "hasSandbox": false,
+  "integrity": "cs:sha256:5a9b95cd07a682ff26c339d5fe9c66467f6861913c78ebf0d894fe1a2330497c"
 }

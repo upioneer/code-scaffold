@@ -1,9 +1,9 @@
 {
   "label": "Slidev",
   "description": "Comprehensive skill for building, configuring, and exporting Slidev markdown presentations.",
-  "version": "3",
+  "version": 4,
   "target": ".skills/slidev",
-  "hasSandbox": true,
+  "hasSandbox": false,
   "logo": [
     "  ███████╗██╗     ██╗██████╗ ███████╗██╗   ██╗  ",
     "  ██╔════╝██║     ██║██╔══██╗██╔════╝██║   ██║  ",

@@ -2,7 +2,7 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_ratatui_skill",
-  "version": "6",
+  "version": "7",
   "description": "Build high-performance, robust Terminal User Interfaces (TUI) with modern Ratatui architecture, safe terminal lifecycle handling, async event loops, and rich component pipelines in Rust.",
   "entryPoint": "./SKILL.md",
   "engines": {
@@ -26,6 +26,6 @@
     "mvu-elm",
     "tokio-event-loop"
   ],
-  "hasSandbox": true,
-  "integrity": "cs:sha256:d596891848cd6fa0c11cfc1010d6232a70486264aa61b0dd61103f020dba10eb"
+  "hasSandbox": false,
+  "integrity": "cs:sha256:a234d0a1b8d37f079bf6b83d9593e8562352d32301c333f03d6ade215880985b"
 }

@@ -1,9 +1,9 @@
 {
   "label": "Tasty",
   "description": "Code Scaffold's bespoke anti-slop frontend styling engine for premium landing pages and portfolios.",
-  "version": "4",
+  "version": 5,
   "target": ".skills/tasty",
-  "hasSandbox": true,
+  "hasSandbox": false,
   "logo": [
     "  ████████╗ █████╗ ███████╗████████╗██╗   ██╗  ",
     "  ╚══██╔══╝██╔══██╗██╔════╝╚══██╔══╝╚██╗ ██╔╝  ",

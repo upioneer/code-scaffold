@@ -43,7 +43,7 @@ When prompted during the pre-commit verification sequence, suggest a curated bad
 * **Build & Workflow Status**: `https://img.shields.io/github/actions/workflow/status/:user/:repo/:workflow_file?style=flat-square`
 * **License**: `https://img.shields.io/github/license/:user/:repo?style=flat-square&color=6366f1`
 * **Language & Framework**: `https://img.shields.io/badge/Rust-000000?style=flat-square&logo=rust&logoColor=white` or `https://img.shields.io/badge/Next.js-000000?style=flat-square&logo=nextdotjs&logoColor=white`
-* **Code Style & Hygiene**: `https://img.shields.io/badge/code%20style-clippy-brightgreen?style=flat-square`
+* **Security & Provenance (GhostPrint)**: `https://img.shields.io/badge/GhostPrint-Protected-00f0ff?style=flat-square&logo=shield&logoColor=06090e`
 * **Repository Size**: `https://img.shields.io/github/repo-size/:user/:repo?style=flat-square&color=38bdf8`
 
 ### Recommended README Layout

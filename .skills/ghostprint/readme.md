@@ -1,6 +1,6 @@
 # GhostPrint Engine
 
-**Version:** 2
+**Version:** 4
 **Target:** `.skills/ghostprint`
 **Category:** Security & Cryptography
 **Keywords:** `ghostprint`, `ghost-print`, `code-provenance`, `steganography`, `copyright-protection`, `digital-forensics`, `functional-entanglement`, `anti-tamper`, `zero-knowledge-proof`, `key-ceremony`, `entropy-meter`, `stylometry`, `ast-invariants`, `statistical-distribution`, `remote-oracle`, `daubert-standard`, `courtroom-admissible`, `dmca-evidence`
@@ -30,6 +30,7 @@ GhostPrint Engine is an industrial grade cryptographic code provenance and stega
   * 24 Words (256-bit): 93 Quindecillion Years (Effectively infinite: exceeds the estimated heat death of the cosmos).
 * **Cryptographic Wordlist Optimization**: Built upon a standardized 2,048-word lexicon where every word is uniquely identifiable by its first four letters, contains zero homophones or visually ambiguous lookalikes, and provides optimal Hamming distance for human error detection and transcription reliability (11 bits of entropy per word).
 * **Anti-Correlation Policy Gatekeeper**: Audits repository metadata in real time (git configuration, remote URLs, package names, author handles, directory names) and enforces a mandatory 75% external dictionary word threshold, actively blocking authors from establishing vulnerable keys composed of public project terms and defeating targeted dictionary attacks.
+* **Automated README Badge Generation**: Automatically asserts a Shields.io [GhostPrint Protected] badge directly beneath the primary repository header in README.md upon project protection, with dedicated CLI inspection and manual opt-out support (--no-badge).
 * **Project-Segmented Vault Topology**: Automatically segments credentials into isolated project vaults (`~/.ghostprint/projects/<slug>.vault.json.enc`) protected by authenticated AES-256-GCM encryption with PBKDF2 key derivation (100,000 iterations), ensuring client and personal repositories remain completely segregated with zero cross-contamination.
 * **Universal Git Slug Auto-Routing**: Automatically inspects git remote origin URLs and resolves them into canonical filesystem slugs (e.g. `organization-project-slug`, `core-infrastructure-repo`), enabling seamless single-command vault access and contextual configuration.
 * **Master Portfolio Key Reuse**: Allows authors to use a single 24-word sovereign master passphrase across 50 independent repositories while HKDF automatically derives 100% uncorrelated layer constants for each project using repository URLs as cryptographic salt, guaranteeing that the compromise of one repository yields zero knowledge about any other codebase.
@@ -37,7 +38,7 @@ GhostPrint Engine is an industrial grade cryptographic code provenance and stega
 * **Forensic Repository Auditor (`ghostprint-audit.js`)**: Deep inspection engine that scans suspect repositories, evaluates AST tree isomorphism, calculates statistical Hamming distance, analyzes token n-grams, and computes joint p-values (p < 10^-45) providing irrefutable mathematical proof of code theft.
 * **Court Admissible Digital Forensics Dossier (`ghostprint-export.js`)**: Automatically generates sealed forensic evidence reports (Markdown, PDF, and machine-verifiable JSON formats) detailing derivation trees, AST coordinate mapping, statistical impossibility proofs exceeding the federal Daubert standard, and independent sandbox reproduction scripts for judicial expert examiners.
 * **Remote Black-Box Oracle Probing (`ghostprint-oracle.js`)**: Audits closed-source cloud deployments and private SaaS applications over public HTTP interfaces via timing jitter analysis, synthetic edge-case error message capture, and numerical rendering delta checks without requiring source code access.
-* **Interactive Visual Studio (`sandbox/index.html`)**: Browser-based graphical security suite styled in Spectral Cyan and Phantom Glow (`#00f0ff` on `#06090e`) with a live dynamic entropy meter, anti-correlation policy auditor, and interactive forensic repository audit simulator.
+* **Authoritative Architectural Contract Card**: Interactive specification card presenting the ASCII branding banner, CLI installation syntax, programmatic import code, YAML frontmatter schemas, domain constraints, and security permissions on code-scaffold.com.
 * **Natural Language Intent Engine**: Provides conversational CLI dispatch allowing developers and AI agents to invoke commands naturally (e.g. `ghostprint "list my registered projects"`, `ghostprint "audit ../competitor-app"`, `ghostprint "probe https://suspect-site.com"`).
 * **Multi-Domain Entanglement Archetypes**: Production-ready reference patterns across six core domains: State and Cache Mechanics, Spatial and 3D Engines, Scientific and Color Science, Networking and Rate Limiting, UI and Animation Design Systems, and Data/ML Pipelines.
 * **Zero External Dependencies**: Operates 100% offline across Windows, macOS, and Linux using the native Node.js standard runtime and built-in crypto module with zero npm package requirements.
@@ -46,6 +47,7 @@ GhostPrint Engine is an industrial grade cryptographic code provenance and stega
 AI agents and developers invoke the GhostPrint Engine via conversational natural language commands or structured CLI flags:
 
 * Interactive Setup & Key Ceremony: `node .skills/ghostprint/scripts/ghostprint.js init` or `ghostprint "generate a new 15-word passphrase for this repo"`
+* Assert Shields.io README Protection Badge: `node .skills/ghostprint/scripts/ghostprint.js badge` or `ghostprint "add ghostprint badge to readme"`
 * Project Registry Dashboard: `node .skills/ghostprint/scripts/ghostprint.js list` or `ghostprint "list my registered projects"`
 * Key Rotation with Epoch Succession: `node .skills/ghostprint/scripts/ghostprint.js rotate` or `ghostprint "rotate master key but preserve old releases"`
 * Multi-Layer Repository Infringement Audit: `node .skills/ghostprint/scripts/ghostprint.js audit --target /path/to/suspect-repo`
@@ -53,5 +55,7 @@ AI agents and developers invoke the GhostPrint Engine via conversational natural
 * Sealed Legal Dossier Generation: `node .skills/ghostprint/scripts/ghostprint.js export --target /path/to/suspect-repo --format all`
 
 ## Changelog
+* **v4** : Added automatic GhostPrint README badge generation on project protection with dedicated CLI inspection and manual opt-out support.
+* **v3** : Standardized hasSandbox to false to mount the clean Architectural Contract card on code-scaffold.com.
 * **v2** : Corrected box-drawing table column alignment for Layer 0 steganographic gradient in SKILL.md.
 * **v1** : Initial release of the GhostPrint Engine featuring the 9-layer steganographic defense-in-depth architecture, Hierarchical Deterministic (HD) Ratchet Key Tree, interactive Spectral Cyan Key Ceremony with real-time entropy progress bar, Anti-Correlation Gatekeeper, Project-Segmented Vault Topology, Forensic Infringement Auditor, Remote Black-Box Oracle Probes, and court-admissible legal dossier generator.

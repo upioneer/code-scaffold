@@ -1,6 +1,6 @@
 # Tasty
 
-**Version:** 4
+**Version:** 5
 **Target:** `.skills/tasty`
 **Category:** Frontend & UI Design
 **Keywords:** `tasty`, `anti-slop`, `design-tokens`, `landing-page`, `typography`, `micro-animations`, `curated-ui`
@@ -25,7 +25,7 @@ Tasty is Code Scaffold's bespoke, native anti-slop frontend orchestration engine
 ## Usage
 Agents should read and abide by `SKILL.md` when acting in a frontend or web-development capacity. The engine's principles should be applied silently during DOM generation and CSS architecture scaffolding. Users can invoke specific `/tasty` commands in prompts to steer agent output.
 
-## Changelog
+* **v5** : Standardized hasSandbox to false to mount the clean Architectural Contract card on code-scaffold.com.
 * **4** : Integrated interactive Tasty Anti-Slop Studio sandbox and updated manifest flags
 * **3** : Merged the deep architectural principles of the SkillForge aesthetic protocol into the Tasty engine via SkillForge. Added macrostructures, project memory (.tasty/log.json), pre-flight scanning, 8-state component discipline, pre-emit self-critiques, and four new strict anti-patterns (no redrawn chrome, no fabricated copy, locked tokens, typography purity).
 * **2** : Integrated the advanced /tasty command vocabulary...

@@ -2,7 +2,7 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_proxmox_skill",
-  "version": "2",
+  "version": "3",
   "description": "Design, build, and maintain turnkey Proxmox VE LXC helper scripts with two-tier host orchestrator and in-container provisioner architecture, whiptail dialogs, ZFS/Ceph storage integration, cloud-init VM templating, snapshot automation, Prometheus monitoring, and container hardening.",
   "entryPoint": "./SKILL.md",
   "engines": {
@@ -48,6 +48,6 @@
     "vlan-tagging",
     "network-bridge"
   ],
-  "hasSandbox": true,
-  "integrity": "cs:sha256:d62be817a18840feacec0029b5e817fa750cf6f43c1c40dee376c8d30c130072"
+  "hasSandbox": false,
+  "integrity": "cs:sha256:3ebc6c41128ceeea702fab40119572a45cc1e14236082a598c3bebb937c3a3c6"
 }
