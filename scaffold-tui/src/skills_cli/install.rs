@@ -191,6 +191,24 @@ pub fn run_install(
         }
     }
 
+    if overall_success && !options.dry_run {
+        match crate::skills_cli::pointers::sync_universal_agent_pointers(&options.target) {
+            Ok(updated) => {
+                if !updated.is_empty() && !printer.is_json() {
+                    printer.info(format!(
+                        "Synchronized universal agent pointers for {} agents",
+                        updated.len()
+                    ));
+                }
+            }
+            Err(e) => {
+                if !printer.is_json() {
+                    printer.warning(format!("Failed to synchronize agent pointers: {}", e));
+                }
+            }
+        }
+    }
+
     if printer.is_json() {
         let out = json!({
             "target": options.target.to_string_lossy(),
