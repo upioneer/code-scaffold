@@ -8,6 +8,7 @@ pub mod install;
 pub mod list;
 pub mod lockfile;
 pub mod output;
+pub mod pointers;
 pub mod search;
 pub mod uninstall;
 pub mod update;

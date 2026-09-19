@@ -244,6 +244,22 @@ pub async fn execute(
             ));
         }
     }
+    if !manifest.skills.is_empty() {
+        let _ = tx.send(" -> Synchronizing Universal Agent Pointers (12 Agents)...".to_string());
+        if let Ok(updated) = crate::skills_cli::pointers::sync_universal_agent_pointers(
+            std::path::Path::new(target_folder),
+        ) {
+            if !updated.is_empty() {
+                let _ = tx.send(format!(
+                    " -> Bound skill context for {} agents: {}",
+                    updated.len(),
+                    updated.join(", ")
+                ));
+            } else {
+                let _ = tx.send(" -> Agent pointer bindings up to date".to_string());
+            }
+        }
+    }
     tokio::time::sleep(Duration::from_millis(500)).await; // UX execution padding
 
     // 5. Environmental Variable Export

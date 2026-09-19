@@ -1,6 +1,6 @@
 [package]
 name = "scaffold-tui"
-version = "7.28.0"
+version = "7.29.0"
 edition = "2021"
 license-file = "../LICENSE.md"
 

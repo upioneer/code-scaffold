@@ -71,7 +71,7 @@ export async function installAdHocSkill(skillIdentifier, targetProjectDir) {
     }
 
     await fs.writeFile(internalRegistryPath, JSON.stringify(currentRegistry, null, 2), "utf-8")
-    // Universal Agent Routing Configurations
+    // Universal Agent Routing Configurations (12 Leading AI Ecosystems)
     try {
       // Antigravity Mapping
       const agyDir = path.join(targetProjectDir, ".agents")
@@ -79,42 +79,52 @@ export async function installAdHocSkill(skillIdentifier, targetProjectDir) {
       const linkContent = { entries: [{ path: "../.skills" }] }
       await fs.writeFile(path.join(agyDir, "skills.json"), JSON.stringify(linkContent, null, 2), "utf-8")
 
-      // Cursor Mapping
-      const cursorDir = path.join(targetProjectDir, ".cursor", "rules")
-      await fs.mkdir(cursorDir, { recursive: true })
-      const cursorRules = path.join(cursorDir, "skills.mdc")
       const rule = "\n# Code Scaffold Skills\nWhen using skills, actively read and adhere to the instructions inside the `.skills/` directory.\n"
-      let currentRules = ""
-      try { currentRules = await fs.readFile(cursorRules, "utf-8") } catch (e) {}
-      if (!currentRules.includes(".skills/")) {
-        await fs.writeFile(cursorRules, currentRules + rule, "utf-8")
+
+      // Helper to append rule idempotently
+      const appendRuleIfMissing = async (filePath) => {
+        const dir = path.dirname(filePath)
+        await fs.mkdir(dir, { recursive: true })
+        let current = ""
+        try { current = await fs.readFile(filePath, "utf-8") } catch (e) {}
+        if (!current.includes(".skills/")) {
+          const prefix = current && !current.endsWith("\n") ? "\n" : ""
+          await fs.writeFile(filePath, current + prefix + rule.trimStart(), "utf-8")
+        }
       }
+
+      // Cursor Mapping
+      await appendRuleIfMissing(path.join(targetProjectDir, ".cursor", "rules", "skills.mdc"))
 
       // Claude Code Mapping
-      const claudeCodeFile = path.join(targetProjectDir, "CLAUDE.md")
-      let currentClaudeCode = ""
-      try { currentClaudeCode = await fs.readFile(claudeCodeFile, "utf-8") } catch (e) {}
-      if (!currentClaudeCode.includes(".skills/")) {
-        await fs.writeFile(claudeCodeFile, currentClaudeCode + rule, "utf-8")
-      }
+      await appendRuleIfMissing(path.join(targetProjectDir, "CLAUDE.md"))
 
       // OpenCode Mapping
-      const openCodeFile = path.join(targetProjectDir, ".opencode.md")
-      let currentOpenCode = ""
-      try { currentOpenCode = await fs.readFile(openCodeFile, "utf-8") } catch (e) {}
-      if (!currentOpenCode.includes(".skills/")) {
-        await fs.writeFile(openCodeFile, currentOpenCode + rule, "utf-8")
-      }
+      await appendRuleIfMissing(path.join(targetProjectDir, ".opencode.md"))
 
       // Devin CLI & Devin Desktop Mapping
-      const devinDir = path.join(targetProjectDir, ".devin", "rules")
-      await fs.mkdir(devinDir, { recursive: true })
-      const devinRules = path.join(devinDir, "skills.md")
-      let currentDevin = ""
-      try { currentDevin = await fs.readFile(devinRules, "utf-8") } catch (e) {}
-      if (!currentDevin.includes(".skills/")) {
-        await fs.writeFile(devinRules, currentDevin + rule, "utf-8")
-      }
+      await appendRuleIfMissing(path.join(targetProjectDir, ".devin", "rules", "skills.md"))
+
+      // OpenAI Codex & ChatGPT Mapping
+      await appendRuleIfMissing(path.join(targetProjectDir, "CODEX.md"))
+
+      // Meta Muse Mapping
+      await appendRuleIfMissing(path.join(targetProjectDir, "MUSE.md"))
+
+      // Kimi Code Mapping
+      await appendRuleIfMissing(path.join(targetProjectDir, "KIMI.md"))
+
+      // Qwen Code Mapping
+      await appendRuleIfMissing(path.join(targetProjectDir, "QWEN.md"))
+
+      // GitHub Copilot Mapping
+      await appendRuleIfMissing(path.join(targetProjectDir, ".github", "copilot-instructions.md"))
+
+      // Windsurf (Codeium Cascade) Mapping
+      await appendRuleIfMissing(path.join(targetProjectDir, ".windsurfrules"))
+
+      // Cline & Roo Code Mapping
+      await appendRuleIfMissing(path.join(targetProjectDir, ".clinerules"))
     } catch (configError) {
       // Fail silently if configuration writing fails, to prevent blocking the skill installation
     }
