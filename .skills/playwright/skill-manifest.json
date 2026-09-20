@@ -2,7 +2,7 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_playwright_skill",
-  "version": "4",
+  "version": "5",
   "description": "Browser automation and end-to-end testing with Playwright",
   "entryPoint": "./SKILL.md",
   "engines": {
@@ -20,8 +20,10 @@
     "e2e-testing",
     "mobile-viewports",
     "layout-overflow",
-    "visual-qa"
+    "visual-qa",
+    "yaml-workflows",
+    "run-recording"
   ],
   "hasSandbox": false,
-  "integrity": "cs:sha256:ac383deff446a11f15b5ec708ed569da91023f97a1c69a73b7495590c6795c79"
+  "integrity": "cs:sha256:ab835edc0deb8e479eebc3f531dc7447091cb1e54a1861862d98af4ec42b8d54"
 }

@@ -861,7 +861,9 @@ impl Component for Workspace {
                             companion.selected = true;
                         }
                         if let Some(companion) = self.items.iter_mut().find(|i| {
-                            (i.label == "ghostprint" || i.label == "ghost-print")
+                            (i.label == "ghostimprint"
+                                || i.label == "ghostprint"
+                                || i.label == "ghost-print")
                                 && i.category == Category::AgentSkills
                         }) {
                             companion.selected = true;

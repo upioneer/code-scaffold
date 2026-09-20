@@ -1,0 +1,27 @@
+{
+  "routes": [
+    {
+      "slot": "splash",
+      "url": "/",
+      "actions": [{ "type": "wait-ms", "ms": 2000 }]
+    },
+    {
+      "slot": "main",
+      "url": "/app",
+      "actions": [
+        { "type": "wait-ms", "ms": 1500 },
+        { "type": "click", "selector": "button[data-tour]" },
+        { "type": "wait-ms", "ms": 1000 }
+      ]
+    },
+    {
+      "slot": "final",
+      "url": "/app",
+      "actions": [
+        { "type": "fill", "selector": "input[name=email]", "value": "release@example.com" },
+        { "type": "click", "selector": "button[type=submit]" },
+        { "type": "wait-ms", "ms": 2000 }
+      ]
+    }
+  ]
+}

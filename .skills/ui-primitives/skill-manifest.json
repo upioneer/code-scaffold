@@ -2,7 +2,7 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_ui_primitives_skill",
-  "version": "5",
+  "version": "6",
   "description": "High-fidelity interactive web UI components, GSAP choreography timelines, WebGL Three.js 3D scenes, WebGPU halftone cursor trails, premium gradient borders, perimeter border beams, liquid gooey physics, spring magnification docks, spotlight bento grids, universal transitions, kinetic typography, atomic tokens, and high-conversion landing page architecture.",
   "entryPoint": "./SKILL.md",
   "engines": {
@@ -49,8 +49,22 @@
     "universal-transitions",
     "kinetic-typography",
     "atomic-tokens",
-    "3d-tilt-card"
+    "3d-tilt-card",
+    "text-animation",
+    "stagger-reveal",
+    "split-text",
+    "blur-reveal",
+    "typewriter-effect",
+    "circular-text",
+    "shine-sweep",
+    "pixel-dissolve",
+    "card-stack",
+    "masonry-reveal",
+    "spring-toggle",
+    "toast-queue",
+    "aurora-background",
+    "particle-drift"
   ],
   "hasSandbox": true,
-  "integrity": "cs:sha256:daaac651cfb69397b8a3862053137857140ef30bd24839313683063d5df5a1f5"
+  "integrity": "cs:sha256:e6de57b2bcf2452a6cb2d00c956295bd4425e32325c3e1047046226be186e725"
 }

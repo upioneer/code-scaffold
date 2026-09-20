@@ -1,0 +1,40 @@
+/**
+ * Code Scaffold - Component Motion Expansion Styling
+ * Pixel veil, fanned stack geometry, masonry entrance base states.
+ */
+
+.cs-dissolved { position: relative; }
+
+.cs-pixel-veil {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(var(--cs-cols, 8), 1fr);
+  grid-template-rows: repeat(var(--cs-rows, 6), 1fr);
+  pointer-events: none;
+  z-index: 5;
+}
+
+.cs-pixel-veil > span {
+  background: #0b1220;
+  opacity: 1;
+  transition: opacity 0.35s ease-out;
+}
+
+.cs-pixel-veil.cs-dissolving > span { opacity: 0; }
+
+.cs-stack-active { outline: none; }
+
+.cs-stack-active > * { pointer-events: auto; }
+
+/* Stack children read --cs-stack-rot / --cs-stack-x from the controller */
+[class*="cs-stack"] > * {
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  transform: translateX(var(--cs-stack-x, 0px)) rotate(var(--cs-stack-rot, 0deg));
+  transform-origin: 50% 120%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cs-pixel-veil { display: none; }
+  [class*="cs-stack"] > * { transition: none; transform: none; }
+}

@@ -1,10 +1,10 @@
 ---
-name: ghostprint
+name: ghostimprint
 description: Cryptographic code provenance, 9-layer steganographic entanglement matrix, hierarchical deterministic key ceremony, and digital forensics suite. Trigger when embedding irrefutable proof of authorship, protecting intellectual property from unauthorized copying, LLM rewrites, and closed SaaS exfiltration, auditing suspect repositories, running remote black-box oracle probes, or generating court-admissible forensic dossiers.
 category: Security & Cryptography
 keywords:
-  - ghostprint
-  - ghost-print
+  - ghostimprint
+  - ghost-imprint
   - code-provenance
   - steganography
   - copyright-protection
@@ -25,7 +25,7 @@ keywords:
   - shields-io
   - provenance-badge
 entryPoint: ./SKILL.md
-version: 4
+version: 5
 engines:
   node: ">=18.0.0"
 requiredPermissions:
@@ -33,10 +33,10 @@ requiredPermissions:
   - "fs:write"
   - "net:connect"
 ---
-​‌‍# GhostPrint Engine: Cryptographic Code Provenance & Digital Forensics Suite
+​‌‍# GhostImprint Engine: Cryptographic Code Provenance & Digital Forensics Suite
 
 ## Purpose and Scope
-The GhostPrint Engine equips autonomous agents and developers to embed deterministic, irrefutable, and mathematically court-admissible proof of authorship into proprietary software. It is engineered specifically for open-source repositories and public codebases where naive watermarks (such as plaintext author comments, visible copyright strings, or simple ASCII byte arrays) fail because they are trivially detected, sanitized, or stripped by bad actors and automated AI refactoring agents.
+The GhostImprint Engine equips autonomous agents and developers to embed deterministic, measured proof of authorship into proprietary software, structured to support admissibility proceedings. It is engineered specifically for open-source repositories and public codebases where naive watermarks (such as plaintext author comments, visible copyright strings, or simple ASCII byte arrays) fail because they are trivially detected, sanitized, or stripped by bad actors and automated AI refactoring agents.
 
 The core architecture satisfies Kerckhoffs principle for steganography: **the system remains 100% secure and undetectable even if the adversary possesses this complete specification, provided they do not hold the author private root passphrase.**
 
@@ -44,7 +44,7 @@ The core architecture satisfies Kerckhoffs principle for steganography: **the sy
 
 ## The Nine Layer Steganographic Defense in Depth Architecture
 
-GhostPrint operates across an adversarial gradient spanning nine discrete information-theoretic channels:
+GhostImprint operates across an adversarial gradient spanning nine discrete information-theoretic channels:
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -87,7 +87,7 @@ GhostPrint operates across an adversarial gradient spanning nine discrete inform
 
 ### Layer 4: Linguistic Stylometry Lexicon Binding
 * **Principle:** Every developer possesses a natural linguistic rhythm in error messages, comment vocabulary, and string phrasing.
-* **Mechanism:** GhostPrint binds a curated dictionary of 200 plus semantically equivalent phrasing templates. The author private seed deterministically selects specific phrasings across 40 plus error conditions (such as `"Upstream host declined connection"` vs `"Connection refused by upstream host"`).
+* **Mechanism:** GhostImprint binds a curated dictionary of 200 plus semantically equivalent phrasing templates. The author private seed deterministically selects specific phrasings across 40 plus error conditions (such as `"Upstream host declined connection"` vs `"Connection refused by upstream host"`).
 * **AI Resilience:** When an AI refactors code, it preserves semantic string meanings, preserving the author stylometric fingerprint.
 
 ### Layer 5: Abstract Syntax Tree (AST) Topological Invariants
@@ -97,10 +97,10 @@ GhostPrint operates across an adversarial gradient spanning nine discrete inform
 
 ### Layer 6: Soft Constant Cluster Statistical Distribution
 * **The Mathematically Unremovable Layer:** Codebases contain dozens of discretionary soft parameters (timeouts, debounce intervals, buffer boundaries, batch sizes, animation durations).
-* **Mechanism:** GhostPrint seeds 40 plus soft parameters with values chosen from acceptable operational ranges via a deterministic pseudorandom function (e.g. debounce set to `287ms`, cache TTL to `491s`, page size to `23`).
+* **Mechanism:** GhostImprint seeds 40 plus soft parameters with values chosen from acceptable operational ranges via a deterministic pseudorandom function (e.g. debounce set to `287ms`, cache TTL to `491s`, page size to `23`).
 * **Joint Probability:** While each number is individually indistinguishable from natural developer choices, the joint probability of two developers choosing the exact same 40 values is:
   $$P = \prod_{i=1}^{40} \frac{1}{R_i} < 10^{-50}$$
-* **Detection:** GhostPrint computes the Hamming distance across the soft constant cluster. Matching 30 of 40 constants yields mathematical certainty ($p < 10^{-45}$).
+* **Detection (v5, measured):** The auditor reports the literal-hit fraction across the derived cluster (e.g. 31 of 40 literals present). It reports raw counts only. Population level p-values require corpus baselining and are not claimed.
 
 ### Layer 7: Remote Runtime Behavioral Oracles
 * **Purpose:** Proving infringement when code is deployed as a closed-source, paywalled cloud SaaS.
@@ -111,13 +111,13 @@ GhostPrint operates across an adversarial gradient spanning nine discrete inform
 ### Layer 8: Temporal Proof Anchoring
 * **RFC 3161 Timestamping:** Cryptographically signs the pre-image with a public Trust Authority before publishing.
 * **OpenTimestamps Bitcoin Anchoring:** Commits the pre-image hash to Bitcoin block headers for immutable chronological precedence.
-* **Forensic Dossier:** Generates sealed courtroom exhibits exceeding the federal Daubert standard for scientific evidence.
+* **Forensic Dossier:** Generates evidence dossiers compiled from measured audit output. Unmeasured layers are labeled as such. The dossier makes no standalone admissibility claim; population error rates are pending corpus baselining.
 
 ***
 
 ## Hierarchical Deterministic (HD) Ratchet Key Tree
 
-Authors must never manage multiple keys across versions. GhostPrint implements a Hierarchical Deterministic key tree rooted in a single Master Passphrase:
+Authors must never manage multiple keys across versions. GhostImprint implements a Hierarchical Deterministic key tree rooted in a single Master Passphrase:
 
 ```
                        [Master Identity Passphrase]
@@ -140,7 +140,7 @@ Constants                     Constants                     Constants
 ChildKey(v) = HKDF-SHA256(
   MasterSecret,
   Salt = SHA-256(canonical_repo_url || author_legal_name),
-  Info = "ghostprint:release:" + semver_version
+  Info = "ghostimprint:release:" + semver_version
 )
 ```
 Ten years from now, entering your single 15-word passphrase and specifying any historical version string (`v3.2.1`) deterministically regenerates every single constant embedded in that release.
@@ -149,7 +149,7 @@ Ten years from now, entering your single 15-word passphrase and specifying any h
 
 ## Spectral Cyan Key Ceremony & Entropy Tiers
 
-GhostPrint supports the full spectrum of cryptographic entropy profiles up to 24 words, framed with explicit supercomputer compute benchmarks:
+GhostImprint supports the full spectrum of cryptographic entropy profiles up to 24 words, framed with explicit supercomputer compute benchmarks:
 
 ### Cryptographic Benchmark & Threat Model Reference Table
 
@@ -168,16 +168,16 @@ GhostPrint supports the full spectrum of cryptographic entropy profiles up to 24
 
 ## Anti-Correlation Policy Gatekeeper
 
-GhostPrint enforces a strict policy preventing keys from being composed of public project terms:
+GhostImprint enforces a strict policy preventing keys from being composed of public project terms:
 * **The Vulnerability:** If a passphrase contains only project names or author handles, adversaries can reverse-engineer the derivation using dictionary attacks on public GitHub metadata.
 * **The Rule:** No more than 25% of words may match known project terms. At least 75% of words must be independent external dictionary words.
-* **Automated Enforcement:** GhostPrint scans git config, package files, and remotes. If excessive overlap is detected, the key ceremony halts and alerts the developer.
+* **Automated Enforcement:** GhostImprint scans git config, package files, and remotes. If excessive overlap is detected, the key ceremony halts and alerts the developer.
 
 ***
 
 ## Three Tier Storage Hierarchy
 
-1. **User Vault (`~/.ghostprint/vault.json.enc`):** Default and recommended. Stored in the user home directory outside the project root. AES-256-GCM encrypted at rest using host-derived cryptographic keys. Physically immune to git tracking.
+1. **User Vault (`~/.ghostimprint/vault.json.enc`):** Default and recommended. Stored in the user home directory outside the project root. AES-256-GCM encrypted at rest using host-derived cryptographic keys. Physically immune to git tracking.
 2. **Local Environment (`.env`):** Stored in project root. Enforces an automated fail-closed `.gitignore` assert gatekeeper that immediately injects ignore rules if missing.
 3. **Memory Only (Ephemeral):** Held in RAM during build execution; zero trace written to disk.
 
@@ -215,47 +215,102 @@ To guarantee that watermarking commits remain completely invisible in public git
 
 ## Automated Shields.io README Badge Protection
 
-Whenever a repository is protected, initialized, or enrolled into the GhostPrint system, the engine automatically asserts a standardized Shields.io provenance badge directly below the primary heading in `README.md`:
+Whenever a repository is protected, initialized, or enrolled into the GhostImprint system, the engine automatically asserts a standardized Shields.io provenance badge directly below the primary heading in `README.md`:
 
 ```markdown
-[![GhostPrint Protected](https://img.shields.io/badge/GhostPrint-Protected-00f0ff?style=flat-square&logo=shield&logoColor=06090e)](https://code-scaffold.com)
+[![GhostImprint Protected](https://img.shields.io/badge/GhostImprint-Protected-00f0ff?style=flat-square&logo=shield&logoColor=06090e)](https://code-scaffold.com)
 ```
 
 * **Default Behavior**: Protection commands (`init`, `protect`, `seal`) inspect `README.md` (or `readme.md`). If the badge is absent, it is cleanly inserted beneath the top-level `# [Project Title]` header or placed within existing badge blocks.
-* **Idempotent Assertion**: If a GhostPrint badge is already detected, the file remains untouched.
+* **Idempotent Assertion**: If a GhostImprint badge is already detected, the file remains untouched.
 * **Bypass Flag**: Pass `--no-badge` during key ceremony to opt out of automated README modification.
-* **Direct Badge Generation**: Developers can invoke `node .skills/ghostprint/scripts/ghostprint.js badge` to generate or assert the badge on demand.
+* **One Way Street**: Enrollment is permanent for published releases. Sealed constants stay in git history and cannot be retracted. Unprotect removes local enrollment only.
+* **Direct Badge Generation**: Developers can invoke `node .skills/ghostimprint/scripts/ghostimprint.js badge` to generate or assert the badge on demand.
 
 ***
 
 ## CLI & Natural Language Commands
 
 * **Initialize Key Ceremony & Assert Protection Badge:**
-  `node .skills/ghostprint/scripts/ghostprint.js init`
-  `node .skills/ghostprint/scripts/ghostprint.js protect`
-  `node .skills/ghostprint/scripts/ghostprint.js "create a 15-word passphrase for this repo"`
-  `node .skills/ghostprint/scripts/ghostprint.js "protect this repository"`
+  `node .skills/ghostimprint/scripts/ghostimprint.js init`
+  `node .skills/ghostimprint/scripts/ghostimprint.js protect`
+  `node .skills/ghostimprint/scripts/ghostimprint.js "create a 15-word passphrase for this repo"`
+  `node .skills/ghostimprint/scripts/ghostimprint.js "protect this repository"`
 * **Generate or Assert README Badge Standalone:**
-  `node .skills/ghostprint/scripts/ghostprint.js badge`
-  `node .skills/ghostprint/scripts/ghostprint.js "add ghostprint badge to readme"`
+  `node .skills/ghostimprint/scripts/ghostimprint.js badge`
+  `node .skills/ghostimprint/scripts/ghostimprint.js "add ghostimprint badge to readme"`
+* **Record Applied Decision:**
+  `node .skills/ghostimprint/scripts/ghostimprint.js record --release 1.0.0 --layer l4 --site src/net.js:41 --value "..." --note conn-refused`
+* **Bind Oracle Probe Plan:**
+  `node .skills/ghostimprint/scripts/ghostimprint.js record-plan --release 1.0.0 --triggers '[{"path": "/edge", "expect": "..."}]'`
+* **Anchor Release to Git:**
+  `node .skills/ghostimprint/scripts/ghostimprint.js anchor --release 1.0.0 --tag v1.0.0`
+* **Receipt Summary:**
+  `node .skills/ghostimprint/scripts/ghostimprint.js receipt`
 * **Audit Target Repository:**
-  `node .skills/ghostprint/scripts/ghostprint-audit.js --target /path/to/suspect-repo`
-  `node .skills/ghostprint/scripts/ghostprint.js "audit ../competitor-app against my secret"`
+  `node .skills/ghostimprint/scripts/ghostimprint-audit.js --target /path/to/suspect-repo --release 1.0.0`
+  `node .skills/ghostimprint/scripts/ghostimprint.js "audit ../competitor-app against my secret"`
 * **Remote SaaS Oracle Probe:**
-  `node .skills/ghostprint/scripts/ghostprint-oracle.js --url https://suspect-saas.com`
-  `node .skills/ghostprint/scripts/ghostprint.js "probe https://suspect-saas.com for my code"`
+  `node .skills/ghostimprint/scripts/ghostimprint-oracle.js --url https://suspect-saas.com`
+  `node .skills/ghostimprint/scripts/ghostimprint.js "probe https://suspect-saas.com for my code"`
 * **Export Court-Admissible Forensic Dossier:**
-  `node .skills/ghostprint/scripts/ghostprint-export.js /path/to/suspect-repo`
-  `node .skills/ghostprint/scripts/ghostprint.js "export court exhibit report"`
+  `node .skills/ghostimprint/scripts/ghostimprint-export.js /path/to/suspect-repo`
+  `node .skills/ghostimprint/scripts/ghostimprint.js "export court exhibit report"`
 
 ***
 
+## Measurement Honesty Contract (v5)
+
+The audit, oracle, and dossier commands report only what they measure:
+
+* **Always measured:** Layer 0 decoy presence, Layer 1 constant literals, Layer 2 coefficient literals and ratio, Layer 3 Unicode channel counts, Layer 6 soft cluster literal-hit fraction, remote timing baseline against the derived debounce value.
+* **Measured with an application receipt:** Layer 4 stylometry (recorded variant match fraction), Layer 5 construct-choice agreement at recorded sites, Layer 8 git anchor plus timestamp witness verification, oracle error triggers and numerical endpoint when a probe plan is bound.
+* **Unmeasured:** Anything without a recording. Labels print UNMEASURED with the reason and the command that would make it measurable. Unmeasured layers never count as matches.
+* **Fail-closed identity:** Without a project vault or passphrase, audit and oracle exit non-zero instead of guessing. A run without identity cannot produce evidence.
+* **Verdicts:** STRONG SUPPORT, MODERATE SUPPORT, or INCONCLUSIVE from measured layers only. Population error rates are pending corpus baselining. No invented p-values, no IRREFUTABLE ratings.
+
+## Application Receipt Workflow
+
+The receipt (`~/.ghostimprint/projects/<slug>.receipt.json`) is the ground truth the audit compares against. Agents applying constants log each decision as it lands:
+
+* `node .skills/ghostimprint/scripts/ghostimprint.js record --release 1.0.0 --layer l4 --site src/net.js:41 --value "Upstream host declined connection" --note conn-refused`
+* `node .skills/ghostimprint/scripts/ghostimprint.js record --release 1.0.0 --layer l5 --site src/net.js:41 --value guard-clause`
+* `node .skills/ghostimprint/scripts/ghostimprint.js record-plan --release 1.0.0 --triggers '[{"path": "/edge", "expect": "Upstream host declined"}]'`
+* `node .skills/ghostimprint/scripts/ghostimprint.js anchor --release 1.0.0 --tag v1.0.0`
+* `node .skills/ghostimprint/scripts/ghostimprint.js receipt` (summary of what is recorded)
+* `node .skills/ghostimprint/scripts/ghostimprint-audit.js --target /path/to/suspect --release 1.0.0`
+
+Layers without recordings stay UNMEASURED. That is the honest default, not a gap to work around.
+
+## Temporal Anchor Tiers
+
+Git history is rewritable, so priority claims need external witnesses. Three tiers:
+
+* **Local (default, offline):** `anchor --release 1.0.0 --tag v1.0.0` records commit SHA, tree SHA, tag, and dirty state. Verified later with read-only git. Proves what the tree was, not when.
+* **Notarized (recommended, needs network at seal time):** `anchor --release 1.0.0 --tier notarized` adds two independent witnesses over the same commitment hash. An RFC 3161 token from a timestamp authority (response parsed strictly; imprint and status verified). A Sigstore Rekor transparency-log entry signed by a P-256 key derived from the master secret (entry hash, signature, and server timestamp verified locally). Either witness defeats backdating on its own. Privacy: the notarized tier publishes the commitment hash plus a derived public key, never source code. The same derived key signs every release under one master secret, so releases are linkable to each other by design. Local is the default; notarized asks for explicit consent interactively (or `--yes` for automation) and refuses silently scripted runs without it.
+* **Sovereign (future iteration):** OpenTimestamps Bitcoin anchoring plus optional on-chain attestation for clients who need absolute maximum protection.
+
+Verification honesty: Merkle inclusion-root recomputation and CMS signer-chain validation need live interop passes and are reported by exact status until then. Nothing in this path is ever reported as verified without a local check behind it.
+
+## Roadmap (In Development)
+
+The following items are planned and explicitly not yet claimed as capabilities:
+
+* **Population error rates:** corpus baselining study that turns literal-hit fractions into defensible coincidence probabilities. Until published, the dossier makes no admissibility claim on its own.
+* **Layer 1 multi-word and multi-release matching:** audit currently matches the first derived word for one release. Planned: match all derived words across every sealed release in the receipt.
+* **Layer 2 ratio verification in situ:** audit currently finds coefficient literals. Planned: extract co-located operand pairs and verify the quotient equals the expected signature ratio.
+* **Layer 3 payload decoding:** audit currently counts markers. Planned: encode derived bits in marker sequences so the auditor decodes and verifies the payload against the child key instead of counting.
+* **Layer 6 rarity weighting:** the cluster fraction treats every literal equally. Planned: weight hits by per-value range width and co-occurrence so common numbers stop outvoting rare ones.
+* **Sovereign anchoring:** OpenTimestamps Bitcoin anchoring plus optional on-chain attestation. The notarized tier (RFC 3161 plus Rekor) is implemented; CMS signer-chain validation and Merkle root recomputation against live logs need supervised live interop passes.
+* **Automated applier:** codemods that place constants and write the receipt in one step. Until then, agents apply by hand and log with `record`.
+* **Expanded lexicon:** the bundled stylometry lexicon starts at 24 conditions and grows with usage.
+
 ## Cognitive Directives for Downstream AI Agents
 
-When an AI agent (such as Cursor, Devin, Claude Code, or Antigravity) is instructed to apply or maintain GhostPrint:
+When an AI agent (such as Cursor, Devin, Claude Code, or Antigravity) is instructed to apply or maintain GhostImprint:
 1. Never log, reveal, or output the author private 15-word passphrase in terminal transcripts or git commits.
 2. Always execute `assertGitIgnore()` before touching `.env` files.
-3. Automatically assert the `[GhostPrint Protected]` Shields.io badge in `README.md` upon project protection unless the user explicitly specifies `--no-badge`.
+3. Automatically assert the `[GhostImprint Protected]` Shields.io badge in `README.md` upon project protection unless the user explicitly specifies `--no-badge`.
 4. Apply Layer 0 honeypot decoys alongside real entangled constants to mislead adversarial AI cleanup attempts.
 5. When refactoring code, preserve Layer 6 soft parameter values to maintain statistical provenance.
 6. In version bump operations, derive release child keys using the target version string and bundle constant updates into the version bump commit.
