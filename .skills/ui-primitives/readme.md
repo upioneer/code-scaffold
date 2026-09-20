@@ -1,8 +1,11 @@
 # UI Primitives & Micro-Interactions
 
 **Version:** 6
+
 **Target:** `.skills/ui-primitives`
+
 **Category:** Frontend & UI Design
+
 **Keywords:** `ui-primitives`, `micro-interactions`, `gsap`, `scroll-trigger`, `threejs`, `webgpu-shader`, `cursor-trail`, `gradient-borders`, `css-alpha-masking`, `design-first-prompting`, `landing-page-architecture`, `border-beam`, `gooey-fluid`, `spring-dock`, `bento-grid`, `kinetic-typography`, `atomic-tokens`
 
 ## Description

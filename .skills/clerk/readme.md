@@ -1,8 +1,11 @@
 # Clerk Authentication Perimeter
 
 **Version:** 3
+
 **Target:** `.skills/clerk`
+
 **Category:** Data, Databases & Storage
+
 **Keywords:** `clerk`, `authentication`, `user-management`, `jwt`, `oauth`, `nextjs-auth`, `security`
 
 ## Description

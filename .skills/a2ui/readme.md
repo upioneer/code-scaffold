@@ -1,8 +1,11 @@
 # A2UI
 
 **Version:** 1
+
 **Target:** `.skills/a2ui`
+
 **Category:** Frontend & UI Design
+
 **Keywords:** `a2ui`, `declarative-ui`, `json-to-ui`, `agent-ui`, `adaptive-cards`, `dynamic-forms`, `design-system`
 
 ## Description

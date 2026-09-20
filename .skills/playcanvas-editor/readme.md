@@ -1,8 +1,11 @@
 # PlayCanvas Editor
 
 **Version:** 3
+
 **Target:** `.skills/playcanvas-editor`
+
 **Category:** Animation & Graphics
+
 **Keywords:** `playcanvas-editor`, `3d-engine`, `webgl`, `webgpu`, `scene-editor`, `gltf`, `spatial-dev`
 
 ## Description

@@ -1,12 +1,12 @@
 # Excalidraw
 
 **Version:** 4
-**Target:** `.skills/excalidraw`
-**Category:** Publishing & Documentation
-**Keywords:** `excalidraw`, `virtual-whiteboard`, `hand-drawn-diagrams`, `architecture-diagram`, `canvas`, `visuals`
 
-**Version:** 3
 **Target:** `.skills/excalidraw`
+
+**Category:** Publishing & Documentation
+
+**Keywords:** `excalidraw`, `virtual-whiteboard`, `hand-drawn-diagrams`, `architecture-diagram`, `canvas`, `visuals`
 
 ## Description
 Renders and embeds Excalidraw whiteboards
@@ -23,6 +23,7 @@ Renders and embeds Excalidraw whiteboards
 ## Usage
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
+## Changelog
 * **v4** : Standardized hasSandbox to false to mount the clean Architectural Contract card on code-scaffold.com.
 * **v3** : Deployed custom interactive visual sandbox
 * **v2** : Expanded capability descriptions

@@ -1,8 +1,11 @@
 # MCP Generator
 
 **Version:** 4
+
 **Target:** `.skills/mcp-generator`
+
 **Category:** AI, MCP & Developer Tools
+
 **Keywords:** `mcp-generator`, `model-context-protocol`, `fastmcp`, `custom-tools`, `json-rpc`, `agent-integrations`
 
 ## Description

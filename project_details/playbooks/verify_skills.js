@@ -10,6 +10,7 @@
  *   4. Manifest Schema (name, version, description, category, keywords array > 0, requiredPermissions)
  *   5. Typography Compliance (NO em-dashes —, NO en-dashes –, asterisks for bullet lists)
  *   6. Zero External Brand Leakage (no forbidden third-party trademarks in user-facing metadata/docs)
+ *   7. Readme Shape Invariant (single header badge block, Changelog footer last, no stranded version history)
  * 
  * Usage:
  *   node project_details/playbooks/verify_skills.js
@@ -185,6 +186,35 @@ function checkSkill(skillName) {
   }
   if (!readmeContent.includes('**Keywords:**')) {
     skillErrors.push('readme.md missing "**Keywords:**" header badge');
+  }
+
+  // 7b. Readme shape invariant: single badge block, Changelog footer, no stranded history
+  for (const badge of ['**Version:**', '**Target:**', '**Category:**', '**Keywords:**']) {
+    const count = readmeContent.split(badge).length - 1;
+    if (count !== 1) {
+      skillErrors.push(`readme.md header badge "${badge}" must appear exactly once (found ${count})`);
+    }
+  }
+  const readmeLines = readmeContent.split(/\r?\n/);
+  readmeLines.forEach((line, idx) => {
+    if (/^\*\*(Version|Target|Category|Keywords):\*\*/.test(line)) {
+      const next = readmeLines[idx + 1];
+      if (next !== undefined && next.trim() !== '') {
+        skillErrors.push('readme.md header badges must be separated by exactly one blank line');
+      }
+    }
+  });
+  const readmeSections = [...readmeContent.matchAll(/^## (.+)$/gm)].map((m) => m[1].trim());
+  if (!readmeSections.includes('Changelog')) {
+    skillErrors.push('readme.md missing dedicated "## Changelog" footer section');
+  } else if (readmeSections[readmeSections.length - 1] !== 'Changelog') {
+    skillErrors.push('readme.md "## Changelog" must be the final section');
+  }
+  const preChangelog = readmeContent.includes('## Changelog')
+    ? readmeContent.split('## Changelog')[0]
+    : readmeContent;
+  if (/^\* \*\*v\d+\*\*/m.test(preChangelog)) {
+    skillErrors.push('readme.md has version history bullets outside the Changelog footer');
   }
 
   // 7. Brand Leakage Checks in user-facing texts

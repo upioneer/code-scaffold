@@ -1,8 +1,11 @@
 # Skeleton Performance Studio
 
 **Version:** 1
+
 **Target:** `.skills/skeleton`
+
 **Category:** Frontend & UI Design
+
 **Keywords:** `skeleton`, `skeleton-screens`, `content-placeholders`, `shimmer-effects`, `perceived-performance`, `cumulative-layout-shift`, `cls-zero`, `core-web-vitals`, `fast-page-loads`, `loading-states`, `react-suspense`, `nextjs-loading`, `tailwind-shimmer`, `pure-css-shimmer`, `layout-reservation`, `accessible-loading`, `web-vitals-optimization`, `hardware-accelerated-shimmer`, `dark-mode-shimmer`, `loading-ux`
 
 ## Description

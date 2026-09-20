@@ -1,8 +1,11 @@
 # Scrollytelling
 
 **Version:** 4
+
 **Target:** `.skills/scrollytelling`
+
 **Category:** Frontend & UI Design
+
 **Keywords:** `scrollytelling`, `scroll-magic`, `gsap-scrolltrigger`, `interactive-storytelling`, `3d-product-view`
 
 ## Description

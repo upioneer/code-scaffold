@@ -1,8 +1,11 @@
 # Playwright Plus
 
 **Version:** 5
+
 **Target:** `.skills/playwright`
+
 **Category:** Web Automation & Scraping
+
 **Keywords:** `playwright`, `browser-automation`, `e2e-testing`, `mobile-viewports`, `layout-overflow`, `visual-qa`, `yaml-workflows`, `run-recording`
 
 ## Description

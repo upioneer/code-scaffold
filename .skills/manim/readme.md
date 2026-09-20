@@ -1,8 +1,11 @@
 # Manim Math Animations
 
 **Version:** 5
+
 **Target:** `.skills/manim`
+
 **Category:** Animation & Graphics
+
 **Keywords:** `manim`, `math-animation`, `python-video`, `3b1b`, `technical-animations`, `scientific-viz`
 
 ## Description
@@ -20,10 +23,9 @@ Mathematical animations using the Manim library.
 ## Usage
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
+## Changelog
+* **v5** : Standardized ASCII art logo to uniform 6-line ANSI Shadow format.
 * **v4** : Standardized hasSandbox to false to mount the clean Architectural Contract card on code-scaffold.com.
 * **v3** : Integrated interactive Manim Mathematical Animation Studio sandbox and updated manifest flags
 * **v2** : Expanded capability descriptions
 * **v1** : Add p5js and manim skills and bump version to v3.1.0
-
-## Changelog
-* **v5** : Standardized ASCII art logo to uniform 6-line ANSI Shadow format.

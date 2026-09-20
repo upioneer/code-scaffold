@@ -1,8 +1,11 @@
 # Trackio ML Tracking
 
 **Version:** 3
+
 **Target:** `.skills/trackio`
+
 **Category:** Data, Databases & Storage
+
 **Keywords:** `trackio`, `ml-experiment-tracking`, `hyperparameters`, `metrics-logging`, `huggingface-spaces`
 
 ## Description

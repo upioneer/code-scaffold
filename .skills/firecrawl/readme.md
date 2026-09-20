@@ -1,8 +1,11 @@
 # Firecrawl Scraper
 
 **Version:** 3
+
 **Target:** `.skills/firecrawl`
+
 **Category:** Web Automation & Scraping
+
 **Keywords:** `firecrawl`, `web-crawler`, `llm-scraping`, `clean-markdown`, `structured-json`, `data-extraction`
 
 ## Description

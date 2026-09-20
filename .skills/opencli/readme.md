@@ -1,8 +1,11 @@
 # OpenCLI
 
 **Version:** 2
+
 **Target:** `.skills/opencli`
+
 **Category:** Web Automation & Scraping
+
 **Keywords:** `opencli`, `cli-to-web`, `site-adapters`, `terminal-browser`, `structured-extraction`, `cli-tools`
 
 ## Description

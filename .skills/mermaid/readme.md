@@ -1,12 +1,12 @@
 # Mermaid
 
 **Version:** 4
-**Target:** `.skills/mermaid`
-**Category:** Publishing & Documentation
-**Keywords:** `mermaid`, `mermaid-cli`, `diagrams-as-code`, `flowcharts`, `sequence-diagrams`, `er-diagrams`
 
-**Version:** 3
 **Target:** `.skills/mermaid`
+
+**Category:** Publishing & Documentation
+
+**Keywords:** `mermaid`, `mermaid-cli`, `diagrams-as-code`, `flowcharts`, `sequence-diagrams`, `er-diagrams`
 
 ## Description
 Mermaid diagram creation and rendering
@@ -23,6 +23,7 @@ Mermaid diagram creation and rendering
 ## Usage
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
+## Changelog
 * **v4** : Standardized hasSandbox to false to mount the clean Architectural Contract card on code-scaffold.com.
 * **v3** : Deployed custom interactive visual sandbox
 * **v2** : Expanded capability descriptions

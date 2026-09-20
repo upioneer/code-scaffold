@@ -1,8 +1,11 @@
 # Stealth Browser
 
 **Version:** 5
+
 **Target:** `.skills/stealth-browser`
+
 **Category:** Web Automation & Scraping
+
 **Keywords:** `stealth-browser`, `ghost-graph`, `ghost-core`, `lightweight-cdp`, `nodriver`, `cloudflare-bypass`, `antibot`, `fastmcp`, `smart-scraper`, `hardware-randomization`, `canvas-noise`, `visual-takeover`, `auth-vault`, `text-perception`, `witness-receipts`, `pii-scrubbing`
 
 ## Description

@@ -1,8 +1,11 @@
 # CyberSecurity Toolkit
 
 **Version:** 8
+
 **Target:** `.skills/cybersecurity-toolkit`
+
 **Category:** DevOps & Infrastructure
+
 **Keywords:** `cybersecurity`, `security-audit`, `vulnerability-scan`, `owasp`, `penetration-testing`, `hardening`, `agentic-security`, `sentinel-mesh`
 
 ## Description

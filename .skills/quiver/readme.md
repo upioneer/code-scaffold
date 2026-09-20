@@ -1,8 +1,11 @@
 # Quiver AI Vector Studio
 
 **Version:** 2
+
 **Target:** `.skills/quiver`
+
 **Category:** Animation & Graphics
+
 **Keywords:** `quiver`, `quiver-ai`, `vector-graphics`, `svg-generation`, `image-vectorization`, `arrow-2`, `arrow-2-telos`, `mcp-server`, `text-to-svg`, `vector-design`
 
 ## Description
@@ -27,5 +30,6 @@ The Quiver AI Vector Studio skill empowers Code Scaffold agents to synthesize, v
 
 This skill is designed for the Code Scaffold engine. AI agents and developers should reference `SKILL.md` inside this directory for full endpoint schemas, Node.js and TypeScript client code, MCP server configurations, and vector asset pipeline recipes.
 
+## Changelog
 * **v2** : Standardized hasSandbox to false to mount the clean Architectural Contract card on code-scaffold.com.
 * **v1** : Initial release with Arrow foundation model catalog (Arrow 2 Telos, Arrow 2.0, Arrow 1.1), Text-to-SVG generation, Image-to-SVG vectorization, hosted MCP server integration, OpenAI SDK compatibility, SVG sanitization, and interactive terminal sandbox.

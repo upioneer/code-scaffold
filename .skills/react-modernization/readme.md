@@ -1,8 +1,11 @@
 # React Modernization
 
 **Version:** 1
+
 **Target:** `.skills/react-modernization`
+
 **Category:** Frontend & UI Design
+
 **Keywords:** `react-19`, `react-server-components`, `server-actions`, `modernization`, `nextjs`, `state-management`
 
 ## Description

@@ -1,8 +1,11 @@
 # Resend
 
 **Version:** 2
+
 **Target:** `.skills/resend`
+
 **Category:** Data, Databases & Storage
+
 **Keywords:** `resend`, `transactional-email`, `react-email`, `smtp`, `email-api`, `deliverability`
 
 ## Description

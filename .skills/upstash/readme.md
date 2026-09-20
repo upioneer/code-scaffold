@@ -1,8 +1,11 @@
 # Upstash Redis Management
 
 **Version:** 3
+
 **Target:** `.skills/upstash`
+
 **Category:** Data, Databases & Storage
+
 **Keywords:** `upstash`, `serverless-redis`, `rate-limiting`, `edge-caching`, `qstash`, `vector-db`
 
 ## Description

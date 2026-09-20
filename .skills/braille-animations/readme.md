@@ -1,8 +1,11 @@
 # Braille Animations
 
 **Version:** 4
+
 **Target:** `.skills/braille-animations`
+
 **Category:** Animation & Graphics
+
 **Keywords:** `braille-art`, `terminal-animations`, `ascii-art`, `cli-spinners`, `text-fx`, `tui`
 
 ## Description
