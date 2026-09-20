@@ -1,5 +1,5 @@
 ---
-​‌‍name: playwright_automation
+​‌‍name: playwright_plus
 description: Complete browser automation with Playwright. Auto-detects dev servers, authors declarative YAML workflows for deterministic testing. Test pages, fill forms, take screenshots, validate UX. Use when user wants to test websites, automate browser interactions, or perform browser-based testing.
 ---
 
@@ -35,7 +35,7 @@ General-purpose browser automation skill. I will orchestrate browser automation 
 1. You describe what you want to test/automate
 2. I auto-detect running dev servers (or ask for URL if testing external site)
 3. I author a custom declarative Playwright YAML workflow in the `workflows/` directory.
-4. I execute it via the native manifest engine: `code-scaffold run workflows/test-*.yaml`
+4. I execute it via the declarative dispatcher: `node workflows/run.cjs --workflow workflows/test-*.yaml`
 5. Results are parsed by the engine safely without evaluating arbitrary Javascript.
 
 ## Execution Pattern
@@ -75,8 +75,32 @@ jobs:
 **Step 3: Execute via the Scaffold Engine**
 
 ```bash
-cd $SKILL_DIR && code-scaffold run workflows/test-page.yaml
+cd $SKILL_DIR && node workflows/run.cjs --workflow workflows/test-page.yaml
 ```
+
+### Recording Runs on Video (Declarative)
+A job may declare a job level `record` block. Recording binds to context creation and teardown, so steps stay pure and replayable. `dir` is required; `gif` converts the recording with ffmpeg.
+
+```yaml
+jobs:
+  capture:
+    record:
+      dir: ./recordings
+      gif: ./demo.gif
+    steps:
+      - name: Launch Browser
+        model: browser/playwright
+        method: launch
+        args:
+          headless: true
+      - name: Navigate
+        model: browser/playwright
+        method: goto
+        args:
+          url: ${env.TARGET_URL}
+```
+
+The dispatcher additionally supports `wait-ms` (`args.ms`) for explicit render waits. Only the declared method allowlist can execute: `launch`, `goto`, `fill`, `click`, `screenshot`, `waitForURL`, `wait-ms`, `audit_links`. Anything else fails before the browser launches.
 
 ### Test Login Flow (Declarative)
 ```yaml

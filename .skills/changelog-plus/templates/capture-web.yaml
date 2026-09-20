@@ -1,0 +1,51 @@
+name: Changelog Web Capture
+trigger: manual
+jobs:
+  capture:
+    record:
+      dir: ${env.CHANGELOG_DIR}/.video
+      gif: ${env.CHANGELOG_DIR}/demo.gif
+    steps:
+      - name: Launch Browser
+        model: browser/playwright
+        method: launch
+        args:
+          headless: true
+      - name: Splash Route
+        model: browser/playwright
+        method: goto
+        args:
+          url: ${env.TARGET_URL}/
+      - name: Splash Screenshot
+        model: browser/playwright
+        method: screenshot
+        args:
+          path: ${env.CHANGELOG_DIR}/demo_splash.png
+          fullPage: true
+      - name: Main Route
+        model: browser/playwright
+        method: goto
+        args:
+          url: ${env.TARGET_URL}/app
+      - name: Main Screenshot
+        model: browser/playwright
+        method: screenshot
+        args:
+          path: ${env.CHANGELOG_DIR}/demo_main.png
+          fullPage: true
+      - name: Interact
+        model: browser/playwright
+        method: click
+        args:
+          selector: button[data-tour]
+      - name: Settle
+        model: browser/playwright
+        method: wait-ms
+        args:
+          ms: 2000
+      - name: Final Screenshot
+        model: browser/playwright
+        method: screenshot
+        args:
+          path: ${env.CHANGELOG_DIR}/demo_final.png
+          fullPage: true

@@ -1,8 +1,8 @@
 {
   "name": "playwright-skill",
-  "version": "4.1.0",
+  "version": "5.0.0",
   "description": "General-purpose browser automation with Playwright for agents with auto-detection and smart test management",
-  "author": "lackeyjb",
+  "author": "Code Scaffold",
   "main": "run.js",
   "scripts": {
     "setup": "npm install && npx playwright install chromium",
@@ -17,6 +17,7 @@
     "general-purpose"
   ],
   "dependencies": {
+    "js-yaml": "^5.4.2",
     "playwright": "^1.40.0"
   },
   "engines": {

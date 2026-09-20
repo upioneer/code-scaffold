@@ -1,9 +1,9 @@
-# Playwright
+# Playwright Plus
 
-**Version:** 4
+**Version:** 5
 **Target:** `.skills/playwright`
 **Category:** Web Automation & Scraping
-**Keywords:** `playwright`, `browser-automation`, `e2e-testing`, `mobile-viewports`, `layout-overflow`, `visual-qa`
+**Keywords:** `playwright`, `browser-automation`, `e2e-testing`, `mobile-viewports`, `layout-overflow`, `visual-qa`, `yaml-workflows`, `run-recording`
 
 ## Description
 Browser automation and end to end testing with Playwright
@@ -16,11 +16,14 @@ Browser automation and end to end testing with Playwright
 * **Complex State Testing**: Automates and verifies deep application states including multi-step login flows, persistent cookie banners, and dynamic form submissions.
 * **Network & DOM Diagnostics**: Scans and parses the DOM to aggressively validate HTTP status codes across all anchor links to detect dead pathways.
 * **Custom Header Injection**: Spoofs or enforces custom HTTP headers (e.g. `X-Automated-By`) to bypass bot protections or request LLM-optimized backend payloads.
+* **Real YAML Workflow Dispatcher**: Executes declarative workflows through `workflows/run.cjs` against a strict method allowlist, with environment and base URL substitution and zero arbitrary code evaluation.
+* **Run Recording**: Job level `record` blocks capture full run video with optional ffmpeg conversion to gif for release evidence.
 
 ## Usage
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog
+* **v5** : Renamed to Playwright Plus. Added the real declarative workflow dispatcher (`workflows/run.cjs`) with strict method allowlist, job level run recording with gif conversion, and a maintained selftest.
 * **v4** : Added automated mobile responsive viewport validation and overflow checker (`scripts/test-responsive.js`).
 * **v3** : Massive rewrite adhering to the SkillForge Declarative Workflow mandate. The agent now orchestrates browser automation by authoring rigid YAML workflows (with CEL expression injection for zero-trust secrets) instead of raw Javascript scripts.
 * **v2** : Expanded capability descriptions

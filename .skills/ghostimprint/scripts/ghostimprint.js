@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * GhostPrint Engine™ CLI & Core Architecture
+ * GhostImprint Engine™ CLI & Core Architecture
  * Industrial Grade Cryptographic Code Provenance, Steganographic Entanglement Matrix & Digital Forensics
  * Cross-platform: Windows, macOS, Linux (Zero external npm dependencies)
  */
@@ -11,6 +11,7 @@ const os = require('os');
 const crypto = require('crypto');
 const readline = require('readline');
 const wordlist = require('./wordlist');
+const ts = require('./ghostimprint-timestamp');
 
 // ── SPECTRAL CYAN FORENSIC PALETTE ──────────────────────────────────
 const C = {
@@ -36,14 +37,14 @@ ${C.cyan}${C.bold}   ██████╗ ██╗  ██╗ █████�
   ██║   ██║██╔══██║██║   ██║╚════██║   ██║   ██╔═══╝ ██╔══██╗██║██║╚██╗██║   ██║     
   ╚██████╔╝██║  ██║╚██████╔╝███████║   ██║   ██║     ██║  ██║██║██║ ╚████║   ██║     
    ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚══════╝   ╚═╝   ╚═╝     ╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝   ╚═╝     ${C.reset}
-${C.silver}           GhostPrint Engine™: Cryptographic Code Provenance & Digital Forensics${C.reset}
+${C.silver}           GhostImprint Engine™: Cryptographic Code Provenance & Digital Forensics${C.reset}
 ${C.dim}                   Kerckhoffs-Compliant Steganographic Entanglement Matrix${C.reset}
 `);
 }
 
 // ── STORAGE LOCATIONS & OS VAULT PATHS ──────────────────────────────
 function getVaultDir() {
-  return path.join(os.homedir(), '.ghostprint');
+  return path.join(os.homedir(), '.ghostimprint');
 }
 
 function getProjectsDir() {
@@ -68,6 +69,251 @@ function getProjectSlug(metadata) {
 function getProjectVaultPath(metadata) {
   const slug = getProjectSlug(metadata);
   return path.join(getProjectsDir(), `${slug}.vault.json.enc`);
+}
+
+// ── APPLICATION RECEIPT STORE (public, unencrypted) ───────────────
+// The receipt records what was actually applied, per release and layer:
+// the audit compares suspect code against the receipt, never against wishes.
+const RECEIPT_LAYERS = ['l0', 'l1', 'l2', 'l3', 'l4', 'l5', 'l6'];
+
+function getReceiptPath(metadata) {
+  const slug = getProjectSlug(metadata);
+  return path.join(getProjectsDir(), `${slug}.receipt.json`);
+}
+
+function loadReceipt(metadata = null) {
+  const meta = metadata || discoverProjectMetadata();
+  const receiptPath = getReceiptPath(meta);
+  if (fs.existsSync(receiptPath)) {
+    try {
+      return JSON.parse(fs.readFileSync(receiptPath, 'utf8'));
+    } catch (_) {
+      return null;
+    }
+  }
+  // Legacy GhostPrint era receipt location (read only)
+  const legacyPath = path.join(os.homedir(), '.ghostprint', 'projects', `${getProjectSlug(meta)}.receipt.json`);
+  if (fs.existsSync(legacyPath)) {
+    try {
+      return JSON.parse(fs.readFileSync(legacyPath, 'utf8'));
+    } catch (_) {
+      return null;
+    }
+  }
+  return null;
+}
+
+function saveReceipt(metadata, receipt) {
+  ensureVaultDir();
+  const receiptPath = getReceiptPath(metadata);
+  receipt.updatedAt = new Date().toISOString();
+  fs.writeFileSync(receiptPath, JSON.stringify(receipt, null, 2), 'utf8');
+  if (process.platform !== 'win32') {
+    try { fs.chmodSync(receiptPath, 0o600); } catch (_) {}
+  }
+  return receiptPath;
+}
+
+function blankReceipt(metadata) {
+  return {
+    version: 1,
+    projectSlug: getProjectSlug(metadata),
+    project: metadata.project,
+    repo: metadata.repo,
+    releases: {},
+    updatedAt: new Date().toISOString()
+  };
+}
+
+function recordDecision(metadata, release, layer, site, value, note = '') {
+  if (!RECEIPT_LAYERS.includes(layer)) {
+    throw new Error(`Unknown receipt layer "${layer}". Use one of: ${RECEIPT_LAYERS.join(', ')}.`);
+  }
+  const receipt = loadReceipt(metadata) || blankReceipt(metadata);
+  if (!receipt.releases[release]) {
+    receipt.releases[release] = { layers: {}, probePlan: null, anchor: null };
+  }
+  const bucket = receipt.releases[release].layers[layer] || [];
+  bucket.push({ site, value, note, recordedAt: new Date().toISOString() });
+  receipt.releases[release].layers[layer] = bucket;
+  return saveReceipt(metadata, receipt);
+}
+
+function recordProbePlan(metadata, release, plan) {
+  const receipt = loadReceipt(metadata) || blankReceipt(metadata);
+  if (!receipt.releases[release]) {
+    receipt.releases[release] = { layers: {}, probePlan: null, anchor: null };
+  }
+  receipt.releases[release].probePlan = Object.assign(
+    { triggers: [], endpoint: null, toleranceMs: null },
+    plan,
+    { recordedAt: new Date().toISOString() }
+  );
+  return saveReceipt(metadata, receipt);
+}
+
+function latestReceiptRelease(receipt) {
+  const names = Object.keys(receipt.releases || {});
+  if (names.length === 0) return null;
+  return names.sort().reverse()[0];
+}
+
+function receiptSummary(receipt) {
+  const summary = { project: receipt.project, releases: {} };
+  for (const [release, data] of Object.entries(receipt.releases || {})) {
+    const layers = {};
+    for (const [layer, entries] of Object.entries(data.layers || {})) {
+      layers[layer] = entries.length;
+    }
+    summary.releases[release] = {
+      decisions: layers,
+      probePlan: data.probePlan ? { triggers: (data.probePlan.triggers || []).length, endpoint: Boolean(data.probePlan.endpoint) } : null,
+      anchor: data.anchor ? { commit: data.anchor.commit, tag: data.anchor.tag, dirty: data.anchor.dirty } : null
+    };
+  }
+  return summary;
+}
+
+// ── GIT-TREE TEMPORAL ANCHOR ───────────────────────────────────────
+// Records the git identity of a release: commit SHA, tree SHA, tag, and
+// whether the tree was dirty. Verification shells out to git read-only.
+function gitCapture(cwd, gitArgs) {
+  try {
+    const child = require('child_process');
+    return child.spawnSync('git', gitArgs, { cwd, encoding: 'utf8', timeout: 15000 });
+  } catch (_) {
+    return { status: 1, stdout: '', stderr: 'spawn failed' };
+  }
+}
+
+function recordAnchor(metadata, release, cwd = process.cwd(), tag = null) {
+  const head = gitCapture(cwd, ['rev-parse', 'HEAD']);
+  if (head.status !== 0) {
+    throw new Error('Not a git repository (or git unavailable). Anchor requires a commit to point at.');
+  }
+  const commit = head.stdout.trim();
+  const tree = gitCapture(cwd, ['rev-parse', `${commit}^{tree}`]);
+  const dirty = gitCapture(cwd, ['status', '--porcelain']);
+  const receipt = loadReceipt(metadata) || blankReceipt(metadata);
+  if (!receipt.releases[release]) {
+    receipt.releases[release] = { layers: {}, probePlan: null, anchor: null };
+  }
+  receipt.releases[release].anchor = {
+    commit,
+    tree: tree.status === 0 ? tree.stdout.trim() : null,
+    tag,
+    dirty: dirty.status === 0 ? dirty.stdout.trim().length > 0 : null,
+    repoPath: path.resolve(cwd),
+    recordedAt: new Date().toISOString()
+  };
+  return saveReceipt(metadata, receipt);
+}
+
+async function notarizeRelease(metadata, release, options = {}) {
+  const receipt = loadReceipt(metadata);
+  const data = receipt && receipt.releases[release];
+  if (!data || !data.anchor || !data.anchor.commit) {
+    throw new Error('No local anchor recorded. The notarized tier builds on a local anchor.');
+  }
+  const preimage = Buffer.from(`commit:${data.anchor.commit}\ntree:${data.anchor.tree || ''}\n`, 'utf8');
+  const hashHex = crypto.createHash('sha256').update(preimage).digest('hex');
+
+  const vault = loadVault(metadata);
+  let masterKey = null;
+  if (vault && vault.epochs && vault.epochs.length > 0) {
+    const epoch = vault.epochs[vault.epochs.length - 1];
+    masterKey = deriveMasterKey(epoch.passphraseWords, epoch.metadata || metadata);
+  } else {
+    const envWords = (process.env.GHOSTIMPRINT_MASTER_PASSPHRASE || '').trim().split(/\s+/).filter(Boolean);
+    if (envWords.length === 0) throw new Error('Notarized tier needs an identity (vault or passphrase) to sign the Rekor entry.');
+    masterKey = deriveMasterKey(envWords, metadata);
+  }
+
+  const tsa = await ts.tsaSubmit(Buffer.from(hashHex, 'hex'), options.tsaUrl);
+  let rekor = { ok: false, error: 'not attempted' };
+  try {
+    const scalar = ts.deriveSigningScalar(masterKey);
+    const pem = ts.publicKeyPem(scalar);
+    const sig = ts.signBytes(scalar, Buffer.from(hashHex, 'hex'));
+    const sub = await ts.rekorSubmit(hashHex, sig, pem, options.rekorUrl);
+    if (sub.ok) {
+      const check = ts.verifyRekorEntry(sub.entry, hashHex, pem);
+      rekor = {
+        ok: check.problems.length === 0,
+        uuid: sub.uuid,
+        url: options.rekorUrl || ts.REKOR_BASE,
+        hashHex,
+        publicKeyPem: pem,
+        integratedTime: check.integratedTime,
+        entry: sub.entry,
+        problems: check.problems,
+        inclusion: check.inclusion,
+        error: check.problems.length === 0 ? null : check.problems.join('; ')
+      };
+    } else {
+      rekor = { ok: false, error: sub.error };
+    }
+  } catch (e) {
+    rekor = { ok: false, error: String(e.message || e).slice(0, 160) };
+  }
+
+  const fresh = loadReceipt(metadata);
+  fresh.releases[release].witnesses = {
+    preimage: preimage.toString('utf8'),
+    hashHex,
+    tsa: tsa.ok
+      ? { ok: true, url: options.tsaUrl || ts.FREETSA_URL, genTime: tsa.genTime, tokenB64: tsa.tokenB64, certCount: tsa.certCount, signerNote: tsa.signerNote }
+      : { ok: false, error: tsa.error },
+    rekor
+  };
+  saveReceipt(metadata, fresh);
+  return fresh.releases[release].witnesses;
+}
+
+function verifyStoredWitnesses(releaseData) {
+  const out = { tsa: { status: 'ABSENT' }, rekor: { status: 'ABSENT' } };
+  const w = releaseData && releaseData.witnesses;
+  if (!w) return out;
+  if (w.tsa && w.tsa.ok && w.tsa.tokenB64) {
+    try {
+      const parsed = ts.parseTsaResponse(Buffer.from(w.tsa.tokenB64, 'base64'));
+      const imprint = ts.verifyTsaImprint(parsed, Buffer.from(w.hashHex, 'hex'));
+      out.tsa = imprint.ok
+        ? { status: 'VERIFIED', genTime: imprint.genTime, url: w.tsa.url }
+        : { status: 'RECORDED-NOT-VERIFIED', reason: imprint.reason };
+    } catch (e) {
+      out.tsa = { status: 'RECORDED-NOT-VERIFIED', reason: 'Token no longer parses: ' + String(e.message || e).slice(0, 100) };
+    }
+  } else if (w.tsa && !w.tsa.ok) {
+    out.tsa = { status: 'FAILED-AT-SEAL', reason: w.tsa.error };
+  }
+  if (w.rekor && w.rekor.ok && w.rekor.entry) {
+    const check = ts.verifyRekorEntry(w.rekor.entry, w.rekor.hashHex, w.rekor.publicKeyPem);
+    out.rekor = check.problems.length === 0
+      ? { status: 'VERIFIED', uuid: w.rekor.uuid, integratedTime: check.integratedTime, inclusion: check.inclusion.status }
+      : { status: 'RECORDED-NOT-VERIFIED', reason: check.problems.join('; ') };
+  } else if (w.rekor && !w.rekor.ok) {
+    out.rekor = { status: 'FAILED-AT-SEAL', reason: w.rekor.error };
+  }
+  return out;
+}
+
+function verifyAnchor(anchor) {
+  if (!anchor || !anchor.commit) return { verified: false, reason: 'No anchor recorded.' };
+  if (!anchor.repoPath || !fs.existsSync(anchor.repoPath)) {
+    return { verified: false, reason: 'Anchor repository path unavailable.', recorded: anchor };
+  }
+  const typeCheck = gitCapture(anchor.repoPath, ['cat-file', '-t', anchor.commit]);
+  if (typeCheck.status !== 0 || typeCheck.stdout.trim() !== 'commit') {
+    return { verified: false, reason: 'Commit object not found in repository.', recorded: anchor };
+  }
+  if (anchor.tree) {
+    const treeCheck = gitCapture(anchor.repoPath, ['cat-file', '-t', anchor.tree]);
+    if (treeCheck.status !== 0 || treeCheck.stdout.trim() !== 'tree') {
+      return { verified: false, reason: 'Tree object not found in repository.', recorded: anchor };
+    }
+  }
+  return { verified: true, commit: anchor.commit, tree: anchor.tree, tag: anchor.tag, dirty: anchor.dirty };
 }
 
 // Ensure vault directory and projects subdirectory exist with secure permissions
@@ -189,13 +435,13 @@ function deriveMasterKey(passphrase, metadata) {
     .digest();
   
   // Derive 256-bit Master Root Key via HKDF
-  const masterKey = crypto.hkdfSync('sha256', Buffer.from(cleanPass, 'utf8'), salt, Buffer.from('ghostprint:master:root', 'utf8'), 32);
+  const masterKey = crypto.hkdfSync('sha256', Buffer.from(cleanPass, 'utf8'), salt, Buffer.from('ghostimprint:master:root', 'utf8'), 32);
   return Buffer.from(masterKey);
 }
 
 function deriveReleaseChildKey(masterKey, version, metadata) {
   const versionSalt = crypto.createHash('sha256').update(`release:${version}:${metadata.repo}`).digest();
-  const childKey = crypto.hkdfSync('sha256', masterKey, versionSalt, Buffer.from(`ghostprint:release:${version}`, 'utf8'), 32);
+  const childKey = crypto.hkdfSync('sha256', masterKey, versionSalt, Buffer.from(`ghostimprint:release:${version}`, 'utf8'), 32);
   return Buffer.from(childKey);
 }
 
@@ -234,14 +480,15 @@ function generateLayerConstants(childKey, version) {
     layer1: { word0: layer1Word0, word1: layer1Word1 },
     layer2: { jitterCoeff: f1, refillEpsilon: f2, expectedRatio: ratio },
     layer6SoftClusterCount: softConstants.length,
-    layer6Sample: softConstants.slice(0, 6)
+    layer6Sample: softConstants.slice(0, 6),
+    softCluster: softConstants
   };
 }
 
 // ── VAULT ENCRYPTION & MANAGEMENT ──────────────────────────────────
 function getHostMachineKey() {
   const hostInfo = `${os.hostname()}:${os.userInfo().username}:${os.platform()}`;
-  return crypto.createHash('sha256').update(hostInfo + ':ghostprint:host:salt').digest();
+  return crypto.createHash('sha256').update(hostInfo + ':ghostimprint:host:salt').digest();
 }
 
 function saveVault(vaultData, metadata = null) {
@@ -316,6 +563,19 @@ function loadVault(metadata = null) {
     if (data) return data;
   }
 
+  // 2b. Migrate GhostPrint era vaults (pre-rename). Read only; new saves go to ~/.ghostimprint.
+  const legacyGhostPrintDir = path.join(os.homedir(), '.ghostprint');
+  const legacyGhostPrintProject = path.join(legacyGhostPrintDir, 'projects', `${getProjectSlug(meta)}.vault.json.enc`);
+  if (fs.existsSync(legacyGhostPrintProject)) {
+    const data = decryptVaultFile(legacyGhostPrintProject);
+    if (data) return data;
+  }
+  const legacyGhostPrintRoot = path.join(legacyGhostPrintDir, 'vault.json.enc');
+  if (fs.existsSync(legacyGhostPrintRoot)) {
+    const data = decryptVaultFile(legacyGhostPrintRoot);
+    if (data) return data;
+  }
+
   // 3. Try global identity
   const identityPath = path.join(getVaultDir(), 'identity.vault.json.enc');
   if (fs.existsSync(identityPath)) {
@@ -379,11 +639,11 @@ function assertGitIgnore(cwd = process.cwd()) {
   let content = fs.existsSync(gitIgnorePath) ? fs.readFileSync(gitIgnorePath, 'utf8') : '';
   const lines = content.split(/\r?\n/).map(l => l.trim());
 
-  const requiredEntries = ['.env', '.env.local', '.ghostprint', '*.enc'];
+  const requiredEntries = ['.env', '.env.local', '.ghostimprint', '*.enc'];
   const missing = requiredEntries.filter(r => !lines.includes(r));
 
   if (missing.length > 0) {
-    const addition = '\n# GhostPrint Engine & Security Invariant Gatekeeper\n' + missing.join('\n') + '\n';
+    const addition = '\n# GhostImprint Engine & Security Invariant Gatekeeper\n' + missing.join('\n') + '\n';
     fs.appendFileSync(gitIgnorePath, addition, 'utf8');
     return { modified: true, appended: missing };
   }
@@ -398,15 +658,15 @@ function askQuestion(rl, query) {
 
 // ── SHIELDS.IO README BADGE GENERATOR & GATEKEEPER ─────────────────
 function generateBadgeMarkdown(metadata = {}) {
-  const url = 'https://img.shields.io/badge/GhostPrint-Protected-00f0ff?style=flat-square&logo=shield&logoColor=06090e';
+  const url = 'https://img.shields.io/badge/GhostImprint-Protected-00f0ff?style=flat-square&logo=shield&logoColor=06090e';
   const targetUrl = 'https://code-scaffold.com';
-  return `[![GhostPrint Protected](${url})](${targetUrl})`;
+  return `[![GhostImprint Protected](${url})](${targetUrl})`;
 }
 
 function generateBadgeHtml(metadata = {}) {
-  const url = 'https://img.shields.io/badge/GhostPrint-Protected-00f0ff?style=flat-square&logo=shield&logoColor=06090e';
+  const url = 'https://img.shields.io/badge/GhostImprint-Protected-00f0ff?style=flat-square&logo=shield&logoColor=06090e';
   const targetUrl = 'https://code-scaffold.com';
-  return `<a href="${targetUrl}"><img src="${url}" alt="GhostPrint Protected" /></a>`;
+  return `<a href="${targetUrl}"><img src="${url}" alt="GhostImprint Protected" /></a>`;
 }
 
 function assertReadmeBadge(projectDir = process.cwd(), options = {}) {
@@ -433,13 +693,26 @@ function assertReadmeBadge(projectDir = process.cwd(), options = {}) {
 
   const content = fs.readFileSync(fullPath, 'utf8');
 
-  // Check if GhostPrint badge is already present
+  // Check if GhostImprint badge is already present
+  if (
+    content.includes('badge/GhostImprint') ||
+    content.includes('GhostImprint-Protected') ||
+    content.includes('[![GhostImprint')
+  ) {
+    return { created: false, modified: false, alreadyPresent: true, fullPath, fileName: targetFile, badgeMarkdown };
+  }
+
+  // Migrate GhostPrint era badge to GhostImprint (rename). Exact line swap only.
   if (
     content.includes('badge/GhostPrint') ||
     content.includes('GhostPrint-Protected') ||
     content.includes('[![GhostPrint')
   ) {
-    return { created: false, modified: false, alreadyPresent: true, fullPath, fileName: targetFile, badgeMarkdown };
+    const migrated = content.replace(/\[!\[GhostPrint[^\]]*\]\([^)]+\)/g, badgeMarkdown);
+    if (migrated !== content) {
+      fs.writeFileSync(fullPath, migrated, 'utf8');
+      return { created: false, modified: true, alreadyPresent: false, migrated: true, fullPath, fileName: targetFile, badgeMarkdown };
+    }
   }
 
   // Insert badge directly below primary # header or within existing badge block
@@ -481,10 +754,14 @@ async function runKeyCeremony(metadata, options = {}) {
   const isInteractive = Boolean(process.stdin.isTTY && !isAuto);
   const rl = isInteractive ? readline.createInterface({ input: process.stdin, output: process.stdout }) : null;
 
-  console.log(`${C.silver}Initializing GhostPrint Key Ceremony for:${C.reset}`);
+  console.log(`${C.silver}Initializing GhostImprint Key Ceremony for:${C.reset}`);
   console.log(`* ${C.cyan}Project:${C.reset} ${metadata.project}`);
   console.log(`* ${C.cyan}Author:${C.reset}  ${metadata.author}`);
   console.log(`* ${C.cyan}Repo:${C.reset}    ${metadata.repo}\n`);
+
+  console.log(`${C.amber}${C.bold}ONE WAY STREET: enrollment is permanent for published releases.${C.reset}`);
+  console.log(`${C.amber}Constants sealed into shipped versions stay in git history and cannot be retracted.${C.reset}`);
+  console.log(`${C.amber}Unprotect removes local enrollment only, never published history.${C.reset}\n`);
 
   let choice = '1';
   if (isInteractive) {
@@ -562,13 +839,13 @@ async function runKeyCeremony(metadata, options = {}) {
   let storeChoice = '1';
   if (isInteractive) {
     console.log(`${C.bold}${C.cyan}Select Storage Target:${C.reset}`);
-    console.log(`  ${C.emerald}[1] Secure Project Vault: ~/.ghostprint/projects/${getProjectSlug(metadata)}.vault.json.enc (Recommended: isolated outside git)${C.reset}`);
+    console.log(`  ${C.emerald}[1] Secure Project Vault: ~/.ghostimprint/projects/${getProjectSlug(metadata)}.vault.json.enc (Recommended: isolated outside git)${C.reset}`);
     console.log(`  ${C.cyan}[2] Local Project .env (Automatic .gitignore assertion enforced)${C.reset}`);
     console.log(`  ${C.silver}[3] Ephemeral Memory Only (Prompt on every release build)${C.reset}\n`);
 
     storeChoice = (await askQuestion(rl, `${C.cyan}Enter storage selection [1-3] (default: 1): ${C.reset}`)).trim() || '1';
   } else {
-    console.log(`${C.emerald}[✓] Automated Storage Selection: using Secure Project Vault (~/.ghostprint/projects/).${C.reset}`);
+    console.log(`${C.emerald}[✓] Automated Storage Selection: using Secure Project Vault (~/.ghostimprint/projects/).${C.reset}`);
   }
 
   const masterKey = deriveMasterKey(words, metadata);
@@ -593,7 +870,7 @@ async function runKeyCeremony(metadata, options = {}) {
     if (gitIgnoreRes.modified) {
       console.log(`${C.amber}[✓] Automatically appended .env to .gitignore for security protection.${C.reset}`);
     }
-    const envLine = `\nGHOSTPRINT_MASTER_PASSPHRASE="${words.join(' ')}"\n`;
+    const envLine = `\nGHOSTIMPRINT_MASTER_PASSPHRASE="${words.join(' ')}"\n`;
     fs.appendFileSync(path.join(process.cwd(), '.env'), envLine, 'utf8');
     console.log(`${C.emerald}[✓] Saved to project .env (verified excluded from git index).${C.reset}`);
   } else {
@@ -614,15 +891,17 @@ async function runKeyCeremony(metadata, options = {}) {
   if (!options.noBadge) {
     const badgeRes = assertReadmeBadge(options.targetDir || process.cwd(), { metadata });
     if (badgeRes.created) {
-      console.log(`* README Badge:    ${C.emerald}Created ${badgeRes.fileName} with [GhostPrint Protected] badge${C.reset}`);
+      console.log(`* README Badge:    ${C.emerald}Created ${badgeRes.fileName} with [GhostImprint Protected] badge${C.reset}`);
+    } else if (badgeRes.migrated) {
+      console.log(`* README Badge:    ${C.emerald}Migrated legacy badge to [GhostImprint Protected] in ${badgeRes.fileName}${C.reset}`);
     } else if (badgeRes.modified) {
-      console.log(`* README Badge:    ${C.emerald}Injected [GhostPrint Protected] badge into ${badgeRes.fileName}${C.reset}`);
+      console.log(`* README Badge:    ${C.emerald}Injected [GhostImprint Protected] badge into ${badgeRes.fileName}${C.reset}`);
     } else if (badgeRes.alreadyPresent) {
-      console.log(`* README Badge:    ${C.silver}[GhostPrint Protected] badge verified in ${badgeRes.fileName}${C.reset}`);
+      console.log(`* README Badge:    ${C.silver}[GhostImprint Protected] badge verified in ${badgeRes.fileName}${C.reset}`);
     }
   }
 
-  console.log(`\n${C.emerald}${C.bold}✅ GHOSTPRINT KEY CEREMONY COMPLETE!${C.reset}\n`);
+  console.log(`\n${C.emerald}${C.bold}✅ GHOSTIMPRINT KEY CEREMONY COMPLETE!${C.reset}\n`);
 
   if (rl) rl.close();
 }
@@ -657,18 +936,20 @@ async function main() {
     printBanner();
     const badgeRes = assertReadmeBadge(targetDir, { metadata });
     console.log(`${C.bold}${C.cyan}╔════════════════════════════════════════════════════════════════════════════╗${C.reset}`);
-    console.log(`${C.bold}${C.cyan}║                   GHOSTPRINT README BADGE GENERATOR                        ║${C.reset}`);
+    console.log(`${C.bold}${C.cyan}║                   GHOSTIMPRINT README BADGE GENERATOR                        ║${C.reset}`);
     console.log(`${C.bold}${C.cyan}╚════════════════════════════════════════════════════════════════════════════╝${C.reset}\n`);
     console.log(`${C.silver}Markdown Badge:${C.reset}`);
     console.log(`  ${badgeRes.badgeMarkdown}\n`);
     console.log(`${C.silver}HTML Badge:${C.reset}`);
     console.log(`  ${generateBadgeHtml(metadata)}\n`);
     if (badgeRes.created) {
-      console.log(`${C.emerald}[✓] Created ${badgeRes.fileName} with GhostPrint Protected badge.${C.reset}\n`);
+      console.log(`${C.emerald}[✓] Created ${badgeRes.fileName} with GhostImprint Protected badge.${C.reset}\n`);
+    } else if (badgeRes.migrated) {
+      console.log(`${C.emerald}[✓] Migrated legacy GhostPrint badge to GhostImprint in ${badgeRes.fileName}.${C.reset}\n`);
     } else if (badgeRes.modified) {
-      console.log(`${C.emerald}[✓] Injected GhostPrint Protected badge into ${badgeRes.fileName}.${C.reset}\n`);
+      console.log(`${C.emerald}[✓] Injected GhostImprint Protected badge into ${badgeRes.fileName}.${C.reset}\n`);
     } else {
-      console.log(`${C.silver}[✓] GhostPrint Protected badge is already present in ${badgeRes.fileName}.${C.reset}\n`);
+      console.log(`${C.silver}[✓] GhostImprint Protected badge is already present in ${badgeRes.fileName}.${C.reset}\n`);
     }
   } else if (
     rawInput.includes('list') ||
@@ -679,11 +960,11 @@ async function main() {
     printBanner();
     const projects = listRegisteredProjects();
     console.log(`${C.bold}${C.cyan}╔════════════════════════════════════════════════════════════════════════════╗${C.reset}`);
-    console.log(`${C.bold}${C.cyan}║                     GHOSTPRINT REGISTERED PROJECTS                         ║${C.reset}`);
+    console.log(`${C.bold}${C.cyan}║                     GHOSTIMPRINT REGISTERED PROJECTS                         ║${C.reset}`);
     console.log(`${C.bold}${C.cyan}╚════════════════════════════════════════════════════════════════════════════╝${C.reset}\n`);
 
     if (projects.length === 0) {
-      console.log(`${C.silver}No projects registered yet. Run ${C.cyan}ghostprint init${C.silver} to seal your first repository.${C.reset}\n`);
+      console.log(`${C.silver}No projects registered yet. Run ${C.cyan}ghostimprint init${C.silver} to seal your first repository.${C.reset}\n`);
     } else {
       for (const p of projects) {
         console.log(`* ${C.bold}${C.emerald}${p.project}${C.reset} (${C.silver}${p.repo}${C.reset})`);
@@ -692,6 +973,140 @@ async function main() {
         console.log(`  ${C.dim}Security:${C.reset}   ${p.tier}`);
         console.log(`  ${C.dim}Epochs:${C.reset}     ${p.epochsCount} active epoch(s) | Last updated: ${p.lastUpdated}\n`);
       }
+    }
+  } else if (
+    rawInput.includes('record decision') ||
+    rawInput.includes('record --') ||
+    rawInput.includes('log decision') ||
+    rawInput.includes('receipt record')
+  ) {
+    printBanner();
+    const getFlag = (name) => {
+      const i = args.indexOf(name);
+      return i !== -1 && args[i + 1] ? args[i + 1] : null;
+    };
+    const release = getFlag('--release') || '1.0.0';
+    const layer = (getFlag('--layer') || '').toLowerCase();
+    const site = getFlag('--site') || '';
+    const value = getFlag('--value') || '';
+    const note = getFlag('--note') || '';
+    try {
+      const savedPath = recordDecision(metadata, release, layer, site, value, note);
+      console.log(`${C.emerald}[✓] Recorded ${layer} decision for ${release} at ${site} -> ${savedPath}${C.reset}\n`);
+    } catch (err) {
+      console.error(`${C.red}GhostImprint Error: ${err.message}${C.reset}`);
+      process.exit(1);
+    }
+  } else if (
+    rawInput.includes('record-plan') ||
+    rawInput.includes('record plan') ||
+    rawInput.includes('bind probe') ||
+    rawInput.includes('probe plan')
+  ) {
+    printBanner();
+    const getFlag = (name) => {
+      const i = args.indexOf(name);
+      return i !== -1 && args[i + 1] ? args[i + 1] : null;
+    };
+    const release = getFlag('--release') || '1.0.0';
+    let triggers = [];
+    const triggersRaw = getFlag('--triggers');
+    if (triggersRaw) {
+      try {
+        triggers = JSON.parse(triggersRaw);
+        if (!Array.isArray(triggers)) throw new Error('not an array');
+      } catch (err) {
+        console.error(`${C.red}GhostImprint Error: --triggers must be a JSON array of {path, expect} objects.${C.reset}`);
+        process.exit(1);
+      }
+    }
+    try {
+      const savedPath = recordProbePlan(metadata, release, {
+        triggers,
+        endpoint: getFlag('--endpoint'),
+        expected: getFlag('--expect'),
+        toleranceMs: getFlag('--tolerance-ms') ? Number(getFlag('--tolerance-ms')) : null
+      });
+      console.log(`${C.emerald}[✓] Bound probe plan for ${release} (${triggers.length} triggers) -> ${savedPath}${C.reset}\n`);
+    } catch (err) {
+      console.error(`${C.red}GhostImprint Error: ${err.message}${C.reset}`);
+      process.exit(1);
+    }
+  } else if (
+    rawInput.includes('anchor') ||
+    rawInput.includes('seal release') ||
+    rawInput.includes('timestamp release')
+  ) {
+    printBanner();
+    const getFlag = (name) => {
+      const i = args.indexOf(name);
+      return i !== -1 && args[i + 1] ? args[i + 1] : null;
+    };
+    const release = getFlag('--release') || '1.0.0';
+    const tag = getFlag('--tag');
+    const tier = (getFlag('--tier') || 'local').toLowerCase();
+    const cwdIdx = args.indexOf('--cwd');
+    const cwd = cwdIdx !== -1 && args[cwdIdx + 1] ? path.resolve(args[cwdIdx + 1]) : process.cwd();
+    if (tier !== 'local' && tier !== 'notarized') {
+      console.error(`${C.red}GhostImprint Error: unknown tier "${tier}". Use local or notarized. Sovereign (on-chain) is a future iteration.${C.reset}`);
+      process.exit(1);
+    }
+    try {
+      const savedPath = recordAnchor(metadata, release, cwd, tag);
+      const stored = (loadReceipt(metadata).releases[release] || {}).anchor;
+      const check = verifyAnchor(stored);
+      console.log(`${C.emerald}[✓] Anchored ${release} (tier: local) -> ${savedPath}${C.reset}`);
+      console.log(`${C.silver}Verified: ${check.verified ? 'commit and tree objects present' : check.reason}${C.reset}`);
+      if (tier === 'notarized') {
+        const privacyNotice = 'Notarized anchors publish the release commitment hash and a derived public key to the Rekor transparency log and a timestamp authority. Source code never leaves this machine, but the hash, key, and timestamp become public and permanent.';
+        const runNotarized = () => notarizeRelease(metadata, release, { tsaUrl: getFlag('--tsa-url'), rekorUrl: getFlag('--rekor-url') }).then((rep) => {
+          console.log(`${C.silver}TSA witness: ${rep.tsa.ok ? 'recorded (genTime ' + rep.tsa.genTime + ')' : 'FAILED: ' + rep.tsa.error}${C.reset}`);
+          console.log(`${C.silver}Rekor witness: ${rep.rekor.ok ? 'recorded (uuid ' + rep.rekor.uuid + ')' : 'FAILED: ' + rep.rekor.error}${C.reset}\n`);
+          if (!rep.tsa.ok || !rep.rekor.ok) {
+            console.error(`${C.amber}Notarized tier incomplete. Local anchor retained; re-run anchor --tier notarized when online.${C.reset}`);
+            process.exit(1);
+          }
+        }).catch((err) => {
+          console.error(`${C.red}GhostImprint Error: ${err.message}${C.reset}`);
+          process.exit(1);
+        });
+        if (args.includes('--yes')) {
+          runNotarized();
+          return;
+        }
+        if (!process.stdin.isTTY) {
+          console.error(`${C.amber}Refusing: notarized anchors publish data permanently. Re-run with --yes to consent, or run interactively.${C.reset}`);
+          console.error(`${C.dim}${privacyNotice}${C.reset}`);
+          process.exit(1);
+        }
+        console.log(`${C.amber}Privacy: ${privacyNotice}${C.reset}`);
+        const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+        rl.question('Publish and continue? [y/N] ', (answer) => {
+          rl.close();
+          if (String(answer).trim().toLowerCase() !== 'y' && String(answer).trim().toLowerCase() !== 'yes') {
+            console.log(`${C.silver}Declined. Local anchor retained; nothing was published.${C.reset}\n`);
+            process.exit(1);
+          }
+          runNotarized();
+        });
+        return;
+      }
+      console.log('');
+    } catch (err) {
+      console.error(`${C.red}GhostImprint Error: ${err.message}${C.reset}`);
+      process.exit(1);
+    }
+  } else if (
+    rawInput.includes('receipt') ||
+    rawInput.includes('show receipt') ||
+    rawInput.includes('recorded decisions')
+  ) {
+    printBanner();
+    const receipt = loadReceipt(metadata);
+    if (!receipt) {
+      console.log(`${C.silver}No application receipt for this project yet. Record decisions with the record command.${C.reset}\n`);
+    } else {
+      console.log(JSON.stringify(receiptSummary(receipt), null, 2));
     }
   } else if (
     rawInput.includes('init') ||
@@ -714,16 +1129,26 @@ async function main() {
     rawInput.includes('did they copy') ||
     rawInput.includes('stole')
   ) {
-    const auditScript = path.join(__dirname, 'ghostprint-audit.js');
-    require(auditScript);
+    const auditScript = path.join(__dirname, 'ghostimprint-audit.js');
+    const auditor = require(auditScript);
+    const auditTargetIdx = args.indexOf('--target');
+    const auditTarget = auditTargetIdx !== -1 && args[auditTargetIdx + 1]
+      ? path.resolve(args[auditTargetIdx + 1])
+      : (args.find(a => !a.startsWith('-') && !/audit|check|examine|stole|copy/i.test(a)) || process.cwd());
+    const auditReleaseIdx = args.indexOf('--release');
+    auditor.runAudit(auditTarget, args.includes('--json'), auditReleaseIdx !== -1 && args[auditReleaseIdx + 1] ? args[auditReleaseIdx + 1] : null);
   } else if (
     rawInput.includes('probe') ||
     rawInput.includes('oracle') ||
     rawInput.includes('http') ||
     rawInput.includes('url')
   ) {
-    const oracleScript = path.join(__dirname, 'ghostprint-oracle.js');
-    require(oracleScript);
+    const oracleScript = path.join(__dirname, 'ghostimprint-oracle.js');
+    const oracle = require(oracleScript);
+    const urlIdx = args.indexOf('--url');
+    const probeUrl = urlIdx !== -1 && args[urlIdx + 1] ? args[urlIdx + 1] : null;
+    const inlineUrl = (rawInput.match(/https?:\/\/[^\s"']+/) || [])[0] || null;
+    oracle.runOracleProbe(probeUrl || inlineUrl || 'https://example-suspect-saas.com', args.includes('--json'));
   } else if (
     rawInput.includes('export') ||
     rawInput.includes('dossier') ||
@@ -731,21 +1156,25 @@ async function main() {
     rawInput.includes('exhibit') ||
     rawInput.includes('dmca')
   ) {
-    const exportScript = path.join(__dirname, 'ghostprint-export.js');
+    const exportScript = path.join(__dirname, 'ghostimprint-export.js');
     require(exportScript);
   } else {
     // Default interactive dashboard
     printBanner();
     console.log(`${C.silver}Natural Language Command Interface:${C.reset}`);
-    console.log(`  node ghostprint.js "protect this repository"`);
-    console.log(`  node ghostprint.js "generate a new 15-word passphrase for this repo"`);
-    console.log(`  node ghostprint.js "add ghostprint badge to readme"`);
-    console.log(`  node ghostprint.js "audit ../competitor-repo against my master secret"`);
-    console.log(`  node ghostprint.js "probe https://suspect-saas.com for my watermark"`);
-    console.log(`  node ghostprint.js "export court-admissible legal dossier"\n`);
+    console.log(`  node ghostimprint.js "protect this repository"`);
+    console.log(`  node ghostimprint.js "generate a new 15-word passphrase for this repo"`);
+    console.log(`  node ghostimprint.js "add ghostimprint badge to readme"`);
+    console.log(`  node ghostimprint.js "audit ../competitor-repo against my master secret"`);
+    console.log(`  node ghostimprint.js "probe https://suspect-saas.com for my watermark"`);
+    console.log(`  node ghostimprint.js "export court-admissible legal dossier"\n`);
     console.log(`${C.cyan}Direct Subcommands:${C.reset}`);
     console.log(`  ${C.bold}init / protect${C.reset} : Run Key Ceremony & assert README protection badge`);
-    console.log(`  ${C.bold}badge${C.reset}          : Generate and assert the Shields.io GhostPrint badge in README.md`);
+    console.log(`  ${C.bold}badge${C.reset}          : Generate and assert the Shields.io GhostImprint badge in README.md`);
+    console.log(`  ${C.bold}record${C.reset}         : Log an applied decision (--release --layer --site --value)`);
+    console.log(`  ${C.bold}record-plan${C.reset}    : Bind oracle probe triggers (--release --triggers JSON)`);
+    console.log(`  ${C.bold}anchor${C.reset}         : Seal a release to its git commit and tree (--release [--tag])`);
+    console.log(`  ${C.bold}receipt${C.reset}        : Show the recorded application receipt summary`);
     console.log(`  ${C.bold}list${C.reset}           : Display all registered projects and active encrypted vaults`);
     console.log(`  ${C.bold}audit${C.reset}          : Scan a target repository for 9-layer cryptographic fingerprints`);
     console.log(`  ${C.bold}probe${C.reset}          : Execute a remote black-box oracle probe against a cloud SaaS URL`);
@@ -755,7 +1184,7 @@ async function main() {
 
 if (require.main === module) {
   main().catch(err => {
-    console.error(`${C.red}GhostPrint Error: ${err.message}${C.reset}`);
+    console.error(`${C.red}GhostImprint Error: ${err.message}${C.reset}`);
     process.exit(1);
   });
 }
@@ -768,6 +1197,17 @@ module.exports = {
   deriveMasterKey,
   deriveReleaseChildKey,
   generateLayerConstants,
+  getReceiptPath,
+  loadReceipt,
+  saveReceipt,
+  recordDecision,
+  recordProbePlan,
+  latestReceiptRelease,
+  receiptSummary,
+  recordAnchor,
+  verifyAnchor,
+  notarizeRelease,
+  verifyStoredWitnesses,
   saveVault,
   loadVault,
   getVaultDir,

@@ -1,0 +1,15 @@
+{
+  "label": "Changelog Plus",
+  "description": "Automated immutable release history pipeline: versioned changelog authoring, headless TUI media capture, declarative web application capture, failure gates, and root README synchronization for every release.",
+  "version": "3",
+  "target": ".skills/changelog-plus",
+  "hasSandbox": false,
+  "logo": [
+    "   ██████╗██╗  ██╗ █████╗ ███╗   ██╗ ██████╗ ███████╗██╗      ██████╗  ██████╗   ",
+    "  ██╔════╝██║  ██║██╔══██╗████╗  ██║██╔════╝ ██╔════╝██║     ██╔═══██╗██╔════╝   ",
+    "  ██║     ███████║███████║██╔██╗ ██║██║  ███╗█████╗  ██║     ██║   ██║██║  ███╗  ",
+    "  ██║     ██╔══██║██╔══██║██║╚██╗██║██║   ██║██╔══╝  ██║     ██║   ██║██║   ██║  ",
+    "  ╚██████╗██║  ██║██║  ██║██║ ╚████║╚██████╔╝███████╗███████╗╚██████╔╝╚██████╔╝  ",
+    "   ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝╚══════╝ ╚═════╝  ╚═════╝   "
+  ]
+}

@@ -1,0 +1,49 @@
+/**
+ * Code Scaffold - Ambient Aurora Backdrop Styling
+ * Slow drifting radial bands in deep teal and ink tones. Decorative only:
+ * always aria-hidden, never the sole carrier of meaning or contrast.
+ */
+
+.cs-aurora {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background: #060b16;
+}
+
+.cs-aurora::before,
+.cs-aurora::after {
+  content: "";
+  position: absolute;
+  inset: -25%;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(38% 42% at 22% 30%, rgba(14, 165, 233, 0.22), transparent 70%),
+    radial-gradient(30% 36% at 78% 22%, rgba(34, 211, 238, 0.14), transparent 70%),
+    radial-gradient(44% 40% at 60% 82%, rgba(13, 148, 136, 0.16), transparent 70%);
+  animation: cs-aurora-drift 26s ease-in-out infinite alternate;
+}
+
+.cs-aurora::after {
+  animation-duration: 34s;
+  animation-direction: alternate-reverse;
+  opacity: 0.7;
+}
+
+@keyframes cs-aurora-drift {
+  from { transform: translate3d(-4%, -2%, 0) scale(1); }
+  to { transform: translate3d(4%, 3%, 0) scale(1.08); }
+}
+
+.cs-drift-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cs-aurora::before, .cs-aurora::after { animation: none; }
+}

@@ -1,0 +1,102 @@
+/**
+ * Code Scaffold - Micro Spring Kit Styling
+ * Press bounce, spring toggle, tooltip fade, toast slide states.
+ */
+
+/* Press-and-release bounce for tappable controls */
+.cs-press {
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.cs-press:active { transform: scale(0.93); }
+
+/* Spring toggle switch */
+.cs-toggle {
+  appearance: none;
+  width: 46px;
+  height: 26px;
+  border-radius: 999px;
+  background: #1e293b;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.25s ease;
+  outline-offset: 3px;
+}
+
+.cs-toggle::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  transition: transform 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.cs-toggle:checked { background: #0ea5e9; }
+
+.cs-toggle:checked::after { transform: translateX(20px); }
+
+/* Fade tooltip anchored above the trigger */
+.cs-tip { position: relative; }
+
+.cs-tip::before {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: #0f172a;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #e2e8f0;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.cs-tip:hover::before,
+.cs-tip:focus-visible::before {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Toast slide states driven by the queue controller */
+.cs-toast {
+  transform: translateY(12px);
+  opacity: 0;
+  transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.24s ease;
+  background: #0f172a;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 10px 14px;
+  color: #e2e8f0;
+  font-size: 13px;
+  margin-top: 8px;
+}
+
+.cs-toast-in { transform: translateY(0); opacity: 1; }
+
+/* Burst particle host and dots */
+.cs-burst-host { position: relative; overflow: hidden; }
+
+.cs-burst-p {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #22d3ee;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cs-press, .cs-toggle, .cs-toggle::after { transition: none; }
+  .cs-press:active { transform: none; }
+  .cs-tip::before { transition: none; }
+  .cs-toast { transition: none; transform: none; opacity: 1; }
+}

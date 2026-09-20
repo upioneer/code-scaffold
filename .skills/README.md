@@ -57,7 +57,7 @@ Welcome to the official **Code Scaffold Skills Library**. This curated registry 
 
 | Skill | Description | Search Keywords | Version | Path |
 | :--- | :--- | :--- | :--- | :--- |
-| **GhostPrint Engine** | Industrial grade cryptographic code provenance, 9-layer steganographic entanglement matrix, hierarchical deterministic key ceremony, and digital forensics suite. | `ghostprint`, `ghost-print`, `code-provenance`, `steganography`, `copyright-protection`, `digital-forensics`, `anti-tamper` | v4 | `.skills/ghostprint` |
+| **GhostImprint Engine** | Industrial grade cryptographic code provenance, 9-layer steganographic entanglement matrix, hierarchical deterministic key ceremony, and digital forensics suite. | `ghostimprint`, `ghost-imprint`, `code-provenance`, `steganography`, `copyright-protection`, `digital-forensics`, `anti-tamper` | v5 | `.skills/ghostimprint` |
 
 ### Frontend & UI Design
 
@@ -71,7 +71,7 @@ Welcome to the official **Code Scaffold Skills Library**. This curated registry 
 | **Scrollytelling** | Design architecture, workflows, and code implementations for scroll-triggered 3D model manipulation and interactive 'production explosion' views. | `scrollytelling`, `scroll-magic`, `gsap-scrolltrigger` | v3 | `.skills/scrollytelling` |
 | **Tasty** | Code Scaffold's bespoke anti-slop frontend styling engine for premium landing pages and portfolios. | `tasty`, `anti-slop`, `design-tokens` | v5 | `.skills/tasty` |
 | **TUI Tools** | Architectural playbook and tooling (including VHS integration) for building robust, instant-on, and visually stunning modern terminal splash screens and integrations. | `tui-tools`, `vhs-tapes`, `terminal-gif` | v6 | `.skills/tui-tools` |
-| **UI Primitives & Micro-Interactions** | GSAP choreography timelines, Three.js 3D scenes, WebGPU halftone cursor trails, premium gradient borders, perimeter border beams, liquid gooey physics, spring docks, bento grids, kinetic typography, atomic tokens, design-first prompting, landing page architecture, and 6 signature motion looks. | `ui-primitives`, `gsap`, `threejs`, `webgpu-shader`, `gradient-borders`, `cursor-trail`, `border-beam`, `landing-page` | v4 | `.skills/ui-primitives` |
+| **UI Primitives & Micro-Interactions** | GSAP choreography timelines, Three.js 3D scenes, WebGPU halftone cursor trails, premium gradient borders, perimeter border beams, liquid gooey physics, spring docks, bento grids, kinetic typography, staggered blur reveals, typewriter, circular text, atomic tokens, design-first prompting, landing page architecture, and 6 signature motion looks. | `ui-primitives`, `gsap`, `threejs`, `webgpu-shader`, `gradient-borders`, `cursor-trail`, `border-beam`, `landing-page`, `text-animation`, `stagger-reveal`, `typewriter-effect`, `pixel-dissolve`, `card-stack`, `aurora-background` | v6 | `.skills/ui-primitives` |
 | **Skeleton Performance Studio** | High-performance skeleton loading states, layout stability patterns, and perceptual performance engineering to eliminate Cumulative Layout Shift (CLS) and accelerate perceived page load speeds. | `skeleton`, `loading-states`, `cumulative-layout-shift`, `perceived-performance`, `cls-zero`, `shimmer-effect`, `react-skeleton`, `nextjs-loading` | v1 | `.skills/skeleton` |
 
 ### Publishing & Documentation
@@ -89,6 +89,7 @@ Welcome to the official **Code Scaffold Skills Library**. This curated registry 
 | **Reveal.js** | Comprehensive toolkit and knowledge base for scaffolding, configuring, and exporting Reveal.js presentations. | `revealjs`, `html-presentations`, `3d-transitions` | v2 | `.skills/revealjs` |
 | **Slidev** | Comprehensive skill for building, configuring, and exporting Slidev markdown presentations. | `slidev`, `developer-slides`, `vue-slides` | v4 | `.skills/slidev` |
 | **tldraw** | Transforms tldraw into an advanced spatial computing engine. Beyond whiteboarding, this skill orchestrates cinematic scrollytelling, live-mutating data dashboards, multiplayer AI cursors, and Matter.js physics integrations for hyper-creative web experiences. | `tldraw`, `infinite-canvas`, `spatial-computing` | v3 | `.skills/tldraw` |
+| **Changelog Plus** | Automated immutable release history pipeline with versioned changelog authoring, headless terminal and declarative web capture, and README synchronization. | `changelog-plus`, `release-notes`, `version-history` | v3 | `.skills/changelog-plus` |
 
 ### Smart Home & IoT Automation
 
@@ -102,7 +103,7 @@ Welcome to the official **Code Scaffold Skills Library**. This curated registry 
 | :--- | :--- | :--- | :--- | :--- |
 | **Firecrawl Scraper** | Crawl and scrape websites to clean markdown or structured data with Firecrawl API & CLI | `firecrawl`, `web-crawler`, `llm-scraping` | v2 | `.skills/firecrawl` |
 | **OpenCLI** | Bridge websites and the CLI for structured data extraction and browser automation | `opencli`, `cli-to-web`, `site-adapters` | v2 | `.skills/opencli` |
-| **Playwright** | Browser automation and end-to-end testing with Playwright | `playwright`, `browser-automation`, `e2e-testing` | v4 | `.skills/playwright` |
+| **Playwright Plus** | Browser automation and end-to-end testing with Playwright, now with a real declarative YAML dispatcher and run recording | `playwright`, `browser-automation`, `e2e-testing` | v5 | `.skills/playwright` |
 | **SEO GEO AEO Auditor** | Unified model-agnostic Search Engine, Generative Engine, and Answer Engine Optimization auditor to analyze traditional visibility, AI engine discoverability, and snippet answers. | `seo`, `geo`, `aeo` | v3 | `.skills/seo-geo-aeo-auditor` |
 | **Stealth Browser** | Multi-engine ghost browser automation skill for AI agents, unifying Ghost Graph extraction pipelines, FastMCP anti-detection automation, Ghost Core native CDP micro-engine, visual takeover, encrypted auth vaults, zero-token text perception, and cryptographic witness receipts. | `stealth-browser`, `ghost-graph`, `auth-vault` | v4 | `.skills/stealth-browser` |
 

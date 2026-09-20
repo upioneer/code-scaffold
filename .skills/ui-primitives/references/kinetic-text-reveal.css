@@ -1,0 +1,78 @@
+/**
+ * Code Scaffold - Kinetic Typography Reveal Styling
+ * Shine sweeps, gradient text, rise keyframes, circular text, typewriter caret.
+ * Use shine and gradient treatments sparingly: one display element per viewport,
+ * never body copy. All motion guarded by prefers-reduced-motion.
+ */
+
+.cs-reveal-seg {
+  display: inline-block;
+  will-change: transform, filter, opacity;
+}
+
+/* Shine sweep: restrained light band, inherits text color context */
+.cs-shine-text {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  background-image: linear-gradient(
+    105deg,
+    transparent 42%,
+    rgba(255, 255, 255, 0.55) 50%,
+    transparent 58%
+  );
+  background-size: 280% 100%;
+  background-repeat: no-repeat;
+  animation: cs-shine-sweep 3.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes cs-shine-sweep {
+  0% { background-position: 120% 0; }
+  55%, 100% { background-position: -120% 0; }
+}
+
+/* Gradient display text: reserve for a single hero line, never body copy */
+.cs-text-gradient {
+  background-image: linear-gradient(100deg, #0ea5e9 10%, #22d3ee 45%, #a5f3fc 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Typewriter caret */
+.cs-type-caret::after {
+  content: "";
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  background: currentColor;
+  animation: cs-caret-blink 0.9s steps(2, start) infinite;
+}
+
+@keyframes cs-caret-blink {
+  50% { opacity: 0; }
+}
+
+/* Circular rotating text container */
+.cs-circular-text {
+  display: inline-block;
+  line-height: 0;
+}
+
+.cs-circular-text svg {
+  will-change: transform;
+}
+
+.cs-circular-text text {
+  font-size: 15px;
+  letter-spacing: 3px;
+  fill: currentColor;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cs-shine-text { animation: none; }
+  .cs-type-caret::after { animation: none; }
+  .cs-reveal-seg { opacity: 1 !important; filter: none !important; transform: none !important; }
+}

@@ -2419,21 +2419,21 @@ mod visual_artifacts_tests {
     }
 
     #[tokio::test]
-    async fn test_security_persona_auto_selects_ghostprint() {
+    async fn test_security_persona_auto_selects_ghostimprint() {
         let payload_dir = std::path::PathBuf::from("../.skills");
         let mut app = App::new(payload_dir);
 
-        // Ensure ghostprint and cybersecurity-toolkit exist in workspace items for the test
+        // Ensure ghostimprint and cybersecurity-toolkit exist in workspace items for the test
         if !app
             .workspace
             .items
             .iter()
-            .any(|i| i.label == "ghostprint" && i.category == Category::AgentSkills)
+            .any(|i| i.label == "ghostimprint" && i.category == Category::AgentSkills)
         {
             app.workspace
                 .items
                 .push(crate::components::workspace::WorkspaceItem {
-                    label: "ghostprint".into(),
+                    label: "ghostimprint".into(),
                     selected: false,
                     category: Category::AgentSkills,
                     description: None,
@@ -2485,16 +2485,16 @@ mod visual_artifacts_tests {
             .unwrap();
         assert!(sec_item.selected);
 
-        // Verify that ghostprint and cybersecurity-toolkit are auto-selected
+        // Verify that ghostimprint and cybersecurity-toolkit are auto-selected
         let ghost_item = app
             .workspace
             .items
             .iter()
-            .find(|i| i.label == "ghostprint" && i.category == Category::AgentSkills)
+            .find(|i| i.label == "ghostimprint" && i.category == Category::AgentSkills)
             .unwrap();
         assert!(
             ghost_item.selected,
-            "ghostprint should be auto-selected when Security Analyst is selected"
+            "ghostimprint should be auto-selected when Security Analyst is selected"
         );
 
         let cyber_item = app

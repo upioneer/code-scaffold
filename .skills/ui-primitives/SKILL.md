@@ -1,7 +1,7 @@
 ---
 ​‌‍name: UI Primitives & Micro-Interactions
-description: High-fidelity interactive web UI components, perimeter border beams, liquid gooey physics, spring magnification docks, spotlight bento grids, universal motion transitions, kinetic typography, atomic tokens, GSAP choreography timelines, ScrollTrigger scroll-driven animation, WebGL Three.js 3D scenes, WebGPU halftone cursor shader trails, premium surface gradient borders, design-first constraint prompting, and high-conversion landing page architecture.
-version: 4
+description: High-fidelity interactive web UI components, perimeter border beams, liquid gooey physics, spring magnification docks, spotlight bento grids, universal motion transitions, kinetic typography, staggered blur reveals, typewriter, circular text, atomic tokens, GSAP choreography timelines, ScrollTrigger scroll-driven animation, WebGL Three.js 3D scenes, WebGPU halftone cursor shader trails, premium surface gradient borders, design-first constraint prompting, and high-conversion landing page architecture.
+version: 6
 ---
 
 # UI Primitives & Micro-Interactions Skill
@@ -334,6 +334,35 @@ Apply subtle gradient-border treatments for dark glass, pricing panels, nav bars
 
 See `references/gradient-borders.css` for masked pattern variant (for surfaces with complex fills).
 
+### Pixel-Dissolve Card Reveal
+A grid veil over the card face dissolves cell by cell along the diagonal on viewport entry:
+
+```javascript
+import { pixelDissolve } from "./references/component-motion.js";
+
+pixelDissolve(document.querySelector(".cs-feature-card"), { cellPx: 14, staggerMs: 12 });
+```
+
+### Fanned Card Stack
+Click-to-focus fan with rotation plus lateral spread driven by custom properties:
+
+```javascript
+import { cardStack } from "./references/component-motion.js";
+
+cardStack(document.querySelector(".cs-card-fan"), { fanDeg: 7, spreadPx: 26, activeIndex: 1 });
+```
+
+### Staggered Masonry Entrance
+Per-item rise with index stagger, unobserved after play so scrolled grids never replay:
+
+```javascript
+import { masonryReveal } from "./references/component-motion.js";
+
+masonryReveal(document.querySelector(".cs-masonry"), { staggerMs: 60, risePx: 24 });
+```
+
+See `references/component-motion.js` and `references/component-motion.css`.
+
 ---
 
 ## 10. Universal Motion Transition System
@@ -351,6 +380,26 @@ Framework-agnostic namespaced transition tokens, timing curves, and micro-state 
 * `.cs-modal-backdrop` + `.cs-modal-dialog`: Coordinated scale and backdrop blur dialogs.
 
 See `references/universal-transitions.css` for all token definitions and keyframes.
+
+### Micro Spring Kit
+Press bounce, spring toggle, fade tooltip, announced toast queue, and pointer bursts:
+
+```javascript
+import { toastQueue, pointerBurst } from "./references/micro-springs.js";
+
+const toasts = toastQueue(document.querySelector(".cs-toast-region"));
+toasts.show("Workspace saved");
+pointerBurst(document.querySelector(".cs-like-button"), { particles: 10 });
+```
+
+```html
+<input type="checkbox" class="cs-toggle" aria-label="Enable notifications">
+<button class="cs-press cs-tip" data-tip="Save workspace">Save</button>
+```
+
+Toasts announce through `aria-live`. Bursts are pointer-driven decoration and stay `aria-hidden`.
+
+See `references/micro-springs.js` and `references/micro-springs.css`.
 
 ---
 
@@ -386,6 +435,52 @@ Reveals or conceals elements with crisp hard-cut edges using `mask-image` or `-w
 
 See `references/kinetic-text.css` for scramble and tilt CSS, `references/css-masking.css` for masking patterns.
 
+### C. Staggered Blur Reveal (Words or Characters)
+Progressive disclosure where each segment travels blur plus rise with a midpoint overshoot, gated on viewport entry:
+
+```javascript
+import { staggerReveal } from "./references/kinetic-text-reveal.js";
+
+staggerReveal(document.querySelector(".cs-hero-line"), {
+  by: "words", blurPx: 10, risePx: 28, staggerMs: 45, durationMs: 550, overshootPx: 5
+});
+```
+
+Structural bounds are intrinsic (segments occupy final layout before paint). Reduced motion renders the final state instantly.
+
+### D. Split-Letter Rise
+Same engine at character granularity (`by: "chars"`, smaller `risePx`, tighter `staggerMs` around 18ms). Reserve character splits for short display strings under 60 characters; longer copy staggers by words to protect readability.
+
+### E. Shine Sweep Display Treatment
+A restrained light band crossing display type, one element per viewport maximum:
+
+```html
+<span class="cs-shine-text">Launch Sequence</span>
+```
+
+### F. Gradient Display Line
+Single hero-line treatment in cyan tones with a usage restraint: never body copy, never stacked with shine on the same element. See `references/kinetic-text-reveal.css` (`.cs-text-gradient`).
+
+### G. Typewriter With Layout Reserve
+Character output at a fixed rate with a reserved minimum height so surrounding layout never shifts, plus an auto-dismissing caret:
+
+```javascript
+import { typewriter } from "./references/kinetic-text-reveal.js";
+
+typewriter(document.querySelector(".cs-terminal-line"), { charsPerSecond: 28, minLines: 2 });
+```
+
+### H. Circular Rotating Text
+SVG `textPath` on a circular path with rAF rotation, viewport-paused offscreen:
+
+```javascript
+import { circularText } from "./references/kinetic-text-reveal.js";
+
+circularText(document.querySelector(".cs-orbit-badge"), { text: "SCROLL FOR MORE ", radius: 90, degreesPerSecond: 12 });
+```
+
+See `references/kinetic-text-reveal.js` and `references/kinetic-text-reveal.css` for the full engine.
+
 ---
 
 ## 12. Atomic Design Token Architecture & Agent Registry Protocol
@@ -403,6 +498,10 @@ When building client interfaces, autonomous agents can query component recipes d
 * `gooey-fluid`: SVG filter fluid droplet merger.
 * `dock-bento`: Spring dock and spotlight card.
 * `kinetic-text`: Scramble typography and 3D card tilt.
+* `kinetic-text-reveal`: Staggered blur/rise reveals, split-letter rise, shine sweep, gradient display line, typewriter with layout reserve, circular rotating text.
+* `component-motion`: Pixel-dissolve card reveal, fanned card stack, staggered masonry entrance.
+* `micro-springs`: Press bounce, spring toggle, fade tooltip, announced toast queue, pointer bursts.
+* `ambient-drift`: Aurora backdrop bands plus canvas particle drift field.
 * `universal-transitions`: Reusable timing curves and micro-states.
 * `gradient-borders`: Premium surface padding-box/border-box patterns.
 * `progressive-blur`: Multi-layer backdrop-filter depth glass.
@@ -767,6 +866,24 @@ const lightField = new LightFieldMaterial(document.querySelector(".cs-light-fiel
 
 lightField.setColor([0.83, 0.95, 0.29]); // Switch to Signal lime
 ```
+
+### Lightweight Ambient Alternative
+When WebGL is unavailable or overkill, layer the CSS aurora backdrop with the canvas drift field. Both are decorative, density-capped, and pause offscreen:
+
+```html
+<section class="cs-aurora" aria-label="Product highlights">
+  <canvas class="cs-drift-canvas" aria-hidden="true"></canvas>
+  <!-- content above -->
+</section>
+```
+
+```javascript
+import { driftField } from "./references/ambient-drift.js";
+
+driftField(document.querySelector(".cs-drift-canvas"), { density: 1 / 16000, maxParticles: 90 });
+```
+
+See `references/ambient-drift.js` and `references/ambient-drift.css`.
 
 ---
 

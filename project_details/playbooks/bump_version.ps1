@@ -94,6 +94,13 @@ vhs '$wslTapePath'
         if (Test-Path demo_main.png) { Move-Item -Force demo_main.png "$ChangelogDir\demo_main.png" }
         if (Test-Path demo_final.png) { Move-Item -Force demo_final.png "$ChangelogDir\demo_final.png" }
         
+        # Failure gate: a present tape makes media mandatory. Never proceed silent on capture failure.
+        $producedMedia = @(Get-ChildItem -Path $ChangelogDir -Filter 'demo*' -ErrorAction SilentlyContinue)
+        if ($producedMedia.Count -eq 0) {
+            Write-Error "VHS capture produced no media assets in $ChangelogDir. Resolve the capture pipeline before committing."
+            exit 1
+        }
+
         Write-Host "VHS capture complete! Assets moved to $ChangelogDir" -ForegroundColor Green
     } else {
         if ($isWin) {

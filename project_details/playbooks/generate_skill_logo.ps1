@@ -31,6 +31,14 @@ try {
     const maxLen = Math.max(...lines.map(l => l.length));
     const formatted = lines.map(line => '  ' + line.padEnd(maxLen, ' ') + '  ');
 
+    const widths = formatted.map(l => l.length);
+    if (Math.max(...widths) !== Math.min(...widths)) {
+        throw new Error("Logo lines have non-uniform widths after padding.");
+    }
+    if (Math.max(...widths) > 88) {
+        throw new Error(`Logo width ${Math.max(...widths)} exceeds the 88-column SkillForge invariant. Use a shorter brand slug (reference renderer: classic FIGlet ANSI Shadow as bundled with pyfiglet).`);
+    }
+
     console.log(JSON.stringify(formatted, null, 2));
 } catch (e) {
     console.error(e.message);

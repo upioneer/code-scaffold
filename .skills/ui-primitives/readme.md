@@ -1,6 +1,6 @@
 # UI Primitives & Micro-Interactions
 
-**Version:** 5
+**Version:** 6
 **Target:** `.skills/ui-primitives`
 **Category:** Frontend & UI Design
 **Keywords:** `ui-primitives`, `micro-interactions`, `gsap`, `scroll-trigger`, `threejs`, `webgpu-shader`, `cursor-trail`, `gradient-borders`, `css-alpha-masking`, `design-first-prompting`, `landing-page-architecture`, `border-beam`, `gooey-fluid`, `spring-dock`, `bento-grid`, `kinetic-typography`, `atomic-tokens`
@@ -23,6 +23,10 @@ The UI Primitives & Micro-Interactions skill is the complete high-fidelity web i
 * **Spotlight Bento Grid**: Responsive bento card layouts with CSS variable mouse-coordinate tracking (`--mouse-x`, `--mouse-y`) powering radial gradient ambient highlight borders.
 * **Universal Motion Transition System**: Framework-agnostic namespaced CSS timing tokens (`--cs-ease-spring`, `--cs-ease-out-quint`, `--cs-dur-normal`), error shake, success pop, notification badge ping, and modal spring reveal micro-state animators. FLIP-safe card resize included.
 * **Kinetic Typography & 3D Perspective Tilt**: Hacker glyph scramble decoder with configurable duration, and 3D gyroscopic tilt card with dynamic specular glare tracking via `perspective(1000px)` + `rotateX/Y`.
+* **Kinetic Typography Reveal System**: Staggered blur plus rise reveals at word or character granularity with midpoint overshoot, split-letter rise, restrained shine sweeps, single-line gradient display treatments, layout-reserve typewriter with auto-dismissing caret, and viewport-paused circular rotating text. Every pattern ships with `prefers-reduced-motion` fallbacks and zero layout shift discipline.
+* **Component Motion Expansion**: Pixel-dissolve card reveals, click-to-focus fanned card stacks, and staggered masonry entrances that unobserve after play.
+* **Micro Spring Kit**: Press bounce controls, spring toggle switches, fade tooltips, an `aria-live` toast queue, and pointer burst particles.
+* **Ambient Backgrounds**: CSS aurora backdrop bands plus a density-capped canvas drift field that pauses offscreen, as a lightweight alternative to the WebGL light-field.
 * **Atomic Design Token Architecture**: StyleX-grade type-safe CSS token system covering surface layers, brand accents, border tiers, text hierarchy, elevation shadows, and WAI-ARIA dual-ring keyboard focus contracts.
 * **Design-First Constraint Specification Skeleton**: Typed GOAL, FORMAT, LAYOUT, TYPE SYSTEM, COLOR + MATERIAL, IMAGERY, COPY, CONSTRAINTS, and NEGATIVE PROMPT prompt template for consistent AI UI generation. Iteration rule: change at most 1 to 2 fields per round.
 * **High-Conversion Landing Page Architecture**: Pre-design checklist (primary action, ICP, proof, constraints), section architecture (above fold, argument, objection handling), layout archetypes (classic hero, long-form story, minimal conversion, comparison), message-source matching (ads, SEO, email), and conversion pitfalls (multiple CTAs, generic imagery, missing risk reversal, navigation leakage).
@@ -44,9 +48,11 @@ Invoke this skill when an agent is asked to:
 * Prompt an AI agent for UI generation using a consistent design-first spec skeleton
 * Design or critique a high-conversion SaaS, app, or service landing page
 * Implement any kinetic button, counter ticker, elastic slider, progress indicator, or notification ping
+* Animate display type with staggered blur reveals, typewriter output, shine sweeps, or circular rotating badges
 * Build a motion presentation stage for product demos or marketing collateral
 
 ## Changelog
+* **v6** : Kinetic Typography Reveal System (staggered blur reveals, split-letter rise, shine sweep, gradient display line, layout-reserve typewriter, circular rotating text). Component Motion Expansion (pixel dissolve, card stack, masonry). Micro Spring Kit (press, toggle, tooltip, toast queue, bursts). Ambient Backgrounds (aurora bands, drift field). Normalized version sync to 6.
 * **v5** : Standardized ASCII art logo to uniform 6-line ANSI Shadow format.
 
 * **v4**: Added GSAP Choreography Engine (Section 13), WebGL Three.js Scene Architecture (Section 14), WebGPU Halftone Cursor Shader Trail (Section 15), Design-First Constraint Specification Skeleton (Section 16), High-Conversion Landing Page Architecture (Section 17), Scroll-Driven Viewport Reveal (Section 18), Premium Surface Gradient Borders (Section 9 expansion), CSS Alpha Channel Masking (Section 11 expansion). Four new reference files bundled: `gsap-choreography.js`, `threejs-scene.js`, `cursor-shader.js`, `gradient-borders.css`, `css-masking.css`. Skill now covers 22 sections and 13 reference files.
