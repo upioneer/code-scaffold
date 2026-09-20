@@ -1,8 +1,11 @@
 # Terraform
 
 **Version:** 2
+
 **Target:** `.skills/terraform`
+
 **Category:** DevOps & Infrastructure
+
 **Keywords:** `terraform`, `opentofu`, `infrastructure-as-code`, `hcl`, `aws-azure-gcp`, `state-management`
 
 ## Description

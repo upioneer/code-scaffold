@@ -1,8 +1,11 @@
 # Website Deploy Linux
 
 **Version:** 7
+
 **Target:** `.skills/website-deploy-linux`
+
 **Category:** DevOps & Infrastructure
+
 **Keywords:** `website-deploy-linux`, `nginx-deploy`, `putty-plink-pscp`, `ssh-deployment`, `static-hosting`, `spa-deploy`
 
 ## Description

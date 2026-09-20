@@ -1,8 +1,11 @@
 # Codebase Memory MCP
 
 **Version:** 2
+
 **Target:** `.skills/codebase-memory-mcp`
+
 **Category:** AI, MCP & Developer Tools
+
 **Keywords:** `codebase-memory`, `mcp-server`, `vector-embeddings`, `ast-index`, `semantic-search`, `rag`
 
 ## Description

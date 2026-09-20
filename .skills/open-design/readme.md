@@ -1,8 +1,11 @@
 # Open Design Prototypes
 
 **Version:** 3
+
 **Target:** `.skills/open-design`
+
 **Category:** Frontend & UI Design
+
 **Keywords:** `open-design`, `design-system`, `figma-tokens`, `tailwind-tokens`, `component-library`, `ui-ux`
 
 ## Description

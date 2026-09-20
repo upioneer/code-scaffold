@@ -1,8 +1,11 @@
 # Slidev
 
 **Version:** 4
+
 **Target:** `.skills/slidev`
+
 **Category:** Publishing & Documentation
+
 **Keywords:** `slidev`, `developer-slides`, `vue-slides`, `markdown-presentations`, `unocss`, `live-code-demos`
 
 ## Description
@@ -19,6 +22,7 @@ Comprehensive skill for building, configuring, and exporting Slidev markdown pre
 ## Usage
 This skill is designed to guide AI agents in generating, configuring, and exporting slide decks using Slidev. Slidev relies on a Markdown based syntax to generate beautiful, interactive, and code friendly presentations. When invoked, refer to `SKILL.md` for complete technical limitations, known issues, workflows, and advanced configurations.
 
+## Changelog
 * **v4** : Standardized hasSandbox to false to mount the clean Architectural Contract card on code-scaffold.com.
 * **v3** : Integrated interactive Slidev Developer Presentation Deck Player sandbox and updated manifest flags
 * **v2** : Expanded capability descriptions

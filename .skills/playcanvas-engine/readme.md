@@ -1,8 +1,11 @@
 # PlayCanvas Engine
 
 **Version:** 3
+
 **Target:** `.skills/playcanvas-engine`
+
 **Category:** Animation & Graphics
+
 **Keywords:** `playcanvas-engine`, `3d-rendering`, `shader-graph`, `physics-ammo`, `webgl2`, `webgpu-games`
 
 ## Description

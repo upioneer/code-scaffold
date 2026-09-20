@@ -1,8 +1,11 @@
 # PlayCanvas SuperSplat
 
 **Version:** 3
+
 **Target:** `.skills/playcanvas-supersplat`
+
 **Category:** Animation & Graphics
+
 **Keywords:** `gaussian-splats`, `3d-splatting`, `point-cloud`, `photogrammetry`, `radiance-fields`, `ply-optimizer`
 
 ## Description

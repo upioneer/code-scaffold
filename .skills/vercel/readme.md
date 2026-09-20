@@ -1,8 +1,11 @@
 # Vercel Deployment Routine
 
 **Version:** 3
+
 **Target:** `.skills/vercel`
+
 **Category:** DevOps & Infrastructure
+
 **Keywords:** `vercel`, `edge-deployments`, `nextjs-hosting`, `serverless-functions`, `domain-management`
 
 ## Description

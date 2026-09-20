@@ -1,8 +1,11 @@
 # Hyperframes
 
 **Version:** 3
+
 **Target:** `.skills/hyperframes`
+
 **Category:** Frontend & UI Design
+
 **Keywords:** `hyperframes`, `micro-frontends`, `iframe-orchestration`, `cross-window-messaging`, `web-components`
 
 ## Description

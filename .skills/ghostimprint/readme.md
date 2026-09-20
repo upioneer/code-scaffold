@@ -1,8 +1,11 @@
 # GhostImprint Engine
 
 **Version:** 5
+
 **Target:** `.skills/ghostimprint`
+
 **Category:** Security & Cryptography
+
 **Keywords:** `ghostimprint`, `ghost-imprint`, `code-provenance`, `steganography`, `copyright-protection`, `digital-forensics`, `functional-entanglement`, `anti-tamper`, `zero-knowledge-proof`, `key-ceremony`, `entropy-meter`, `stylometry`, `ast-invariants`, `statistical-distribution`, `remote-oracle`, `daubert-standard`, `courtroom-admissible`, `dmca-evidence`
 
 ## Description

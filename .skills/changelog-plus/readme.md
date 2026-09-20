@@ -1,8 +1,11 @@
 # Changelog Plus
 
 **Version:** 3
+
 **Target:** `.skills/changelog-plus`
+
 **Category:** Publishing & Documentation
+
 **Keywords:** `changelog-plus`, `release-notes`, `version-history`, `immutable-history`, `terminal-capture`, `tape-recorder`, `release-automation`, `web-capture`, `viewport-matrix`, `route-manifest`
 
 ## Description

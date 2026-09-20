@@ -1,8 +1,11 @@
 # Lingo
 
 **Version:** 4
+
 **Target:** `.skills/lingo`
+
 **Category:** Publishing & Documentation
+
 **Keywords:** `lingo`, `localization`, `i18n`, `translation`, `multilingual`, `po-editor`, `l10n`
 
 ## Description

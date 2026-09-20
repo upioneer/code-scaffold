@@ -1,8 +1,11 @@
 # Code Scaffold Harness
 
 **Version:** 7
+
 **Target:** `.skills/code-scaffold`
+
 **Category:** AI, MCP & Developer Tools
+
 **Keywords:** `code-scaffold`, `scaffolding-engine`, `project-generator`, `templates`, `agentic-workflow`, `tui`
 
 ## Description

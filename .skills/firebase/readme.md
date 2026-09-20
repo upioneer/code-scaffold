@@ -1,8 +1,11 @@
 # Firebase
 
 **Version:** 5
+
 **Target:** `.skills/firebase`
+
 **Category:** Data, Databases & Storage
+
 **Keywords:** `firebase`, `firestore`, `baas`, `authentication`, `realtime-database`, `cloud-functions`, `hosting`, `firebase-cli`, `firestore-rules`, `firestore-databases`, `mobile-sdk-config`, `automated-provisioning`, `sdk-config`
 
 ## Description

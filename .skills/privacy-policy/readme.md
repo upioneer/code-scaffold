@@ -1,8 +1,11 @@
 # Privacy Policy Generator
 
 **Version:** 6
+
 **Target:** `.skills/privacy-policy`
+
 **Category:** Publishing & Documentation
+
 **Keywords:** `privacy-policy`, `gdpr`, `ccpa`, `legal-compliance`, `cookie-policy`, `terms-of-service`
 
 ## Description

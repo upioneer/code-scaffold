@@ -1,8 +1,11 @@
 # Quarto Scientific Publishing
 
 **Version:** 2
+
 **Target:** `.skills/quarto`
+
 **Category:** Publishing & Documentation
+
 **Keywords:** `quarto`, `scientific-publishing`, `computational-notebooks`, `r-python-julia`, `dashboards`, `academic-docs`
 
 ## Description

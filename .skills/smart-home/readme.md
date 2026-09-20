@@ -1,8 +1,11 @@
 # Smart Home
 
 **Version:** 3
+
 **Target:** `.skills/smart-home`
+
 **Category:** Smart Home & IoT Automation
+
 **Keywords:** `smart-home`, `home-assistant`, `homekit`, `matter`, `thread`, `alexa-smart-home`, `google-home`, `iot-automation`, `zigbee`, `zwave`, `hass-rest-api`, `hass-websocket`
 
 ## Description
@@ -24,8 +27,7 @@ Unified smart home and IoT automation orchestrator bridging Home Assistant, Appl
 ## Usage
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for deep integration guidelines, environment variable setups, and agentic workflows.
 
-* **v2** : Standardized hasSandbox to false to mount the clean Architectural Contract card on code-scaffold.com.
-* **v1** : Initial release of the unified Smart Home automation orchestrator bridging Home Assistant, HomeKit, Alexa, Google Home, and Matter
-
 ## Changelog
 * **v3** : Standardized ASCII art logo to uniform 6-line ANSI Shadow format.
+* **v2** : Standardized hasSandbox to false to mount the clean Architectural Contract card on code-scaffold.com.
+* **v1** : Initial release of the unified Smart Home automation orchestrator bridging Home Assistant, HomeKit, Alexa, Google Home, and Matter

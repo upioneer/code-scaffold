@@ -1,8 +1,11 @@
 # Rust
 
 **Version:** 1
+
 **Target:** `.skills/rust`
+
 **Category:** AI, MCP & Developer Tools
+
 **Keywords:** `rust`, `cargo`, `cargo-clippy`, `cargo-fmt`, `rust-workspaces`, `systems-programming`, `wasm`
 
 ## Description

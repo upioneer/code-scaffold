@@ -1,8 +1,11 @@
 # TUI Tools
 
 **Version:** 7
+
 **Target:** `.skills/tui-tools`
+
 **Category:** Frontend & UI Design
+
 **Keywords:** `tui-tools`, `vhs-tapes`, `terminal-gif`, `ratatui-helpers`, `figlet-ascii`, `cli-branding`
 
 ## Description

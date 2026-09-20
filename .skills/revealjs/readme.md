@@ -1,8 +1,11 @@
 # Reveal.js
 
 **Version:** 2
+
 **Target:** `.skills/revealjs`
+
 **Category:** Publishing & Documentation
+
 **Keywords:** `revealjs`, `html-presentations`, `3d-transitions`, `web-slides`, `markdown-slides`, `interactive-talks`
 
 ## Description

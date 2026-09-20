@@ -1,8 +1,11 @@
 # CAD Tools
 
 **Version:** 5
+
 **Target:** `.skills/cad-tools`
+
 **Category:** Animation & Graphics
+
 **Keywords:** `cad`, `3d-modeling`, `step-files`, `stl`, `parametric-design`, `manufacturing`, `engineering`
 
 ## Description
@@ -41,10 +44,9 @@ Activate this skill for any task involving:
 * Computing geometric mass properties for engineering analysis
 * Maintaining structured BOM documentation alongside CAD models
 
+## Changelog
+* **v5** : Standardized ASCII art logo to uniform 6-line ANSI Shadow format.
 * **v4** : Standardized hasSandbox to false to mount the clean Architectural Contract card on code-scaffold.com.
 * **v3** : Integrated interactive CAD Tools Parametric 3D CAD Workbench sandbox and updated manifest flags
 * **v2** : Added JSON-to-CAD interoperability engine.
 * **v1** : Initial release covering build123d parametric modeling, Zoo.dev cloud API (text-to-CAD, format conversion, mass properties), Windows COM desktop automation (AutoCAD/ZWCAD/GstarCAD), VTK off-screen rendering, trimesh validation, CNC machinability checks, BOM management, and project structure conventions.
-
-## Changelog
-* **v5** : Standardized ASCII art logo to uniform 6-line ANSI Shadow format.

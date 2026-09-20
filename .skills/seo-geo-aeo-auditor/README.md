@@ -1,8 +1,11 @@
 # SEO GEO AEO Auditor
 
 **Version:** 4
+
 **Target:** `.skills/seo-geo-aeo-auditor`
+
 **Category:** Web Automation & Scraping
+
 **Keywords:** `seo`, `geo`, `aeo`, `schema-org`, `json-ld`, `generative-engine`, `answer-engine`, `mobile-viewport`
 
 ## Description

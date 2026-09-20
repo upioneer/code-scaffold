@@ -1,8 +1,11 @@
 # Docker Engine
 
 **Version:** 2
+
 **Target:** `.skills/docker`
+
 **Category:** DevOps & Infrastructure
+
 **Keywords:** `docker`, `container-engine`, `ephemeral-swapper`, `in-place-updates`, `zero-downtime`, `buildkit`, `multi-stage-builds`, `distroless`, `sidecar-diagnostics`, `image-optimization`
 
 ## Description

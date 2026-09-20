@@ -1,8 +1,11 @@
 # OfficeCLI
 
 **Version:** 1
+
 **Target:** `.skills/officecli`
+
 **Category:** Publishing & Documentation
+
 **Keywords:** `officecli`, `docx`, `pptx`, `xlsx`, `office-documents`, `document-automation`, `pdf-generation`
 
 ## Description
