@@ -8,7 +8,7 @@
 
 Code Scaffold is a modular, robust, and highly visual native TUI provisioning engine. It is designed to bootstrap new development projects with predefined directory structures, architectural templates, and complex skill payloads, all driven by a high-fidelity Terminal User Interface.
 
-![Code Scaffold Screenshot 1](project_details/changelog/v7.30.0/demo.gif)
+![Code Scaffold Screenshot 1](project_details/changelog/v7.31.0/demo.gif)
 
 ## Compatibility & Integration
 
@@ -34,7 +34,13 @@ Code Scaffold is officially compatible with the Agent Client Protocol (ACP). Thi
 * **Automated Baseline Documentation**: Automatically generates a structured `README.md` in the target directory, dynamically titled with the project's folder name, to provide a consistent starting point for all scaffolded projects.
 * **Immutable Version History**: Adheres to a strict versioning protocol, maintaining snapshots of every significant deployment cycle in `project_details\changelog`.
 
-![Code Scaffold Screenshot 2](project_details/changelog/v7.30.0/demo_splash.png)
+![Code Scaffold Screenshot 2](project_details/changelog/v7.31.0/demo_splash.png)
+
+## Deployment Report
+
+Every deploy closes with a deployment report card that types itself out in the Info pane. It reports directories created, artifacts and skills provisioned, agent contexts bound, `.env` keys written, measured files, bytes, and lines in the target, wall elapsed time, and a keystroke equivalent at 40 words per minute for personality. Your previous deploy rides along for comparison, Esc exits, and headless plus ACP surfaces receive the same report as structured data.
+
+![Code Scaffold Deployment Report](project_details/changelog/v7.31.0/demo_report_full.png)
 
 ## Architecture Overview
 

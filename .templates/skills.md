@@ -6,22 +6,22 @@
 
 ## SKILL: Firebase Deployment Routine
 * Purpose: Ensure Firebase deployment is properly configured and documented before pushing, and updated afterwards.
-* Logic: 
-  1. Check if `firebase.md` contains the necessary configuration info.
+* Logic:
+  1. Check if the `FIREBASE_` keys are populated in `.env` (seeded automatically when the Firebase skill is selected; see the Firebase skill for the full key list).
   2. If not, prompt the user for the lacking details.
   3. Execute the push to Firebase using the verified info.
   4. Test to ensure the deployment was successful.
-  5. Update `firebase.md` with the tested and validated configuration details.
+  5. Record tested and validated configuration notes in project documentation.
 
 ## SKILL: GitHub Push Routine
 * Purpose: Ensure GitHub push is properly configured and handles mismatches (e.g., rebasing, merging) between local directory and remote.
-* Logic: 
-  1. Check if `github.md` contains the necessary configuration info.
+* Logic:
+  1. Check if the `GITHUB_` keys are populated in `.env` (seeded automatically when the GitHub skill is selected; see the GitHub skill for the full workflow).
   2. If not, prompt the user for the lacking details.
   3. Fetch the latest remote changes and check the status of the local working directory against the remote branch.
   4. If there's a mismatch (diverged, local behind, conflicts), prompt the user in plain English with specific options (Merge, Rebase, Overwrite Web, Overwrite Local).
   5. Execute the Git command based on the user's explicit instructions.
-  6. Push to GitHub and update `github.md` with new configuration details if applicable.
+  6. Push to GitHub after explicit authorization and record new configuration details in project documentation if applicable.
 
 ## SKILL: Supabase Management Routine
 * Purpose: Keep database schemas properly synchronized via migrations and maintain strictly typed front-ends
@@ -66,8 +66,8 @@
 ## SKILL: Vercel Deployment Routine
 * Purpose: Coordinate serverless infrastructure and deployment pipelines on Vercel.
 * Logic:
-  1. Verify the presence of `vercel.json` in the root workspace.
-  2. Verify that `VERCEL_ORG_ID` and `VERCEL_PROJECT_ID` are configured in the environment.
+  1. Follow the deployment configuration reference inside the Vercel skill (the skill owns the `vercel.json` shape; it is no longer a standalone selectable artifact).
+  2. Verify that `VERCEL_ORG_ID` and `VERCEL_PROJECT_ID` are configured in `.env` (seeded automatically when the Vercel skill is selected).
   3. Validate that build configurations conform to the serverless optimization matrix.
   4. Coordinate Vercel CLI deployment steps for staging and production boundaries.
 

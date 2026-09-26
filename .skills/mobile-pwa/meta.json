@@ -1,0 +1,15 @@
+{
+  "label": "Mobile PWA",
+  "description": "Turn a web app into an installable mobile PWA: web manifest, icons, service worker offline shell, install prompt flow, and platform detection across Vite React Vue Svelte, Next.js, Nuxt, SvelteKit, and Angular.",
+  "version": "1",
+  "target": ".skills/mobile-pwa",
+  "hasSandbox": false,
+  "logo": [
+    "  ██████╗ ██╗    ██╗ █████╗   ",
+    "  ██╔══██╗██║    ██║██╔══██╗  ",
+    "  ██████╔╝██║ █╗ ██║███████║  ",
+    "  ██╔═══╝ ██║███╗██║██╔══██║  ",
+    "  ██║     ╚███╔███╔╝██║  ██║  ",
+    "  ╚═╝      ╚══╝╚══╝ ╚═╝  ╚═╝  "
+  ]
+}

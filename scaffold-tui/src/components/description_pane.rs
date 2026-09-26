@@ -15,14 +15,6 @@ const SITE_URL: &str = "https://code-scaffold.com";
 /// A static description table mapping item labels to human-readable descriptions.
 fn item_description(label: &str) -> &'static str {
     match label {
-        "Continue with Current Path [Enter]" =>
-            "Target Deployment Overview:\n* Working Directory: Active directory where Code Scaffold CLI was launched.\n* Frictionless Start: Press [Enter] to immediately lock in this path and proceed to Core Artifacts.\n* Safe Scaffolding: Existing files are preserved; only selected artifacts and skills will be created or updated.\n* Change Target: Press [F] if you want to deploy to a different directory.",
-        "Browse for Another Folder [F]" =>
-            "Filesystem Directory Browser:\n* Interactive Navigation: Use arrow keys to explore local drives and directories.\n* Direct Access: Press [F] anytime from Step 1 to open the browser modal.\n* Path Selection: Press [Enter] on any directory to select it as the deployment root.",
-        "Scaffold Connect (Remote / ACP) [Coming Soon]" =>
-            "Scaffold Connect Remote Telemetry (Preview):\n* Agent Copilot: Future capability to stream scaffolding manifests directly into an active IDE or remote agent runtime.\n* Status: Currently in alpha preview; active pairing will be enabled in an upcoming release.",
-        "Reset to Launch Directory [R]" =>
-            "Reset Deployment Target:\n* Restores the target deployment directory back to the working directory where Code Scaffold was executed.\n* Direct Access: Press [R] anytime from Step 1 to reset.",
         "Deploy Base Artifacts" =>
             "Copies core project scaffolding files (AGENT.md, DESIGN.md, PLAN.md, etc.) into the target workspace. These artifacts serve as the foundational context layer for agent-driven development.",
         "Deploy Core Agent Skills" =>
@@ -76,7 +68,12 @@ pub struct DescriptionPane {
     pub current_category: Option<Category>,
     qr_lines: Vec<String>,
     pub show_qr: bool,
+    report_text: String,
+    report_shown: usize,
 }
+
+/// Characters revealed per frame while the deployment report types out.
+const REPORT_TYPEWRITER_STEP: usize = 3;
 
 impl DescriptionPane {
     pub fn new() -> Self {
@@ -89,6 +86,8 @@ impl DescriptionPane {
             current_category: None,
             qr_lines,
             show_qr: false,
+            report_text: String::new(),
+            report_shown: 0,
         }
     }
 
@@ -105,6 +104,33 @@ impl DescriptionPane {
         self.current_version = version.to_string();
         self.current_logo = logo;
         self.current_category = category;
+    }
+
+    /// Stage a deployment report. It types out progressively via
+    /// `reveal_step` until `reveal_all` completes it instantly.
+    pub fn set_report(&mut self, text: String) {
+        self.report_text = text;
+        self.report_shown = 0;
+    }
+
+    pub fn clear_report(&mut self) {
+        self.report_text.clear();
+        self.report_shown = 0;
+    }
+
+    pub fn reveal_step(&mut self) {
+        let total = self.report_text.chars().count();
+        if self.report_shown < total {
+            self.report_shown = (self.report_shown + REPORT_TYPEWRITER_STEP).min(total);
+        }
+    }
+
+    pub fn reveal_all(&mut self) {
+        self.report_shown = self.report_text.chars().count();
+    }
+
+    pub fn report_pending(&self) -> bool {
+        self.report_shown < self.report_text.chars().count()
     }
 }
 
@@ -131,9 +157,16 @@ impl Component for DescriptionPane {
         let inner = outer.inner(area);
         f.render_widget(outer, area);
 
-        // Split inner area: description on top, QR label + QR below
-        let qr_height = if self.show_qr {
-            (self.qr_lines.len() as u16).min(inner.height.saturating_sub(2)) // Leave room for top padding or label
+        // Split inner area: description on top, QR label + QR below,
+        // deployment report typed out beneath the QR code.
+        let show_report = !self.report_text.is_empty();
+        // Once the report lands it takes over the pane: a partially visible
+        // QR code is unscannable and steals lines from the card, so the QR
+        // collapses and the report gets the full height.
+        let show_qr_now = self.show_qr && !show_report;
+        let qr_height = if show_qr_now {
+            (self.qr_lines.len() as u16).min(inner.height.saturating_sub(2))
+        // Leave room for top padding or label
         } else {
             0
         };
@@ -143,9 +176,10 @@ impl Component for DescriptionPane {
             .direction(Direction::Vertical)
             .constraints([
                 Constraint::Length(desc_height), // Description text
-                Constraint::Length(1),           // Separator / QR label
+                Constraint::Length(if show_qr_now { 1 } else { 0 }), // Separator / QR label
                 Constraint::Length(qr_height),   // QR code
-                Constraint::Min(0),
+                Constraint::Length(if show_report { 1 } else { 0 }), // Report label
+                Constraint::Min(0),              // Deployment report
             ])
             .split(inner);
 
@@ -383,7 +417,7 @@ impl Component for DescriptionPane {
         f.render_widget(desc_para, sections[0]);
 
         // ── QR label ─────────────────────────────────────────────────
-        if self.show_qr {
+        if show_qr_now {
             let qr_label = Paragraph::new(Line::from(vec![Span::styled(
                 " View Online Guide ",
                 Style::default()
@@ -409,6 +443,44 @@ impl Component for DescriptionPane {
 
             let qr_para = Paragraph::new(qr_text).style(Style::default().bg(theme.bg));
             f.render_widget(qr_para, sections[2]);
+        }
+
+        // ── Deployment report (typewriter) ─────────────────────────
+        if show_report {
+            let report_label = Paragraph::new(Line::from(vec![Span::styled(
+                " Deployment Report ",
+                Style::default()
+                    .fg(theme.bg)
+                    .bg(theme.secondary)
+                    .add_modifier(ratatui::style::Modifier::BOLD),
+            )]))
+            .alignment(ratatui::layout::Alignment::Center);
+            f.render_widget(report_label, sections[3]);
+
+            let shown: String = self.report_text.chars().take(self.report_shown).collect();
+            let mut report_lines: Vec<Line> = shown
+                .lines()
+                .map(|l| {
+                    Line::from(Span::styled(
+                        l.to_string(),
+                        Style::default().fg(theme.text).bg(theme.bg),
+                    ))
+                })
+                .collect();
+            if self.report_pending() {
+                match report_lines.last_mut() {
+                    Some(last) => last.spans.push(Span::styled(
+                        "▌",
+                        Style::default().fg(theme.primary).bg(theme.bg),
+                    )),
+                    None => report_lines.push(Line::from(Span::styled(
+                        "▌",
+                        Style::default().fg(theme.primary).bg(theme.bg),
+                    ))),
+                }
+            }
+            let report_para = Paragraph::new(report_lines).style(Style::default().bg(theme.bg));
+            f.render_widget(report_para, sections[4]);
         }
 
         Ok(())
@@ -443,4 +515,30 @@ fn wrap_text(text: &str, max_width: usize) -> Vec<String> {
         }
     }
     lines
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_report_types_out_progressively_then_completes() {
+        let mut pane = DescriptionPane::new();
+        assert!(!pane.report_pending());
+        pane.set_report("abcdefg".to_string());
+        assert!(pane.report_pending());
+        pane.reveal_step();
+        assert!(pane.report_pending());
+        pane.reveal_all();
+        assert!(!pane.report_pending());
+    }
+
+    #[test]
+    fn test_clear_report_resets_typewriter() {
+        let mut pane = DescriptionPane::new();
+        pane.set_report("abc".to_string());
+        pane.reveal_all();
+        pane.clear_report();
+        assert!(!pane.report_pending());
+    }
 }

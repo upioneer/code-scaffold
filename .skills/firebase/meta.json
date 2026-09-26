@@ -1,7 +1,7 @@
 {
   "label": "Firebase",
   "description": "Firebase CLI lifecycle, Cloud Firestore multi-database management, and authentication connectivity",
-  "version": "5",
+  "version": "6",
   "target": ".skills/firebase",
   "hasSandbox": false,
   "logo": [

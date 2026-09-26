@@ -118,6 +118,19 @@ pub fn set_has_seen_copilot_welcome(val: bool) {
     save_prefs(&prefs);
 }
 
+pub fn save_last_deploy_report(report: &crate::manifest_engine::DeploymentReport) {
+    let mut prefs = load_prefs();
+    prefs["last_deploy"] = serde_json::to_value(report).unwrap_or(json!({}));
+    save_prefs(&prefs);
+}
+
+pub fn load_last_deploy_report() -> Option<crate::manifest_engine::DeploymentReport> {
+    let prefs = load_prefs();
+    prefs
+        .get("last_deploy")
+        .and_then(|v| serde_json::from_value(v.clone()).ok())
+}
+
 pub fn can_rotate_keys() -> Result<(), String> {
     let prefs = load_prefs();
     let now = std::time::SystemTime::now()

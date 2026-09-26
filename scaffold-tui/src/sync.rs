@@ -59,8 +59,21 @@ pub async fn sync_payload() -> Result<std::path::PathBuf> {
                 .and_then(|m| m.get("version"))
                 .and_then(|v| v.as_str())
             {
-                if remote_version != local_version {
+                // Persist the remote manifest: production deploys read their
+                // artifact, skill, and env baseline from
+                // `cache_dir/manifest.json`, which is never part of the zip
+                // payload. Without this write every production run falls back
+                // to the empty manifest and provisions almost nothing.
+                let manifest_path = cache_dir.join("manifest.json");
+                let payloads_present =
+                    cache_dir.join(".templates").is_dir() && cache_dir.join(".skills").is_dir();
+                if remote_version != local_version || !payloads_present || !manifest_path.exists() {
                     println!("Syncing remote payload library v{}...", remote_version);
+                    if let Err(e) =
+                        std::fs::write(&manifest_path, serde_json::to_string_pretty(&manifest)?)
+                    {
+                        eprintln!("Warning: could not persist remote manifest: {}", e);
+                    }
                     let zip_url =
                         "https://github.com/upioneer/code-scaffold/archive/refs/heads/main.zip";
                     if let Ok(zip_resp) = client.get(zip_url).send().await {

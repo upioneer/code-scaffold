@@ -34,6 +34,7 @@ pub fn print_headless_help(payload_dir: std::path::PathBuf) {
             "--artifacts": "OPTIONAL. Comma-separated labels of Core Artifacts.",
             "--skills": "OPTIONAL. Comma-separated labels of Agent Skills.",
             "--license": "OPTIONAL. License label (e.g. 'MIT').",
+            "--contributing": "OPTIONAL. Contributing template label (e.g. 'open-source').",
             "--json-output": "OPTIONAL. Outputs execution results in machine-readable JSON.",
             "--dry-run": "OPTIONAL. Outputs the constructed manifest without executing it.",
             "--version-json": "OPTIONAL. Outputs the version in machine-readable JSON."
@@ -57,6 +58,7 @@ pub async fn run_headless(
     let mut arg_artifacts = Vec::new();
     let mut arg_skills = Vec::new();
     let mut arg_license = String::new();
+    let mut arg_contributing = String::new();
     let mut json_output = false;
     let mut dry_run = false;
 
@@ -99,6 +101,12 @@ pub async fn run_headless(
             "--license" => {
                 if i + 1 < args.len() {
                     arg_license = args[i + 1].trim().to_string();
+                    i += 1;
+                }
+            }
+            "--contributing" => {
+                if i + 1 < args.len() {
+                    arg_contributing = args[i + 1].trim().to_string();
                     i += 1;
                 }
             }
@@ -167,6 +175,7 @@ pub async fn run_headless(
     let arg_personas: Vec<String> = arg_personas.into_iter().map(|s| s.to_lowercase()).collect();
     let arg_skills: Vec<String> = arg_skills.into_iter().map(|s| s.to_lowercase()).collect();
     let arg_license = arg_license.to_lowercase();
+    let arg_contributing = arg_contributing.to_lowercase();
 
     for item in workspace.items {
         let label_lower = item.label.to_lowercase();
@@ -254,11 +263,31 @@ pub async fn run_headless(
                     manifest
                         .artifacts
                         .push(crate::models::manifest::ArtifactEntry {
-                            id: "license.md".into(),
-                            label: "license.md".into(),
+                            id: "LICENSE.md".into(),
+                            label: "LICENSE.md".into(),
                             source: Some(source.to_string_lossy().to_string()),
                             target: std::path::PathBuf::from(&target)
-                                .join("license.md")
+                                .join("LICENSE.md")
+                                .to_string_lossy()
+                                .to_string(),
+                            method: "copy".into(),
+                            content: None,
+                        });
+                }
+            }
+            Category::ContributingTemplate => {
+                if label_lower == arg_contributing && label_lower != "none" {
+                    let source = payload_dir
+                        .join(".contributions")
+                        .join(format!("{}.md", item.label));
+                    manifest
+                        .artifacts
+                        .push(crate::models::manifest::ArtifactEntry {
+                            id: "CONTRIBUTING.md".into(),
+                            label: "CONTRIBUTING.md".into(),
+                            source: Some(source.to_string_lossy().to_string()),
+                            target: std::path::PathBuf::from(&target)
+                                .join("CONTRIBUTING.md")
                                 .to_string_lossy()
                                 .to_string(),
                             method: "copy".into(),
@@ -290,31 +319,36 @@ pub async fn run_headless(
         }
     });
 
-    if let Err(e) =
-        crate::manifest_engine::execute(&manifest, tx.clone(), &payload_dir, &target).await
-    {
-        if json_output {
-            eprintln!(
-                "{}",
-                serde_json::json!({ "status": "error", "message": e.to_string() })
-            );
-        } else {
-            eprintln!("Deployment failed: {}", e);
+    match crate::manifest_engine::execute(&manifest, tx.clone(), &payload_dir, &target).await {
+        Ok(report) => {
+            if json_output {
+                println!(
+                    "{}",
+                    serde_json::json!({ "status": "success", "message": "Headless deployment completed successfully!", "report": report })
+                );
+            } else {
+                for line in report.card_lines(None) {
+                    println!("{}", line);
+                }
+                println!("Headless deployment completed successfully!");
+            }
         }
-        std::process::exit(1);
+        Err(e) => {
+            if json_output {
+                eprintln!(
+                    "{}",
+                    serde_json::json!({ "status": "error", "message": e.to_string() })
+                );
+            } else {
+                eprintln!("Deployment failed: {}", e);
+            }
+            std::process::exit(1);
+        }
     }
 
     // Drop tx so the receiver loop closes
     drop(tx);
     let _ = rx_task.await;
 
-    if json_output {
-        println!(
-            "{}",
-            serde_json::json!({ "status": "success", "message": "Headless deployment completed successfully!" })
-        );
-    } else {
-        println!("Headless deployment completed successfully!");
-    }
     Ok(())
 }

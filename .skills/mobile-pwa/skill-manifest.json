@@ -1,0 +1,31 @@
+{
+  "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
+  "specification": "https://code-scaffold.com/spec/v1",
+  "name": "code_scaffold_mobile_pwa_skill",
+  "version": "1",
+  "description": "Turn a web app into an installable mobile PWA: web manifest, icons, service worker offline shell, install prompt flow, and platform detection across Vite React Vue Svelte, Next.js, Nuxt, SvelteKit, and Angular.",
+  "entryPoint": "./SKILL.md",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "requiredPermissions": [
+    "fs:read",
+    "fs:write",
+    "net:connect"
+  ],
+  "category": "UI & Design",
+  "keywords": [
+    "pwa",
+    "progressive-web-app",
+    "installable",
+    "add-to-home-screen",
+    "service-worker",
+    "web-manifest",
+    "offline-shell",
+    "mobile",
+    "ios",
+    "android"
+  ],
+  "hasSandbox": false,
+  "integrity": "cs:sha256:af2f57f63c9290ceccecb74ecf9cef9ef5020ae28b07d40b78fe46dd855b171c"
+}

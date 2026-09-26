@@ -33,7 +33,7 @@ Welcome to the official **Code Scaffold Skills Library**. This curated registry 
 | Skill | Description | Search Keywords | Version | Path |
 | :--- | :--- | :--- | :--- | :--- |
 | **Clerk Authentication Perimeter** | Authentication perimeter and identity management using Clerk. | `clerk`, `authentication`, `user-management` | v3 | `.skills/clerk` |
-| **Firebase** | Autonomous project provisioning, clean URL naming, CLI lifecycle management, and Firestore multi-database operations. | `firebase`, `firestore`, `baas`, `automated-provisioning` | v5 | `.skills/firebase` |
+| **Firebase** | Autonomous project provisioning, clean URL naming, CLI lifecycle management, and Firestore multi-database operations. | `firebase`, `firestore`, `baas`, `automated-provisioning` | v6 | `.skills/firebase` |
 | **Resend** | Sends emails using the Resend API | `resend`, `transactional-email`, `react-email` | v2 | `.skills/resend` |
 | **Supabase** | Supabase database and authentication integration | `supabase`, `postgresql`, `row-level-security` | v2 | `.skills/supabase` |
 | **Telegram** | Telegram Bot API interactions | `telegram`, `telegram-bot-api`, `messaging-bot` | v2 | `.skills/telegram` |
@@ -47,10 +47,10 @@ Welcome to the official **Code Scaffold Skills Library**. This curated registry 
 | **Ansible** | Infrastructure automation, configuration management, and application deployment orchestration using Ansible. | `ansible`, `configuration-management`, `playbooks` | v2 | `.skills/ansible` |
 | **CyberSecurity Toolkit** | Autonomous cybersecurity arsenal integrating the Sentinel Multi-Agent Security Mesh, episodic attack surface mapping, MITRE and NIST methodologies, SkillSpector scanning, and ChainAST context compaction. | `cybersecurity`, `security-audit`, `vulnerability-scan`, `agentic-security` | v8 | `.skills/cybersecurity-toolkit` |
 | **Docker Engine** | Comprehensive container engineering arsenal featuring the Ephemeral Swapper Protocol for in-place zero-downtime updates, BuildKit cache optimization, and sidecar diagnostic injection. | `docker`, `container-engine`, `ephemeral-swapper` | v2 | `.skills/docker` |
-| **GitHub** | GitHub push workflow with .env-based identity configuration; merges github.md into the skill | `github`, `git`, `github-actions` | v5 | `.skills/github` |
+| **GitHub** | GitHub push workflow with .env-based identity configuration; merges github.md into the skill | `github`, `git`, `github-actions` | v7 | `.skills/github` |
 | **Proxmox VE Container Engineering** | Two-tier LXC helper script architecture with host orchestrator, in-container provisioner, whiptail dialogs, integer disk sizing, bootstrap isolation, V8 heap management, active health polling, ZFS/Ceph storage, cloud-init VM templating, PBS backup automation, Prometheus monitoring, and container hardening. | `proxmox`, `proxmox-ve`, `lxc`, `pct-create`, `cloud-init`, `zfs`, `proxmox-backup-server`, `homelab` | v3 | `.skills/proxmox` |
 | **Terraform** | Infrastructure as Code (IaC) provisioning and state management using Terraform or OpenTofu. | `terraform`, `opentofu`, `infrastructure-as-code` | v2 | `.skills/terraform` |
-| **Vercel Deployment Routine** | Configuration and deployment routines for Vercel hosting. | `vercel`, `edge-deployments`, `nextjs-hosting` | v3 | `.skills/vercel` |
+| **Vercel Deployment Routine** | Configuration and deployment routines for Vercel hosting. | `vercel`, `edge-deployments`, `nextjs-hosting` | v4 | `.skills/vercel` |
 | **Website Deploy Linux** | Enterprise Linux Deployment Agent for deploying static sites and SPAs to Nginx locally or remotely via PuTTY CLI (plink/pscp) or SSH, featuring upfront architectural prompting, automatic .env setups, reference scripts, and non-destructive folder structures | `website-deploy-linux`, `nginx-deploy`, `putty-plink-pscp` | v7 | `.skills/website-deploy-linux` |
 
 ### Security & Cryptography
@@ -73,6 +73,7 @@ Welcome to the official **Code Scaffold Skills Library**. This curated registry 
 | **TUI Tools** | Architectural playbook and tooling (including VHS integration) for building robust, instant-on, and visually stunning modern terminal splash screens and integrations. | `tui-tools`, `vhs-tapes`, `terminal-gif` | v7 | `.skills/tui-tools` |
 | **UI Primitives & Micro-Interactions** | GSAP choreography timelines, Three.js 3D scenes, WebGPU halftone cursor trails, premium gradient borders, perimeter border beams, liquid gooey physics, spring docks, bento grids, kinetic typography, staggered blur reveals, typewriter, circular text, atomic tokens, design-first prompting, landing page architecture, and 6 signature motion looks. | `ui-primitives`, `gsap`, `threejs`, `webgpu-shader`, `gradient-borders`, `cursor-trail`, `border-beam`, `landing-page`, `text-animation`, `stagger-reveal`, `typewriter-effect`, `pixel-dissolve`, `card-stack`, `aurora-background` | v6 | `.skills/ui-primitives` |
 | **Skeleton Performance Studio** | High-performance skeleton loading states, layout stability patterns, and perceptual performance engineering to eliminate Cumulative Layout Shift (CLS) and accelerate perceived page load speeds. | `skeleton`, `loading-states`, `cumulative-layout-shift`, `perceived-performance`, `cls-zero`, `shimmer-effect`, `react-skeleton`, `nextjs-loading` | v1 | `.skills/skeleton` |
+| **Mobile PWA** | Turn a web app into an installable mobile PWA with manifest, icons, service worker offline shell, install prompt flow, and platform detection. | `pwa`, `progressive-web-app`, `installable`, `add-to-home-screen`, `service-worker`, `web-manifest`, `offline-shell`, `mobile`, `ios`, `android` | v1 | `.skills/mobile-pwa` |
 
 ### Publishing & Documentation
 
