@@ -1,6 +1,6 @@
 # Firebase
 
-**Version:** 5
+**Version:** 6
 
 **Target:** `.skills/firebase`
 
@@ -34,6 +34,7 @@ Autonomous Firebase project provisioning, clean project naming, CLI lifecycle ma
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog
+* **v6** : Skill owns Firebase configuration outright with required environment variable table, .env first checks replacing the retired firebase.md artifact, and scaffold time key seeding
 * **v5** : Added autonomous project provisioning pipeline, clean URL naming protocol, and conflict resolution
 * **v4** : Added foundational Firebase CLI lifecycle workflows, multi-database Firestore edition management, and mobile SDK config provisioning
 * **v3** : Expanded capability descriptions

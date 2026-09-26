@@ -29,51 +29,10 @@ pub struct Workspace {
 
 impl Workspace {
     pub fn new(payload_dir: std::path::PathBuf) -> Self {
+        // Step 1 (DeploymentTarget) carries no selectable rows: the pane
+        // renders a static target confirmation and all actions run through
+        // hotkeys ([Enter] continue, [F] browse, [R] reset, [W] welcome).
         let mut items = vec![];
-
-        items.push(WorkspaceItem {
-            label: "Continue with Current Path [Enter]".into(),
-            selected: true,
-            category: Category::DeploymentTarget,
-            description: Some("Confirm the current directory as the deployment target and proceed to Core Artifacts configuration. Recommended if you launched Code Scaffold from your target project directory.".into()),
-            version: None,
-            exists_in_target: false,
-            target_version: None,
-            logo: None,
-        });
-
-        items.push(WorkspaceItem {
-            label: "Browse for Another Folder [F]".into(),
-            selected: false,
-            category: Category::DeploymentTarget,
-            description: Some("Open the interactive file tree browser to navigate your filesystem and select an alternative target directory for project scaffolding.".into()),
-            version: None,
-            exists_in_target: false,
-            target_version: None,
-            logo: None,
-        });
-
-        items.push(WorkspaceItem {
-            label: "Scaffold Connect (Remote / ACP) [Coming Soon]".into(),
-            selected: false,
-            category: Category::DeploymentTarget,
-            description: Some("Scaffold Connect remote agent pairing and ACP telemetry synchronization is currently in preview and will be available in an upcoming release.".into()),
-            version: None,
-            exists_in_target: false,
-            target_version: None,
-            logo: None,
-        });
-
-        items.push(WorkspaceItem {
-            label: "Reset to Launch Directory [R]".into(),
-            selected: false,
-            category: Category::DeploymentTarget,
-            description: Some("Reset the target folder back to the working directory from which Code Scaffold was originally launched.".into()),
-            version: None,
-            exists_in_target: false,
-            target_version: None,
-            logo: None,
-        });
 
         items.extend(vec![
             WorkspaceItem {
@@ -213,6 +172,14 @@ impl Workspace {
                     if name.to_lowercase() == "license.md" {
                         continue;
                     }
+                    // Platform configuration files are owned by their respective
+                    // skills (github, firebase, vercel) and provisioned through
+                    // skill selection plus .env defaults, so they are not
+                    // offered as standalone selectable artifacts.
+                    match name.to_lowercase().as_str() {
+                        "deploy.yml" | "vercel.json" | "firebase.md" | "github.md" => continue,
+                        _ => {}
+                    }
 
                     let description = match name.as_str() {
                         "apps/" => Some("Core full-stack application scaffolding structure including nested directories for api, desktop, mobile (iOS/Android), web, cli, and docker environments.".to_string()),
@@ -220,11 +187,8 @@ impl Workspace {
                         "agent.md" => Some("System rules and behavioral instructions governing AI agent operations in the workspace.".to_string()),
                         "brand.md" => Some("Design system document encompassing typography, color palettes, and UI component standards.".to_string()),
                         "contributing.md" => Some("Community contribution guidelines, PR policies, and codebase governance rules.".to_string()),
-                        "deploy.yml" => Some("GitHub Actions CI/CD workflow configuration for automated testing and deployment.".to_string()),
                         "design.md" => Some("Architectural blueprints, database schemas, and frontend UI mockups.".to_string()),
                         "env.example" => Some("Environment variable template demonstrating required configuration keys without exposing secrets.".to_string()),
-                        "firebase.md" => Some("Firebase configuration, security rules, and SDK initialization references.".to_string()),
-                        "github.md" => Some("GitHub workflow documentation and git integration rules.".to_string()),
                         "layout.tsx" => Some("Next.js root layout component template establishing the core application shell.".to_string()),
                         "middleware.ts" => Some("Next.js Edge Middleware for handling authentication routing and request manipulation.".to_string()),
                         "plan.md" => Some("Strategic project roadmap, milestone tracking, and task decomposition.".to_string()),
@@ -234,7 +198,6 @@ impl Workspace {
                         "skills.md" => Some("Registry of custom AI agent skills and their associated capabilities.".to_string()),
                         "testing.md" => Some("Quality assurance guidelines, test coverage requirements, and Playwright automation steps.".to_string()),
                         "todo.md" => Some("Immediate, actionable checklist for granular feature implementation and bug fixes.".to_string()),
-                        "vercel.json" => Some("Vercel deployment configuration, serverless function settings, and routing rules.".to_string()),
                         ".gitignore" => Some("Standard exclusions for build artifacts, node_modules, and environment files.".to_string()),
                         _ => None,
                     };
@@ -740,38 +703,28 @@ impl Workspace {
             f.render_widget(divider, chunks[1]);
         }
 
-        let visible = self.visible_indices();
         let list_area = if has_room_for_header {
             chunks[2]
         } else {
             chunks[1]
         };
-        let mut list_items = Vec::new();
 
-        for (_i, actual_idx) in visible.iter().enumerate() {
-            let item = &self.items[*actual_idx];
-            let is_disabled = item.label.contains("[Coming Soon]");
-            let item_style = if is_disabled {
-                Style::default().fg(theme.secondary)
-            } else {
-                Style::default().fg(theme.text).bg(theme.bg)
-            };
+        let key_style = Style::default()
+            .fg(theme.primary)
+            .add_modifier(Modifier::BOLD);
+        let text_style = Style::default().fg(theme.text).bg(theme.bg);
+        let confirm_lines = vec![
+            Line::from(Span::styled(" Ready when you are.", text_style)),
+            Line::from(vec![
+                Span::styled("  [Enter] Continue  ", key_style),
+                Span::styled("[F] Browse folders  ", text_style),
+                Span::styled("[R] Reset  ", text_style),
+                Span::styled("[W] Welcome", text_style),
+            ]),
+        ];
 
-            list_items.push(ListItem::new(format!("  {}", item.label)).style(item_style));
-        }
-
-        let list = List::new(list_items).style(Style::default().bg(theme.bg));
-
-        let list = if active {
-            list.highlight_style(Style::default().bg(theme.primary).fg(theme.bg))
-                .highlight_symbol(">> ")
-        } else {
-            list.highlight_style(Style::default().fg(theme.primary))
-                .highlight_symbol("   ")
-        };
-
-        self.state.select(Some(self.selected_idx));
-        f.render_stateful_widget(list, list_area, &mut self.state);
+        let confirm = Paragraph::new(confirm_lines).style(Style::default().bg(theme.bg));
+        f.render_widget(confirm, list_area);
         Ok(())
     }
 }
@@ -901,43 +854,10 @@ impl Component for Workspace {
                     }
                 }
 
-                if category == Category::AgentSkills {
-                    if label == "firebase" {
-                        if let Some(companion) = self
-                            .items
-                            .iter_mut()
-                            .find(|i| i.label == "firebase.md" && i.category == Category::Artifacts)
-                        {
-                            companion.selected = new_state;
-                        }
-                    } else if label == "github" {
-                        if let Some(companion) = self
-                            .items
-                            .iter_mut()
-                            .find(|i| i.label == "github.md" && i.category == Category::Artifacts)
-                        {
-                            companion.selected = new_state;
-                        }
-                    }
-                } else if category == Category::Artifacts {
-                    if label == "firebase.md" {
-                        if let Some(companion) = self
-                            .items
-                            .iter_mut()
-                            .find(|i| i.label == "firebase" && i.category == Category::AgentSkills)
-                        {
-                            companion.selected = new_state;
-                        }
-                    } else if label == "github.md" {
-                        if let Some(companion) = self
-                            .items
-                            .iter_mut()
-                            .find(|i| i.label == "github" && i.category == Category::AgentSkills)
-                        {
-                            companion.selected = new_state;
-                        }
-                    }
-                }
+                // Platform skills (github, firebase, vercel) carry their own
+                // configuration inside the skill payload and seed .env
+                // defaults at deploy time, so they no longer toggle
+                // companion artifact selections.
             }
             Action::Enter => {
                 return Ok(Some(Action::Enter));

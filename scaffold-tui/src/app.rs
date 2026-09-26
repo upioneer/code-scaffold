@@ -354,7 +354,7 @@ impl App {
                 WizardState::AgentPersona => (" Step 3: Agent Persona (Conditional) ", "Select the primary focus for the Agent. This will tailor testing guidelines and instructions.\nPress [Enter] or [Tab] to proceed to Contributing Template.\nPress [Shift+Tab] to go back.".to_string()),
                 WizardState::ContributingTemplate => (" Step 4: Contributing Template (Conditional) ", "Select an open-source or proprietary PR contribution policy.\nPress [Enter] or [Tab] to proceed to Skills.\nPress [Shift+Tab] to go back.".to_string()),
                 WizardState::Skills => {
-                    let mut text = "Select the domain skills you need. Notice how GitHub and Firebase toggle their companion artifacts!\nPress [Enter] or [Tab] to proceed to Licensing.\nPress [Shift+Tab] to go back.".to_string();
+                    let mut text = "Select the domain skills you need. GitHub, Firebase, and Vercel carry their own configuration and seed .env defaults on deploy.\nPress [Enter] or [Tab] to proceed to Licensing.\nPress [Shift+Tab] to go back.".to_string();
                     if let Some(idx) = self.workspace.state.selected() {
                         let visible = self.workspace.visible_indices();
                         if idx < visible.len() {
@@ -391,6 +391,22 @@ impl App {
 
         while !self.should_quit {
             while let Ok(msg) = self.rx.try_recv() {
+                if let Some(payload) = msg.strip_prefix("[REPORT] ") {
+                    if let Ok(report) =
+                        serde_json::from_str::<crate::manifest_engine::DeploymentReport>(payload)
+                    {
+                        let previous = crate::prefs::load_last_deploy_report();
+                        crate::prefs::save_last_deploy_report(&report);
+                        let clean_path = self.target_folder.replace("\\\\?\\", "");
+                        let mut text = format!("Target: {}\n", clean_path);
+                        text.push_str(&report.card_lines(previous.as_ref()).join("\n"));
+                        // The card lives in the Info pane beneath the QR
+                        // code and types out progressively; the summary pane
+                        // keeps mirroring the engine log.
+                        self.description_pane.set_report(text);
+                    }
+                    continue;
+                }
                 if let Some(version) = msg.strip_prefix("[UPDATE_AVAILABLE] ") {
                     self.update_available = Some(version.to_string());
                     self.header.update_available = Some(version.to_string());
@@ -1338,8 +1354,14 @@ impl App {
             return Ok(());
         }
 
+        // Any keypress completes a typing-out report instantly.
+        if !matches!(action, Action::Tick) {
+            self.description_pane.reveal_all();
+        }
+
         match action {
             Action::Tick => {
+                self.description_pane.reveal_step();
                 self.splash_tick_count = self.splash_tick_count.wrapping_add(1);
                 if self.splash_tick_count % 2 == 0 {
                     let prev_idx = self.splash_frame_idx;
@@ -1406,6 +1428,7 @@ impl App {
                     self.wizard_state = WizardState::Executing;
                     self.summary_pane.title = " Deploying... ".to_string();
                     self.summary_pane.summary_text = "Initializing engine...".to_string();
+                    self.description_pane.clear_report();
 
                     let tx_clone = self.tx.clone();
 
@@ -1632,6 +1655,9 @@ impl App {
                                 });
                             }
                             Category::License => {
+                                if item.label == "None" {
+                                    continue;
+                                }
                                 let source = self
                                     .payload_dir
                                     .join(".licenses")
@@ -1657,7 +1683,7 @@ impl App {
                     let payload_dir_clone = self.payload_dir.clone();
                     let target_folder_clone = self.target_folder.clone();
                     tokio::spawn(async move {
-                        if let Err(e) = crate::manifest_engine::execute(
+                        match crate::manifest_engine::execute(
                             &manifest,
                             tx_clone.clone(),
                             &payload_dir_clone,
@@ -1665,7 +1691,15 @@ impl App {
                         )
                         .await
                         {
-                            let _ = tx_clone.send(format!(" -> (FATAL) Execution failed: {}", e));
+                            Ok(report) => {
+                                if let Ok(json) = serde_json::to_string(&report) {
+                                    let _ = tx_clone.send(format!("[REPORT] {}", json));
+                                }
+                            }
+                            Err(e) => {
+                                let _ =
+                                    tx_clone.send(format!(" -> (FATAL) Execution failed: {}", e));
+                            }
                         }
                         let _ = tx_clone.send("".to_string());
                         let _ = tx_clone
@@ -1913,6 +1947,7 @@ impl App {
             Action::Char('u') | Action::Char('U') => {
                 if self.update_available.is_some() {
                     self.wizard_state = WizardState::Executing;
+                    self.description_pane.clear_report();
                     self.summary_pane.title = " Applying Update ".to_string();
                     self.summary_pane.summary_text =
                         "Downloading in-place update payload...".to_string();
@@ -2028,34 +2063,14 @@ impl App {
                         crate::prefs::set_has_seen_welcome(true);
                     }
                     WizardState::DeploymentTarget => {
-                        let selected_action_idx = if self.active_block == ActiveBlock::Workspace {
-                            self.workspace.state.selected().unwrap_or(0)
-                        } else {
-                            0
-                        };
-                        match selected_action_idx {
-                            1 => {
-                                // Option 1: Browse for Another Folder
-                                self.directory_browser.open(&self.target_folder);
-                            }
-                            2 => {
-                                // Option 2: Scaffold Connect (Coming Soon teaser - no-op)
-                            }
-                            3 => {
-                                // Option 3: Reset to Launch Directory
-                                self.target_folder = Self::default_target_dir();
-                                self.workspace.detect_installed(&self.target_folder);
-                                self.update_summary();
-                            }
-                            _ => {
-                                // Default / Option 0: Continue with Current Path
-                                self.wizard_state = WizardState::Artifacts;
-                                self.workspace.set_category(Category::Artifacts);
-                                self.nav_tree.set_selected(Category::Artifacts);
-                                self.active_block = ActiveBlock::Workspace;
-                                self.update_summary();
-                            }
-                        }
+                        // ENTER always advances immediately with the current
+                        // target (CWD by default). [F] opens the folder
+                        // browser, [R] resets to the launch directory.
+                        self.wizard_state = WizardState::Artifacts;
+                        self.workspace.set_category(Category::Artifacts);
+                        self.nav_tree.set_selected(Category::Artifacts);
+                        self.active_block = ActiveBlock::Workspace;
+                        self.update_summary();
                     }
                     WizardState::Artifacts => {
                         let has_agent = self
@@ -2140,32 +2155,14 @@ impl App {
             }
             Action::Char(' ') => {
                 if self.wizard_state == WizardState::DeploymentTarget {
-                    if self.active_block == ActiveBlock::Workspace {
-                        let selected_action_idx = self.workspace.state.selected().unwrap_or(0);
-                        match selected_action_idx {
-                            1 => {
-                                self.directory_browser.open(&self.target_folder);
-                                return Ok(());
-                            }
-                            2 => {
-                                return Ok(());
-                            }
-                            3 => {
-                                self.target_folder = Self::default_target_dir();
-                                self.workspace.detect_installed(&self.target_folder);
-                                self.update_summary();
-                                return Ok(());
-                            }
-                            _ => {
-                                self.wizard_state = WizardState::Artifacts;
-                                self.workspace.set_category(Category::Artifacts);
-                                self.nav_tree.set_selected(Category::Artifacts);
-                                self.active_block = ActiveBlock::Workspace;
-                                self.update_summary();
-                                return Ok(());
-                            }
-                        }
-                    }
+                    // Step 1 has no selectable rows: Space advances exactly
+                    // like ENTER. [F] browses, [R] resets.
+                    self.wizard_state = WizardState::Artifacts;
+                    self.workspace.set_category(Category::Artifacts);
+                    self.nav_tree.set_selected(Category::Artifacts);
+                    self.active_block = ActiveBlock::Workspace;
+                    self.update_summary();
+                    return Ok(());
                 }
                 if self.wizard_state == WizardState::Skills {
                     if let Some(idx) = self.workspace.state.selected() {
@@ -2356,6 +2353,21 @@ mod visual_artifacts_tests {
         assert_eq!(app.wizard_state, WizardState::Artifacts);
         assert_eq!(app.target_folder, initial_target);
         assert_eq!(app.workspace.current_category, Category::Artifacts);
+    }
+
+    #[tokio::test]
+    async fn test_step1_enter_advances_regardless_of_highlight() {
+        let payload_dir = std::path::PathBuf::from("/nonexistent/dummy/path");
+        let mut app = App::new(payload_dir);
+        app.wizard_state = WizardState::DeploymentTarget;
+        app.update_summary();
+
+        // Park the highlight on the Browse row: ENTER must still advance
+        // with CWD instead of opening the folder browser.
+        app.workspace.state.select(Some(1));
+        let _ = app.update(Action::Enter);
+        assert_eq!(app.wizard_state, WizardState::Artifacts);
+        assert!(!app.directory_browser.is_open);
     }
 
     #[tokio::test]

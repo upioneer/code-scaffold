@@ -40,6 +40,8 @@ impl DirectoryBrowser {
 
     pub fn load_directory(&mut self) {
         self.items.clear();
+        // ".." stays first for fast navigation; the confirm row sits
+        // directly beneath so selecting the current folder stays deliberate.
         if let Some(parent) = self.current_path.parent() {
             if parent != self.current_path {
                 self.items.push(("..".to_string(), true));
@@ -48,6 +50,8 @@ impl DirectoryBrowser {
             // Root directory, still push ".." just in case, though it won't do much
             self.items.push(("..".to_string(), true));
         }
+        self.items
+            .push(("[ Select This Folder ]".to_string(), false));
         self.items
             .push(("[ + Create New Folder ]".to_string(), false));
 
@@ -131,7 +135,10 @@ impl Component for DirectoryBrowser {
             Action::Enter | Action::Right => {
                 if let Some(selected) = self.state.selected() {
                     let (name, is_dir) = &self.items[selected];
-                    if name == "[ + Create New Folder ]" {
+                    if name == "[ Select This Folder ]" {
+                        self.selected_path = Some(self.current_path.to_string_lossy().to_string());
+                        self.is_open = false;
+                    } else if name == "[ + Create New Folder ]" {
                         self.is_creating_folder = true;
                         self.new_folder_name.clear();
                     } else if name == ".." {
@@ -208,7 +215,9 @@ impl Component for DirectoryBrowser {
             .items
             .iter()
             .map(|(name, _)| {
-                let display_name = if name == "[ + Create New Folder ]" {
+                let display_name = if name == "[ Select This Folder ]" {
+                    format!(" ✅ {}", name)
+                } else if name == "[ + Create New Folder ]" {
                     format!(" ➕ {}", name)
                 } else {
                     format!(" 📁 {}", name)
@@ -224,7 +233,7 @@ impl Component for DirectoryBrowser {
             )
         } else {
             let clean_path = self.current_path.to_string_lossy().replace("\\\\?\\", "");
-            format!(" Press [Space] to select: {} ", clean_path)
+            format!(" Select: {} ([Enter]/[Space]) ", clean_path)
         };
 
         let list = List::new(items)
@@ -241,5 +250,35 @@ impl Component for DirectoryBrowser {
 
         f.render_stateful_widget(list, area, &mut self.state);
         Ok(())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::action::Action;
+    use crate::components::Component;
+
+    #[test]
+    fn test_select_row_sits_second_below_parent() {
+        let mut browser = DirectoryBrowser::new();
+        browser.open(&std::env::temp_dir().to_string_lossy().to_string());
+        assert_eq!(browser.items[0].0, "..");
+        assert_eq!(browser.items[1].0, "[ Select This Folder ]");
+    }
+
+    #[test]
+    fn test_enter_on_select_row_confirms_current_folder() {
+        let mut browser = DirectoryBrowser::new();
+        let target = std::env::temp_dir()
+            .canonicalize()
+            .unwrap()
+            .to_string_lossy()
+            .to_string();
+        browser.open(&target);
+        browser.state.select(Some(1));
+        let _ = browser.update(Action::Enter);
+        assert!(!browser.is_open);
+        assert_eq!(browser.selected_path.as_deref(), Some(target.as_str()));
     }
 }

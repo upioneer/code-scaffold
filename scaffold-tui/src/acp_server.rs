@@ -111,11 +111,14 @@ pub async fn run_acp_server(payload_dir: PathBuf, args: Vec<String>) -> Result<(
                 }
 
                 let pdir = std::path::PathBuf::from(".");
-                if let Err(e) = manifest_engine::execute(&manifest, tx, &pdir, &input.target_directory).await {
-                    return Ok(serde_json::json!({"status": "error", "message": e.to_string()}));
+                match manifest_engine::execute(&manifest, tx, &pdir, &input.target_directory).await {
+                    Ok(report) => {
+                        Ok(serde_json::json!({"status": "success", "target": input.target_directory, "report": report}))
+                    }
+                    Err(e) => {
+                        Ok(serde_json::json!({"status": "error", "message": e.to_string()}))
+                    }
                 }
-
-                Ok(serde_json::json!({"status": "success", "target": input.target_directory}))
             },
             tool_fn!(),
         )
@@ -153,11 +156,14 @@ pub async fn run_acp_server(payload_dir: PathBuf, args: Vec<String>) -> Result<(
                 };
 
                 let pdir = std::path::PathBuf::from(".");
-                if let Err(e) = manifest_engine::execute(&manifest, tx, &pdir, &input.target_directory).await {
-                    return Ok(serde_json::json!({"status": "error", "message": e.to_string()}));
+                match manifest_engine::execute(&manifest, tx, &pdir, &input.target_directory).await {
+                    Ok(report) => {
+                        Ok(serde_json::json!({"status": "success", "persona": input.persona_id, "report": report}))
+                    }
+                    Err(e) => {
+                        Ok(serde_json::json!({"status": "error", "message": e.to_string()}))
+                    }
                 }
-
-                Ok(serde_json::json!({"status": "success", "persona": input.persona_id}))
             },
             tool_fn!(),
         )

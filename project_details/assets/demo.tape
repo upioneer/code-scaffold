@@ -1,18 +1,21 @@
 Output demo.gif
 Output demo.png
-Require scaffold-tui/target/debug/code-scaffold.exe
+Require "scaffold-tui/target/debug/code-scaffold.exe"
 
 Set FontSize 15
 Set Width 1200
 Set Height 800
 Set Padding 20
-Set Framerate 60
+Set Framerate 30
 
+# Sanitized capture invariant: all machine specific setup stays hidden. The
+# visible session runs from neutral /tmp/vhs-demo and launches a relative
+# binary name, so recordings never contain usernames or local paths.
 Hide
-Type "cd scaffold-tui && clear"
+Type "rm -rf /tmp/vhs-demo && mkdir -p /tmp/vhs-demo && cp scaffold-tui/target/debug/code-scaffold.exe /tmp/vhs-demo/ && cd /tmp/vhs-demo && clear"
 Enter
 Show
-Type "./target/debug/code-scaffold.exe"
+Type "./code-scaffold.exe"
 Enter
 
 # Wait for the welcome splash screen
@@ -21,25 +24,27 @@ Sleep 4s
 # Capture the splash screen
 Screenshot demo_splash.png
 
-# Press Enter to go to the main UI
+# Walk the wizard to Deploy with default selections (ENTER advances each step)
 Enter
 Sleep 2s
-
-# Capture the main UI
-Screenshot demo_main.png
+Enter
 Sleep 2s
-
-# Show some interaction
-Down 2
-Sleep 1s
-Space
-Sleep 1s
-Tab
-Sleep 1s
-Down
-Sleep 1s
-Space
+Enter
 Sleep 2s
+Enter
+Sleep 2s
+Enter
+Sleep 2s
+Enter
+Sleep 2s
+Enter
+Sleep 2s
+Screenshot demo_deploy.png
 
-# Capture final state
-Screenshot demo_final.png
+# Execute the deployment, then capture the typed out report card
+Enter
+Sleep 45s
+Screenshot demo_report.png
+Sleep 10s
+Screenshot demo_report_full.png
+Sleep 3s

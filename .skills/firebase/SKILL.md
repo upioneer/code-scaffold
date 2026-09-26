@@ -1,7 +1,7 @@
 ---
 ​‌‍name: Firebase
 description: Autonomous Firebase project provisioning, clean project naming, CLI lifecycle management, Cloud Firestore multi-database operations, and client SDK integration.
-version: 5
+version: 6
 ---
 
 # Firebase Platform & Cloud Firestore Skill
@@ -18,7 +18,7 @@ AI agents should enable zero-friction, automated project provisioning directly o
 
 When requested to initialize or deploy a new Firebase project, the agent must adhere to the following sequence:
 
-1. **Active Context Pre-Check**: Inspect `firebase.md`, `.firebaserc`, and `.env.local` to determine if a project ID is already assigned. If configured, confirm with the user before overwriting.
+1. **Active Context Pre-Check**: Inspect `.env` (prepopulated with `FIREBASE_` placeholder keys when this skill is selected at scaffold time), `.firebaserc`, and `.env.local` to determine if a project ID is already assigned. If configured, confirm with the user before overwriting.
 2. **Clean Project ID Derivation**:
    * Derive a clean, human-readable candidate name directly from the workspace folder name (e.g. `my-saas-platform` or `cool-app`).
    * Adhere strictly to Google Cloud ID standards: 6 to 30 characters, lowercase alphanumeric characters and hyphens only (pattern: `^[a-z][a-z0-9-]{4,28}[a-z0-9]$`).
@@ -64,7 +64,7 @@ The script executes the following end-to-end pipeline:
 5. Fetches client SDK credentials (`apps:sdkconfig WEB`).
 6. Injects credentials into `.env.local` (or `.env`) without overwriting existing environment parameters.
 7. Generates `.firebaserc` pointing to the new project.
-8. Synchronizes `firebase.md` with active project parameters and live hosting URLs.
+8. Records active project parameters and live hosting URLs in project documentation.
 9. Creates a production-ready `firebase.json` with single-page application rewrites if not already present.
 
 ---
@@ -72,6 +72,20 @@ The script executes the following end-to-end pipeline:
 ## 2. Foundational Firebase CLI Lifecycle & Environment Setup
 
 Before executing database or deployment operations, verify the environment:
+
+### Required Environment Variables
+
+All Firebase configuration lives in the project root `.env` (never in version tracked docs). The scaffolder prepopulates these keys when this skill is selected; the agent self-heals real values with the user:
+
+* `FIREBASE_PROJECT_ID`: primary project ID (determines `<project-id>.web.app`)
+* `FIREBASE_SITE_ID`: hosting site ID (defaults to `FIREBASE_PROJECT_ID` if unset)
+* `NEXT_PUBLIC_FIREBASE_API_KEY`: client Web SDK API key
+* `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN`: auth domain (`<project-id>.firebaseapp.com`)
+* `NEXT_PUBLIC_FIREBASE_PROJECT_ID`: client side project ID mirror
+* `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET`: default Cloud Storage bucket
+* `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID`: Cloud Messaging sender ID
+* `NEXT_PUBLIC_FIREBASE_APP_ID`: registered Web App ID
+* `NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID`: analytics measurement ID (optional)
 
 ```bash
 # 1. Verify CLI installation and latest version
@@ -227,8 +241,8 @@ If projected workloads exceed Spark boundaries, warn the user and confirm author
 
 ## 7. Safe Deployment Routine
 
-1. **Verify firebase.md**: Read `firebase.md` in the project root to ensure deployment parameters and project IDs are recorded.
-2. **Missing Configuration Check**: If `firebase.md` does not exist or lacks key details, prompt the user or run the provisioning script before deploying.
+1. **Verify environment**: Read `.env` in the project root to ensure the `FIREBASE_` deployment parameters and project IDs are populated beyond placeholders.
+2. **Missing Configuration Check**: If keys are absent or still placeholders, prompt the user or run the provisioning script before deploying.
 3. **Execute Deploy**:
    ```bash
    # Full project deployment
@@ -238,7 +252,7 @@ If projected workloads exceed Spark boundaries, warn the user and confirm author
    npx -y firebase-tools@latest deploy --only hosting,firestore
    ```
 4. **Post-Deployment Verification**: Inspect the terminal output and console URLs to confirm successful rollout.
-5. **Update Documentation**: Record confirmed configuration details and URLs in `firebase.md`.
+5. **Update Documentation**: Record confirmed configuration details and URLs in project documentation.
 
 ---
 

@@ -1,0 +1,20 @@
+{
+  "name": "code-scaffold-mobile-pwa-tooling",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Dependency specification for the Mobile PWA skill: ecosystem PWA plugins, precaching libraries, and icon asset generators per framework.",
+  "devDependencies": {
+    "vite-plugin-pwa": "*",
+    "@vite-pwa/nuxt": "*",
+    "@vite-pwa/sveltekit": "*",
+    "next-pwa": "*",
+    "@ducanh2912/next-pwa": "*",
+    "serwist": "*",
+    "@angular/pwa": "*",
+    "workbox-precaching": "*",
+    "workbox-routing": "*",
+    "workbox-strategies": "*",
+    "workbox-window": "*",
+    "pwa-asset-generator": "*"
+  }
+}

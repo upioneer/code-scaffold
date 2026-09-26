@@ -8,6 +8,7 @@ mod headless;
 mod manifest_engine;
 mod models;
 mod prefs;
+mod quick_update;
 mod scaffold_connect;
 mod skills_cli;
 mod sync;
@@ -43,6 +44,11 @@ async fn main() -> Result<()> {
 
     if args.len() >= 2 && args[1] == "skills" {
         skills_cli::run(payload_dir, args).await?;
+        return Ok(());
+    }
+
+    if args.iter().any(|arg| arg == "--update") {
+        quick_update::run(payload_dir, &args).await?;
         return Ok(());
     }
 

@@ -1,6 +1,6 @@
 # Vercel Deployment Routine
 
-**Version:** 3
+**Version:** 4
 
 **Target:** `.skills/vercel`
 
@@ -22,6 +22,7 @@ Configuration and deployment routines for Vercel hosting.
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog
+* **v4** : Skill owns the vercel.json deployment configuration reference, .env first checks with scaffold time key seeding, replacing the retired standalone artifact
 * **v3** : Standardized ASCII art logo to uniform 6-line ANSI Shadow format.
 * **v2** : Expanded capability descriptions
 * **v1** : Introduce Clerk Auth, Upstash Redis, and Vercel Deployment skills and templates v3.7.0

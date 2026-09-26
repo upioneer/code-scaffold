@@ -1,6 +1,6 @@
 {
     "metadata": {
-        "version": "7.30.0",
+        "version": "7.31.0",
         "lastUpdated": "2026-09-07T01:09:00Z"
     },
     "env": {
@@ -81,18 +81,6 @@
             "label": "TODO.md",
             "target": "TODO.md",
             "method": "touch"
-        },
-        {
-            "id": "vercel",
-            "label": "vercel.json",
-            "target": "vercel.json",
-            "method": "copy"
-        },
-        {
-            "id": "deploy",
-            "label": "deploy.yml",
-            "target": ".github/workflows/deploy.yml",
-            "method": "copy"
         },
         {
             "id": "env",
@@ -334,6 +322,13 @@
             "label": "MCP Generator",
             "source": ".skills/mcp-generator",
             "target": ".skills/mcp-generator",
+            "method": "copy"
+        },
+        {
+            "id": "mobile-pwa",
+            "label": "Mobile PWA",
+            "source": ".skills/mobile-pwa",
+            "target": ".skills/mobile-pwa",
             "method": "copy"
         }
     ]
