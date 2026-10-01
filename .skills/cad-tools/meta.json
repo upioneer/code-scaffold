@@ -1,9 +1,9 @@
 {
   "label": "CAD Tools",
-  "description": "Comprehensive CAD/CAM engineering skill for AI agents : orchestrating parametric 3D modeling, multi-format conversion, mass property analysis, desktop CAD automation, and AI-generative geometry workflows using open-source and cloud toolchains.",
-  "version": "5",
+  "description": "Comprehensive CAD/CAM engineering skill for AI agents : orchestrating generative design, topology optimization with the Alien Meter slider, FreeCAD socket and headless automation, parametric 3D modeling, additive manufacturing (DMLS/SLS), and multi-format conversion.",
+  "version": "8",
   "target": ".skills/cad-tools",
-  "hasSandbox": false,
+  "hasSandbox": true,
   "logo": [
     "   ██████╗ █████╗ ██████╗   ",
     "  ██╔════╝██╔══██╗██╔══██╗  ",

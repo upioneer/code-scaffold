@@ -4,7 +4,7 @@
   <!-- Code Scaffold Specification Schema: https://code-scaffold.com/spec/v1 -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CAD Tools - Parametric 3D CAD Engineering Workbench</title>
+  <title>CAD Tools - Generative Design & Topology Optimization Workbench</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
@@ -24,7 +24,7 @@
       background-size: 28px 28px;
     }
     .glass-panel {
-      background: rgba(15, 23, 42, 0.85);
+      background: rgba(15, 23, 42, 0.88);
       backdrop-filter: blur(16px);
       border: 1px solid rgba(34, 211, 238, 0.2);
     }
@@ -36,6 +36,48 @@
     }
     canvas:active {
       cursor: grabbing;
+    }
+    .alien-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      height: 6px;
+      border-radius: 3px;
+      background: linear-gradient(to right, #0284c7 0%, #0369a1 35%, #2563eb 70%, #4f46e5 100%);
+      border: 1px solid rgba(148, 163, 184, 0.15);
+      outline: none;
+      transition: opacity 0.2s;
+    }
+    .alien-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #090d16;
+      border: 2px solid #38bdf8;
+      box-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
+      cursor: pointer;
+      transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
+    }
+    .alien-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+      border-color: #818cf8;
+      box-shadow: 0 0 10px rgba(129, 140, 248, 0.6);
+    }
+    .alien-slider::-moz-range-thumb {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #090d16;
+      border: 2px solid #38bdf8;
+      box-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
+      cursor: pointer;
+      transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
+    }
+    .alien-slider::-moz-range-thumb:hover {
+      transform: scale(1.15);
+      border-color: #818cf8;
+      box-shadow: 0 0 10px rgba(129, 140, 248, 0.6);
     }
     ::-webkit-scrollbar { width: 5px; height: 5px; }
     ::-webkit-scrollbar-track { background: #020617; }
@@ -54,29 +96,32 @@
       <div>
         <h1 class="text-sm font-bold tracking-wider uppercase text-white flex items-center gap-2">
           CAD Tools Workbench
-          <span class="text-[10px] bg-cyan-500/20 text-cyan-400 px-2 py-0.5 rounded border border-cyan-500/30">PARAMETRIC 3D CAD ENGINE</span>
+          <span class="text-[10px] bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded border border-purple-500/30">GENERATIVE TOPOLOGY OPTIMIZATION</span>
         </h1>
-        <p class="text-xs text-slate-400">WebGL Three.js Viewport &bull; B-Rep Solid Topology</p>
+        <p class="text-xs text-slate-400">FEA Stress Paths &bull; Bio-Morphology &bull; Additive DMLS/SLS</p>
       </div>
     </div>
 
     <!-- Active Model Selector -->
     <div class="flex items-center gap-2 text-xs font-mono">
-      <button onclick="setModel('flange')" id="btn-model-flange" class="px-3 py-1.5 rounded-lg font-medium transition bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
-        Mechanical Flange
+      <button onclick="setModel('bracket')" id="btn-model-bracket" class="px-3 py-1.5 rounded-lg font-medium transition bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
+        Aerospace Bracket
       </button>
-      <button onclick="setModel('gear')" id="btn-model-gear" class="px-3 py-1.5 rounded-lg font-medium transition text-slate-400 hover:text-white border border-slate-800">
-        Planetary Gear
+      <button onclick="setModel('drone_arm')" id="btn-model-drone_arm" class="px-3 py-1.5 rounded-lg font-medium transition text-slate-400 hover:text-white border border-slate-800">
+        Drone Cantilever Arm
       </button>
-      <button onclick="setModel('bracket')" id="btn-model-bracket" class="px-3 py-1.5 rounded-lg font-medium transition text-slate-400 hover:text-white border border-slate-800">
-        Mounting Bracket
+      <button onclick="setModel('heat_sink')" id="btn-model-heat_sink" class="px-3 py-1.5 rounded-lg font-medium transition text-slate-400 hover:text-white border border-slate-800">
+        Carapace Heat Sink
+      </button>
+      <button onclick="setModel('tpms_core')" id="btn-model-tpms_core" class="px-3 py-1.5 rounded-lg font-medium transition text-slate-400 hover:text-white border border-slate-800">
+        TPMS Gyroid Core
       </button>
     </div>
 
     <!-- Right Controls -->
     <div class="flex items-center gap-2">
       <button onclick="resetCamera()" class="px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg border border-slate-700 transition">
-        Reset View
+        Reset Camera
       </button>
     </div>
   </header>
@@ -86,101 +131,153 @@
 
     <!-- 3D WebGL Canvas Stage -->
     <div class="flex-1 relative bg-slate-950 overflow-hidden" id="canvas-container">
-      <div class="absolute top-4 left-4 glass-panel px-3 py-1.5 rounded-lg text-xs font-mono text-slate-400 flex items-center gap-3 z-10">
-        <span>VIEWPORT: <strong class="text-cyan-400" id="view-mode-label">SHADED SOLID</strong></span>
+
+      <!-- Viewport Mode HUD (Top Left) -->
+      <div class="absolute top-4 left-4 glass-panel px-3 py-2 rounded-xl text-xs font-mono text-slate-300 flex items-center gap-3 z-10">
+        <span class="flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+          <span>MODE: <strong class="text-cyan-400" id="hud-render-mode">SHADED SOLID</strong></span>
+        </span>
         <span class="text-slate-600">|</span>
-        <span>GRID: <strong class="text-slate-200">10mm STEPS</strong></span>
+        <span>SOLVER: <strong class="text-emerald-400">SIMP 3D Voxel FEA</strong></span>
+      </div>
+
+      <!-- Live Compromise Alert Banner (Top Right in Viewport) -->
+      <div class="absolute top-4 right-4 glass-panel px-4 py-2.5 rounded-xl text-xs font-mono z-10 max-w-sm flex flex-col gap-1 border-l-4" id="compromise-badge">
+        <div class="flex justify-between items-center">
+          <span class="text-[10px] text-slate-400 uppercase tracking-wider font-bold">Structural Safety Factor</span>
+          <span class="font-bold text-xs" id="fs-badge-val">FS = 2.45</span>
+        </div>
+        <p class="text-[11px] text-slate-300 leading-tight" id="fs-badge-desc">
+          High structural rigidity. Meets aerospace critical flight envelope.
+        </p>
       </div>
 
       <!-- Viewport Display Mode Toggles (Bottom Left) -->
       <div class="absolute bottom-4 left-4 glass-panel p-1.5 rounded-xl flex items-center gap-1 z-10 border border-slate-800 text-xs font-mono">
-        <button onclick="setRenderMode('shaded')" id="btn-mode-shaded" class="px-2.5 py-1 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">Shaded</button>
+        <button onclick="setRenderMode('shaded')" id="btn-mode-shaded" class="px-2.5 py-1 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">Shaded Solid</button>
+        <button onclick="setRenderMode('fea')" id="btn-mode-fea" class="px-2.5 py-1 rounded text-slate-400 hover:text-white">FEA Stress Map</button>
+        <button onclick="setRenderMode('xray')" id="btn-mode-xray" class="px-2.5 py-1 rounded text-slate-400 hover:text-white">X-Ray Voids</button>
         <button onclick="setRenderMode('wireframe')" id="btn-mode-wireframe" class="px-2.5 py-1 rounded text-slate-400 hover:text-white">Wireframe</button>
-        <button onclick="setRenderMode('xray')" id="btn-mode-xray" class="px-2.5 py-1 rounded text-slate-400 hover:text-white">X-Ray</button>
+      </div>
+
+      <!-- FEA Stress Legend (Bottom Right in Viewport, visible in FEA mode) -->
+      <div class="absolute bottom-4 right-4 glass-panel p-2.5 rounded-xl text-[10px] font-mono z-10 flex flex-col gap-1 hidden" id="fea-legend">
+        <span class="text-slate-400 font-bold uppercase tracking-wider">Von Mises Stress (MPa)</span>
+        <div class="w-36 h-3 rounded flex overflow-hidden border border-slate-700">
+          <div class="flex-1 bg-blue-500" title="Low Stress"></div>
+          <div class="flex-1 bg-cyan-400"></div>
+          <div class="flex-1 bg-emerald-400"></div>
+          <div class="flex-1 bg-yellow-400"></div>
+          <div class="flex-1 bg-orange-500"></div>
+          <div class="flex-1 bg-red-500" title="Yield Concentration"></div>
+        </div>
+        <div class="flex justify-between text-slate-400 text-[9px]">
+          <span>0 MPa (Evacuated)</span>
+          <span id="legend-max-stress">270 MPa</span>
+        </div>
       </div>
     </div>
 
-    <!-- Right Properties & Mass Analysis Inspector -->
-    <div class="w-84 glass-panel border-y-0 border-r-0 border-l border-slate-800 p-5 flex flex-col gap-5 overflow-y-auto z-10 text-xs">
-      <div>
-        <h2 class="text-xs font-bold uppercase tracking-wider text-cyan-400 mb-1">Parametric Dimensions</h2>
-        <p class="text-slate-400 text-[11px]">Directly mutate geometric features in real-time.</p>
-      </div>
-
-      <!-- Parametric Sliders -->
-      <div class="space-y-4 font-mono">
-        <div class="space-y-1">
-          <div class="flex justify-between">
-            <span class="text-slate-300">OUTER RADIUS (R1)</span>
-            <span class="text-cyan-400 font-bold" id="dim-val-r1">50 mm</span>
+    <!-- Right Properties & Generative Telemetry Inspector -->
+    <div class="w-96 glass-panel border-y-0 border-r-0 border-l border-slate-800 p-5 flex flex-col gap-5 overflow-y-auto z-10 text-xs">
+      
+      <!-- Alien Meter Hero Control -->
+      <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-3">
+        <div class="flex justify-between items-center">
+          <div>
+            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200 flex items-center gap-1.5">
+              <span class="text-cyan-400">👽 ALIEN METER</span>
+              <span class="text-[9px] bg-cyan-950/60 text-cyan-300 border border-cyan-800/60 px-1.5 py-0.5 rounded font-mono" id="alien-level-tag">50%</span>
+            </h2>
+            <p class="text-[10px] text-slate-400 font-mono" id="alien-regime-label">AEROSPACE TOPO OPTIMIZATION</p>
           </div>
-          <input type="range" min="30" max="80" value="50" oninput="updateParam('r1', this.value)" class="w-full h-1 bg-slate-800 rounded accent-cyan-400 cursor-pointer">
+          <span class="text-lg font-bold font-mono text-cyan-300" id="alien-pct-display">50%</span>
         </div>
 
-        <div class="space-y-1">
-          <div class="flex justify-between">
-            <span class="text-slate-300">INNER BORE (R2)</span>
-            <span class="text-cyan-400 font-bold" id="dim-val-r2">20 mm</span>
-          </div>
-          <input type="range" min="10" max="25" value="20" oninput="updateParam('r2', this.value)" class="w-full h-1 bg-slate-800 rounded accent-cyan-400 cursor-pointer">
-        </div>
+        <input type="range" min="0" max="100" value="50" oninput="updateAlienMeter(this.value)" class="alien-slider w-full cursor-pointer">
 
-        <div class="space-y-1">
-          <div class="flex justify-between">
-            <span class="text-slate-300">THICKNESS / HEIGHT</span>
-            <span class="text-cyan-400 font-bold" id="dim-val-h">25 mm</span>
-          </div>
-          <input type="range" min="10" max="50" value="25" oninput="updateParam('h', this.value)" class="w-full h-1 bg-slate-800 rounded accent-cyan-400 cursor-pointer">
+        <div class="flex justify-between text-[9px] font-mono text-slate-400">
+          <span>0% Prismatic</span>
+          <span>50% Aerospace</span>
+          <span>100% Art/Bio</span>
         </div>
       </div>
 
-      <!-- Mass Property Analysis Card -->
+      <!-- Engineering Compromise Card -->
       <div class="bg-slate-900/90 rounded-xl p-4 border border-slate-800 space-y-3 font-mono">
         <div class="flex justify-between items-center border-b border-slate-800 pb-2">
-          <span class="text-slate-400 font-bold text-[10px] uppercase tracking-wider">Mass Properties</span>
-          <span class="px-2 py-0.5 bg-emerald-950/60 text-emerald-400 border border-emerald-800/60 rounded text-[10px]">MANIFOLD SOLID</span>
+          <span class="text-slate-400 font-bold text-[10px] uppercase tracking-wider">Engineering Compromise</span>
+          <span class="px-2 py-0.5 bg-cyan-950/60 text-cyan-400 border border-cyan-800/60 rounded text-[9px]" id="compromise-status-tag">OPTIMAL COMPLIANCE</span>
         </div>
 
         <div class="space-y-2 text-[11px]">
-          <div class="flex justify-between">
-            <span class="text-slate-400">MATERIAL:</span>
-            <select onchange="updateMaterial(this.value)" id="material-select" class="bg-slate-950 border border-slate-800 rounded px-2 py-0.5 text-cyan-300 text-[11px]">
-              <option value="aluminum">Aluminum 6061 (2.70 g/cm³)</option>
-              <option value="steel">Stainless 304 (7.93 g/cm³)</option>
-              <option value="pla">PLA Plastic (1.24 g/cm³)</option>
-              <option value="titanium">Titanium Ti-6Al-4V (4.43 g/cm³)</option>
+          <div class="flex justify-between items-center">
+            <span class="text-slate-400">ALLOY / MATERIAL:</span>
+            <select onchange="updateMaterial(this.value)" id="material-select" class="bg-slate-950 border border-slate-800 rounded px-2 py-0.5 text-cyan-300 text-[10px]">
+              <option value="ti64">Titanium Ti-6Al-4V (Yield: 880 MPa)</option>
+              <option value="al10" selected>AlSi10Mg Aluminum (Yield: 270 MPa)</option>
+              <option value="in718">Inconel 718 (Yield: 1100 MPa)</option>
+              <option value="pa12">PA12 Nylon SLS (Yield: 48 MPa)</option>
             </select>
           </div>
+
           <div class="flex justify-between">
-            <span class="text-slate-400">SOLID VOLUME:</span>
-            <span class="text-slate-200 font-bold" id="prop-volume">82,460 mm³</span>
+            <span class="text-slate-400">MASS REDUCTION:</span>
+            <span class="text-emerald-400 font-bold" id="telemetry-mass-reduction">-45.2%</span>
           </div>
+
           <div class="flex justify-between">
-            <span class="text-slate-400">SURFACE AREA:</span>
-            <span class="text-slate-200 font-bold" id="prop-area">34,120 mm²</span>
+            <span class="text-slate-400">ACTIVE SOLID MASS:</span>
+            <span class="text-slate-200 font-bold" id="telemetry-active-mass">182.4 g</span>
           </div>
-          <div class="flex justify-between border-t border-slate-800/60 pt-1.5">
-            <span class="text-slate-400">TOTAL MASS:</span>
-            <span class="text-cyan-400 font-bold" id="prop-mass">222.6 g</span>
+
+          <div class="flex justify-between">
+            <span class="text-slate-400">MAX VON MISES STRESS:</span>
+            <span class="text-yellow-400 font-bold" id="telemetry-stress">142 MPa</span>
+          </div>
+
+          <div class="flex justify-between">
+            <span class="text-slate-400">FACTOR OF SAFETY (FS):</span>
+            <span class="text-emerald-400 font-bold" id="telemetry-fs">1.90</span>
+          </div>
+
+          <div class="flex justify-between">
+            <span class="text-slate-400">MAX PEAK DEFLECTION:</span>
+            <span class="text-slate-200 font-bold" id="telemetry-deflection">0.24 mm</span>
+          </div>
+
+          <div class="flex justify-between border-t border-slate-800/60 pt-2">
+            <span class="text-slate-400">DMLS PRINTABILITY:</span>
+            <span class="text-cyan-400 font-bold text-[10px]" id="telemetry-printability">92% Self-Supporting</span>
           </div>
         </div>
       </div>
 
-      <!-- Export Formats -->
-      <div class="bg-slate-900/90 rounded-xl p-4 border border-slate-800 space-y-2">
-        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Export Pipeline</span>
-        <div class="grid grid-cols-2 gap-1.5 font-mono text-[11px]">
-          <button class="px-2 py-1.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded text-cyan-300 text-left">.STEP (ISO 10303)</button>
-          <button class="px-2 py-1.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded text-purple-300 text-left">.STL (Binary)</button>
-          <button class="px-2 py-1.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded text-emerald-300 text-left">.DXF (CNC 2D)</button>
-          <button class="px-2 py-1.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded text-blue-300 text-left">.GLTF (3D Web)</button>
+      <!-- Additive Manufacturing Guidance -->
+      <div class="bg-slate-900/90 rounded-xl p-3.5 border border-slate-800 space-y-1.5 text-[11px]">
+        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block font-mono">Additive Fabrication Advice</span>
+        <p class="text-slate-300 leading-relaxed text-[11px]" id="additive-notes">
+          Direct Metal Laser Sintering (DMLS) recommended. Overhang angles remain under 45 degrees relative to build plate. No internal trapped powder pockets.
+        </p>
+      </div>
+
+      <!-- Export Deliverables -->
+      <div class="bg-slate-900/90 rounded-xl p-3.5 border border-slate-800 space-y-2">
+        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block font-mono">Export Pipeline</span>
+        <div class="grid grid-cols-2 gap-1.5 font-mono text-[10px]">
+          <button onclick="simulateExport('step')" class="px-2 py-1.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded text-cyan-300 text-left transition">.STEP (B-Rep)</button>
+          <button onclick="simulateExport('stl')" class="px-2 py-1.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded text-purple-300 text-left transition">.STL (DMLS Mesh)</button>
+          <button onclick="simulateExport('3mf')" class="px-2 py-1.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded text-emerald-300 text-left transition">.3MF (Additive)</button>
+          <button onclick="simulateExport('fcstd')" class="px-2 py-1.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded text-blue-300 text-left transition">.FCStd (FreeCAD)</button>
         </div>
       </div>
 
-      <div class="p-3 bg-cyan-950/20 border border-cyan-800/40 rounded-xl text-[11px] text-slate-400 space-y-1 mt-auto">
-        <span class="text-cyan-400 font-bold block">&bull; B-Rep Kernel</span>
-        <span>Parametric OpenCASCADE kernel integration via build123d Python pipelines with deterministic mesh export.</span>
+      <div class="p-3 bg-slate-900/90 border border-slate-800 rounded-xl text-[10px] text-slate-400 space-y-1 mt-auto font-mono">
+        <span class="text-cyan-400 font-bold block">&bull; Generative Topology Engine</span>
+        <span>Governed by SIMP density penalization (p=3.0) and FEA compliance minimization for additive manufacturing.</span>
       </div>
+
     </div>
 
   </div>
@@ -188,18 +285,25 @@
   <script>
     const container = document.getElementById('canvas-container');
     let scene, camera, renderer, controls;
-    let currentMesh = null;
-    let currentModelType = 'flange';
+    let modelGroup = null;
+    let currentModel = 'bracket';
     let renderMode = 'shaded';
-    let params = { r1: 50, r2: 20, h: 25 };
-    let materialDensity = 2.70; // Aluminum 6061 (g/cm^3)
+    let alienLevel = 50; // 0 to 100
+    let activeMaterial = 'al10';
+
+    const materialsData = {
+      al10: { name: 'AlSi10Mg Aluminum', yield: 270, density: 2.67, baseColor: 0x94a3b8, roughness: 0.35, metalness: 0.8 },
+      ti64: { name: 'Titanium Ti-6Al-4V', yield: 880, density: 4.43, baseColor: 0x64748b, roughness: 0.45, metalness: 0.85 },
+      in718: { name: 'Inconel 718', yield: 1100, density: 8.19, baseColor: 0x475569, roughness: 0.3, metalness: 0.9 },
+      pa12: { name: 'PA12 Nylon SLS', yield: 48, density: 1.01, baseColor: 0xe2e8f0, roughness: 0.8, metalness: 0.1 }
+    };
 
     function init() {
       scene = new THREE.Scene();
       scene.background = new THREE.Color(0x020617);
 
       camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
-      camera.position.set(120, 100, 140);
+      camera.position.set(130, 110, 150);
 
       renderer = new THREE.WebGLRenderer({ antialias: true });
       renderer.setSize(container.clientWidth, container.clientHeight);
@@ -211,26 +315,33 @@
       controls.enableDamping = true;
       controls.dampingFactor = 0.05;
 
-      // Lights
-      const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+      // Lighting
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.45);
       scene.add(ambientLight);
 
-      const dirLight1 = new THREE.DirectionalLight(0x22d3ee, 0.8);
-      dirLight1.position.set(100, 150, 100);
+      const dirLight1 = new THREE.DirectionalLight(0x38bdf8, 0.9);
+      dirLight1.position.set(120, 180, 120);
+      dirLight1.castShadow = true;
       scene.add(dirLight1);
 
-      const dirLight2 = new THREE.DirectionalLight(0xffffff, 0.5);
-      dirLight2.position.set(-100, -50, -100);
+      const dirLight2 = new THREE.DirectionalLight(0xa855f7, 0.6);
+      dirLight2.position.set(-120, 80, -100);
       scene.add(dirLight2);
 
-      // Grid Floor
-      const grid = new THREE.GridHelper(200, 20, 0x1e293b, 0x0f172a);
-      grid.position.y = -20;
+      // Bottom rim light for organic undercuts
+      const bottomLight = new THREE.DirectionalLight(0x10b981, 0.3);
+      bottomLight.position.set(0, -100, 0);
+      scene.add(bottomLight);
+
+      // Engineering Grid Floor
+      const grid = new THREE.GridHelper(260, 26, 0x1e293b, 0x0f172a);
+      grid.position.y = -35;
       scene.add(grid);
 
       window.addEventListener('resize', onWindowResize);
 
-      buildModel();
+      rebuildGeometry();
+      updateTelemetry();
       animate();
     }
 
@@ -240,192 +351,421 @@
       renderer.setSize(container.clientWidth, container.clientHeight);
     }
 
-    function buildModel() {
-      if (currentMesh) scene.remove(currentMesh);
-
-      const group = new THREE.Group();
-
-      let mat;
-      if (renderMode === 'wireframe') {
-        mat = new THREE.MeshBasicMaterial({ color: 0x22d3ee, wireframe: true });
-      } else if (renderMode === 'xray') {
-        mat = new THREE.MeshPhysicalMaterial({
-          color: 0x38bdf8,
-          transparent: true,
-          opacity: 0.35,
-          roughness: 0.1,
-          transmission: 0.9,
-          ior: 1.5
-        });
-      } else {
-        mat = new THREE.MeshStandardMaterial({
-          color: 0x334155,
-          metalness: 0.7,
-          roughness: 0.25,
-          wireframe: false
-        });
-      }
-
-      if (currentModelType === 'flange') {
-        // Main base disc
-        const baseGeo = new THREE.CylinderGeometry(params.r1, params.r1, params.h * 0.4, 48);
-        const baseMesh = new THREE.Mesh(baseGeo, mat);
-        group.add(baseMesh);
-
-        // Center hub
-        const hubGeo = new THREE.CylinderGeometry(params.r1 * 0.55, params.r1 * 0.55, params.h, 48);
-        hubGeo.translate(0, params.h * 0.3, 0);
-        const hubMesh = new THREE.Mesh(hubGeo, mat);
-        group.add(hubMesh);
-
-        // Center bore inner cylinder (carved visual representation)
-        const boreGeo = new THREE.CylinderGeometry(params.r2, params.r2, params.h * 1.1, 32);
-        boreGeo.translate(0, params.h * 0.3, 0);
-        const boreMat = new THREE.MeshBasicMaterial({ color: 0x090d16 });
-        const boreMesh = new THREE.Mesh(boreGeo, boreMat);
-        group.add(boreMesh);
-
-        // Bolt holes around perimeter
-        const boltCount = 6;
-        const boltRadius = (params.r1 + params.r1 * 0.55) / 2;
-        for (let i = 0; i < boltCount; i++) {
-          const angle = (i / boltCount) * Math.PI * 2;
-          const bx = Math.cos(angle) * boltRadius;
-          const bz = Math.sin(angle) * boltRadius;
-          const boltHole = new THREE.CylinderGeometry(4, 4, params.h * 0.45, 16);
-          boltHole.translate(bx, 0, bz);
-          const bMesh = new THREE.Mesh(boltHole, boreMat);
-          group.add(bMesh);
-        }
-      } else if (currentModelType === 'gear') {
-        // Gear body
-        const gearGeo = new THREE.CylinderGeometry(params.r1 * 0.9, params.r1 * 0.9, params.h * 0.6, 48);
-        const gearMesh = new THREE.Mesh(gearGeo, mat);
-        group.add(gearMesh);
-
-        // Gear teeth around perimeter
-        const teethCount = 18;
-        for (let i = 0; i < teethCount; i++) {
-          const angle = (i / teethCount) * Math.PI * 2;
-          const tooth = new THREE.BoxGeometry(params.r1 * 0.25, params.h * 0.6, params.r1 * 0.12);
-          tooth.rotateY(-angle);
-          tooth.translate(Math.cos(angle) * params.r1 * 0.95, 0, Math.sin(angle) * params.r1 * 0.95);
-          const tMesh = new THREE.Mesh(tooth, mat);
-          group.add(tMesh);
-        }
-
-        // Center bore
-        const boreGeo = new THREE.CylinderGeometry(params.r2, params.r2, params.h, 32);
-        const boreMesh = new THREE.Mesh(boreGeo, new THREE.MeshBasicMaterial({ color: 0x090d16 }));
-        group.add(boreMesh);
-      } else if (currentModelType === 'bracket') {
-        // Base plate
-        const base = new THREE.BoxGeometry(params.r1 * 1.6, params.h * 0.3, params.r1 * 1.2);
-        base.translate(0, -params.h * 0.15, 0);
-        group.add(new THREE.Mesh(base, mat));
-
-        // Vertical wall
-        const wall = new THREE.BoxGeometry(params.r1 * 1.6, params.h * 1.2, params.h * 0.3);
-        wall.translate(0, params.h * 0.6, -params.r1 * 0.45);
-        group.add(new THREE.Mesh(wall, mat));
-
-        // Center gusset rib
-        const rib = new THREE.BoxGeometry(params.h * 0.25, params.h * 0.9, params.r1 * 0.7);
-        rib.translate(0, params.h * 0.4, 0);
-        group.add(new THREE.Mesh(rib, mat));
-      }
-
-      currentMesh = group;
-      scene.add(currentMesh);
-
-      calculateProperties();
-    }
-
-    function calculateProperties() {
-      // Approximate physical properties based on geometric parameters
-      let volCm3 = 0;
-      let areaCm2 = 0;
-
-      if (currentModelType === 'flange') {
-        const discVol = Math.PI * Math.pow(params.r1 / 10, 2) * (params.h * 0.4 / 10);
-        const hubVol = Math.PI * Math.pow((params.r1 * 0.55) / 10, 2) * (params.h * 0.6 / 10);
-        const boreVol = Math.PI * Math.pow(params.r2 / 10, 2) * (params.h / 10);
-        volCm3 = Math.max(10, discVol + hubVol - boreVol);
-        areaCm2 = volCm3 * 0.42;
-      } else if (currentModelType === 'gear') {
-        volCm3 = Math.PI * Math.pow(params.r1 / 10, 2) * (params.h * 0.6 / 10) * 1.15;
-        areaCm2 = volCm3 * 0.55;
-      } else {
-        volCm3 = (params.r1 * 1.6 / 10) * (params.h / 10) * (params.r1 * 1.2 / 10) * 0.45;
-        areaCm2 = volCm3 * 0.48;
-      }
-
-      const massGrams = volCm3 * materialDensity;
-
-      document.getElementById('prop-volume').textContent = `${(volCm3 * 1000).toFixed(0)} mm³`;
-      document.getElementById('prop-area').textContent = `${(areaCm2 * 100).toFixed(0)} mm²`;
-      document.getElementById('prop-mass').textContent = `${massGrams.toFixed(1)} g`;
-    }
-
     function setModel(type) {
-      currentModelType = type;
-      ['flange', 'gear', 'bracket'].forEach(m => {
-        const btn = document.getElementById(`btn-model-${m}`);
-        if (m === type) {
+      currentModel = type;
+      ['bracket', 'drone_arm', 'heat_sink', 'tpms_core'].forEach(id => {
+        const btn = document.getElementById('btn-model-' + id);
+        if (id === type) {
           btn.className = "px-3 py-1.5 rounded-lg font-medium transition bg-cyan-500/20 text-cyan-300 border border-cyan-500/40";
         } else {
           btn.className = "px-3 py-1.5 rounded-lg font-medium transition text-slate-400 hover:text-white border border-slate-800";
         }
       });
-      buildModel();
+      rebuildGeometry();
+      updateTelemetry();
     }
 
     function setRenderMode(mode) {
       renderMode = mode;
-      ['shaded', 'wireframe', 'xray'].forEach(m => {
-        const btn = document.getElementById(`btn-mode-${m}`);
+      document.getElementById('hud-render-mode').innerText = mode.toUpperCase();
+      ['shaded', 'fea', 'xray', 'wireframe'].forEach(m => {
+        const btn = document.getElementById('btn-mode-' + m);
         if (m === mode) {
           btn.className = "px-2.5 py-1 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40";
         } else {
           btn.className = "px-2.5 py-1 rounded text-slate-400 hover:text-white";
         }
       });
-      document.getElementById('view-mode-label').textContent = mode.toUpperCase();
-      buildModel();
+
+      const feaLegend = document.getElementById('fea-legend');
+      if (mode === 'fea') {
+        feaLegend.classList.remove('hidden');
+      } else {
+        feaLegend.classList.add('hidden');
+      }
+
+      applyMaterials();
     }
 
-    function updateParam(param, val) {
-      params[param] = parseFloat(val);
-      document.getElementById(`dim-val-${param}`).textContent = `${val} mm`;
-      buildModel();
+    function updateAlienMeter(val) {
+      alienLevel = parseInt(val, 10);
+      document.getElementById('alien-pct-display').innerText = alienLevel + '%';
+      document.getElementById('alien-level-tag').innerText = alienLevel + '%';
+
+      let regime = "PRISMATIC CAD (STANDARD)";
+      if (alienLevel > 25 && alienLevel <= 60) regime = "AEROSPACE TOPO OPTIMIZATION";
+      else if (alienLevel > 60 && alienLevel <= 85) regime = "BIOMIMETIC SKELETAL WEBS";
+      else if (alienLevel > 85) regime = "BIOMECHANICAL ART (MAX ALIEN)";
+
+      document.getElementById('alien-regime-label').innerText = regime;
+
+      rebuildGeometry();
+      updateTelemetry();
     }
 
-    function updateMaterial(val) {
-      const densities = {
-        aluminum: 2.70,
-        steel: 7.93,
-        pla: 1.24,
-        titanium: 4.43
-      };
-      materialDensity = densities[val] || 2.70;
-      calculateProperties();
+    function updateMaterial(matKey) {
+      activeMaterial = matKey;
+      applyMaterials();
+      updateTelemetry();
+    }
+
+    function getMaterialForSubPart(stressIntensity) {
+      // stressIntensity: 0.0 (near zero stress) to 1.0 (peak yield stress)
+      if (renderMode === 'wireframe') {
+        return new THREE.MeshBasicMaterial({ color: 0x38bdf8, wireframe: true });
+      }
+      if (renderMode === 'xray') {
+        return new THREE.MeshPhysicalMaterial({
+          color: 0x38bdf8,
+          transparent: true,
+          opacity: 0.35,
+          roughness: 0.1,
+          transmission: 0.85,
+          ior: 1.4
+        });
+      }
+      if (renderMode === 'fea') {
+        // Compute Jet/Rainbow gradient based on stress
+        const hue = (1.0 - Math.min(1.0, Math.max(0.0, stressIntensity))) * 0.65; // 0.65 (blue) down to 0.0 (red)
+        const color = new THREE.Color().setHSL(hue, 1.0, 0.5);
+        return new THREE.MeshStandardMaterial({
+          color: color,
+          roughness: 0.4,
+          metalness: 0.3
+        });
+      }
+
+      // Shaded Solid PBR
+      const mData = materialsData[activeMaterial];
+      return new THREE.MeshStandardMaterial({
+        color: mData.baseColor,
+        roughness: mData.roughness,
+        metalness: mData.metalness
+      });
+    }
+
+    function applyMaterials() {
+      if (!modelGroup) return;
+      modelGroup.traverse(child => {
+        if (child.isMesh) {
+          const stress = child.userData.stress || 0.3;
+          child.material = getMaterialForSubPart(stress);
+        }
+      });
+    }
+
+    function rebuildGeometry() {
+      if (modelGroup) scene.remove(modelGroup);
+      modelGroup = new THREE.Group();
+
+      const t = alienLevel / 100; // 0.0 to 1.0
+
+      if (currentModel === 'bracket') {
+        buildBracketModel(modelGroup, t);
+      } else if (currentModel === 'drone_arm') {
+        buildDroneArmModel(modelGroup, t);
+      } else if (currentModel === 'heat_sink') {
+        buildHeatSinkModel(modelGroup, t);
+      } else if (currentModel === 'tpms_core') {
+        buildTPMSModel(modelGroup, t);
+      }
+
+      scene.add(modelGroup);
+      applyMaterials();
+    }
+
+    // ── Model 1: Aerospace Cantilever Bracket ──────────────────────────────
+    function buildBracketModel(group, t) {
+      // Base Mounting Flange (Preserve Zone)
+      const baseGeo = new THREE.BoxGeometry(70, 10, 50);
+      const baseMesh = new THREE.Mesh(baseGeo);
+      baseMesh.position.set(0, -25, 0);
+      baseMesh.userData.stress = 0.2;
+      group.add(baseMesh);
+
+      // Upright Mounting Boss (Preserve Zone)
+      const bossGeo = new THREE.CylinderGeometry(14, 14, 25, 32);
+      bossGeo.rotateZ(Math.PI / 2);
+      const bossMesh = new THREE.Mesh(bossGeo);
+      bossMesh.position.set(0, 35, -20);
+      bossMesh.userData.stress = 0.9; // High load zone
+      group.add(bossMesh);
+
+      if (t < 0.25) {
+        // Prismatic solid web
+        const webThick = 24 - t * 16;
+        const webGeo = new THREE.BoxGeometry(webThick, 60, 45);
+        const webMesh = new THREE.Mesh(webGeo);
+        webMesh.position.set(0, 5, -10);
+        webMesh.userData.stress = 0.35;
+        group.add(webMesh);
+      } else {
+        // Topo Optimized Branching Struts
+        const strutRadius = Math.max(2.5, 9.0 * (1.0 - t * 0.7));
+        const numBranches = t > 0.65 ? 6 : 4;
+
+        for (let i = 0; i < numBranches; i++) {
+          const angle = (i / numBranches) * Math.PI - Math.PI / 2;
+          const curve = new THREE.CatmullRomCurve3([
+            new THREE.Vector3(Math.sin(angle) * (20 + t * 15), -20, Math.cos(angle) * 15),
+            new THREE.Vector3(Math.sin(angle) * 12 * (1.0 - t * 0.3), 5 + (i % 2 === 0 ? 8 : -8), -5),
+            new THREE.Vector3((i % 2 === 0 ? 8 : -8), 32, -20)
+          ]);
+          const tubeGeo = new THREE.TubeGeometry(curve, 20, strutRadius, 16, false);
+          const tubeMesh = new THREE.Mesh(tubeGeo);
+          tubeMesh.userData.stress = 0.5 + 0.45 * (i / numBranches);
+          group.add(tubeMesh);
+        }
+
+        // Alien tendril lattice bridges at high alien levels
+        if (t > 0.7) {
+          for (let k = 0; k < 5; k++) {
+            const crossCurve = new THREE.CatmullRomCurve3([
+              new THREE.Vector3(-18 + k * 9, -5, -8),
+              new THREE.Vector3(0, 8 + Math.sin(k) * 10, -14),
+              new THREE.Vector3(18 - k * 9, 22, -18)
+            ]);
+            const tendrilGeo = new THREE.TubeGeometry(crossCurve, 16, 1.8, 12, false);
+            const tendrilMesh = new THREE.Mesh(tendrilGeo);
+            tendrilMesh.userData.stress = 0.85;
+            group.add(tendrilMesh);
+          }
+        }
+      }
+    }
+
+    // ── Model 2: Drone Cantilever Arm ──────────────────────────────────────
+    function buildDroneArmModel(group, t) {
+      // Motor mount ring (Preserve zone)
+      const ringGeo = new THREE.CylinderGeometry(18, 18, 8, 32);
+      const ringMesh = new THREE.Mesh(ringGeo);
+      ringMesh.position.set(65, 0, 0);
+      ringMesh.userData.stress = 0.85;
+      group.add(ringMesh);
+
+      // Chassis root root block
+      const rootGeo = new THREE.BoxGeometry(20, 18, 25);
+      const rootMesh = new THREE.Mesh(rootGeo);
+      rootMesh.position.set(-60, 0, 0);
+      rootMesh.userData.stress = 0.95;
+      group.add(rootMesh);
+
+      if (t < 0.25) {
+        // Solid rectangular beam
+        const beamGeo = new THREE.BoxGeometry(110, 14, 18);
+        const beamMesh = new THREE.Mesh(beamGeo);
+        beamMesh.position.set(2, 0, 0);
+        beamMesh.userData.stress = 0.4;
+        group.add(beamMesh);
+      } else {
+        // Dual organic spar topology
+        const sparThick = Math.max(2.0, 7.0 * (1.0 - t * 0.65));
+        
+        // Upper tension spar
+        const upperCurve = new THREE.CatmullRomCurve3([
+          new THREE.Vector3(-50, 6, 8),
+          new THREE.Vector3(0, 14 * (1.0 - t * 0.4) + Math.sin(t * 5) * 4, 10 * (1.0 - t * 0.2)),
+          new THREE.Vector3(50, 3, 4)
+        ]);
+        const upperMesh = new THREE.Mesh(new THREE.TubeGeometry(upperCurve, 24, sparThick, 16, false));
+        upperMesh.userData.stress = 0.9;
+        group.add(upperMesh);
+
+        // Lower compression spar
+        const lowerCurve = new THREE.CatmullRomCurve3([
+          new THREE.Vector3(-50, -6, -8),
+          new THREE.Vector3(0, -14 * (1.0 - t * 0.4), -10 * (1.0 - t * 0.2)),
+          new THREE.Vector3(50, -3, -4)
+        ]);
+        const lowerMesh = new THREE.Mesh(new THREE.TubeGeometry(lowerCurve, 24, sparThick, 16, false));
+        lowerMesh.userData.stress = 0.75;
+        group.add(lowerMesh);
+
+        // Biomimetic truss web connections
+        const numWebs = t > 0.6 ? 8 : 4;
+        for (let w = 0; w < numWebs; w++) {
+          const ratio = (w + 1) / (numWebs + 1);
+          const xPos = -45 + ratio * 90;
+          const strutCurve = new THREE.CatmullRomCurve3([
+            new THREE.Vector3(xPos, 7, (w % 2 === 0 ? 6 : -6)),
+            new THREE.Vector3(xPos + (w % 2 === 0 ? 5 : -5), 0, 0),
+            new THREE.Vector3(xPos + 8, -7, (w % 2 === 0 ? -6 : 6))
+          ]);
+          const strutMesh = new THREE.Mesh(new THREE.TubeGeometry(strutCurve, 12, Math.max(1.5, sparThick * 0.6), 12, false));
+          strutMesh.userData.stress = 0.45 + 0.3 * Math.sin(w);
+          group.add(strutMesh);
+        }
+      }
+    }
+
+    // ── Model 3: Carapace Heat Sink ────────────────────────────────────────
+    function buildHeatSinkModel(group, t) {
+      // Thermal base plate (preserve zone)
+      const baseGeo = new THREE.BoxGeometry(80, 8, 80);
+      const baseMesh = new THREE.Mesh(baseGeo);
+      baseMesh.position.set(0, -20, 0);
+      baseMesh.userData.stress = 0.3;
+      group.add(baseMesh);
+
+      // CPU Die contact puck
+      const puckGeo = new THREE.CylinderGeometry(20, 20, 4, 32);
+      const puckMesh = new THREE.Mesh(puckGeo);
+      puckMesh.position.set(0, -25, 0);
+      puckMesh.userData.stress = 0.95;
+      group.add(puckMesh);
+
+      if (t < 0.25) {
+        // Standard straight fins
+        for (let f = -30; f <= 30; f += 10) {
+          const finGeo = new THREE.BoxGeometry(70, 35, 3);
+          const finMesh = new THREE.Mesh(finGeo);
+          finMesh.position.set(0, 0, f);
+          finMesh.userData.stress = 0.4;
+          group.add(finMesh);
+        }
+      } else {
+        // Generative branching convective coral spines
+        const numSpines = t > 0.65 ? 24 : 14;
+        for (let s = 0; s < numSpines; s++) {
+          const angle = (s / numSpines) * Math.PI * 2;
+          const dist = 12 + (s % 3) * 12;
+          const x0 = Math.cos(angle) * dist;
+          const z0 = Math.sin(angle) * dist;
+
+          const spineCurve = new THREE.CatmullRomCurve3([
+            new THREE.Vector3(x0, -16, z0),
+            new THREE.Vector3(x0 * 1.3, 0, z0 * 1.3),
+            new THREE.Vector3(x0 * (1.6 + t * 0.8) + Math.sin(s + t * 5) * 8, 25 + Math.cos(s) * 8, z0 * (1.6 + t * 0.8))
+          ]);
+          const spineMesh = new THREE.Mesh(new THREE.TubeGeometry(spineCurve, 16, Math.max(1.8, 4.5 * (1.0 - t * 0.5)), 12, false));
+          spineMesh.userData.stress = 0.3 + 0.5 * (1.0 - s / numSpines);
+          group.add(spineMesh);
+        }
+      }
+    }
+
+    // ── Model 4: TPMS Gyroid Lattice Core ──────────────────────────────────
+    function buildTPMSModel(group, t) {
+      if (t < 0.2) {
+        // Solid cube
+        const cubeGeo = new THREE.BoxGeometry(60, 60, 60);
+        const cubeMesh = new THREE.Mesh(cubeGeo);
+        cubeMesh.userData.stress = 0.25;
+        group.add(cubeMesh);
+      } else {
+        // Gyroid lattice cell array simulation
+        const gridSize = 4;
+        const spacing = 14;
+        const cellRadius = Math.max(1.4, 5.0 * (1.0 - t * 0.65));
+
+        for (let x = -gridSize / 2; x < gridSize / 2; x++) {
+          for (let y = -gridSize / 2; y < gridSize / 2; y++) {
+            for (let z = -gridSize / 2; z < gridSize / 2; z++) {
+              // Mathematical Gyroid approximation: sin(x)cos(y) + sin(y)cos(z) + sin(z)cos(x)
+              const val = Math.sin(x) * Math.cos(y) + Math.sin(y) * Math.cos(z) + Math.sin(z) * Math.cos(x);
+              if (Math.abs(val) < (1.2 - t * 0.8)) {
+                const nodeGeo = new THREE.SphereGeometry(cellRadius, 10, 10);
+                const nodeMesh = new THREE.Mesh(nodeGeo);
+                nodeMesh.position.set(x * spacing + spacing / 2, y * spacing + spacing / 2, z * spacing + spacing / 2);
+                nodeMesh.userData.stress = 0.4 + 0.55 * Math.abs(val);
+                group.add(nodeMesh);
+
+                // Strut connections to neighboring nodes
+                const strutGeo = new THREE.CylinderGeometry(cellRadius * 0.6, cellRadius * 0.6, spacing, 8);
+                const strutMesh = new THREE.Mesh(strutGeo);
+                strutMesh.position.set(x * spacing + spacing / 2, y * spacing, z * spacing + spacing / 2);
+                strutMesh.userData.stress = 0.6;
+                group.add(strutMesh);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // ── Live Telemetry & Engineering Compromise Calculation ───────────────
+    function updateTelemetry() {
+      const t = alienLevel / 100;
+      const mData = materialsData[activeMaterial];
+
+      // Physical modeling calculations:
+      // Mass reduction correlates directly with alien topology level
+      const massReductionPct = (t * 74.0).toFixed(1); // 0% up to 74%
+      const initialMass = (currentModel === 'bracket' ? 420 : currentModel === 'drone_arm' ? 280 : 380) * (mData.density / 2.70);
+      const activeMass = (initialMass * (1.0 - t * 0.74)).toFixed(1);
+
+      // Factor of Safety curve: drops non-linearly as material evacuates
+      let fs = (3.5 * Math.exp(-t * 1.55)).toFixed(2);
+      if (fs < 0.4) fs = 0.40;
+
+      // Peak stress rises as cross-sections narrow
+      const peakStress = Math.round(75 + t * t * 240);
+      const deflection = (0.05 + t * t * 1.45).toFixed(2);
+
+      document.getElementById('telemetry-mass-reduction').innerText = '-' + massReductionPct + '%';
+      document.getElementById('telemetry-active-mass').innerText = activeMass + ' g';
+      document.getElementById('telemetry-stress').innerText = peakStress + ' MPa';
+      document.getElementById('telemetry-fs').innerText = fs;
+      document.getElementById('telemetry-deflection').innerText = deflection + ' mm';
+      document.getElementById('legend-max-stress').innerText = mData.yield + ' MPa';
+
+      // Printability assessment
+      let printability = "100% Self-Supporting (Machinable/FDM)";
+      let advice = "Conventional subtractive machining or basic FDM printing. Maximum stiffness, thick cross-sections, zero risk of under-load failure.";
+      let badgeColor = "border-emerald-500/60 bg-emerald-950/40 text-emerald-300";
+      let statusTag = "HIGH RIGIDITY";
+
+      if (t > 0.25 && t <= 0.60) {
+        printability = "92% Self-Supporting (DMLS / SLS)";
+        advice = "Optimized for Direct Metal Laser Sintering (DMLS) or SLS Nylon. Overhang angles remain under 45 degrees. Safe for critical flight envelopes.";
+        badgeColor = "border-cyan-500/60 bg-cyan-950/40 text-cyan-300";
+        statusTag = "AEROSPACE COMPLIANT";
+      } else if (t > 0.60 && t <= 0.85) {
+        printability = "76% Supported (DMLS Wire EDM)";
+        advice = "High-stress biomimicry. Requires build plate support anchors during powder sintering. Noticeable elastic deflection under high mechanical loads.";
+        badgeColor = "border-yellow-500/60 bg-yellow-950/40 text-yellow-300";
+        statusTag = "NON-CRITICAL / EXPERIMENTAL";
+      } else if (t > 0.85) {
+        printability = "Complex Lattice (Sacrificial Supports)";
+        advice = "Hyper-organic sculpture. Structural integrity is compromised (FS < 1.0 under design load). Recommended for generative art, cosplay props, and visual prototypes.";
+        badgeColor = "border-purple-500/60 bg-purple-950/40 text-purple-300";
+        statusTag = "ART & DISPLAY ONLY";
+      }
+
+      document.getElementById('telemetry-printability').innerText = printability;
+      document.getElementById('additive-notes').innerText = advice;
+      document.getElementById('compromise-status-tag').innerText = statusTag;
+
+      // Update Viewport HUD Badge
+      const badge = document.getElementById('compromise-badge');
+      badge.className = `absolute top-4 right-4 glass-panel px-4 py-2.5 rounded-xl text-xs font-mono z-10 max-w-sm flex flex-col gap-1 border-l-4 ${badgeColor}`;
+      document.getElementById('fs-badge-val').innerText = 'FS = ' + fs;
+      document.getElementById('fs-badge-desc').innerText = advice;
     }
 
     function resetCamera() {
-      camera.position.set(120, 100, 140);
+      camera.position.set(130, 110, 150);
       controls.target.set(0, 0, 0);
+      controls.update();
+    }
+
+    function simulateExport(format) {
+      alert(`Exporting ${currentModel.toUpperCase()} at Alien Level ${alienLevel}% as .${format.toUpperCase()} with ${materialsData[activeMaterial].name} material telemetry included.`);
     }
 
     function animate() {
       requestAnimationFrame(animate);
-      if (currentMesh) {
-        currentMesh.rotation.y += 0.003;
-      }
       controls.update();
+
+      // Subtle slow rotation if idle
+      if (modelGroup && !controls.state == -1) {
+        modelGroup.rotation.y += 0.001;
+      }
+
       renderer.render(scene, camera);
     }
 
-    init();
+    window.onload = init;
   </script>
 </body>
 </html>

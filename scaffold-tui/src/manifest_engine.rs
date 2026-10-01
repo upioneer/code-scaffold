@@ -24,21 +24,21 @@ pub struct DeploymentReport {
     pub finished_unix: u64,
 }
 
-/// Standard typing math: 40 words per minute at 5 characters per word.
+/// Standard typing math: 60 words per minute at 5 characters per word.
 pub fn keystroke_equivalent_minutes(chars: u64) -> f64 {
-    chars as f64 / 200.0
+    chars as f64 / 300.0
 }
 
 pub fn format_keystroke_equivalent(chars: u64) -> String {
     let total_minutes = keystroke_equivalent_minutes(chars).round() as u64;
     if total_minutes < 1 {
-        return "under a minute of typing at 40 wpm".to_string();
+        return "under a minute of typing at 60 wpm".to_string();
     }
     if total_minutes < 60 {
-        return format!("~{} min of typing at 40 wpm", total_minutes);
+        return format!("~{} min of typing at 60 wpm", total_minutes);
     }
     format!(
-        "~{}h {:02}m of typing at 40 wpm",
+        "~{}h {:02}m of typing at 60 wpm",
         total_minutes / 60,
         total_minutes % 60
     )
@@ -598,8 +598,8 @@ mod tests {
     #[test]
     fn test_keystroke_equivalent_math() {
         assert_eq!(keystroke_equivalent_minutes(0), 0.0);
-        assert_eq!(keystroke_equivalent_minutes(12_000), 60.0);
-        assert_eq!(keystroke_equivalent_minutes(200), 1.0);
+        assert_eq!(keystroke_equivalent_minutes(12_000), 40.0);
+        assert_eq!(keystroke_equivalent_minutes(300), 1.0);
     }
 
     #[test]
@@ -607,11 +607,11 @@ mod tests {
         assert!(format_keystroke_equivalent(50).contains("under a minute"));
         assert_eq!(
             format_keystroke_equivalent(9_000),
-            "~45 min of typing at 40 wpm"
+            "~30 min of typing at 60 wpm"
         );
         assert_eq!(
             format_keystroke_equivalent(48_000),
-            "~4h 00m of typing at 40 wpm"
+            "~2h 40m of typing at 60 wpm"
         );
     }
 
@@ -648,7 +648,7 @@ mod tests {
         assert!(card.contains("Directories created: 8"));
         assert!(card.contains("Agent contexts bound: 12"));
         assert!(card.contains(".env keys written: 24"));
-        assert!(card.contains("Keystroke equivalent: ~20h 00m of typing at 40 wpm"));
+        assert!(card.contains("Keystroke equivalent: ~13h 20m of typing at 60 wpm"));
         assert!(card.contains("Previous deploy: 300 files in 6.9s (1m ago)"));
         assert!(card.contains("Press [Esc] to exit."));
     }

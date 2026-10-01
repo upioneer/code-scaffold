@@ -19,7 +19,7 @@ Welcome to the official **Code Scaffold Skills Library**. This curated registry 
 | Skill | Description | Search Keywords | Version | Path |
 | :--- | :--- | :--- | :--- | :--- |
 | **Braille Animations** | Create and manage unicode braille animations and spinners for CLIs and web apps. | `braille-art`, `terminal-animations`, `ascii-art` | v4 | `.skills/braille-animations` |
-| **CAD Tools** | Comprehensive CAD/CAM engineering skill for AI agents :  orchestrating parametric 3D modeling, multi-format conversion, mass property analysis, desktop CAD automation, and AI-generative geometry workflows using open-source and cloud toolchains. | `cad`, `3d-modeling`, `step-files` | v5 | `.skills/cad-tools` |
+| **CAD Tools** | Comprehensive CAD/CAM engineering skill for AI agents : orchestrating generative design, topology optimization with the Alien Meter slider, FreeCAD socket/headless automation, parametric 3D modeling, additive manufacturing (DMLS/SLS), and multi-format conversion. | `cad`, `generative-design`, `topology-optimization`, `alien-meter`, `freecad` | v8 | `.skills/cad-tools` |
 | **Kinetic Canvas** | Ultra-fast, zero-dependency WebGL shaders and interactive HTML canvases wrapped as native React components. | `kinetic-canvas`, `canvas-api`, `physics-simulation` | v7 | `.skills/kinetic-canvas` |
 | **Manim Math Animations** | Mathematical animations using the Manim library. | `manim`, `math-animation`, `python-video` | v5 | `.skills/manim` |
 | **p5.js Creative Coding** | Creative coding and visual animations using the p5.js library. | `p5js`, `creative-coding`, `canvas2d` | v5 | `.skills/p5js` |
