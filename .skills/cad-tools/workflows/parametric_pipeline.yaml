@@ -1,0 +1,66 @@
+name: Parametric CAD Generation Pipeline
+version: 1.0.0
+description: Declarative workflow for executing parametric CAD modeling, validation, and multi-format asset exports.
+
+inputs:
+  component_name:
+    type: string
+    description: Unique component identifier
+    default: "chassis_bracket"
+  engine:
+    type: string
+    description: Geometry engine to invoke (freecad or build123d)
+    default: "freecad"
+  export_formats:
+    type: array
+    description: List of formats to emit
+    default: ["step", "stl", "dxf"]
+
+jobs:
+  geometry_synthesis:
+    name: Synthesize Parametric Solid
+    steps:
+      - name: Initialize Document and Body
+        action: cad.initialize_context
+        inputs:
+          engine: ${{ inputs.engine }}
+          document_name: ${{ inputs.component_name }}
+
+      - name: Build Parametric Features
+        action: cad.execute_features
+        inputs:
+          source_model: "cad/models/${{ inputs.component_name }}.py"
+          transactional_rollback: true
+
+      - name: Export Geometric Assets
+        action: cad.export_deliverables
+        inputs:
+          formats: ${{ inputs.export_formats }}
+          destination: "cad/output/"
+
+  quality_audit:
+    name: Validate Manufacturing Readiness
+    needs: [geometry_synthesis]
+    steps:
+      - name: Audit Mesh Watertightness
+        action: validation.mesh_audit
+        inputs:
+          mesh_path: "cad/output/${{ inputs.component_name }}.stl"
+          max_overhang_angle: 45.0
+
+      - name: Compute Mass Properties
+        action: validation.mass_properties
+        inputs:
+          model_path: "cad/output/${{ inputs.component_name }}.step"
+          material: "Al6061"
+
+  visual_telemetry:
+    name: Multi-Angle Snapshot Rendering
+    needs: [geometry_synthesis]
+    steps:
+      - name: Capture Inspection Renders
+        action: cad.render_views
+        inputs:
+          model_path: "cad/output/${{ inputs.component_name }}.step"
+          angles: ["isometric", "top", "front", "side"]
+          output_dir: "cad/output/renders"

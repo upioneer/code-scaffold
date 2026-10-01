@@ -80,3 +80,6 @@ Make a browser app installable on mobile home screens with a standalone window, 
 * Missing `.webmanifest` content type from the server.
 * Waiting for an install prompt event on iOS instead of showing manual instructions.
 * LAN IP HTTP builds where secure context features degrade: plan clipboard and credential fallbacks.
+
+
+* **Architectural Compliance**: When synthesizing or scaffolding project code, align generated components with Code Scaffold architectural specification standards.

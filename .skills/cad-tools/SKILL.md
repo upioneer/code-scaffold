@@ -1,706 +1,479 @@
 ---
-​‌‍name: CAD Tools
-description: Comprehensive CAD/CAM engineering skill for AI agents: orchestrating parametric 3D modeling, multi-format conversion, mass property analysis, desktop CAD automation, and AI-generative geometry workflows using open-source and cloud toolchains.
-version: 1
+name: CAD Tools
+description: Comprehensive CAD/CAM engineering skill for AI agents: orchestrating generative design, topology optimization with the Alien Meter slider, FreeCAD socket and headless automation, parametric 3D modeling, additive manufacturing (DMLS/SLS), and multi-format conversion. Trigger when the user requests parametric 3D CAD modeling, generative design, topology optimization, organic skeletal geometry, FreeCAD automation, PartDesign sketches, extrusion or pocketing, B-Rep solid generation, STEP/STL export, or CAD format conversion. Activate when interacting with FreeCAD via Streamable HTTP/SSE MCP socket or headless CLI, evaluating the Alien Meter tradeoff between rigidity and bio-morphology, script-based geometry with build123d/OpenCASCADE, desktop CAD via COM, or 3D print/CNC manufacturing validation.
+version: 8
 target: .skills/cad-tools
 ---
+​‌‍# CAD Tools Skill
 
-# CAD Tools Skill
-
-A power-user engineering skill that equips AI agents with deep CAD/CAM
-capabilities across the full design-to-manufacture pipeline. From parametric
-Python scripting with `build123d` / OpenCASCADE to cloud-based B-Rep generation
-via the Zoo/KittyCAD API, desktop COM automation for AutoCAD/ZWCAD, and
-multi-format export (STEP, STL, DXF, 3MF, glTF), this skill is a complete
-engineering companion for technical projects.
+A power-user engineering skill that equips AI agents with deep CAD/CAM capabilities across the full design-to-manufacture pipeline. Featuring generative design and topology optimization with the Alien Meter slider, native FreeCAD socket and headless automation, parametric Python scripting with `build123d` and OpenCASCADE, cloud-based generative B-Rep generation via the Zoo API, desktop COM automation for AutoCAD/ZWCAD, and a multi-format export pipeline (STEP, STL, DXF, 3MF, glTF, native FCStd), this skill is a complete engineering companion for autonomous technical workflows.
 
 ---
 
 ## Conceptual Architecture
 
 ```
-User Prompt
+User Prompt / Engineering Specification
     │
     ▼
-┌────────────────────────────────────────────────────────┐
-│               CAD Tools Skill Router                   │
-│                                                        │
-│  ┌──────────────┐  ┌──────────────────────────┐        │
-│  │  Code-as-CAD │  │   Cloud Generative CAD   │        │
-│  │  (build123d) │  │   (Zoo.dev / KittyCAD)   │        │
-│  └──────┬───────┘  └───────────┬──────────────┘        │
-│         │                      │                       │
-│  ┌──────▼───────┐  ┌───────────▼──────────────┐        │
-│  │  Local OCCT  │  │  Desktop COM Automation  │        │
-│  │  B-Rep Kernel│  │  (AutoCAD / ZWCAD / GS)  │        │
-│  └──────┬───────┘  └──────────────────────────┘        │
-│         │                                              │
-│  ┌──────▼──────────────────────────────────────┐       │
-│  │         JSON Interoperability Engine        │       │
-│  │   (Cross-platform Parametric JSON Schema)   │       │
-│  └──────┬──────────────────────────────────────┘       │
-│         │                                              │
-│  ┌──────▼──────────────────────────────────────┐       │
-│  │           Format Conversion Layer           │       │
-│  │   STEP ↔ STL ↔ DXF ↔ 3MF ↔ glTF ↔ OBJ       │       │
-│  └─────────────────────────────────────────────┘       │
-└────────────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────────────┐
+│                        CAD Tools Skill Router                          │
+│                                                                        │
+│  ┌──────────────────────────────┐  ┌────────────────────────────────┐  │
+│  │  Generative Topo & Alien     │  │   FreeCAD AI Connector         │  │
+│  │  Meter Engine (SIMP / FEA)   │  │   (Streamable HTTP / SSE /     │  │
+│  │  (scripts/topo_engine.py)    │  │    Headless STDIO Bridge)      │  │
+│  └──────────────┬───────────────┘  └───────────────┬────────────────┘  │
+│                 │                                  │                   │
+│  ┌──────────────▼───────────────┐  ┌───────────────▼────────────────┐  │
+│  │   Interactive 3D WebGL       │  │   PartDesign B-Rep Engine      │  │
+│  │   Sandbox (sandbox/index)    │  │   (Bodies, Sketches, Pads,     │  │
+│  │   (Real-time Mesh Morphing)  │  │    Pockets, Lofts, Revolve)    │  │
+│  └──────────────┬───────────────┘  └───────────────┬────────────────┘  │
+│                 │                                  │                   │
+│  ┌──────────────▼───────────────┐  ┌───────────────▼────────────────┐  │
+│  │   Code-as-CAD Modeling       │  │   Cloud Generative CAD         │  │
+│  │   (build123d / OpenCASCADE)  │  │   (Zoo / KittyCAD Text-to-CAD) │  │
+│  └──────────────┬───────────────┘  └───────────────┬────────────────┘  │
+│                 │                                  │                   │
+│  ┌──────────────▼───────────────┐  ┌───────────────▼────────────────┐  │
+│  │   Desktop COM Automation     │  │   JSON Interoperability Engine │  │
+│  │   (AutoCAD / ZWCAD / GS)     │  │   (Parametric JSON Schemas)    │  │
+│  └──────────────┬───────────────┘  └───────────────┬────────────────┘  │
+│                 │                                  │                   │
+│  ┌──────────────▼──────────────────────────────────▼────────────────┐  │
+│  │                    Multi-Format Export Pipeline                  │  │
+│  │         STEP ↔ STL ↔ DXF ↔ 3MF ↔ glTF ↔ OBJ ↔ FCStd              │  │
+│  └──────────────────────────────────┬───────────────────────────────┘  │
+│                                     │                                  │
+│  ┌──────────────────────────────────▼───────────────────────────────┐  │
+│  │       Quality Assurance & Additive Manufacturing Verification    │  │
+│  │    (trimesh Watertightness, DMLS Overhangs, Depowdering Voids)   │  │
+│  └──────────────────────────────────────────────────────────────────┘  │
+└────────────────────────────────────────────────────────────────────────┘
     │
     ▼
- Deliverable: STEP + STL + DXF + Renders + BOM
+ Deliverables: Engineering STEP + DMLS/SLS 3MF + CNC DXF + Visual Renders + BOM
 ```
 
 ---
 
-## Core Toolchain: Code-as-CAD with build123d
+## Section 1: Generative Design, Topology Optimization & The Alien Meter
 
-### Why Code-as-CAD?
+Generative design and Topology Optimization (Topo) represent the frontier of AI and algorithmic mechanical engineering. Rather than modeling geometry manually, an engineer or agent defines load boundaries, keep-out zones, mounting points, and manufacturing constraints. The solver then iteratively optimizes the distribution of material using Finite Element Analysis (FEA) to minimize structural compliance (maximize stiffness) for a targeted mass fraction.
 
-Pure binary geometry generation from LLMs is prone to hallucinations and
-produces non-manifold meshes. Representing geometry as **Python code** using
-`build123d` gives us:
-- **Version-controllable** models (diff, blame, PR review)
-- **Parametric** designs (change wall thickness = change one variable)
-- **Deterministic** compilation via the OpenCASCADE kernel
-- **Self-correctable** iteration (the agent can re-run, measure, adjust)
+### The Mathematics: SIMP Topology Optimization
+The skill employs the Solid Isotropic Material with Penalization (SIMP) framework. In SIMP, each finite voxel in the design domain has a continuous relative density $\rho_e \in [0, 1]$. Young's modulus $E_e$ of each element is penalized:
 
-### Setup
+$$E_e(\rho_e) = E_{min} + \rho_e^p (E_0 - E_{min})$$
 
+Where:
+* $E_0$ is the solid material modulus (e.g. 70 GPa for Aluminum, 114 GPa for Titanium).
+* $E_{min}$ is a tiny stiffness assigned to void elements ($10^{-9} E_0$) to prevent FEA singularity.
+* $p$ is the penalization power (typically $p = 3.0$), which forces intermediate densities toward 0 (void) or 1 (solid).
+
+The optimization objective minimizes compliance subject to a volume constraint:
+
+$$\min_{\boldsymbol{\rho}} \quad c(\boldsymbol{\rho}) = \mathbf{U}^T \mathbf{K} \mathbf{U} = \sum_{e=1}^N \left(E_{min} + \rho_e^p (E_0 - E_{min})\right) \mathbf{u}_e^T \mathbf{k}_0 \mathbf{u}_e$$
+
+$$\text{subject to} \quad \frac{V(\boldsymbol{\rho})}{V_0} \le V_f, \quad \mathbf{K}(\boldsymbol{\rho}) \mathbf{U} = \mathbf{F}, \quad 0 \le \rho_e \le 1$$
+
+Because natural load paths curve, branch, and split along principal stress trajectories, the resulting structures exhibit bone-like, organic, or biomechanical morphology.
+
+---
+
+### The "Alien Meter" Spectrum (0% to 100%)
+
+The **Alien Meter** provides an intuitive, calibrated dial that controls how aggressively the model deviates from classical prismatic geometry toward organic bio-morphology, balancing structural stiffness against visual drama:
+
+```
+[0% Prismatic] ────────── [50% Aerospace Topo] ────────── [100% Biomechanical Art]
+  High Stiffness               Balanced Rigidity                  Hyper-Organic
+  Traditional CNC               DMLS/SLS Additive                  Sculptural / Porous
+  FS >= 3.0                     FS 1.5 - 2.0                       FS < 1.0 (Art Only)
+```
+
+#### 1. Level 0 to 25% : Classical Prismatic CAD (Low Alien)
+* **Design Philosophy:** Maximum stiffness, deterministic safety, conventional subtractive manufacturing (3-axis CNC milling, turning) or basic FDM printing.
+* **Geometric Attributes:** Flat orthogonal datum faces, uniform wall thickness, standard circular fillets and chamfers.
+* **Structural Metrics:** Factor of Safety ($FS \ge 3.0$). Negligible elastic deflection under rated operational loads.
+
+#### 2. Level 26 to 60% : Aerospace Topology Optimization (Balanced Alien)
+* **Design Philosophy:** Weight reduction for aerospace, motorsports, and robotics via metal powder bed fusion (DMLS, SLS).
+* **Geometric Attributes:** FEA-governed branching load struts, parabolic arch ribbing, stress-guided webs, smooth organic fillets around bolt bosses.
+* **Structural Metrics:** Factor of Safety ($FS \approx 1.5 - 2.0$). Optimized compliance. Material is removed strictly from dead-weight zones experiencing near-zero stress.
+
+#### 3. Level 61 to 85% : Aggressive Biomimicry (High Alien)
+* **Design Philosophy:** Advanced generative brackets, skeletal drone arms, organic heat sinks.
+* **Geometric Attributes:** Thin tendon-like tension members, bone-like cortical channels, high-curvature surfaces, porous internal web networks.
+* **Structural Metrics:** Reduced Factor of Safety ($FS \approx 1.1 - 1.4$). Noticeable elastic deflection under peak transient forces. Requires engineer approval.
+
+#### 4. Level 86 to 100% : Biomechanical & Generative Art (Maximum Alien)
+* **Design Philosophy:** Sci-fi props, wearable tech, kinetic sculptures, generative architecture.
+* **Geometric Attributes:** Triply Periodic Minimal Surfaces (TPMS : Gyroids, Schwarz D, Neovius), cellular Voronoi degradation, skeletal tendril webs.
+* **Structural Metrics:** Factor of Safety drops below structural threshold ($FS < 1.0$ under rated loads). Clearly classified as **Decorative / Art-Only**.
+
+---
+
+### The Engineering Compromise Card
+
+Whenever an agent or user invokes generative design or topology optimization, the skill computes and reports a standardized **Engineering Compromise Card** via `scripts/topo_engine.py`:
+
+```
+======================================================================
+  Code Scaffold Generative Telemetry : Engineering Compromise Card
+======================================================================
+* Alien Meter Setting     : 50% (AEROSPACE TOPO OPTIMIZATION (DMLS/SLS))
+* Material Selected       : AlSi10Mg Aluminum [Direct Metal Laser Sintering (DMLS)]
+* Mass Reduction          : -37.2% (934.5g -> 586.4g)
+* Factor of Safety (FS)   : 1.63 [AEROSPACE COMPLIANT]
+* Max Von Mises Stress    : 165.2 MPa (Yield: 270.0 MPa)
+* Max Peak Deflection     : 0.472 mm
+* Additive Printability   : 92% Self-Supporting (Additive DMLS)
+* Structural Verdict      : PASSED: Verified compliance with industrial Factor of Safety (FS >= 1.5).
+* Fabrication Advice      : Optimized for Direct Metal Laser Sintering (DMLS) or SLS Nylon. Overhang angles remain under 45 degrees. Safe for critical flight envelopes.
+======================================================================
+```
+
+CLI Command to generate telemetry:
 ```bash
-# Install the CAD toolchain in your project environment
-pip install build123d
-pip install ocp-tessellate  # For fast tessellation / mesh export
-pip install vtk             # For off-screen rendering / snapshots (optional)
-pip install cadquery         # Alternative parametric CAD library
-pip install openscad-py      # For OpenSCAD bridge (optional)
+python .skills/cad-tools/scripts/topo_engine.py --alien-meter 50 --material al10 --load 2500
 ```
-
-### Canonical Model Scaffold
-
-Every model the agent creates MUST follow this scaffold in
-`cad/models/<model_name>.py`:
-
-```python
-"""
-Model: <Component Name>
-Engineer: AI Agent (CAD Tools Skill)
-Version: 1.0
-Description: <One-sentence purpose>
-
-Parameters
-----------
-All units are millimeters unless otherwise noted.
-"""
-
-from build123d import *
-from ocp_vscode import show  # optional: for interactive preview
-
-# ── Parameters ────────────────────────────────────────────────────────────────
-WIDTH      = 50.0   # mm
-HEIGHT     = 30.0   # mm
-DEPTH      = 20.0   # mm
-WALL       = 2.5    # mm  shell thickness
-FILLET_R   = 1.5    # mm  edge fillet radius
-HOLE_DIA   = 3.2    # mm  M3 clearance hole
-
-# ── Geometry ──────────────────────────────────────────────────────────────────
-with BuildPart() as part:
-    Box(WIDTH, DEPTH, HEIGHT)
-    shell = Shell(openings=[part.faces().sort_by(Axis.Z)[-1]], thickness=-WALL)
-    fillet(part.edges(), radius=FILLET_R)
-
-    # M3 mounting bosses (4x corners)
-    with Locations(
-        [(WIDTH / 2 - 5, DEPTH / 2 - 5, 0),
-         (-WIDTH / 2 + 5, DEPTH / 2 - 5, 0),
-         (WIDTH / 2 - 5, -DEPTH / 2 + 5, 0),
-         (-WIDTH / 2 + 5, -DEPTH / 2 + 5, 0)]
-    ):
-        Cylinder(radius=HOLE_DIA / 2, height=HEIGHT, mode=Mode.SUBTRACT)
-
-# ── Export ────────────────────────────────────────────────────────────────────
-part.part.export_step("cad/output/<model_name>.step")
-part.part.export_stl("cad/output/<model_name>.stl")
-```
-
----
-
-## Workflow: End-to-End Design Pipeline
-
-### Step 1 :  Requirements Elicitation
-
-Before writing any geometry, the agent MUST clarify:
-
-1. **Form Factor**: What is the approximate bounding box? (W × D × H in mm)
-2. **Material**: PLA, PETG, Aluminum 6061, Steel 4140, etc.?
-3. **Manufacturing Process**: FDM printing, SLA resin, CNC milling, sheet metal?
-4. **Functional Requirements**: Loads, mating parts, tolerance classes?
-5. **Output Formats**: STEP (engineering), STL (printing), DXF (CNC), glTF (web)?
-
-### Step 2 :  Parametric Code Generation
-
-Generate the `build123d` Python model:
-- All dimensions are **named constants** at the top :  never magic numbers
-- Include docstring with parameter table
-- Use `Mode.SUBTRACT` for holes, pockets, reliefs
-- Apply fillets/chamfers for manufacturability
-- Validate geometric operations don't fail (catch `OCC_Error`)
-
-### Step 3 :  Compile and Validate
-
+Or emit as programmatic JSON:
 ```bash
-python cad/models/<model_name>.py
-```
-
-If the script exits with error, read the traceback and fix:
-- `NullShapeError`: Boolean operation failed :  check intersecting/zero-thickness geometry
-- `StdFail_NotDone`: Fillet radius too large :  reduce `FILLET_R`
-- `TopologicalError`: Non-manifold geometry :  check face normals and closes
-
-### Step 4 :  Measurement & Self-Validation
-
-After successful compilation, the agent MUST verify key measurements:
-
-```python
-from build123d import *
-
-part = import_step("cad/output/<model_name>.step")
-
-# Bounding box check
-bb = part.bounding_box()
-print(f"BBox: {bb.size.X:.2f} × {bb.size.Y:.2f} × {bb.size.Z:.2f} mm")
-
-# Volume / mass (for print time / material cost estimates)
-volume_mm3 = part.volume
-density_g_per_mm3 = 0.00124  # PLA
-mass_g = volume_mm3 * density_g_per_mm3
-print(f"Volume: {volume_mm3:.1f} mm³ | Est. Mass: {mass_g:.1f} g (PLA)")
-
-# Surface area
-print(f"Surface Area: {part.area:.1f} mm²")
-```
-
-### Step 5 :  Multi-Format Export
-
-```python
-# STEP :  Engineering / interoperability (always produce this)
-part.export_step("cad/output/<model>.step")
-
-# STL :  FDM/SLA 3D printing
-part.export_stl("cad/output/<model>.stl", tolerance=0.01, angular_tolerance=0.1)
-
-# DXF :  CNC, laser cutting, 2D drawings (export a face projection)
-with BuildSketch() as sketch:
-    face_projection = part.faces().sort_by(Axis.Z)[-1]
-    Add(face_projection)
-sketch.sketch.export_dxf("cad/output/<model>_top.dxf")
-
-# 3MF :  Modern print format (via external tool)
-# meshlabserver -i output.stl -o output.3mf  (if meshlab available)
-
-# glTF :  Web visualization (via trimesh)
-import trimesh
-mesh = trimesh.load("cad/output/<model>.stl")
-mesh.export("cad/output/<model>.glb")
+python .skills/cad-tools/scripts/topo_engine.py --alien-meter 75 --material ti64 --json
 ```
 
 ---
 
-## JSON-to-CAD Interoperability (GhostPoly-inspired)
+### Additive Manufacturing Design Rules (DMLS / SLS / FDM)
 
-To ensure seamless interoperability between different frontends (like web CAD interfaces) and the local B-Rep kernel, the agent can use a cross-platform structured JSON schema.
+Organic generative geometries require specific additive manufacturing considerations:
 
-### The JSON Parametric Schema
+* **Self-Supporting Overhang Rule (45-Degree Threshold):** Surfaces oriented at angles greater than 45 degrees relative to the vertical build axis require sacrificial support structures in DMLS metal printing. The Topo engine favors self-supporting arch trajectories.
+* **Depowdering Escape Channels:** Hollow interior chambers (such as internal bone cores) must include at least two escape ports (minimum diameter 3.0mm) to evacuate unsintered metal powder during post-processing.
+* **Minimum Feature Thickness:** Thin struts must maintain a minimum diameter of 1.2mm for DMLS (aluminum/titanium) and 0.8mm for SLS (nylon) to prevent thermal distortion and recoater blade collision during printing.
+* **Thermal Residual Stress Relief:** Massive solid blocks adjacent to thin organic struts experience thermal gradient stress during laser sintering. Smooth transition fillets (radius $\ge 2.0\text{mm}$) must be applied to all structural junctions.
 
-This schema abstracts complex python code into an agnostic representation that can be ported or stored in a database.
+---
 
+## Section 2: Interactive 3D WebGL Generative Sandbox
+
+The skill bundles an interactive browser-native 3D WebGL canvas located at `.skills/cad-tools/sandbox/index.html`. It serves as a visual showroom and real-time simulator for generative topology optimization.
+
+* **Real-Time Procedural Mesh Morphing:** Dragging the master **Alien Meter (0% to 100%)** slider dynamically re-solves and deforms the 3D geometry in real time.
+* **Four Engineering Presets:**
+  * **Aerospace Cantilever Bracket:** Transitioning from solid CNC block to dual-spar branching truss with bolt boss keep-out zones.
+  * **Drone Cantilever Arm:** Upper tension spar and lower compression spar connected by biomimetic web struts.
+  * **Carapace Heat Sink:** Straight rectangular cooling fins morphing into generative branching convective coral spines.
+  * **TPMS Gyroid Core:** Infill minimal surface lattice cell array showcasing cellular porosity.
+* **Render Modes:**
+  * *Shaded Solid:* PBR metallic shading with material presets (Titanium Ti-6Al-4V, AlSi10Mg Aluminum, Inconel 718, PA12 Nylon).
+  * *FEA Stress Heatmap:* Jet/Rainbow gradient mapping simulated Von Mises stress (Blue = 0 MPa low stress, Green/Yellow = nominal stress, Red = peak stress concentration).
+  * *X-Ray Voids:* Semitransparent transmission mode to inspect internal hollow channels and depowdering passages.
+  * *Wireframe:* Visualizing underlying mesh facet density.
+* **Launch Instructions:** Open `.skills/cad-tools/sandbox/index.html` directly in any modern web browser or embed via the Code Scaffold web platform iframe.
+
+---
+
+## Section 3: The FreeCAD AI Connector and Socket Automation Bridge
+
+The FreeCAD AI Connector bridges AI coding agents and automated pipelines directly to FreeCAD across three primary paradigms: interactive GUI socket control, headless CLI batch execution, and desktop AI host bridging.
+
+### Paradigm A: Interactive GUI Socket Mode (Streamable HTTP & SSE)
+In interactive GUI mode, FreeCAD runs with its visual graphical interface visible while exposing an internal socket server over port 3000. When the agent calls tools, geometry updates in real time inside the FreeCAD viewport, allowing immediate visual inspection by users or vision-capable models.
+
+* **Streamable HTTP Endpoint (`POST /mcp`):** Modern Model Context Protocol standard. Responses stream back inline as JSON or server-sent event blocks. The server issues an `Mcp-Session-Id` header during the initial handshake, which the client echoes on subsequent requests.
+* **Legacy HTTP+SSE Endpoint (`GET /sse` + `POST /messages`):** Backwards compatibility for clients requiring dedicated SSE push channels.
+* **Network & Security Configuration:**
+  * `MCP_HOST` : Listen address (defaults to `127.0.0.1`). Plaintext HTTP is strictly restricted to loopback addresses (`127.0.0.1`, `localhost`, `::1`).
+  * `MCP_PORT` : Listen port (defaults to `3000`).
+  * `MCP_AUTH_TOKEN` : Optional bearer token. When set, every incoming HTTP request must include `Authorization: Bearer <token>`.
+  * `MCP_ALLOWED_HOSTS` : Comma-separated list of trusted Host headers. Refuses wildcard `*` to prevent DNS rebinding attacks.
+
+Starting the socket server inside an already-running FreeCAD instance via Python console:
+```python
+import os
+import FreeCAD
+
+if not FreeCAD.ActiveDocument:
+    FreeCAD.newDocument("Unnamed")
+
+from freecad_ai.mcp.gui_server import get_server_controller
+controller = get_server_controller()
+url = controller.start(host="127.0.0.1", port=3000)
+print(f"FreeCAD AI Socket running at: {url}")
+```
+
+### Paradigm B: Headless CLI Mode (STDIO JSON-RPC 2.0)
+For continuous integration, Docker containers, or background automation without a display server, FreeCAD executes in console mode via `FreeCADCmd` or `FreeCAD -c`.
+
+* **File Descriptor 3 (FD3) Banner Workaround:** FreeCAD's C++ core prints an unconfigurable startup banner to standard output (`fd 1`) before Python initializes. This banner corrupts standard JSON-RPC streams. The headless bridge wraps execution by saving pristine stdout on file descriptor 3 and redirecting file descriptor 1 to standard error:
+  ```bash
+  exec 3>&1 1>&2 && FreeCAD -c /path/to/mcp_server_entry.py
+  ```
+  The Python entry point detects `fd 3` via `os.fstat(3)` and restores stdout:
+  ```python
+  import os, sys
+  if _have_saved_fd:
+      os.dup2(3, 1)
+      os.close(3)
+      sys.stdout = os.fdopen(1, "w")
+  ```
+* **AppImage Environment Cleanup:** When running inside FreeCAD AppImages, the runtime prepends bundled binary paths and sets `PYTHONHOME`. Subprocesses invoked by the agent must scrub `PYTHONHOME` and `PYTHONPATH` from their environment to prevent `ModuleNotFoundError: No module named 'encodings'` crashes.
+
+### Paradigm C: Desktop AI Host Bridge (ChatGPT / Claude / Cursor via `uvx`)
+For developers utilizing desktop AI environments (ChatGPT Desktop, Claude Desktop, Cursor, or Devin) on Windows, macOS, or Linux, the connection operates through an on-demand runner:
+
+1. **Install Tool Runner (`uvx`):**
+   Install the zero-dependency Python runner via PowerShell as administrator:
+   ```powershell
+   powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+   ```
+   Restart your terminal after installation to refresh the system PATH.
+2. **Install FreeCAD Addon:**
+   Copy the `FreeCADMCP` addon folder into FreeCAD's user Mod directory while FreeCAD is fully closed:
+   * FreeCAD 1.1+: `%APPDATA%\FreeCAD\v1-1\Mod\FreeCADMCP`
+   * FreeCAD 1.0 (legacy): `%APPDATA%\FreeCAD\Mod\FreeCADMCP`
+3. **Activate RPC Server in FreeCAD:**
+   Launch FreeCAD, select the MCP Addon workbench from the workbench dropdown, and click **Start RPC Server**. Check the **Auto Start Server** option so FreeCAD automatically initializes the bridge on every future boot.
+4. **Register Custom MCP in Desktop AI:**
+   Add a custom MCP server within your desktop client configuration:
+   * **Name:** `freecad`
+   * **Type:** `STDIO`
+   * **Command to launch:** `uvx`
+   * **Arguments:** `freecad-mcp`
+   * **Token Optimization (Optional):** To eliminate image token overhead during long text sessions, add `--only-text-feedback` as a second argument.
+5. **The Active Agentic Feedback Loop:**
+   * `execute_code` : The model sends parametric Python commands across the bridge to build or adjust geometry.
+   * `get_view` : The bridge captures an offscreen or viewport snapshot and returns it to the model, closing the visual loop for immediate multimodal validation.
+
+### Transactional Safety and Error Rollback
+Every atomic operation executed through the connector is encapsulated within a transactional boundary:
+```python
+doc = App.ActiveDocument
+doc.openTransaction("CreateFeature")
+try:
+    doc.recompute()
+    doc.commitTransaction()
+except Exception as err:
+    doc.abortTransaction()
+    raise RuntimeError(f"CAD Operation failed, rolled back cleanly: {err}")
+```
+If an operation fails, the transaction is immediately aborted, restoring the CAD tree to its previous valid state. The failure traceback is returned to the agent, triggering an automated self-correction loop (up to 3 retries) with adjusted parameters.
+
+---
+
+## Section 4: Structured PartDesign Modeling Toolkit
+
+The connector exposes over 50 structured operations. Agents should invoke these operations directly for deterministic geometry synthesis.
+
+### 1. `create_body`
+Creates a `PartDesign::Body` container. All PartDesign features (sketches, pads, pockets, fillets) must live inside a body.
 ```json
 {
-  "version": "1.0",
-  "parameters": {
-    "width": 50,
-    "depth": 30,
-    "height": 20
-  },
-  "operations": [
-    {
-      "id": "base",
-      "type": "box",
-      "width": "width",
-      "depth": "depth",
-      "height": "height"
-    },
-    {
-      "id": "hole",
-      "type": "cylinder",
-      "radius": 3.2,
-      "height": "height",
-      "position": [10, 10, 0]
-    },
-    {
-      "id": "final",
-      "type": "boolean",
-      "operation": "subtract",
-      "tool": "hole",
-      "target": "base"
-    }
-  ]
+  "label": "ChassisBody"
 }
 ```
 
-### JSON Execution Engine
+### 2. `create_sketch`
+Creates a 2D constrained profile. Supports attachment to standard planes (`XY`, `XZ`, `YZ`), offset datum planes, or existing planar solid faces.
+* **Parameters:** `plane`, `body_name`, `offset`, `support`, `face`, `geometries`, `constraints`.
+* **Geometries:** `line`, `rectangle`, `circle`, `arc`.
+* **Constraints:** `Coincident`, `Horizontal`, `Vertical`, `Parallel`, `Perpendicular`, `Tangent`, `Distance`, `DistanceX`, `DistanceY`, `Radius`, `Angle`.
 
-A local script `scripts/json_engine.py` is provided to compile this JSON into a `build123d` model and export it.
+### 3. `edit_sketch`
+Modifies an existing sketch. When resizing or repositioning profiles, ALWAYS pass `clear_all: true` with the complete set of new geometries in `add_geometries` to avoid over-constraint solver conflicts.
 
-```bash
-python .skills/cad-tools/scripts/json_engine.py model_spec.json --export output.step
-```
+### 4. `pad_sketch` & `pocket_sketch`
+* `pad_sketch` : Extrudes a sketch profile along its normal into a solid feature.
+* `pocket_sketch` : Cuts material out of a solid using a sketch profile with auto-directional depth analysis.
 
-Agents should use this engine when passing geometric specifications to or from external services and UIs that cannot natively execute Python code.
+### 5. `revolve_sketch`, `loft_sketches`, and `sweep_sketch`
+* `revolve_sketch` : Revolves a sketch profile around an axis (additive Revolution or subtractive Groove).
+* `loft_sketches` : Transitions smoothly across 2 or more cross-sectional sketches placed on offset planes.
+* `sweep_sketch` : Sweeps a cross-section profile sketch along a 3D trajectory spine sketch.
+
+### 6. `boolean_operation`
+Executes parametric `PartDesign::Boolean` operations between bodies, preserving internal feature tree history.
 
 ---
 
-## Cloud Generative CAD :  Zoo.dev / KittyCAD API
+## Section 5: Interactive Cognitive Modeling Workflows
 
-When local `build123d` code is insufficient or the user prefers cloud AI
-geometry generation, use the Zoo.dev text-to-CAD API.
+* **Workflow 1: Measure and Propose (Approval First):** Opening a reference model (e.g. PCB/microcontroller), extracting dimensional constraints, presenting an annotated concept render for human approval, and modeling a matching enclosure.
+* **Workflow 2: Industrial Styling & Concept Refinement:** Adding chunky corner chamfers, wall stiffening ribs, and ventilation slot/grille patterns over heat sources.
+* **Workflow 3: Multi-Part Assemblies & Mechanical Clearances:** Enforcing sliding tolerances (0.3mm - 0.5mm) and snap-fit lip clearances (0.2mm for friction fit, 1.0mm for snap tabs).
+* **Workflow 4: Targeted Face & Sub-Element Edits:** Querying `Gui.Selection.getSelectionEx()` to apply knurling, holes, or fillets directly to user-selected faces in the 3D viewport.
+* **Workflow 5: Drawing and Image-to-CAD:** Step-by-step feature synthesis from dimensioned engineering drawings or reference photos.
 
-### Setup
+---
 
-```bash
-pip install zoo-py
-# OR use the CLI
-npm install -g @zoo/cli
-zoo auth login
-```
+## Section 6: Prompt Library & Troubleshooting Matrix
 
-### Text-to-CAD Generation
+### Verification Prompt Library
+* **Generative Topo Cantilever:**
+  `"Run topology optimization on an aerospace mounting bracket with an Alien Meter setting of 50%. Material is AlSi10Mg. Target factor of safety 1.6."`
+* **Biomechanical Sculpture:**
+  `"Generate an organic biomechanical drone arm with an Alien Meter setting of 85%. Emit the Engineering Compromise Card."`
+* **Connection Baseline:**
+  `"Create a new document in FreeCAD called 'Test Part'. Add a box 50 mm long, 30 mm wide and 20 mm high. Fit the view so I can see it."`
+* **Bolt Flange with PCD Holes:**
+  `"Design a flange in FreeCAD with a base diameter of 100mm, thickness 10mm, and a center hole of 20mm diameter, with 4 bolt holes of 8mm diameter equally spaced at 70mm PCD."`
+* **Additive Export:**
+  `"Export the part as a 3mf file."`
 
+### Troubleshooting Matrix
+| Problem | Root Cause | Solution |
+| :--- | :--- | :--- |
+| `uvx` returns command not found | Terminal session not restarted after installation | Reopen PowerShell as administrator to refresh PATH |
+| Addon missing from FreeCAD workbench dropdown | Files copied while FreeCAD was running or placed in incorrect directory | Fully close FreeCAD, verify folder sits at `%APPDATA%\FreeCAD\v1-1\Mod\FreeCADMCP`, and reopen |
+| Cannot connect to FreeCAD socket | RPC server is not active in running FreeCAD instance | Switch to MCP Addon workbench, click **Start RPC Server**, and enable **Auto Start Server** |
+| Windows Security Firewall prompt | Inbound socket connection blocked by Windows Defender | Navigate to Windows Security -> Firewall -> Allow an app -> check FreeCAD |
+| High LLM token consumption | Large image blocks returned on every viewport turn | Add `--only-text-feedback` argument to `uvx freecad-mcp` launch command |
+| Topo mesh non-manifold error | Isosurface threshold too low, creating zero-thickness facets | Increase minimum filter radius ($r_{min} \ge 1.5\text{mm}$) and verify watertightness via trimesh |
+
+---
+
+## Section 7: Code-as-CAD with build123d and OpenCASCADE
+
+For pure Python script-driven modeling without FreeCAD dependencies, `build123d` provides deterministic B-Rep solid generation:
+
+### Canonical Model Scaffold (`cad/models/<model_name>.py`)
 ```python
-import os
-import httpx
-import base64
-import time
+"""
+Model: Chassis Bracket
+Engineer: AI Agent (CAD Tools Skill)
+Version: 1.0
+Parameters in millimeters.
+"""
 
-ZOO_API_KEY = os.environ["ZOO_API_KEY"]
-BASE_URL = "https://api.zoo.dev"
+from build123d import *
 
-def text_to_cad(prompt: str, output_format: str = "step") -> bytes:
-    """
-    Generate a CAD model from a natural language prompt via Zoo.dev API.
-    Returns raw bytes of the requested format.
-    """
-    headers = {"Authorization": f"Bearer {ZOO_API_KEY}"}
+# ── Parameters ────────────────────────────────────────────────────────────────
+WIDTH    = 60.0
+DEPTH    = 40.0
+HEIGHT   = 25.0
+THICK    = 4.0
+HOLE_DIA = 5.2  # M5 clearance
 
-    # Submit async job
-    resp = httpx.post(
-        f"{BASE_URL}/ai/text-to-cad/{output_format}",
-        headers=headers,
-        json={"prompt": prompt},
-        timeout=30.0,
-    )
-    resp.raise_for_status()
-    job = resp.json()
-    job_id = job["id"]
+# ── Geometry ──────────────────────────────────────────────────────────────────
+with BuildPart() as part:
+    # L-bracket base extrusion
+    with BuildSketch(Plane.XY):
+        Rectangle(WIDTH, DEPTH)
+    extrude(amount=THICK)
 
-    # Poll until complete (max 120s)
-    for _ in range(60):
-        time.sleep(2)
-        status_resp = httpx.get(
-            f"{BASE_URL}/user/text-to-cad/{job_id}",
-            headers=headers
-        )
-        data = status_resp.json()
-        if data["status"] == "completed":
-            # Decode the base64-encoded output file
-            encoded = data["outputs"][f"source.{output_format}"]
-            return base64.b64decode(encoded)
-        elif data["status"] == "failed":
-            raise RuntimeError(f"Zoo CAD generation failed: {data.get('error')}")
+    # Upright flange
+    with BuildSketch(Plane.XZ.offset(DEPTH / 2)):
+        Rectangle(WIDTH, HEIGHT)
+    extrude(amount=-THICK)
 
-    raise TimeoutError("Zoo CAD generation timed out after 120 seconds")
+    # Fillet interior junction
+    fillet(part.edges().filter_by(Axis.X), radius=3.0)
 
-# Usage
-step_bytes = text_to_cad("An enclosure for a Raspberry Pi 4 with ventilation slots")
-with open("cad/output/rpi4_enclosure.step", "wb") as f:
-    f.write(step_bytes)
-```
+    # Mounting holes
+    with Locations([(WIDTH / 4, 0, 0), (-WIDTH / 4, 0, 0)]):
+        Hole(radius=HOLE_DIA / 2, depth=THICK)
 
-### Format Conversion via Zoo API
-
-```python
-def convert_cad_format(
-    input_path: str,
-    output_format: str,
-    output_path: str
-) -> None:
-    """
-    Convert CAD files between formats using the Zoo file conversion API.
-    Supports: step, stl, obj, gltf, glb, fbx, ply, dxf, 3mf
-    """
-    headers = {"Authorization": f"Bearer {ZOO_API_KEY}"}
-    input_format = input_path.rsplit(".", 1)[-1].lower()
-
-    with open(input_path, "rb") as f:
-        file_bytes = f.read()
-
-    resp = httpx.post(
-        f"{BASE_URL}/file/conversion/{input_format}/{output_format}",
-        headers=headers,
-        content=file_bytes,
-        headers={**headers, "Content-Type": "application/octet-stream"},
-        timeout=60.0,
-    )
-    resp.raise_for_status()
-
-    with open(output_path, "wb") as f:
-        f.write(resp.content)
-```
-
-### Mass Properties via Zoo API
-
-```python
-def get_mass_properties(model_path: str, material_density: float = 1.24) -> dict:
-    """
-    Calculate geometric mass properties using Zoo's engine.
-    material_density: g/cm³ (PLA=1.24, PETG=1.27, ABS=1.04, Al6061=2.70)
-    """
-    headers = {"Authorization": f"Bearer {ZOO_API_KEY}"}
-    input_format = model_path.rsplit(".", 1)[-1].lower()
-
-    with open(model_path, "rb") as f:
-        file_bytes = f.read()
-
-    resp = httpx.post(
-        f"{BASE_URL}/file/mass-properties",
-        params={"material_density": material_density, "src_format": input_format},
-        headers={**headers, "Content-Type": "application/octet-stream"},
-        content=file_bytes,
-        timeout=60.0,
-    )
-    resp.raise_for_status()
-    return resp.json()
-
-# Example output:
-# { "mass": 47.3, "volume": 38145.2, "center_of_mass": [0, 0, 12.4],
-#   "inertia": [[...], [...], [...]] }
+# ── Export ────────────────────────────────────────────────────────────────────
+part.part.export_step("cad/output/chassis_bracket.step")
+part.part.export_stl("cad/output/chassis_bracket.stl")
 ```
 
 ---
 
-## Desktop CAD Automation :  AutoCAD / ZWCAD / GstarCAD (Windows)
+## Section 8: Quality Assurance and Manufacturing Verification
 
-For projects requiring native `.dwg`/`.dxf` output or operating within an
-enterprise desktop CAD environment, use Windows COM automation.
+Before delivering production files, run strict manufacturing validation:
 
-### Setup
-
-```bash
-pip install pywin32
-pip install comtypes
-# AutoCAD, ZWCAD, or GstarCAD must be installed and licensed on the machine
-```
-
-### COM Bridge Utilities
-
-```python
-import win32com.client
-from typing import Literal
-
-CADApp = Literal["AutoCAD.Application", "ZWCAD.Application", "GstarCAD.Application"]
-
-def get_cad_app(app_prog_id: CADApp = "AutoCAD.Application"):
-    """Get or launch the desktop CAD application via COM."""
-    try:
-        return win32com.client.GetActiveObject(app_prog_id)
-    except Exception:
-        return win32com.client.Dispatch(app_prog_id)
-
-def draw_line(doc, x1, y1, x2, y2):
-    start = win32com.client.VARIANT(pythoncom.VT_ARRAY | pythoncom.VT_R8, [x1, y1, 0.0])
-    end   = win32com.client.VARIANT(pythoncom.VT_ARRAY | pythoncom.VT_R8, [x2, y2, 0.0])
-    return doc.ModelSpace.AddLine(start, end)
-
-def draw_circle(doc, cx, cy, radius):
-    center = win32com.client.VARIANT(pythoncom.VT_ARRAY | pythoncom.VT_R8, [cx, cy, 0.0])
-    return doc.ModelSpace.AddCircle(center, radius)
-
-def save_dwg(doc, path: str):
-    doc.SaveAs(path, 12)  # 12 = DWG 2018 format
-
-def export_dxf(doc, path: str):
-    doc.SaveAs(path, 61)  # 61 = DXF 2018 ASCII format
-```
-
-### Workflow for COM-based 2D Drafting
-
-```python
-app = get_cad_app()
-app.Visible = True
-doc = app.ActiveDocument
-
-# Create a new layer
-layers = doc.Layers
-layer = layers.Add("DIMENSIONS")
-layer.Color = 3  # Green
-
-# Draw floor plan outline (example)
-draw_line(doc, 0, 0, 6000, 0)    # bottom wall  (6m)
-draw_line(doc, 6000, 0, 6000, 4000)  # right wall
-draw_line(doc, 6000, 4000, 0, 4000)  # top wall
-draw_line(doc, 0, 4000, 0, 0)    # left wall
-
-save_dwg(doc, "cad/output/floorplan.dwg")
-```
-
----
-
-## Rendering & Visual Inspection
-
-Visual feedback is critical for multi-modal AI agents verifying geometry.
-
-### Off-Screen VTK Rendering
-
-```python
-import vtk
-
-def render_step_to_png(step_path: str, output_png: str, camera_angle: str = "iso") -> str:
-    """
-    Render a STEP file to a PNG image for agent visual inspection.
-    camera_angle: 'iso', 'front', 'top', 'right'
-    """
-    from OCC.Core.STEPControl import STEPControl_Reader
-    from OCC.Core.BRep import BRep_Builder
-    from OCC.Extend.DataExchange import read_step_file
-
-    shape = read_step_file(step_path)
-
-    renderer = vtk.vtkRenderer()
-    renderer.SetBackground(0.1, 0.1, 0.15)
-
-    render_window = vtk.vtkRenderWindow()
-    render_window.SetOffScreenRendering(1)
-    render_window.SetSize(1280, 720)
-    render_window.AddRenderer(renderer)
-
-    # Camera presets
-    camera = renderer.GetActiveCamera()
-    if camera_angle == "iso":
-        camera.SetPosition(100, 100, 100)
-    elif camera_angle == "front":
-        camera.SetPosition(0, -100, 0)
-    elif camera_angle == "top":
-        camera.SetPosition(0, 0, 100)
-
-    render_window.Render()
-
-    writer = vtk.vtkPNGWriter()
-    writer.SetFileName(output_png)
-    w2if = vtk.vtkWindowToImageFilter()
-    w2if.SetInput(render_window)
-    w2if.Update()
-    writer.SetInputConnection(w2if.GetOutputPort())
-    writer.Write()
-
-    return output_png
-```
-
-### Three.js / Web Preview (via Headless Browser)
-
-For agents with Playwright access (use the `playwright` skill):
-
-```python
-# Use the playwright skill to load a Three.js STL viewer and screenshot
-# Reference: .skills/playwright/SKILL.md
-```
-
----
-
-## Manufacturing Readiness Checks
-
-Before delivering final files, the agent MUST run manufacturability validation:
-
-### FDM 3D Printing Checks
-
+### FDM & Additive Mesh Validation
 ```python
 import trimesh
 import numpy as np
 
-def check_print_ready(stl_path: str) -> dict:
+def audit_mesh_quality(stl_path: str) -> dict:
     mesh = trimesh.load(stl_path)
     issues = []
 
     if not mesh.is_watertight:
-        issues.append("CRITICAL: Mesh is not watertight :  non-manifold geometry")
+        issues.append("CRITICAL: Mesh is non-manifold (not watertight)")
 
     if not mesh.is_winding_consistent:
-        issues.append("WARNING: Inconsistent face winding :  potential normal flip")
+        issues.append("WARNING: Inconsistent face normal winding")
 
-    # Overhang angle check (FDM typically needs supports for > 45°)
-    face_normals = mesh.face_normals
-    down_vec = np.array([0, 0, -1])
-    angles = np.degrees(np.arccos(np.clip(face_normals @ down_vec, -1, 1)))
-    overhang_faces = np.sum(angles < 45)
-    if overhang_faces > 0:
-        issues.append(f"INFO: {overhang_faces} faces with overhangs > 45° :  supports may be needed")
-
-    # Minimum wall thickness (rough estimate via convex hull deviation)
-    vol_ratio = mesh.volume / mesh.convex_hull.volume
-    if vol_ratio < 0.3:
-        issues.append("WARNING: Very thin geometry detected :  check wall thickness")
+    down_vector = np.array([0, 0, -1])
+    angles = np.degrees(np.arccos(np.clip(mesh.face_normals @ down_vector, -1, 1)))
+    steep_overhangs = np.sum(angles < 45.0)
+    if steep_overhangs > 0:
+        issues.append(f"INFO: {steep_overhangs} faces have overhangs > 45 degrees requiring support")
 
     return {
-        "watertight": mesh.is_watertight,
-        "volume_mm3": float(mesh.volume),
-        "surface_area_mm2": float(mesh.area),
-        "face_count": len(mesh.faces),
-        "issues": issues,
+      "watertight": mesh.is_watertight,
+      "volume_cm3": float(mesh.volume / 1000.0),
+      "surface_area_cm2": float(mesh.area / 100.0),
+      "issues": issues
     }
 ```
 
-### CNC Machinability Checks
-
-```python
-from build123d import *
-
-def check_cnc_ready(part: Part, tool_dia: float = 6.0) -> list[str]:
-    """
-    Basic CNC machinability validation.
-    tool_dia: minimum end-mill diameter in mm (default 6mm)
-    """
-    issues = []
-
-    # Check for internal pockets narrower than tool diameter
-    for face in part.faces():
-        bb = face.bounding_box()
-        min_dim = min(bb.size.X, bb.size.Y)
-        if min_dim < tool_dia and face.normal_direction != Axis.Z.direction:
-            issues.append(
-                f"Pocket/feature width {min_dim:.1f}mm < tool diameter {tool_dia}mm"
-            )
-
-    # Check for undercuts (features invisible from spindle axis)
-    # (simplified: check for downward-facing non-bottom faces)
-    for face in part.faces():
-        if face.normal_direction.Z < -0.1:
-            bb = face.bounding_box()
-            if bb.min.Z > part.bounding_box().min.Z + 0.5:
-                issues.append(f"Potential undercut detected at Z={bb.min.Z:.1f}mm")
-
-    return issues
-```
-
 ---
 
-## Project Structure Convention
+## Section 9: Project Structure Convention & Workflows
 
-All CAD work MUST follow this directory convention within the project:
+All CAD work must adhere to this standardized project layout:
 
 ```
 cad/
-├── models/              # Source-of-truth Python build123d scripts
-│   ├── <component>.py   # One file per distinct component
-│   └── assembly.py      # Top-level assembly (if needed)
-├── output/              # Generated output files (gitignored!)
-│   ├── *.step           # STEP files (primary engineering format)
-│   ├── *.stl            # Mesh for 3D printing
-│   ├── *.dxf            # 2D drawings / CNC
-│   ├── *.glb            # glTF binary for web/AR
-│   └── renders/         # PNG snapshot renders for inspection
-├── bom/                 # Bill of Materials
-│   └── bom.csv          # Component list with quantities and specs
-└── docs/                # Engineering documentation
-    ├── specifications.md
+├── models/              # Parametric Python scripts (FreeCAD / build123d)
+│   ├── enclosure.py
+│   └── bracket.py
+├── output/              # Compiled build artifacts (gitignored)
+│   ├── *.step           # Primary B-Rep engineering solids
+│   ├── *.stl            # Meshes for 3D printing
+│   ├── *.dxf            # 2D drawings for laser / CNC
+│   ├── *.fcstd          # Native FreeCAD document packages
+│   └── renders/         # Multi-angle PNG inspection snapshots
+├── bom/                 # Bill of Materials manifests
+│   └── bom.csv          # Quantities, materials, costs, supplier SKUs
+└── docs/                # Engineering specifications
     └── manufacturing_notes.md
 ```
 
-**CRITICAL :  `.gitignore` rules for CAD projects:**
-
-```gitignore
-# CAD binary outputs :  never commit these, they are build artifacts
-cad/output/*.step
-cad/output/*.stl
-cad/output/*.stl
-cad/output/*.3mf
-cad/output/*.obj
-cad/output/*.glb
-cad/output/*.gltf
-cad/output/*.fbx
-cad/output/renders/
-
-# Keep source models and BOMs under version control
-!cad/models/
-!cad/bom/
-!cad/docs/
-```
+### Declarative Execution Workflow
+To orchestrate end-to-end modeling headlessly, execute the declarative pipeline defined in `workflows/parametric_pipeline.yaml`.
 
 ---
 
-## Bill of Materials (BOM) Management
+## Section 10: Real-Time Interactive Workbench Architecture & Evolution Roadmap
 
-Always maintain a `cad/bom/bom.csv` alongside models:
+To transform the 3D visual sandbox (`sandbox/index.html`) from a standalone procedural simulation into an integrated, live CAD companion application, the skill defines a four-phase closed-loop architecture connecting the user, the AI agent, and the 3D viewport.
 
-```csv
-item_no,part_number,description,quantity,material,unit_weight_g,unit_cost_usd,supplier,notes
-1,ENCL-001,Main enclosure shell,1,PLA 1.75mm,47.3,0.94,Local print,0.02 USD/g @ 20% infill
-2,M3-HEAT-4,M3×4mm heat-set insert,4,Brass,0.4,0.08,Amazon B08BHBL7V9,
-3,M3-BTN-10,M3×10mm button head screw,4,Stainless A2,0.5,0.06,Amazon,
-4,PCB-MAIN,Main control PCB,1,FR4,18.0,24.99,OSHPark,Custom order
-```
+### Architectural Phasing
+* **Phase 1: Live Artifact Synchronization (Agent -> Viewport):**
+  * When prompting for a new part or adjusting geometry headlessly, the agent writes the compiled display mesh to `.cad_runtime/current_part.glb` and telemetry to `.cad_runtime/current_part.json`.
+  * The Three.js canvas dynamically hot-reloads the scene upon filesystem changes without requiring manual imports.
+* **Phase 2: In-Page Conversational Chat Drawer (UI Component):**
+  * Integrates an expandable dark-slate glass chat drawer directly on the left flank of the 3D canvas.
+  * Captures user instructions in natural language while automatically bundling the live 3D viewport state (camera pose, active alloy, Alien Meter percentage, and bounding envelope) as contextual system metadata.
+* **Phase 3: Bidirectional WebSocket & IPC Daemon (Full Synchrony):**
+  * Runs a lightweight local socket daemon (`scripts/freecad_bridge.py --daemon --port 8765`) on `127.0.0.1`.
+  * When the user scrubs the Alien Meter or modifies boundary constraints in the browser, the daemon executes rapid parametric rebuilds in FreeCAD and streams binary glTF buffers back to the viewport.
+* **Phase 4: Real-Time FEA Stream & Multi-Agent Co-Design:**
+  * Interactive finite element analysis updates principal stress tensors dynamically as load vectors move.
+  * Multi-agent collaboration allows structural, thermal, and manufacturing agent personas to inspect and annotate 3D geometry concurrently.
 
----
-
-## Environment Variables
-
-Add to `.env` / `.env.local`:
-
-```env
-# Zoo.dev / KittyCAD API (cloud generative CAD)
-ZOO_API_KEY=your_zoo_api_key_here
-
-# Desktop CAD COM target (Windows only)
-CAD_COM_APP=AutoCAD.Application   # or ZWCAD.Application / GstarCAD.Application
-
-# Output paths
-CAD_OUTPUT_DIR=./cad/output
-CAD_MODELS_DIR=./cad/models
-```
+For the exhaustive protocol schemas, event specifications, and socket lifecycles, refer to `references/WORKBENCH_ROADMAP.md`.
 
 ---
 
-## Quick Reference :  Format Decision Matrix
-
-| Format | Use Case | Produces | Toolchain |
-|--------|----------|----------|-----------|
-| **STEP** | Engineering data exchange, import to CAD tools | B-Rep solid | `build123d`, Zoo API |
-| **STL** | FDM/SLA 3D printing, mesh analysis | Triangular mesh | `build123d`, trimesh |
-| **DXF** | CNC laser/plasma cutting, 2D drawings | Vector paths | `build123d`, ezdxf |
-| **3MF** | Modern print format, color/material metadata | Zipped XML+mesh | trimesh, Zoo API |
-| **glTF/GLB** | Web visualization, AR/VR, Blender import | Optimized mesh | trimesh, Zoo API |
-| **OBJ** | Legacy mesh interchange, renderer inputs | Polygon mesh | trimesh, Zoo API |
-| **DWG** | Enterprise desktop CAD (AutoCAD) | Native format | COM automation |
-| **KCL** | Zoo parametric source code | Code | Zoo API |
-
----
-
-## Example Prompts
-
-The following prompt patterns activate this skill effectively:
-
-- *"Design an enclosure for a Raspberry Pi 4 with ventilation slots and M3 mounting points. Export as STEP and STL."*
-- *"Convert my `model.step` file to glTF for embedding in a web app."*
-- *"Calculate the mass and volume of `bracket.step` assuming it's machined from 6061 aluminum."*
-- *"Generate a 2D floor plan of a 6m × 4m room with a 900mm door opening and export as DXF."*
-- *"Check my `part.stl` for 3D printing readiness and report any overhangs or non-manifold issues."*
-- *"Use the Zoo API to generate a CAD model of a right-angle bracket, 50mm × 50mm × 3mm thick."*
-- *"Draw a mounting bracket in AutoCAD using COM automation and save as DWG."*
-
----
-
-## Changelog
-
-- **v1**: Initial release. Covers build123d parametric modeling, Zoo.dev API integration, Windows COM desktop CAD automation (AutoCAD/ZWCAD/GstarCAD), multi-format export pipeline (STEP/STL/DXF/3MF/glTF), off-screen VTK rendering, trimesh manufacturing validation, BOM management, and project structure conventions.
-- **v2**: Added JSON-to-CAD interoperability engine (GhostPoly-inspired) for translating parametric JSON schemas directly to build123d B-Rep solids, ensuring cross-platform agent UI/database integration.
-
+## Directives
 
 * **Architectural Compliance**: When synthesizing or scaffolding project code, align generated components with Code Scaffold architectural specification standards.
+* **Deterministic Parameter Naming**: All physical dimensions must be named constants defined at the head of the model file : magic numbers are strictly forbidden.
+* **Alien Meter Governance**: When topology optimization is requested, evaluate the Alien Meter tradeoff and output the Engineering Compromise Card. Explicitly warn the user if Factor of Safety falls below 1.5.
+* **Transactional Hygiene**: In FreeCAD scripts, always wrap feature generation in `openTransaction` and `commitTransaction`, with explicit `abortTransaction` calls in exception blocks.
+* **Format Decision Protocol**:
+  * Use **STEP** for mechanical engineering exchange and CNC machining.
+  * Use **STL / 3MF** for additive manufacturing and mesh slicing.
+  * Use **DXF** for laser cutting, waterjet profiling, and 2D drafting.
+  * Use **glTF/GLB** for Three.js web embedding and AR visualization.

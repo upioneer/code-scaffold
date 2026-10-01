@@ -2,8 +2,8 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "cad-tools",
-  "version": "5",
-  "description": "Comprehensive CAD/CAM engineering skill for AI agents : orchestrating parametric 3D modeling, multi-format conversion, mass property analysis, desktop CAD automation, and AI-generative geometry workflows using open-source and cloud toolchains.",
+  "version": "8",
+  "description": "Comprehensive CAD/CAM engineering skill for AI agents : orchestrating generative design, topology optimization with the Alien Meter slider, FreeCAD socket and headless automation, parametric 3D modeling, additive manufacturing (DMLS/SLS), and multi-format conversion.",
   "entryPoint": "./SKILL.md",
   "engines": {
     "python": ">=3.10",
@@ -18,13 +18,29 @@
   "category": "Animation & Graphics",
   "keywords": [
     "cad",
+    "generative-design",
+    "topology-optimization",
+    "alien-meter",
+    "fea-stress",
+    "additive-manufacturing",
+    "dmls",
+    "sls",
     "3d-modeling",
     "step-files",
     "stl",
     "parametric-design",
-    "manufacturing",
-    "engineering"
+    "freecad",
+    "partdesign",
+    "b-rep",
+    "opencascade",
+    "sketcher",
+    "boolean-operations",
+    "streamable-http",
+    "headless-cad",
+    "offscreen-rendering",
+    "undo-transactions",
+    "3mf"
   ],
-  "hasSandbox": false,
-  "integrity": "cs:sha256:5edace83f37394a961e6d43446b4c7f449794fad0615cfcd41f14511c5404f49"
+  "hasSandbox": true,
+  "integrity": "cs:sha256:9cf1ec7291f8d7a42fea26c2f629e4d945370fe95d5031366764af95a287f35a"
 }
