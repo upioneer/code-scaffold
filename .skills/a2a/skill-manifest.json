@@ -1,0 +1,53 @@
+{
+  "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
+  "specification": "https://code-scaffold.com/spec/v1",
+  "name": "code_scaffold_a2a_skill",
+  "version": "1",
+  "description": "Scaffolds Agent2Agent (A2A) protocol servers, clients, and multi agent meshes using official SDKs. Covers agent cards, task lifecycle, streaming, and push notifications.",
+  "entryPoint": "./SKILL.md",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "requiredPermissions": [
+    "fs:read",
+    "fs:write",
+    "net:connect",
+    "sys:exec"
+  ],
+  "category": "AI, MCP & Developer Tools",
+  "keywords": [
+    "a2a",
+    "agent2agent",
+    "agent-to-agent",
+    "agent-card",
+    "agent-discovery",
+    "multi-agent",
+    "agent-interop",
+    "agent-collaboration",
+    "task-lifecycle",
+    "opaque-agents",
+    "agent-handoff",
+    "task-delegation",
+    "long-running-tasks",
+    "json-rpc",
+    "http-json-rest",
+    "grpc-protobuf",
+    "server-sent-events",
+    "push-notifications",
+    "python-sdk",
+    "typescript-sdk",
+    "go-sdk",
+    "java-sdk",
+    "dotnet-sdk",
+    "rust-sdk",
+    "a2a-cli",
+    "conformance-tck",
+    "scaffold-a2a-server",
+    "scaffold-a2a-client",
+    "resolve-agent-card",
+    "stream-task",
+    "mcp-synergy"
+  ],
+  "hasSandbox": false,
+  "integrity": "cs:sha256:29f5b532078e3264b74cb3f261e069c9bca5b50af3b28560558f1f9d6f2fade3"
+}
