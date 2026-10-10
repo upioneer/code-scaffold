@@ -8,6 +8,7 @@ Welcome to the official **Code Scaffold Skills Library**. This curated registry 
 
 | Skill | Description | Search Keywords | Version | Path |
 | :--- | :--- | :--- | :--- | :--- |
+| **A2A Agent Bridge** | Scaffolds Agent2Agent protocol servers, clients, and multi agent meshes with agent cards, task lifecycle, and conformance validation. | `a2a`, `agent2agent`, `agent-card`, `multi-agent`, `task-lifecycle` | v1 | `.skills/a2a` |
 | **Code Scaffold Harness** | Agent harness for headlessly deploying Code Scaffold assets. | `code-scaffold`, `scaffolding-engine`, `project-generator` | v7 | `.skills/code-scaffold` |
 | **Codebase Memory MCP** | High-performance code intelligence MCP server. Indexes codebases into a persistent knowledge graph. | `codebase-memory`, `mcp-server`, `vector-embeddings` | v2 | `.skills/codebase-memory-mcp` |
 | **MCP Generator** | Assists with creating new custom Model Context Protocol (MCP) servers, clients, and apps using official SDKs and best practices. | `mcp-generator`, `model-context-protocol`, `fastmcp` | v4 | `.skills/mcp-generator` |
