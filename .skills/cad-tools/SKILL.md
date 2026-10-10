@@ -1,7 +1,7 @@
 ---
 name: CAD Tools
 description: Comprehensive CAD/CAM engineering skill for AI agents: orchestrating generative design, topology optimization with the Alien Meter slider, FreeCAD socket and headless automation, parametric 3D modeling, additive manufacturing (DMLS/SLS), and multi-format conversion. Trigger when the user requests parametric 3D CAD modeling, generative design, topology optimization, organic skeletal geometry, FreeCAD automation, PartDesign sketches, extrusion or pocketing, B-Rep solid generation, STEP/STL export, or CAD format conversion. Activate when interacting with FreeCAD via Streamable HTTP/SSE MCP socket or headless CLI, evaluating the Alien Meter tradeoff between rigidity and bio-morphology, script-based geometry with build123d/OpenCASCADE, desktop CAD via COM, or 3D print/CNC manufacturing validation.
-version: 8
+version: 10
 target: .skills/cad-tools
 ---
 ​‌‍# CAD Tools Skill
@@ -446,23 +446,75 @@ To orchestrate end-to-end modeling headlessly, execute the declarative pipeline 
 
 ## Section 10: Real-Time Interactive Workbench Architecture & Evolution Roadmap
 
-To transform the 3D visual sandbox (`sandbox/index.html`) from a standalone procedural simulation into an integrated, live CAD companion application, the skill defines a four-phase closed-loop architecture connecting the user, the AI agent, and the 3D viewport.
+To transform the 3D visual sandbox (`sandbox/index.html`) from a standalone procedural simulation into an integrated, live CAD companion application, the skill establishes an active closed-loop architecture connecting the user, the AI agent, and the 3D viewport.
 
-### Architectural Phasing
-* **Phase 1: Live Artifact Synchronization (Agent -> Viewport):**
-  * When prompting for a new part or adjusting geometry headlessly, the agent writes the compiled display mesh to `.cad_runtime/current_part.glb` and telemetry to `.cad_runtime/current_part.json`.
-  * The Three.js canvas dynamically hot-reloads the scene upon filesystem changes without requiring manual imports.
-* **Phase 2: In-Page Conversational Chat Drawer (UI Component):**
-  * Integrates an expandable dark-slate glass chat drawer directly on the left flank of the 3D canvas.
-  * Captures user instructions in natural language while automatically bundling the live 3D viewport state (camera pose, active alloy, Alien Meter percentage, and bounding envelope) as contextual system metadata.
-* **Phase 3: Bidirectional WebSocket & IPC Daemon (Full Synchrony):**
-  * Runs a lightweight local socket daemon (`scripts/freecad_bridge.py --daemon --port 8765`) on `127.0.0.1`.
-  * When the user scrubs the Alien Meter or modifies boundary constraints in the browser, the daemon executes rapid parametric rebuilds in FreeCAD and streams binary glTF buffers back to the viewport.
+### Implementation Status and Phasing
+* **Phase 1: Live Artifact Synchronization & Mesh Importer (Active):**
+  * The sandbox features a native drag-and-drop listener and file importer supporting `.STL` (binary and ASCII) and `.OBJ` models directly on the 3D canvas.
+  * Companion script `scripts/freecad_bridge.py sync` stages geometry into `.cad_runtime/current_part.stl` and `.cad_runtime/current_part.json` for live workbench reflection.
+* **Phase 2: In-Page Conversational AI Co-Pilot Chat Drawer (Active):**
+  * Integrates an expandable dark-slate glass chat drawer directly on the left flank of the 3D canvas, styled with Code Scaffold cyan and emerald status indicators.
+  * Real-Time Intent Parser: Automatically detects instructions for Alien Meter levels (0% to 100%), alloy switching (AlSi10Mg, Ti-6Al-4V, Inconel 718, PA12), model presets, and render modes (FEA Stress, X-Ray, Wireframe, Solid), mutating the 3D stage and telemetry dynamically.
+  * Context Ribbon: Outgoing messages automatically package active 3D metadata (current part, alloy, Alien level, Factor of Safety) into the conversation state.
+* **Phase 3: Bidirectional WebSocket & IPC Daemon (Active Foundation):**
+  * Local socket daemon (`scripts/freecad_bridge.py daemon --port 8765`) runs headlessly on `127.0.0.1`, serving runtime assets and providing WebSocket endpoints for external agent processes.
 * **Phase 4: Real-Time FEA Stream & Multi-Agent Co-Design:**
-  * Interactive finite element analysis updates principal stress tensors dynamically as load vectors move.
-  * Multi-agent collaboration allows structural, thermal, and manufacturing agent personas to inspect and annotate 3D geometry concurrently.
+  * Dynamic voxel stress field streaming and multi-persona engineering collaboration (Structural, Thermal, and Slicing agents).
 
 For the exhaustive protocol schemas, event specifications, and socket lifecycles, refer to `references/WORKBENCH_ROADMAP.md`.
+
+---
+
+## Section 11: Production DfAM and DFM Manufacturing Auditing
+
+Before committing or releasing mechanical solids, execute automated manufacturing feasibility validation across additive (DfAM), subtractive CNC, sheet metal, and injection molding constraints.
+
+### Zero-Dependency Production Auditor (`scripts/manufacturing_auditor.py`)
+Audit mesh models (.stl, .obj) and parametric envelopes headlessly:
+
+```bash
+# Run comprehensive DfAM and DFM audit against 45-degree build limit
+python scripts/manufacturing_auditor.py cad/output/part.stl --angle-limit 45
+
+# Output machine-readable JSON for automated CI/CD pipeline gating
+python scripts/manufacturing_auditor.py cad/output/part.stl --json
+```
+
+* **Overhang Extraction:** Evaluates downward facet normals ($N_z < 0$) against gravity vectors, binning geometry into self-supporting (>45 deg), supported (25 deg to 45 deg), and critical (<25 deg) zones.
+* **Process Feasibility Checks:**
+  * *DMLS / Metal PBF:* Checks thermal anchor requirements and depowdering escape ports (minimum 4mm).
+  * *SLS Nylon:* Verifies self-supporting powder-bed volume and wall limits (0.8mm nominal).
+  * *FDM / FFF:* Asserts minimum wall thickness (1.2mm) and unsupported bridge spans (<= 10mm).
+  * *CNC Milling:* Flags tool length-to-diameter aspect ratios ($L/D > 4:1$) and inaccessible corner radii.
+  * *Sheet Metal:* Validates minimum hole-to-edge distance ($2 \times T$) and bend relief notches.
+
+For detailed threshold tables and process limits, refer to `references/MANUFACTURING_LIMITS.md`.
+
+---
+
+## Section 12: Automated Orthographic Engineering Blueprints
+
+To generate production-ready 2D shop drawings directly from parametric solids without external drafting software:
+
+### Vector Blueprint Generator (`scripts/drawing_generator.py`)
+```bash
+python scripts/drawing_generator.py --name "CHASSIS_BRACKET" --material "Ti-6Al-4V Titanium" --length 140 --width 80 --height 60 --hole 14 --output "cad/output/drawing.svg"
+```
+
+* **ISO Sheet Layout:** Generates ISO A4/A3 standard engineering sheets complete with grid zones (A-D, 1-4), outer border margins, and compliant title blocks.
+* **Third-Angle Projection:** Renders Front Elevation (View A), Plan Top (View B), Right Elevation (View C), and an Isometric perspective (View D).
+* **Automated Dimensioning & Annotation:** Draws witness lines, arrowheads, metric dimension callouts, circular centerlines, and hidden detail dashed lines.
+* **Interactive Blueprint Mode in Workbench:** Select the **Blueprint** button in `sandbox/index.html` to inspect the 3D model styled in architectural blueprint CAD aesthetics.
+
+---
+
+## Section 13: Standard Component and Fastener Vault
+
+When integrating commercial off-the-shelf (COTS) hardware, agents must use standardized clearance and fit dimensions rather than estimating:
+
+* **Metric Screw Clearances (M2 to M10):** Apply standard Close, Normal, or Loose fit hole diameters and counterbore clearances defined in `references/FASTENER_VAULT.md`.
+* **Heat-Set Brass Inserts (Additive Parts):** Follow tapered insert boss dimensions (e.g. M3 insert: 4.4mm top hole diameter, 8 degree draft angle, minimum 1.6mm wall thickness around boss).
+* **Rotary Ball Bearings:** Implement standard press-fit (interference) and slip-fit bore tolerances for standard miniature bearings (608 skate, 688 slim, 625, 624).
 
 ---
 

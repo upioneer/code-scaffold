@@ -2,8 +2,8 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_seo_geo_aeo_auditor_skill",
-  "version": "4",
-  "description": "Unified model-agnostic Search Engine, Generative Engine, and Answer Engine Optimization auditor to analyze traditional visibility, AI engine discoverability, and snippet answers.",
+  "version": "5",
+  "description": "Unified model-agnostic Search Engine, Generative Engine, and Answer Engine Optimization auditor to analyze traditional visibility, Core Web Vitals (LCP/INP/CLS), modern Schema.org validation, passage citability, E-E-A-T signals, and snippet answers.",
   "entryPoint": "./SKILL.md",
   "engines": {
     "node": ">=18.0.0"
@@ -22,8 +22,16 @@
     "json-ld",
     "generative-engine",
     "answer-engine",
-    "mobile-viewport"
+    "mobile-viewport",
+    "core-web-vitals",
+    "inp",
+    "lcp",
+    "cls",
+    "passage-citability",
+    "eeat",
+    "llms-txt",
+    "agentic-browsing"
   ],
   "hasSandbox": false,
-  "integrity": "cs:sha256:df848ac8301d82291b0249a1c4fc2de3b44bae861d5136de3a4147414aeaccc9"
+  "integrity": "cs:sha256:03ddefaec785d9deda92740c9b4a7d19ba0d3bc57b6d672ce120c0b39723e2ff"
 }

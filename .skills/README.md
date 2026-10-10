@@ -19,7 +19,7 @@ Welcome to the official **Code Scaffold Skills Library**. This curated registry 
 | Skill | Description | Search Keywords | Version | Path |
 | :--- | :--- | :--- | :--- | :--- |
 | **Braille Animations** | Create and manage unicode braille animations and spinners for CLIs and web apps. | `braille-art`, `terminal-animations`, `ascii-art` | v4 | `.skills/braille-animations` |
-| **CAD Tools** | Comprehensive CAD/CAM engineering skill for AI agents : orchestrating generative design, topology optimization with the Alien Meter slider, FreeCAD socket/headless automation, parametric 3D modeling, additive manufacturing (DMLS/SLS), and multi-format conversion. | `cad`, `generative-design`, `topology-optimization`, `alien-meter`, `freecad` | v8 | `.skills/cad-tools` |
+| **CAD Tools** | Comprehensive CAD/CAM engineering skill for AI agents : orchestrating generative design, topology optimization with the Alien Meter slider, DfAM/DFM production auditing, orthographic engineering blueprints, FreeCAD socket automation, parametric 3D modeling, and multi-format conversion. | `cad`, `generative-design`, `topology-optimization`, `alien-meter`, `freecad` | v10 | `.skills/cad-tools` |
 | **Kinetic Canvas** | Ultra-fast, zero-dependency WebGL shaders and interactive HTML canvases wrapped as native React components. | `kinetic-canvas`, `canvas-api`, `physics-simulation` | v7 | `.skills/kinetic-canvas` |
 | **Manim Math Animations** | Mathematical animations using the Manim library. | `manim`, `math-animation`, `python-video` | v5 | `.skills/manim` |
 | **p5.js Creative Coding** | Creative coding and visual animations using the p5.js library. | `p5js`, `creative-coding`, `canvas2d` | v5 | `.skills/p5js` |
@@ -105,7 +105,7 @@ Welcome to the official **Code Scaffold Skills Library**. This curated registry 
 | **Firecrawl Scraper** | Crawl and scrape websites to clean markdown or structured data with Firecrawl API & CLI | `firecrawl`, `web-crawler`, `llm-scraping` | v3 | `.skills/firecrawl` |
 | **OpenCLI** | Bridge websites and the CLI for structured data extraction and browser automation | `opencli`, `cli-to-web`, `site-adapters` | v2 | `.skills/opencli` |
 | **Playwright Plus** | Browser automation and end-to-end testing with Playwright, now with a real declarative YAML dispatcher and run recording | `playwright`, `browser-automation`, `e2e-testing` | v5 | `.skills/playwright` |
-| **SEO GEO AEO Auditor** | Unified model-agnostic Search Engine, Generative Engine, and Answer Engine Optimization auditor to analyze traditional visibility, AI engine discoverability, and snippet answers. | `seo`, `geo`, `aeo` | v4 | `.skills/seo-geo-aeo-auditor` |
+| **SEO GEO AEO Auditor** | Unified model-agnostic Search Engine, Generative Engine, and Answer Engine Optimization auditor with Core Web Vitals (INP/LCP/CLS), Schema.org deprecation guard, passage citability, and E-E-A-T readiness. | `seo`, `geo`, `aeo`, `core-web-vitals`, `eeat` | v5 | `.skills/seo-geo-aeo-auditor` |
 | **Stealth Browser** | Multi-engine ghost browser automation skill for AI agents, unifying Ghost Graph extraction pipelines, FastMCP anti-detection automation, Ghost Core native CDP micro-engine, visual takeover, encrypted auth vaults, zero-token text perception, and cryptographic witness receipts. | `stealth-browser`, `ghost-graph`, `auth-vault` | v5 | `.skills/stealth-browser` |
 
 ## Discovery & Ad-Hoc CLI Installation

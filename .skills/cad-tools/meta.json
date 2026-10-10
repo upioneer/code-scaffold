@@ -1,7 +1,7 @@
 {
   "label": "CAD Tools",
-  "description": "Comprehensive CAD/CAM engineering skill for AI agents : orchestrating generative design, topology optimization with the Alien Meter slider, FreeCAD socket and headless automation, parametric 3D modeling, additive manufacturing (DMLS/SLS), and multi-format conversion.",
-  "version": "8",
+  "description": "Comprehensive CAD/CAM engineering skill for AI agents : orchestrating generative design, topology optimization with the Alien Meter slider, DfAM/DFM production auditing, orthographic engineering blueprints, FreeCAD socket automation, parametric 3D modeling, and multi-format conversion.",
+  "version": "10",
   "target": ".skills/cad-tools",
   "hasSandbox": true,
   "logo": [
