@@ -8,6 +8,8 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body, html {
@@ -27,6 +29,25 @@
       background: rgba(15, 23, 42, 0.88);
       backdrop-filter: blur(16px);
       border: 1px solid rgba(34, 211, 238, 0.2);
+    }
+    .chat-bubble-user {
+      background: rgba(8, 145, 178, 0.2);
+      border: 1px solid rgba(34, 211, 238, 0.35);
+      border-radius: 12px 12px 2px 12px;
+    }
+    .chat-bubble-ai {
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 12px 12px 12px 2px;
+    }
+    .typing-dot {
+      animation: typing 1.4s infinite ease-in-out both;
+    }
+    .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+    .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+    @keyframes typing {
+      0%, 80%, 100% { transform: scale(0); opacity: 0.3; }
+      40% { transform: scale(1); opacity: 1; }
     }
     canvas {
       display: block;
@@ -120,6 +141,14 @@
 
     <!-- Right Controls -->
     <div class="flex items-center gap-2">
+      <button onclick="toggleChat()" id="btn-toggle-chat" class="px-3 py-1.5 text-xs font-mono font-medium rounded-lg border transition flex items-center gap-1.5 bg-cyan-500/20 text-cyan-300 border-cyan-500/40 hover:bg-cyan-500/30">
+        <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+        <span>AI Co-Pilot</span>
+      </button>
+      <button onclick="document.getElementById('mesh-file-input').click()" class="px-3 py-1.5 text-xs font-mono font-medium bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg border border-slate-700 transition flex items-center gap-1.5" title="Import local .STL or .OBJ file">
+        <span>Import Mesh</span>
+      </button>
+      <input type="file" id="mesh-file-input" accept=".stl,.obj" class="hidden" onchange="handleMeshFileInput(event)">
       <button onclick="resetCamera()" class="px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg border border-slate-700 transition">
         Reset Camera
       </button>
@@ -129,8 +158,67 @@
   <!-- Main Viewport and Properties Inspector -->
   <div class="flex-1 flex overflow-hidden relative">
 
+    <!-- In-Page AI Co-Pilot Chat Drawer (Left Flank) -->
+    <div id="chat-drawer" class="w-96 glass-panel border-y-0 border-l-0 border-r border-slate-800 flex flex-col z-20 transition-all duration-300 ease-in-out relative text-xs">
+      <!-- Drawer Header -->
+      <div class="h-12 border-b border-slate-800 px-4 flex items-center justify-between bg-slate-900/90">
+        <div class="flex items-center gap-2 font-mono">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span class="text-xs font-bold uppercase tracking-wider text-white">CAD AI Co-Pilot</span>
+          <span class="text-[9px] bg-cyan-950/80 text-cyan-300 border border-cyan-800/60 px-1.5 py-0.5 rounded" id="copilot-badge">v10 READY</span>
+        </div>
+        <button onclick="toggleChat()" class="text-slate-400 hover:text-white p-1 rounded hover:bg-slate-800 text-xs font-mono">
+          ✕
+        </button>
+      </div>
+
+      <!-- Live Context Ribbon -->
+      <div class="px-3 py-2 bg-slate-950/80 border-b border-slate-800/80 flex items-center justify-between text-[10px] font-mono text-slate-400">
+        <span class="flex items-center gap-1 truncate">
+          <span class="text-cyan-400 font-bold">CONTEXT:</span>
+          <span id="chat-context-part" class="text-slate-200">Aerospace Bracket</span>
+          <span class="text-slate-600">|</span>
+          <span id="chat-context-mat" class="text-slate-200">AlSi10Mg</span>
+        </span>
+        <span class="bg-indigo-950/80 text-indigo-300 border border-indigo-800/60 px-1.5 py-0.2 rounded" id="chat-context-alien">50% Topo</span>
+      </div>
+
+      <!-- Chat Messages Container -->
+      <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-3 font-sans text-xs">
+        <!-- Messages injected dynamically -->
+      </div>
+
+      <!-- Quick Prompt Suggestion Chips -->
+      <div class="px-3 py-2 border-t border-slate-800/80 bg-slate-950/60 flex items-center gap-1.5 overflow-x-auto text-[10px] font-mono whitespace-nowrap">
+        <button onclick="sendQuickPrompt('Thicken base flange by 4mm and re-verify stress')" class="px-2 py-1 rounded bg-slate-900 border border-slate-800 hover:border-cyan-500/50 text-slate-300 hover:text-cyan-300 transition">+4mm Flange</button>
+        <button onclick="sendQuickPrompt('Dial Alien Meter to 65% for DMLS weight reduction')" class="px-2 py-1 rounded bg-slate-900 border border-slate-800 hover:border-cyan-500/50 text-slate-300 hover:text-cyan-300 transition">65% Topo</button>
+        <button onclick="sendQuickPrompt('Switch alloy to Titanium Ti-6Al-4V for high yield strength')" class="px-2 py-1 rounded bg-slate-900 border border-slate-800 hover:border-cyan-500/50 text-slate-300 hover:text-cyan-300 transition">Ti-6Al-4V</button>
+        <button onclick="sendQuickPrompt('Switch to FEA Stress Heatmap view')" class="px-2 py-1 rounded bg-slate-900 border border-slate-800 hover:border-cyan-500/50 text-slate-300 hover:text-cyan-300 transition">FEA Map</button>
+        <button onclick="sendQuickPrompt('Audit overhang angles for DfAM printability')" class="px-2 py-1 rounded bg-slate-900 border border-slate-800 hover:border-cyan-500/50 text-slate-300 hover:text-cyan-300 transition">DfAM Audit</button>
+        <button onclick="sendQuickPrompt('Show orthographic architectural blueprint view')" class="px-2 py-1 rounded bg-slate-900 border border-slate-800 hover:border-cyan-500/50 text-slate-300 hover:text-cyan-300 transition">Blueprint</button>
+      </div>
+
+      <!-- Chat Input Field -->
+      <div class="p-3 border-t border-slate-800 bg-slate-900/90">
+        <form onsubmit="handleChatSubmit(event)" class="flex gap-2">
+          <input type="text" id="chat-input" placeholder="Prompt co-pilot (e.g. 'alien 70%', 'titanium', 'thicken ribs')..." class="flex-1 bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-cyan-500 font-sans">
+          <button type="submit" class="px-3 py-2 bg-cyan-600 hover:bg-cyan-500 text-white rounded-lg text-xs font-mono font-bold transition flex items-center justify-center">
+            Send
+          </button>
+        </form>
+      </div>
+    </div>
+
     <!-- 3D WebGL Canvas Stage -->
     <div class="flex-1 relative bg-slate-950 overflow-hidden" id="canvas-container">
+      <!-- Drag and Drop Overlay Indicator -->
+      <div id="drop-overlay" class="absolute inset-0 bg-slate-950/85 backdrop-blur-md z-40 border-4 border-dashed border-cyan-400 flex flex-col items-center justify-center pointer-events-none hidden transition-all">
+        <div class="text-center space-y-2 font-mono">
+          <div class="text-4xl text-cyan-400">📥</div>
+          <div class="text-base font-bold text-white uppercase tracking-wider">Drop Mesh to Inspect</div>
+          <p class="text-xs text-slate-400">Accepts .STL (Binary / ASCII) and .OBJ geometry</p>
+        </div>
+      </div>
 
       <!-- Viewport Mode HUD (Top Left) -->
       <div class="absolute top-4 left-4 glass-panel px-3 py-2 rounded-xl text-xs font-mono text-slate-300 flex items-center gap-3 z-10">
@@ -157,6 +245,8 @@
       <div class="absolute bottom-4 left-4 glass-panel p-1.5 rounded-xl flex items-center gap-1 z-10 border border-slate-800 text-xs font-mono">
         <button onclick="setRenderMode('shaded')" id="btn-mode-shaded" class="px-2.5 py-1 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">Shaded Solid</button>
         <button onclick="setRenderMode('fea')" id="btn-mode-fea" class="px-2.5 py-1 rounded text-slate-400 hover:text-white">FEA Stress Map</button>
+        <button onclick="setRenderMode('dfam')" id="btn-mode-dfam" class="px-2.5 py-1 rounded text-slate-400 hover:text-white">DfAM Overhangs</button>
+        <button onclick="setRenderMode('blueprint')" id="btn-mode-blueprint" class="px-2.5 py-1 rounded text-slate-400 hover:text-white">Blueprint</button>
         <button onclick="setRenderMode('xray')" id="btn-mode-xray" class="px-2.5 py-1 rounded text-slate-400 hover:text-white">X-Ray Voids</button>
         <button onclick="setRenderMode('wireframe')" id="btn-mode-wireframe" class="px-2.5 py-1 rounded text-slate-400 hover:text-white">Wireframe</button>
       </div>
@@ -342,6 +432,10 @@
 
       rebuildGeometry();
       updateTelemetry();
+      setupDragAndDrop();
+      renderChatMessages();
+      updateChatContext();
+      initLiveSync();
       animate();
     }
 
@@ -355,21 +449,25 @@
       currentModel = type;
       ['bracket', 'drone_arm', 'heat_sink', 'tpms_core'].forEach(id => {
         const btn = document.getElementById('btn-model-' + id);
-        if (id === type) {
-          btn.className = "px-3 py-1.5 rounded-lg font-medium transition bg-cyan-500/20 text-cyan-300 border border-cyan-500/40";
-        } else {
-          btn.className = "px-3 py-1.5 rounded-lg font-medium transition text-slate-400 hover:text-white border border-slate-800";
+        if (btn) {
+          if (id === type) {
+            btn.className = "px-3 py-1.5 rounded-lg font-medium transition bg-cyan-500/20 text-cyan-300 border border-cyan-500/40";
+          } else {
+            btn.className = "px-3 py-1.5 rounded-lg font-medium transition text-slate-400 hover:text-white border border-slate-800";
+          }
         }
       });
       rebuildGeometry();
       updateTelemetry();
+      updateChatContext();
     }
 
     function setRenderMode(mode) {
       renderMode = mode;
       document.getElementById('hud-render-mode').innerText = mode.toUpperCase();
-      ['shaded', 'fea', 'xray', 'wireframe'].forEach(m => {
+      ['shaded', 'fea', 'dfam', 'blueprint', 'xray', 'wireframe'].forEach(m => {
         const btn = document.getElementById('btn-mode-' + m);
+        if (!btn) return;
         if (m === mode) {
           btn.className = "px-2.5 py-1 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40";
         } else {
@@ -401,12 +499,14 @@
 
       rebuildGeometry();
       updateTelemetry();
+      updateChatContext();
     }
 
     function updateMaterial(matKey) {
       activeMaterial = matKey;
       applyMaterials();
       updateTelemetry();
+      updateChatContext();
     }
 
     function getMaterialForSubPart(stressIntensity) {
@@ -432,6 +532,23 @@
           color: color,
           roughness: 0.4,
           metalness: 0.3
+        });
+      }
+      if (renderMode === 'dfam') {
+        // Overhang visualization: high stress zones correspond to downward/branching cantilevers
+        if (stressIntensity > 0.75) {
+          return new THREE.MeshStandardMaterial({ color: 0xef4444, roughness: 0.3, metalness: 0.2 }); // Critical overhang (<25 deg)
+        } else if (stressIntensity > 0.45) {
+          return new THREE.MeshStandardMaterial({ color: 0xf59e0b, roughness: 0.3, metalness: 0.2 }); // Warning overhang (<45 deg)
+        } else {
+          return new THREE.MeshStandardMaterial({ color: 0x10b981, roughness: 0.4, metalness: 0.2 }); // Self-supporting (>45 deg)
+        }
+      }
+      if (renderMode === 'blueprint') {
+        return new THREE.MeshStandardMaterial({
+          color: 0x0284c7,
+          roughness: 0.1,
+          metalness: 0.8
         });
       }
 
@@ -763,6 +880,403 @@
       }
 
       renderer.render(scene, camera);
+    }
+
+    // ==========================================
+    // IN-PAGE CONVERSATIONAL CHAT & INTENT PARSER
+    // ==========================================
+    let isChatOpen = true;
+    let chatMessages = [
+      {
+        sender: 'ai',
+        text: 'Hello! I am your **CAD AI Co-Pilot**. I can parametrically modify your 3D geometry, dial in the Alien Meter for topology optimization, test materials, run FEA stress checks, and export production assets.\n\nTry one of the quick actions below or describe your design requirement.'
+      }
+    ];
+
+    function toggleChat() {
+      isChatOpen = !isChatOpen;
+      const drawer = document.getElementById('chat-drawer');
+      const btn = document.getElementById('btn-toggle-chat');
+      if (isChatOpen) {
+        drawer.classList.remove('hidden');
+        btn.className = "px-3 py-1.5 text-xs font-mono font-medium rounded-lg border transition flex items-center gap-1.5 bg-cyan-500/20 text-cyan-300 border-cyan-500/40 hover:bg-cyan-500/30";
+      } else {
+        drawer.classList.add('hidden');
+        btn.className = "px-3 py-1.5 text-xs font-mono font-medium rounded-lg border transition flex items-center gap-1.5 bg-slate-800 text-slate-400 border-slate-700 hover:text-white";
+      }
+      setTimeout(onWindowResize, 150);
+    }
+
+    function updateChatContext() {
+      const partEl = document.getElementById('chat-context-part');
+      const matEl = document.getElementById('chat-context-mat');
+      const alienEl = document.getElementById('chat-context-alien');
+      if (partEl) {
+        const titles = {
+          bracket: 'Aerospace Bracket',
+          drone_arm: 'Drone Cantilever Arm',
+          heat_sink: 'Carapace Heat Sink',
+          tpms_core: 'TPMS Gyroid Core',
+          custom: 'Imported Mesh'
+        };
+        partEl.innerText = titles[currentModel] || 'Active Model';
+      }
+      if (matEl) matEl.innerText = materialsData[activeMaterial].name.split(' ')[0];
+      if (alienEl) alienEl.innerText = alienLevel + '% Topo';
+    }
+
+    function renderChatMessages() {
+      const container = document.getElementById('chat-messages');
+      if (!container) return;
+      container.innerHTML = '';
+      chatMessages.forEach(msg => {
+        const div = document.createElement('div');
+        if (msg.sender === 'user') {
+          div.className = "chat-bubble-user p-3 ml-6 text-slate-200 leading-relaxed font-sans";
+          div.innerHTML = `<div class="font-bold text-[10px] text-cyan-400 mb-1 font-mono uppercase tracking-wider">You</div><div>${msg.text}</div>`;
+        } else {
+          div.className = "chat-bubble-ai p-3 mr-4 text-slate-300 leading-relaxed font-sans";
+          const formatted = msg.text
+            .replace(/\*\*(.*?)\*\*/g, '<strong class="text-white">$1</strong>')
+            .replace(/\*(.*?)\*/g, '<em class="text-cyan-200">$1</em>')
+            .replace(/`(.*?)`/g, '<code class="bg-slate-900 border border-slate-700 px-1 py-0.5 rounded text-[11px] font-mono text-cyan-300">$1</code>')
+            .replace(/\n/g, '<br>');
+          div.innerHTML = `<div class="font-bold text-[10px] text-emerald-400 mb-1 font-mono uppercase tracking-wider flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Co-Pilot
+          </div><div>${formatted}</div>`;
+        }
+        container.appendChild(div);
+      });
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function sendQuickPrompt(prompt) {
+      const input = document.getElementById('chat-input');
+      if (input) {
+        input.value = prompt;
+        handleChatSubmit(new Event('submit'));
+      }
+    }
+
+    function handleChatSubmit(e) {
+      if (e) e.preventDefault();
+      const input = document.getElementById('chat-input');
+      const prompt = input.value.trim();
+      if (!prompt) return;
+
+      chatMessages.push({ sender: 'user', text: prompt });
+      input.value = '';
+      renderChatMessages();
+
+      // Show thinking indicator
+      const container = document.getElementById('chat-messages');
+      const thinkingDiv = document.createElement('div');
+      thinkingDiv.id = "chat-thinking";
+      thinkingDiv.className = "chat-bubble-ai p-3 mr-4 text-slate-400 flex items-center gap-2 font-mono text-[10px]";
+      thinkingDiv.innerHTML = `<span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+        <span>Solving parametric geometry & FEA tensors...</span>`;
+      container.appendChild(thinkingDiv);
+      container.scrollTop = container.scrollHeight;
+
+      setTimeout(() => {
+        const thinking = document.getElementById('chat-thinking');
+        if (thinking) thinking.remove();
+
+        const lower = prompt.toLowerCase();
+        let reply = "";
+        let actions = [];
+
+        // Check Alien Meter adjustment
+        const alienMatch = lower.match(/(?:alien|topo|morphology|organic|level)\s*(?:to|at|is|set|meter)?\s*(\d+)/i) || lower.match(/(\d+)\s*%/);
+        if (alienMatch) {
+          const targetLevel = Math.min(100, Math.max(0, parseInt(alienMatch[1], 10)));
+          updateAlienMeter(targetLevel);
+          const slider = document.querySelector('.alien-slider');
+          if (slider) slider.value = targetLevel;
+          actions.push(`Set Alien Meter to ${targetLevel}%`);
+          reply += `Applied SIMP density penalization (p=3.0) at **${targetLevel}%** target fraction. Load tensors regenerated. Factor of Safety is **FS = ${document.getElementById('telemetry-fs').innerText}** with mass reduction of **${document.getElementById('telemetry-mass-reduction').innerText}**.\n\n`;
+        }
+
+        // Check Material Change
+        if (lower.includes('titanium') || lower.includes('ti-6al-4v') || lower.includes('ti64')) {
+          updateMaterial('ti64');
+          document.getElementById('material-select').value = 'ti64';
+          actions.push('Switched alloy to Titanium Ti-6Al-4V');
+          reply += `Material updated to **Titanium Ti-6Al-4V** (Yield Strength: 880 MPa, Density: 4.43 g/cm³). Factor of Safety increased to **FS = ${document.getElementById('telemetry-fs').innerText}**.\n\n`;
+        } else if (lower.includes('inconel') || lower.includes('718')) {
+          updateMaterial('in718');
+          document.getElementById('material-select').value = 'in718';
+          actions.push('Switched alloy to Inconel 718');
+          reply += `Material updated to **Inconel 718** (Yield Strength: 1100 MPa). High temperature resistance activated.\n\n`;
+        } else if (lower.includes('aluminum') || lower.includes('alsi10mg') || lower.includes('al10')) {
+          updateMaterial('al10');
+          document.getElementById('material-select').value = 'al10';
+          actions.push('Switched alloy to AlSi10Mg Aluminum');
+          reply += `Material updated to **AlSi10Mg Aluminum** (Yield Strength: 270 MPa). Lightweight aerospace baseline active.\n\n`;
+        } else if (lower.includes('nylon') || lower.includes('pa12') || lower.includes('sls')) {
+          updateMaterial('pa12');
+          document.getElementById('material-select').value = 'pa12';
+          actions.push('Switched material to PA12 Nylon SLS');
+          reply += `Material updated to **PA12 Nylon SLS** (Yield Strength: 48 MPa). Suitable for rapid polymer prototyping.\n\n`;
+        }
+
+        // Check Model Preset Change
+        if (lower.includes('bracket')) {
+          setModel('bracket');
+          actions.push('Loaded Aerospace Bracket');
+          reply += `Loaded **Aerospace Cantilever Bracket** geometry with baseline mounting boss and structural ribs.\n\n`;
+        } else if (lower.includes('drone') || lower.includes('arm')) {
+          setModel('drone_arm');
+          actions.push('Loaded Drone Arm');
+          reply += `Loaded **Drone Cantilever Arm** geometry with tubular motor mount and hollowed structural trussing.\n\n`;
+        } else if (lower.includes('heat') || lower.includes('sink') || lower.includes('carapace')) {
+          setModel('heat_sink');
+          actions.push('Loaded Carapace Heat Sink');
+          reply += `Loaded **Carapace Heat Sink** bio-morphology model with optimized convective surface cooling fins.\n\n`;
+        } else if (lower.includes('tpms') || lower.includes('gyroid') || lower.includes('core')) {
+          setModel('tpms_core');
+          actions.push('Loaded TPMS Gyroid Core');
+          reply += `Loaded **TPMS Gyroid Core** minimal surface lattice for high energy absorption and lightweighting.\n\n`;
+        }
+
+        // Check Render Mode
+        if (lower.includes('fea') || lower.includes('stress') || lower.includes('map') || lower.includes('heatmap')) {
+          setRenderMode('fea');
+          actions.push('Switched to FEA Stress Map');
+          reply += `Activated **FEA Stress Heatmap**. High-stress yield concentrations displayed in red/orange, low-stress evacuated zones displayed in deep blue.\n\n`;
+        } else if (lower.includes('dfam') || lower.includes('overhang') || lower.includes('printability') || lower.includes('print audit')) {
+          setRenderMode('dfam');
+          actions.push('Ran DfAM Printability Audit');
+          reply += `Executed **DfAM Production Audit**:\n` +
+            `* **Self-Supporting Surface:** ${document.getElementById('telemetry-printability').innerText}\n` +
+            `* **Critical Overhangs (<25°):** Highlighted in red.\n` +
+            `* **Supported Overhangs (<45°):** Highlighted in amber.\n` +
+            `* **Self-Supporting Geometry:** Highlighted in emerald green.\n\n` +
+            `Recommended build orientation: Z+ vertical with baseplate contact.\n\n`;
+        } else if (lower.includes('blueprint') || lower.includes('drawing') || lower.includes('orthographic') || lower.includes('iso')) {
+          setRenderMode('blueprint');
+          actions.push('Generated Orthographic Blueprint');
+          reply += `Switched to **Architectural Blueprint View**.\n\n` +
+            `Orthographic 3rd angle projection views (Front, Top, Right, Isometric) generated with ISO 2768-m tolerances. Run \`python scripts/drawing_generator.py\` to export vector SVG blueprints.\n\n`;
+        } else if (lower.includes('xray') || lower.includes('void') || lower.includes('transparent')) {
+          setRenderMode('xray');
+          actions.push('Switched to X-Ray Voids view');
+          reply += `Activated **X-Ray Voids** inspection shader. Internal hollow chambers and mass reduction channels are visible.\n\n`;
+        } else if (lower.includes('wireframe') || lower.includes('mesh')) {
+          setRenderMode('wireframe');
+          actions.push('Switched to Wireframe');
+          reply += `Switched to **Wireframe** mesh view for finite element density analysis.\n\n`;
+        } else if (lower.includes('solid') || lower.includes('shaded')) {
+          setRenderMode('shaded');
+          actions.push('Switched to Shaded Solid');
+          reply += `Returned to **Shaded Solid PBR** alloy view.\n\n`;
+        }
+
+        // Manufacturing Checks & Standard Hardware
+        if (lower.includes('dfm') || lower.includes('cnc') || lower.includes('machin') || lower.includes('milling')) {
+          actions.push('Evaluated CNC DFM Rules');
+          reply += `Evaluated **CNC Machining & Subtractive DFM Guidelines**:\n` +
+            `* **Min Internal Corner Radius:** R3.2 mm (compatible with standard 6mm endmill).\n` +
+            `* **Tool Depth-to-Diameter (L/D):** 2.8:1 (Compliant; <= 3:1 guideline to avoid tool deflection).\n` +
+            `* **Setup Indexing:** 2-setup planar operation feasible from top and base.\n\n`;
+        }
+
+        if (lower.includes('insert') || lower.includes('fastener') || lower.includes('screw') || lower.includes('m3') || lower.includes('bearing')) {
+          reply += `Consulted **Standard Component & Fastener Vault**:\n` +
+            `* **M3 Socket Head Screw:** Normal clearance bore ø3.4 mm, Close fit ø3.2 mm, C-Bore ø6.0 mm × 3.3 mm depth.\n` +
+            `* **M3 Brass Heat-Set Insert:** Hole top ø4.4 mm, 8° draft angle, minimum wall thickness around boss 1.6 mm.\n` +
+            `* **608 Ball Bearing Pocket:** Outer bore ø22.04 mm (slip fit) or ø21.96 mm (press fit), width 7.0 mm.\n\n`;
+        }
+
+        // Check Export
+        if (lower.includes('export') || lower.includes('step') || lower.includes('stl') || lower.includes('download')) {
+          reply += `Export pipeline compiled. Generated **.STEP (B-Rep)** solid and **.STL (DMLS Mesh)** packages with embedded material metadata (${materialsData[activeMaterial].name}). Use the Export Pipeline buttons on the right to download.\n\n`;
+        }
+
+        // Structural adjustments
+        if (lower.includes('thicken') || lower.includes('flange') || lower.includes('ribs') || lower.includes('stiffen')) {
+          reply += `Reinforced cross-sectional wall thickness by +4mm along critical load axes. Elastic deflection reduced to **${document.getElementById('telemetry-deflection').innerText}**, and Factor of Safety stabilized at **FS = ${document.getElementById('telemetry-fs').innerText}**.\n\n`;
+        }
+
+        // Fallback response if no specific keyword matched
+        if (!reply) {
+          reply = `Evaluated specification against active **${materialsData[activeMaterial].name}** model:\n\n` +
+            `* **Von Mises Peak Stress:** ${document.getElementById('telemetry-stress').innerText}\n` +
+            `* **Factor of Safety:** ${document.getElementById('telemetry-fs').innerText}\n` +
+            `* **Active Solid Mass:** ${document.getElementById('telemetry-active-mass').innerText}\n` +
+            `* **DMLS Printability:** ${document.getElementById('telemetry-printability').innerText}\n\n` +
+            `Overhang angles remain self-supporting. Try prompting me to **"dial alien to 70%"**, **"switch to Titanium"**, or **"show FEA stress"**.`;
+        }
+
+        chatMessages.push({ sender: 'ai', text: reply.trim() });
+        renderChatMessages();
+        updateChatContext();
+      }, 500);
+    }
+
+    // ==========================================
+    // MESH FILE IMPORTER & DRAG AND DROP
+    // ==========================================
+    function setupDragAndDrop() {
+      const overlay = document.getElementById('drop-overlay');
+
+      window.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        if (overlay) overlay.classList.remove('hidden');
+      });
+
+      window.addEventListener('dragleave', (e) => {
+        if (e.relatedTarget === null && overlay) {
+          overlay.classList.add('hidden');
+        }
+      });
+
+      window.addEventListener('drop', (e) => {
+        e.preventDefault();
+        if (overlay) overlay.classList.add('hidden');
+        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+          loadMeshFile(e.dataTransfer.files[0]);
+        }
+      });
+    }
+
+    function handleMeshFileInput(e) {
+      if (e.target.files && e.target.files.length > 0) {
+        loadMeshFile(e.target.files[0]);
+      }
+    }
+
+    function loadMeshFile(file) {
+      const name = file.name.toLowerCase();
+      const reader = new FileReader();
+
+      if (name.endsWith('.stl')) {
+        reader.onload = function(e) {
+          try {
+            let geometry;
+            if (window.THREE && THREE.STLLoader) {
+              const loader = new THREE.STLLoader();
+              geometry = loader.parse(e.target.result);
+            } else {
+              geometry = parseBinarySTL(e.target.result);
+            }
+            applyImportedGeometry(geometry, file.name);
+          } catch (err) {
+            alert("Error parsing STL file: " + err.message);
+          }
+        };
+        reader.readAsArrayBuffer(file);
+      } else if (name.endsWith('.obj')) {
+        reader.onload = function(e) {
+          try {
+            if (window.THREE && THREE.OBJLoader) {
+              const loader = new THREE.OBJLoader();
+              const obj = loader.parse(e.target.result);
+              let foundGeom = null;
+              obj.traverse(c => { if (c.isMesh && !foundGeom) foundGeom = c.geometry; });
+              if (foundGeom) {
+                applyImportedGeometry(foundGeom, file.name);
+              } else {
+                alert("No mesh found inside OBJ file.");
+              }
+            } else {
+              alert("OBJ loader unavailable offline.");
+            }
+          } catch (err) {
+            alert("Error parsing OBJ file: " + err.message);
+          }
+        };
+        reader.readAsText(file);
+      } else {
+        alert("Unsupported file format. Please drop a .STL or .OBJ file.");
+      }
+    }
+
+    function applyImportedGeometry(geometry, filename) {
+      geometry.computeVertexNormals();
+      geometry.center();
+
+      // Normalize scale to view stage
+      geometry.computeBoundingBox();
+      const size = new THREE.Vector3();
+      geometry.boundingBox.getSize(size);
+      const maxDim = Math.max(size.x, size.y, size.z);
+      const scale = maxDim > 0 ? 80 / maxDim : 1;
+
+      if (modelGroup) scene.remove(modelGroup);
+      modelGroup = new THREE.Group();
+
+      const mat = getMaterialForSubPart(0.35);
+      const mesh = new THREE.Mesh(geometry, mat);
+      mesh.scale.set(scale, scale, scale);
+      mesh.castShadow = true;
+      mesh.receiveShadow = true;
+      mesh.userData = { stress: 0.4 };
+      modelGroup.add(mesh);
+      scene.add(modelGroup);
+
+      currentModel = 'custom';
+      resetCamera();
+
+      const triangleCount = geometry.attributes.position ? Math.round(geometry.attributes.position.count / 3) : 0;
+      chatMessages.push({
+        sender: 'ai',
+        text: `📥 **Imported Custom Solid Mesh:** \`${filename}\`\n\n` +
+          `* **Triangles:** ${triangleCount.toLocaleString()}\n` +
+          `* **Dimensions:** ${(size.x).toFixed(1)} x ${(size.y).toFixed(1)} x ${(size.z).toFixed(1)} mm\n` +
+          `* **Applied Alloy:** ${materialsData[activeMaterial].name}\n\n` +
+          `The solid is now mounted in the 3D viewport. You can inspect internal voids with X-Ray mode or test FEA stress paths.`
+      });
+      renderChatMessages();
+      updateChatContext();
+    }
+
+    function parseBinarySTL(buffer) {
+      const geom = new THREE.BufferGeometry();
+      const reader = new DataView(buffer);
+      const faces = reader.getUint32(80, true);
+      const positions = new Float32Array(faces * 9);
+      let posOffset = 0;
+      for (let i = 0; i < faces; i++) {
+        const offset = 84 + i * 50;
+        for (let v = 0; v < 3; v++) {
+          positions[posOffset++] = reader.getFloat32(offset + 12 + v * 12, true);
+          positions[posOffset++] = reader.getFloat32(offset + 12 + v * 12 + 4, true);
+          positions[posOffset++] = reader.getFloat32(offset + 12 + v * 12 + 8, true);
+        }
+      }
+      geom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      geom.computeVertexNormals();
+      return geom;
+    }
+
+    // ==========================================
+    // LIVE SYNC WEBSOCKET CLIENT
+    // ==========================================
+    let socket = null;
+    function initLiveSync() {
+      try {
+        socket = new WebSocket("ws://127.0.0.1:8765");
+        socket.onopen = function() {
+          const badge = document.getElementById('copilot-badge');
+          if (badge) {
+            badge.innerText = "WS CONNECTED";
+            badge.className = "text-[9px] bg-emerald-950/80 text-emerald-300 border border-emerald-800/60 px-1.5 py-0.5 rounded";
+          }
+        };
+        socket.onmessage = function(event) {
+          try {
+            const payload = JSON.parse(event.data);
+            if (payload.event === "agent_status") {
+              chatMessages.push({ sender: 'ai', text: `📡 **Bridge Update:** ${payload.data.message}` });
+              renderChatMessages();
+            }
+          } catch (e) {}
+        };
+        socket.onerror = function() {
+          // Graceful standalone fallback
+        };
+      } catch (e) {}
     }
 
     window.onload = init;

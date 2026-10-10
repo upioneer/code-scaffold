@@ -1,12 +1,12 @@
 # CAD Tools
 
-**Version:** 8
+**Version:** 10
 
 **Target:** `.skills/cad-tools`
 
 **Category:** Animation & Graphics
 
-**Keywords:** `cad`, `generative-design`, `topology-optimization`, `alien-meter`, `fea-stress`, `additive-manufacturing`, `dmls`, `sls`, `3d-modeling`, `step-files`, `stl`, `parametric-design`, `freecad`, `partdesign`, `b-rep`, `opencascade`, `sketcher`, `boolean-operations`, `streamable-http`, `headless-cad`, `offscreen-rendering`, `undo-transactions`, `3mf`
+**Keywords:** `cad`, `generative-design`, `topology-optimization`, `alien-meter`, `fea-stress`, `additive-manufacturing`, `dmls`, `sls`, `3d-modeling`, `step-files`, `stl`, `parametric-design`, `freecad`, `partdesign`, `b-rep`, `opencascade`, `sketcher`, `boolean-operations`, `streamable-http`, `headless-cad`, `offscreen-rendering`, `undo-transactions`, `3mf`, `dfam`, `dfm`, `engineering-drawing`, `orthographic`, `fasteners`, `blueprint`, `manufacturing-audit`
 
 ## Description
 
@@ -14,6 +14,12 @@ A comprehensive CAD/CAM engineering skill that equips AI agents with the full de
 
 ## Capabilities & Use Cases
 
+* **Production DfAM & DFM Manufacturing Auditor:** Automated zero-dependency mesh printability and subtractive machining validator analyzing overhang angles, critical support thresholds, powder evacuation holes, CNC tool aspect ratios, sheet metal bend reliefs, and injection molding draft angles
+* **Automated 2D Orthographic Engineering Blueprints:** Standalone vector SVG generator rendering ISO standard drawing sheets with grid frames, third-angle projections (Front, Top, Right, Isometric), dimension extension lines, centerlines, and compliant engineering title blocks
+* **Standard Component & Fastener Vault:** Engineering design specifications for ISO metric screw clearances (M2 to M10), heat-set brass insert boss geometry, and miniature ball bearing fits
+* **Architectural Blueprint & DfAM Shaders in 3D Workbench:** Interactive shaders in the WebGL sandbox highlighting critical overhang facets (<25 degrees in red, supported in amber, self-supporting in emerald green) alongside high-contrast blueprint CAD rendering
+* **In-Page Conversational AI Co-Pilot Chat Drawer:** Embedded glass-panel conversational interface executing real-time natural language intent parsing to dynamically adjust the Alien Meter, switch alloy materials, load presets, and toggle inspection modes without leaving the 3D canvas
+* **Drag-and-Drop Local 3D Mesh Importer:** Direct client-side parsing of binary and ASCII .STL and .OBJ geometry onto the 3D stage with automated bounding box normalization, PBR alloy shading, and geometry telemetry calculations
 * **Real-Time Interactive Workbench Architecture & Evolution Roadmap:** A phased closed-loop architecture integrating live Three.js 3D viewport synchronization, in-page conversational agent chat drawer, bidirectional WebSocket IPC, and real-time SIMP/FEA telemetry recalculation
 * **Generative Design and Topology Optimization (Topo):** AI and algorithm-driven material redistribution via SIMP (Solid Isotropic Material with Penalization) and FEA compliance minimization, automatically channeling loads along branching stress paths while evacuating dead-weight material
 * **The "Alien Meter" Slider and Structural Tradeoff Engine:** Parameterizes the organic bio-morphology spectrum from 0% (prismatic CNC geometry, maximum rigidity, FS >= 3.0) through 50% (aerospace structural TopOpt for DMLS/SLS, FS 1.5 - 2.0) up to 100% (hyper-organic biomechanical art and TPMS minimal surfaces, FS < 1.0, decorative only)
@@ -56,6 +62,8 @@ Activate this skill for any task involving:
 * Maintaining structured BOM documentation and inspection renders alongside CAD models
 
 ## Changelog
+* **v10** : Integrated Production DfAM/DFM Manufacturing Auditor, Automated Orthographic 2D Blueprint Generator with ISO title blocks, Standard Fastener and Hardware Vault, and interactive DfAM/Blueprint shaders in the WebGL workbench.
+* **v9** : Integrated In-Page Conversational AI Co-Pilot Chat Drawer with real-time parametric intent parsing, drag-and-drop local STL/OBJ mesh loader, and local sync daemon bridge.
 * **v8** : Established Real-Time Workbench Architecture & Interactive In-Page Chat Roadmap, defining the multi-tier bridge (Live Mesh Sync, In-Page Chat Drawer, Bidirectional WebSocket IPC, and Real-Time FEA Stream) linking user, agent, and 3D viewport.
 * **v7** : Integrated Generative Design and Topology Optimization (Topo) suite featuring the Alien Meter slider, Engineering Compromise Card telemetry, DMLS/SLS additive manufacturing constraints, and interactive 3D WebGL Three.js workbench sandbox.
 * **v6** : Integrated FreeCAD AI Connector and Parametric Engine Socket Bridge supporting GUI HTTP/SSE streamable socket control, headless STDIO JSON-RPC execution, PartDesign workbench automation, transactional rollbacks, and multimodal offscreen rendering.
