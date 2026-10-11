@@ -177,10 +177,52 @@ pub async fn run_headless(
     let arg_license = arg_license.to_lowercase();
     let arg_contributing = arg_contributing.to_lowercase();
 
+    let has_agent = arg_artifacts.contains(&"agent.md".to_string());
+    if has_agent {
+        let target_dir = std::path::PathBuf::from(&target).join(".agents");
+        let mut persona_lines = Vec::new();
+        for item in &workspace.items {
+            if item.category == Category::AgentPersona
+                && arg_personas.contains(&item.label.to_lowercase())
+            {
+                if let Some(desc) = &item.description {
+                    persona_lines.push(format!("* **{}**: {}", item.label, desc));
+                } else {
+                    persona_lines.push(format!("* **{}**", item.label));
+                }
+            }
+        }
+        let persona_content = if !persona_lines.is_empty() {
+            persona_lines.join("\n")
+        } else {
+            "* **Generic**: A versatile, unopinionated agent ready for general-purpose programming, debugging, and software architecture tasks without specific domain constraints.".to_string()
+        };
+
+        manifest
+            .artifacts
+            .push(crate::models::manifest::ArtifactEntry {
+                id: "agent_personas".into(),
+                label: "Agent Personas".into(),
+                source: Some(
+                    payload_dir
+                        .join(".templates")
+                        .join("agent.md")
+                        .to_string_lossy()
+                        .to_string(),
+                ),
+                target: target_dir.join("AGENTS.md").to_string_lossy().to_string(),
+                method: "inject_persona".into(),
+                content: Some(persona_content),
+            });
+    }
+
     for item in workspace.items {
         let label_lower = item.label.to_lowercase();
         match item.category {
             Category::Artifacts => {
+                if label_lower == "agent.md" || label_lower == "contributing.md" {
+                    continue;
+                }
                 if arg_artifacts.contains(&label_lower) {
                     let source = payload_dir.join(".templates").join(&item.label);
                     let target_dir = if label_lower == "readme.md"
@@ -224,37 +266,8 @@ pub async fn run_headless(
                 }
             }
             Category::AgentPersona => {
-                if arg_personas.contains(&label_lower) {
-                    let target_dir = std::path::PathBuf::from(&target).join(".agents");
-
-                    if !manifest
-                        .artifacts
-                        .iter()
-                        .any(|a| a.method == "inject_persona")
-                    {
-                        manifest
-                            .artifacts
-                            .push(crate::models::manifest::ArtifactEntry {
-                                id: "AGENTS.md".into(),
-                                label: "AGENTS.md".into(),
-                                source: None,
-                                target: target_dir.join("AGENTS.md").to_string_lossy().to_string(),
-                                method: "inject_persona".into(),
-                                content: Some(item.label.clone()),
-                            });
-                    } else {
-                        if let Some(existing) = manifest
-                            .artifacts
-                            .iter_mut()
-                            .find(|a| a.method == "inject_persona")
-                        {
-                            let mut current = existing.content.clone().unwrap_or_default();
-                            current.push_str(", ");
-                            current.push_str(&item.label);
-                            existing.content = Some(current);
-                        }
-                    }
-                }
+                // Handled via consolidated inject_persona block above
+                continue;
             }
             Category::License => {
                 if label_lower == arg_license && label_lower != "none" {
@@ -281,18 +294,42 @@ pub async fn run_headless(
                     let source = payload_dir
                         .join(".contributions")
                         .join(format!("{}.md", item.label));
+                    let target_path = std::path::PathBuf::from(&target).join("CONTRIBUTING.md");
+
+                    let fallback_content = if !source.exists() {
+                        match item.label.as_str() {
+                            "open-source" => Some(
+                                include_str!("../../.contributions/open-source.md").to_string(),
+                            ),
+                            "strict-ownership" => Some(
+                                include_str!("../../.contributions/strict-ownership.md")
+                                    .to_string(),
+                            ),
+                            _ => None,
+                        }
+                    } else {
+                        None
+                    };
+
+                    let (method, src, content) = if let Some(c) = fallback_content {
+                        ("write".into(), None, Some(c))
+                    } else {
+                        (
+                            "copy".into(),
+                            Some(source.to_string_lossy().to_string()),
+                            None,
+                        )
+                    };
+
                     manifest
                         .artifacts
                         .push(crate::models::manifest::ArtifactEntry {
                             id: "CONTRIBUTING.md".into(),
                             label: "CONTRIBUTING.md".into(),
-                            source: Some(source.to_string_lossy().to_string()),
-                            target: std::path::PathBuf::from(&target)
-                                .join("CONTRIBUTING.md")
-                                .to_string_lossy()
-                                .to_string(),
-                            method: "copy".into(),
-                            content: None,
+                            source: src,
+                            target: target_path.to_string_lossy().to_string(),
+                            method,
+                            content,
                         });
                 }
             }

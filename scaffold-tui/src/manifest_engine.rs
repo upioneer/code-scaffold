@@ -415,6 +415,23 @@ pub async fn execute(
                                     " -> Injected persona into: {}",
                                     artifact.target
                                 ));
+
+                                if let Some(target_dir) = path.parent().and_then(|p| p.parent()) {
+                                    let old_details_agent =
+                                        target_dir.join("project_details").join("agent.md");
+                                    if old_details_agent.exists() {
+                                        if let Ok(old_content) =
+                                            fs::read_to_string(&old_details_agent)
+                                        {
+                                            if old_content.contains("[Define the agent's primary role and responsibilities here]") {
+                                                let _ = fs::remove_file(&old_details_agent);
+                                                let _ = tx.send(
+                                                    " -> Cleaned up obsolete un-injected template at project_details/agent.md (canonical path is .agents/AGENTS.md)".to_string(),
+                                                );
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                         Err(e) => {
@@ -441,7 +458,19 @@ pub async fn execute(
                 if let Some(parent) = path.parent() {
                     let _ = fs::create_dir_all(parent);
                 }
-                if path.exists() {
+                let is_empty_or_placeholder = if path.exists() && path.is_file() {
+                    fs::metadata(&path).map(|m| m.len() == 0).unwrap_or(false)
+                        || fs::read_to_string(&path)
+                            .map(|s| {
+                                s.trim().is_empty()
+                                    || s.contains("<!-- Placeholder for contributing.md")
+                            })
+                            .unwrap_or(false)
+                } else {
+                    false
+                };
+
+                if path.exists() && !is_empty_or_placeholder {
                     report.artifacts_retained += 1;
                     let _ = tx.send(format!(
                         " -> Artifact exists (retained): {}",
@@ -455,6 +484,27 @@ pub async fn execute(
                 } else {
                     report.artifacts_provisioned += 1;
                     let _ = tx.send(format!(" -> Generated artifact: {}", artifact.target));
+                    if artifact.target.ends_with("CONTRIBUTING.md") {
+                        if let Some(target_dir) = path.parent() {
+                            let old_details_contributing =
+                                target_dir.join("project_details").join("contributing.md");
+                            if old_details_contributing.exists() {
+                                if let Ok(old_content) =
+                                    fs::read_to_string(&old_details_contributing)
+                                {
+                                    if old_content.trim().is_empty()
+                                        || old_content
+                                            .contains("<!-- Placeholder for contributing.md")
+                                    {
+                                        let _ = fs::remove_file(&old_details_contributing);
+                                        let _ = tx.send(
+                                            " -> Cleaned up obsolete placeholder at project_details/contributing.md (canonical path is CONTRIBUTING.md)".to_string(),
+                                        );
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             } else {
                 let _ = tx.send(format!(
@@ -469,7 +519,19 @@ pub async fn execute(
                     if let Some(parent) = path.parent() {
                         let _ = fs::create_dir_all(parent);
                     }
-                    let res = if path.exists() {
+                    let is_empty_or_placeholder = if path.exists() && path.is_file() {
+                        fs::metadata(&path).map(|m| m.len() == 0).unwrap_or(false)
+                            || fs::read_to_string(&path)
+                                .map(|s| {
+                                    s.trim().is_empty()
+                                        || s.contains("<!-- Placeholder for contributing.md")
+                                })
+                                .unwrap_or(false)
+                    } else {
+                        false
+                    };
+
+                    let res = if path.exists() && !is_empty_or_placeholder {
                         Ok(false)
                     } else if src_path.is_dir() {
                         copy_dir_all(&src_path, &path).map(|_| true)
@@ -493,6 +555,28 @@ pub async fn execute(
                         Ok(true) => {
                             report.artifacts_provisioned += 1;
                             let _ = tx.send(format!(" -> Generated artifact: {}", artifact.target));
+                            if artifact.target.ends_with("CONTRIBUTING.md") {
+                                if let Some(target_dir) = path.parent() {
+                                    let old_details_contributing =
+                                        target_dir.join("project_details").join("contributing.md");
+                                    if old_details_contributing.exists() {
+                                        if let Ok(old_content) =
+                                            fs::read_to_string(&old_details_contributing)
+                                        {
+                                            if old_content.trim().is_empty()
+                                                || old_content.contains(
+                                                    "<!-- Placeholder for contributing.md",
+                                                )
+                                            {
+                                                let _ = fs::remove_file(&old_details_contributing);
+                                                let _ = tx.send(
+                                                    " -> Cleaned up obsolete placeholder at project_details/contributing.md (canonical path is CONTRIBUTING.md)".to_string(),
+                                                );
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 } else {

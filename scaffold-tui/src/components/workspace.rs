@@ -184,10 +184,10 @@ impl Workspace {
                     let description = match name.as_str() {
                         "apps/" => Some("Core full-stack application scaffolding structure including nested directories for api, desktop, mobile (iOS/Android), web, cli, and docker environments.".to_string()),
                         "packages/" => Some("Monorepo shared library directory for storing internal dependencies, shared UI components, TS types, and core backend crates.".to_string()),
-                        "agent.md" => Some("System rules and behavioral instructions governing AI agent operations in the workspace.".to_string()),
+                        "agent.md" => Some("System rules and behavioral instructions governing AI agent operations in the workspace. Deployed to .agents/AGENTS.md with your selected personas injected.".to_string()),
                         "brand.md" => Some("Design system document encompassing typography, color palettes, and UI component standards.".to_string()),
                         "bump_version.ps1" => Some("Universal, adaptable semantic version bumping script that synchronizes project package manifests (Node package.json, Rust Cargo.toml, Python pyproject.toml), enforces semver rules, triggers changelog generation, and automates media capture.".to_string()),
-                        "contributing.md" => Some("Community contribution guidelines, PR policies, and codebase governance rules.".to_string()),
+                        "contributing.md" => Some("Community contribution guidelines, PR policies, and codebase governance rules. Configured via the Contributing wizard and deployed to project root as CONTRIBUTING.md.".to_string()),
                         "design.md" => Some("Architectural blueprints, database schemas, and frontend UI mockups.".to_string()),
                         "env.example" => Some("Environment variable template demonstrating required configuration keys without exposing secrets.".to_string()),
                         "layout.tsx" => Some("Next.js root layout component template establishing the core application shell.".to_string()),
@@ -414,9 +414,7 @@ impl Workspace {
                             {
                                 desc = Some(desc_str.to_string());
                             }
-                            if let Some(vers_str) = json.get("version").and_then(|v| v.as_str()) {
-                                vers = Some(vers_str.to_string());
-                            }
+                            vers = extract_json_version(&json);
                             if let Some(logo_arr) = json.get("logo").and_then(|v| v.as_array()) {
                                 let mut lines = Vec::new();
                                 for l in logo_arr {
@@ -427,6 +425,14 @@ impl Workspace {
                                 if !lines.is_empty() {
                                     logo = Some(lines);
                                 }
+                            }
+                        }
+                    }
+                    if vers.is_none() {
+                        let manifest_path = skills_dir.join(&name).join("skill-manifest.json");
+                        if let Ok(content) = std::fs::read_to_string(&manifest_path) {
+                            if let Ok(json) = serde_json::from_str::<serde_json::Value>(&content) {
+                                vers = extract_json_version(&json);
                             }
                         }
                     }
@@ -554,45 +560,144 @@ fn path_exists_case_insensitive(dir: &std::path::Path, filename: &str) -> bool {
     false
 }
 
+fn extract_json_version(json: &serde_json::Value) -> Option<String> {
+    if let Some(v) = json.get("version") {
+        if let Some(s) = v.as_str() {
+            return Some(s.to_string());
+        }
+        if let Some(n) = v.as_u64() {
+            return Some(n.to_string());
+        }
+        if let Some(n) = v.as_i64() {
+            return Some(n.to_string());
+        }
+    }
+    None
+}
+
+fn find_dir_case_insensitive(
+    parent: &std::path::Path,
+    dirname: &str,
+) -> Option<std::path::PathBuf> {
+    let direct = parent.join(dirname);
+    if direct.is_dir() {
+        return Some(direct);
+    }
+    if let Ok(entries) = std::fs::read_dir(parent) {
+        for entry in entries.flatten() {
+            if entry
+                .file_name()
+                .to_string_lossy()
+                .eq_ignore_ascii_case(dirname)
+                && entry.path().is_dir()
+            {
+                return Some(entry.path());
+            }
+        }
+    }
+    None
+}
+
+fn read_file_case_insensitive(dir: &std::path::Path, filename: &str) -> Option<String> {
+    if !dir.is_dir() {
+        return None;
+    }
+    let direct = dir.join(filename);
+    if direct.is_file() {
+        if let Ok(c) = std::fs::read_to_string(&direct) {
+            return Some(c);
+        }
+    }
+    if let Ok(entries) = std::fs::read_dir(dir) {
+        for entry in entries.flatten() {
+            if entry
+                .file_name()
+                .to_string_lossy()
+                .eq_ignore_ascii_case(filename)
+                && entry.path().is_file()
+            {
+                if let Ok(c) = std::fs::read_to_string(entry.path()) {
+                    return Some(c);
+                }
+            }
+        }
+    }
+    None
+}
+
 fn check_artifact_exists_on_disk(target: &std::path::Path, label: &str) -> bool {
     let lower = label.to_lowercase();
     match lower.as_str() {
         "readme.md" => {
             path_exists_case_insensitive(target, "README.md")
-                || path_exists_case_insensitive(&target.join("project_details"), "README.md")
+                || find_dir_case_insensitive(target, "project_details")
+                    .map(|d| path_exists_case_insensitive(&d, "README.md"))
+                    .unwrap_or(false)
         }
         ".gitignore" => {
             path_exists_case_insensitive(target, ".gitignore")
-                || path_exists_case_insensitive(&target.join("project_details"), ".gitignore")
+                || find_dir_case_insensitive(target, "project_details")
+                    .map(|d| path_exists_case_insensitive(&d, ".gitignore"))
+                    .unwrap_or(false)
         }
         "bump_version.ps1" => {
             path_exists_case_insensitive(target, "bump_version.ps1")
-                || path_exists_case_insensitive(
-                    &target.join("project_details").join("playbooks"),
-                    "bump_version.ps1",
-                )
-                || path_exists_case_insensitive(&target.join("project_details"), "bump_version.ps1")
+                || find_dir_case_insensitive(target, "project_details")
+                    .map(|d| {
+                        path_exists_case_insensitive(&d, "bump_version.ps1")
+                            || find_dir_case_insensitive(&d, "playbooks")
+                                .map(|p| path_exists_case_insensitive(&p, "bump_version.ps1"))
+                                .unwrap_or(false)
+                    })
+                    .unwrap_or(false)
         }
         "env.example" => {
             path_exists_case_insensitive(target, ".env.example")
                 || path_exists_case_insensitive(target, "env.example")
                 || path_exists_case_insensitive(target, ".env")
-                || path_exists_case_insensitive(&target.join("project_details"), ".env.example")
-                || path_exists_case_insensitive(&target.join("project_details"), "env.example")
+                || find_dir_case_insensitive(target, "project_details")
+                    .map(|d| {
+                        path_exists_case_insensitive(&d, ".env.example")
+                            || path_exists_case_insensitive(&d, "env.example")
+                    })
+                    .unwrap_or(false)
         }
         "agent.md" => {
-            path_exists_case_insensitive(&target.join(".agents"), "AGENTS.md")
-                || path_exists_case_insensitive(&target.join(".agents"), "agent.md")
-                || path_exists_case_insensitive(&target.join(".agents"), "AGENTS")
+            find_dir_case_insensitive(target, ".agents")
+                .map(|d| {
+                    path_exists_case_insensitive(&d, "AGENTS.md")
+                        || path_exists_case_insensitive(&d, "agent.md")
+                        || path_exists_case_insensitive(&d, "AGENTS")
+                })
+                .unwrap_or(false)
+                || path_exists_case_insensitive(target, "AGENTS.md")
                 || path_exists_case_insensitive(target, "AGENT.md")
                 || path_exists_case_insensitive(target, "agent.md")
-                || path_exists_case_insensitive(&target.join("project_details"), "agent.md")
-                || path_exists_case_insensitive(&target.join("project_details"), "AGENT.md")
+                || find_dir_case_insensitive(target, "project_details")
+                    .map(|d| {
+                        path_exists_case_insensitive(&d, "agent.md")
+                            || path_exists_case_insensitive(&d, "AGENT.md")
+                            || path_exists_case_insensitive(&d, "AGENTS.md")
+                    })
+                    .unwrap_or(false)
         }
         "contributing.md" => {
-            path_exists_case_insensitive(target, "CONTRIBUTING.md")
-                || path_exists_case_insensitive(&target.join(".github"), "CONTRIBUTING.md")
-                || path_exists_case_insensitive(&target.join("project_details"), "CONTRIBUTING.md")
+            let check_file = |p: &std::path::Path| {
+                if p.is_file() {
+                    if let Ok(c) = std::fs::read_to_string(p) {
+                        return is_valid_contributing_text(&c);
+                    }
+                }
+                false
+            };
+            check_file(&target.join("CONTRIBUTING.md"))
+                || check_file(&target.join("contributing.md"))
+                || find_dir_case_insensitive(target, ".github")
+                    .map(|d| {
+                        check_file(&d.join("CONTRIBUTING.md"))
+                            || check_file(&d.join("contributing.md"))
+                    })
+                    .unwrap_or(false)
         }
         "apps/" => {
             let p = target.join("apps");
@@ -603,59 +708,113 @@ fn check_artifact_exists_on_disk(target: &std::path::Path, label: &str) -> bool 
             p.exists() && p.is_dir()
         }
         "layout.tsx" => {
-            path_exists_case_insensitive(&target.join("app"), "layout.tsx")
-                || path_exists_case_insensitive(&target.join("src").join("app"), "layout.tsx")
-                || path_exists_case_insensitive(&target.join("project_details"), "layout.tsx")
+            find_dir_case_insensitive(target, "app")
+                .map(|d| path_exists_case_insensitive(&d, "layout.tsx"))
+                .unwrap_or(false)
+                || find_dir_case_insensitive(target, "src")
+                    .and_then(|s| find_dir_case_insensitive(&s, "app"))
+                    .map(|d| path_exists_case_insensitive(&d, "layout.tsx"))
+                    .unwrap_or(false)
+                || find_dir_case_insensitive(target, "project_details")
+                    .map(|d| path_exists_case_insensitive(&d, "layout.tsx"))
+                    .unwrap_or(false)
                 || path_exists_case_insensitive(target, "layout.tsx")
         }
         "middleware.ts" => {
             path_exists_case_insensitive(target, "middleware.ts")
-                || path_exists_case_insensitive(&target.join("src"), "middleware.ts")
-                || path_exists_case_insensitive(&target.join("project_details"), "middleware.ts")
+                || find_dir_case_insensitive(target, "src")
+                    .map(|d| path_exists_case_insensitive(&d, "middleware.ts"))
+                    .unwrap_or(false)
+                || find_dir_case_insensitive(target, "project_details")
+                    .map(|d| path_exists_case_insensitive(&d, "middleware.ts"))
+                    .unwrap_or(false)
         }
         "ratelimit.ts" => {
-            path_exists_case_insensitive(&target.join("lib"), "ratelimit.ts")
-                || path_exists_case_insensitive(&target.join("src").join("lib"), "ratelimit.ts")
-                || path_exists_case_insensitive(&target.join("project_details"), "ratelimit.ts")
+            find_dir_case_insensitive(target, "lib")
+                .map(|d| path_exists_case_insensitive(&d, "ratelimit.ts"))
+                .unwrap_or(false)
+                || find_dir_case_insensitive(target, "src")
+                    .and_then(|s| find_dir_case_insensitive(&s, "lib"))
+                    .map(|d| path_exists_case_insensitive(&d, "ratelimit.ts"))
+                    .unwrap_or(false)
+                || find_dir_case_insensitive(target, "project_details")
+                    .map(|d| path_exists_case_insensitive(&d, "ratelimit.ts"))
+                    .unwrap_or(false)
                 || path_exists_case_insensitive(target, "ratelimit.ts")
         }
         "redis.ts" => {
-            path_exists_case_insensitive(&target.join("lib"), "redis.ts")
-                || path_exists_case_insensitive(&target.join("src").join("lib"), "redis.ts")
-                || path_exists_case_insensitive(&target.join("project_details"), "redis.ts")
+            find_dir_case_insensitive(target, "lib")
+                .map(|d| path_exists_case_insensitive(&d, "redis.ts"))
+                .unwrap_or(false)
+                || find_dir_case_insensitive(target, "src")
+                    .and_then(|s| find_dir_case_insensitive(&s, "lib"))
+                    .map(|d| path_exists_case_insensitive(&d, "redis.ts"))
+                    .unwrap_or(false)
+                || find_dir_case_insensitive(target, "project_details")
+                    .map(|d| path_exists_case_insensitive(&d, "redis.ts"))
+                    .unwrap_or(false)
                 || path_exists_case_insensitive(target, "redis.ts")
         }
         _ => {
-            path_exists_case_insensitive(&target.join("project_details"), label)
+            find_dir_case_insensitive(target, "project_details")
+                .map(|d| path_exists_case_insensitive(&d, label))
+                .unwrap_or(false)
                 || path_exists_case_insensitive(target, label)
         }
     }
+}
+
+fn is_valid_contributing_text(text: &str) -> bool {
+    let trimmed = text.trim();
+    !trimmed.is_empty() && !trimmed.contains("<!-- Placeholder for contributing.md")
 }
 
 fn detect_contributing_template(
     target: &std::path::Path,
     manifest_content: Option<&str>,
 ) -> Option<&'static str> {
-    let candidates = [
-        target.join("CONTRIBUTING.md"),
-        target.join("contributing.md"),
-        target.join(".github").join("CONTRIBUTING.md"),
-        target.join("project_details").join("CONTRIBUTING.md"),
-        target.join("project_details").join("contributing.md"),
-    ];
-
     let mut found_content: Option<String> = None;
-    for path in &candidates {
-        if path.exists() {
-            if let Ok(c) = std::fs::read_to_string(path) {
+
+    for name in &["CONTRIBUTING.md", "contributing.md"] {
+        if let Some(c) = read_file_case_insensitive(target, name) {
+            if is_valid_contributing_text(&c) {
                 found_content = Some(c);
                 break;
             }
         }
     }
 
+    if found_content.is_none() {
+        if let Some(gh_dir) = find_dir_case_insensitive(target, ".github") {
+            for name in &["CONTRIBUTING.md", "contributing.md"] {
+                if let Some(c) = read_file_case_insensitive(&gh_dir, name) {
+                    if is_valid_contributing_text(&c) {
+                        found_content = Some(c);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    if found_content.is_none() {
+        if let Some(details_dir) = find_dir_case_insensitive(target, "project_details") {
+            for name in &["CONTRIBUTING.md", "contributing.md"] {
+                if let Some(c) = read_file_case_insensitive(&details_dir, name) {
+                    if is_valid_contributing_text(&c) {
+                        found_content = Some(c);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
     let text_to_check = found_content.as_deref().or(manifest_content);
     if let Some(text) = text_to_check {
+        if !is_valid_contributing_text(text) {
+            return None;
+        }
         let text_lower = text.to_lowercase();
         if text_lower.contains("strict-ownership")
             || text_lower.contains("we do not accept or merge external")
@@ -664,8 +823,14 @@ fn detect_contributing_template(
             || text_lower.contains("closed pr")
         {
             Some("strict-ownership")
-        } else {
+        } else if text_lower.contains("open-source")
+            || text_lower.contains("open source")
+            || text_lower.contains("pull request")
+            || text_lower.contains("contributing")
+        {
             Some("open-source")
+        } else {
+            None
         }
     } else {
         None
@@ -676,25 +841,34 @@ fn detect_personas(
     target: &std::path::Path,
     manifest_persona_content: Option<&str>,
 ) -> Vec<String> {
-    let candidates = [
-        target.join(".agents").join("AGENTS.md"),
-        target.join(".agents").join("agent.md"),
-        target.join(".agents").join("AGENTS"),
-        target.join("AGENT.md"),
-        target.join("agent.md"),
-        target.join("project_details").join("agent.md"),
-        target.join("project_details").join("AGENT.md"),
-    ];
-
     let mut combined_text = String::new();
     if let Some(mp) = manifest_persona_content {
         combined_text.push_str(mp);
         combined_text.push('\n');
     }
 
-    for path in &candidates {
-        if path.exists() {
-            if let Ok(c) = std::fs::read_to_string(path) {
+    // 1. Check .agents directory (canonical modern location)
+    if let Some(agents_dir) = find_dir_case_insensitive(target, ".agents") {
+        for name in &["AGENTS.md", "agent.md", "AGENTS"] {
+            if let Some(c) = read_file_case_insensitive(&agents_dir, name) {
+                combined_text.push_str(&c);
+                combined_text.push('\n');
+            }
+        }
+    }
+
+    // 2. Check root directory
+    for name in &["AGENTS.md", "AGENT.md", "agent.md"] {
+        if let Some(c) = read_file_case_insensitive(target, name) {
+            combined_text.push_str(&c);
+            combined_text.push('\n');
+        }
+    }
+
+    // 3. Check project_details directory (for backwards compatibility)
+    if let Some(details_dir) = find_dir_case_insensitive(target, "project_details") {
+        for name in &["agent.md", "AGENT.md", "AGENTS.md"] {
+            if let Some(c) = read_file_case_insensitive(&details_dir, name) {
                 combined_text.push_str(&c);
                 combined_text.push('\n');
             }
@@ -712,6 +886,7 @@ fn detect_personas(
     if text_lower.contains("**generic**")
         || text_lower.contains("### generic")
         || text_lower.contains("versatile, unopinionated agent")
+        || text_lower.contains("general-purpose programming")
     {
         detected.push("Generic".to_string());
     }
@@ -720,6 +895,7 @@ fn detect_personas(
     if text_lower.contains("ai systems engineer")
         || (text_lower.contains("llms") && text_lower.contains("comfyui"))
         || text_lower.contains("openrouter")
+        || text_lower.contains("rag/agentic")
     {
         detected.push("AI Systems Engineer".to_string());
     }
@@ -728,6 +904,7 @@ fn detect_personas(
     if text_lower.contains("cloud & devops architect")
         || text_lower.contains("cloud & devops")
         || (text_lower.contains("terraform") && text_lower.contains("cloudformation"))
+        || text_lower.contains("infrastructure-as-code")
     {
         detected.push("Cloud & DevOps Architect".to_string());
     }
@@ -735,6 +912,7 @@ fn detect_personas(
     // 4. Containerization (Docker/K8s)
     if text_lower.contains("containerization (docker/k8s)")
         || text_lower.contains("containerization")
+        || text_lower.contains("container ecosystems")
         || (text_lower.contains("dockerfiles")
             && text_lower.contains("docker-compose")
             && text_lower.contains("kubernetes"))
@@ -746,6 +924,7 @@ fn detect_personas(
     if text_lower.contains("data scientist / ml")
         || text_lower.contains("data scientist")
         || (text_lower.contains("pandas") && text_lower.contains("pytorch"))
+        || text_lower.contains("python data ecosystem")
     {
         detected.push("Data Scientist / ML".to_string());
     }
@@ -756,6 +935,7 @@ fn detect_personas(
         || text_lower.contains("database administrator")
         || (text_lower.contains("sql/nosql schema design")
             && text_lower.contains("indexing strategies"))
+        || text_lower.contains("database migration safety")
     {
         detected.push("DBA".to_string());
     }
@@ -764,6 +944,7 @@ fn detect_personas(
     if text_lower.contains("embedded / iot")
         || text_lower.contains("embedded")
         || (text_lower.contains("bare-metal rust") && text_lower.contains("microcontrollers"))
+        || text_lower.contains("microcontrollers, rtos")
     {
         detected.push("Embedded / IoT".to_string());
     }
@@ -771,6 +952,7 @@ fn detect_personas(
     // 8. Game Developer
     if text_lower.contains("game developer")
         || (text_lower.contains("physics engines") && text_lower.contains("game loops"))
+        || text_lower.contains("3d rendering pipelines")
     {
         detected.push("Game Developer".to_string());
     }
@@ -779,6 +961,7 @@ fn detect_personas(
     if text_lower.contains("mobile (ios/and)")
         || text_lower.contains("mobile (ios/android)")
         || (text_lower.contains("ios (swift)") && text_lower.contains("android (kotlin)"))
+        || text_lower.contains("mobile app development")
     {
         detected.push("Mobile (iOS/And)".to_string());
     }
@@ -787,6 +970,7 @@ fn detect_personas(
     if text_lower.contains("security analyst")
         || (text_lower.contains("auditor-style agent")
             && text_lower.contains("cryptographic protocols"))
+        || text_lower.contains("vulnerability scanning")
     {
         detected.push("Security Analyst".to_string());
     }
@@ -795,6 +979,7 @@ fn detect_personas(
     if text_lower.contains("systems scripting")
         || (text_lower.contains("low-level os tasks")
             && text_lower.contains("powershell scripting"))
+        || text_lower.contains("cli tool development")
     {
         detected.push("Systems Scripting".to_string());
     }
@@ -815,20 +1000,34 @@ fn detect_license(
     target: &std::path::Path,
     manifest_license_str: Option<&str>,
 ) -> Option<&'static str> {
-    let candidates = [
-        target.join("LICENSE.md"),
-        target.join("LICENSE"),
-        target.join("license.md"),
-        target.join("project_details").join("license.md"),
-        target.join("project_details").join("LICENSE.md"),
-    ];
-
     let mut found_content: Option<String> = None;
-    for path in &candidates {
-        if path.exists() {
-            if let Ok(c) = std::fs::read_to_string(path) {
-                found_content = Some(c);
-                break;
+
+    for name in &[
+        "LICENSE.md",
+        "LICENSE",
+        "license.md",
+        "license.txt",
+        "LICENSE.txt",
+    ] {
+        if let Some(c) = read_file_case_insensitive(target, name) {
+            found_content = Some(c);
+            break;
+        }
+    }
+
+    if found_content.is_none() {
+        if let Some(details_dir) = find_dir_case_insensitive(target, "project_details") {
+            for name in &[
+                "LICENSE.md",
+                "LICENSE",
+                "license.md",
+                "license.txt",
+                "LICENSE.txt",
+            ] {
+                if let Some(c) = read_file_case_insensitive(&details_dir, name) {
+                    found_content = Some(c);
+                    break;
+                }
             }
         }
     }
@@ -1120,9 +1319,7 @@ impl Workspace {
 
                 if let Ok(meta_content) = std::fs::read_to_string(&skill_meta) {
                     if let Ok(json) = serde_json::from_str::<serde_json::Value>(&meta_content) {
-                        if let Some(v) = json.get("version").and_then(|v| v.as_str()) {
-                            item.target_version = Some(v.to_string());
-                        }
+                        item.target_version = extract_json_version(&json);
                     }
                 }
                 if item.target_version.is_none() {
@@ -1130,9 +1327,7 @@ impl Workspace {
                         if let Ok(json) =
                             serde_json::from_str::<serde_json::Value>(&manifest_content)
                         {
-                            if let Some(v) = json.get("version").and_then(|v| v.as_str()) {
-                                item.target_version = Some(v.to_string());
-                            }
+                            item.target_version = extract_json_version(&json);
                         }
                     }
                 }
@@ -2116,6 +2311,100 @@ mod tests {
             .unwrap();
         assert!(gh.exists_in_target);
         assert!(gh.selected);
+
+        let _ = fs::remove_dir_all(&target_dir);
+    }
+
+    #[test]
+    fn test_detect_personas_multi_selection_and_legacy_paths() {
+        let target_dir = create_test_dir("multi_persona_test");
+
+        // 1. When project has .agents/AGENTS.md with Mobile, Web Dev, and Containerization
+        let agents_dir = target_dir.join(".agents");
+        fs::create_dir_all(&agents_dir).unwrap();
+        fs::write(
+            agents_dir.join("AGENTS.md"),
+            "# Custom Agent Rules\n\n## Roles\n* **Mobile (iOS/And)**: Expert in mobile app development, including iOS (Swift) and Android (Kotlin).\n* **Containerization (Docker/K8s)**: Focused strictly on container ecosystems. Excels at writing Dockerfiles.\n* **Web Dev**: Specialized in modern full-stack web technologies.\n\n## Protocols",
+        )
+        .unwrap();
+
+        let detected = detect_personas(&target_dir, None);
+        assert_eq!(detected.len(), 3);
+        assert!(detected.contains(&"Mobile (iOS/And)".to_string()));
+        assert!(detected.contains(&"Containerization (Docker/K8s)".to_string()));
+        assert!(detected.contains(&"Web Dev".to_string()));
+
+        let _ = fs::remove_dir_all(&target_dir);
+
+        // 2. When project only has legacy project_details/agent.md with raw placeholder
+        let target_legacy = create_test_dir("legacy_placeholder_test");
+        let details_dir = target_legacy.join("project_details");
+        fs::create_dir_all(&details_dir).unwrap();
+        fs::write(
+            details_dir.join("agent.md"),
+            "# Custom Agent Rules\n\n## Role\n[Define the agent's primary role and responsibilities here]\n\n## Protocols\n* **Mandatory Mobile-First Responsive Design Protocol:**\n",
+        )
+        .unwrap();
+
+        let detected_legacy = detect_personas(&target_legacy, None);
+        assert!(
+            detected_legacy.is_empty(),
+            "Raw placeholder must NOT detect any personas"
+        );
+
+        // 3. When legacy project_details/agent.md has actual persona text
+        fs::write(
+            details_dir.join("agent.md"),
+            "# Custom Agent Rules\n\n## Role\n* **Mobile (iOS/And)**: Expert in iOS and Android.\n* **Web Dev**: Full stack web technologies.\n",
+        )
+        .unwrap();
+
+        let detected_with_personas = detect_personas(&target_legacy, None);
+        assert_eq!(detected_with_personas.len(), 2);
+        assert!(detected_with_personas.contains(&"Mobile (iOS/And)".to_string()));
+        assert!(detected_with_personas.contains(&"Web Dev".to_string()));
+
+        let _ = fs::remove_dir_all(&target_legacy);
+    }
+
+    #[test]
+    fn test_detect_contributing_empty_or_placeholder_ignored() {
+        let target_dir = create_test_dir("contributing_empty_test");
+
+        // 1. Empty CONTRIBUTING.md
+        fs::write(target_dir.join("CONTRIBUTING.md"), "").unwrap();
+        assert_eq!(detect_contributing_template(&target_dir, None), None);
+        assert!(!check_artifact_exists_on_disk(
+            &target_dir,
+            "contributing.md"
+        ));
+
+        // 2. Placeholder comment CONTRIBUTING.md
+        fs::write(
+            target_dir.join("CONTRIBUTING.md"),
+            "<!-- Placeholder for contributing.md template injected by wizard -->\n",
+        )
+        .unwrap();
+        assert_eq!(detect_contributing_template(&target_dir, None), None);
+        assert!(!check_artifact_exists_on_disk(
+            &target_dir,
+            "contributing.md"
+        ));
+
+        // 3. Valid strict-ownership CONTRIBUTING.md
+        fs::write(
+            target_dir.join("CONTRIBUTING.md"),
+            "# Contributing\n\nTo preserve architectural vision, we do not accept or merge external pull requests. Soft-closed PRs only.",
+        )
+        .unwrap();
+        assert_eq!(
+            detect_contributing_template(&target_dir, None),
+            Some("strict-ownership")
+        );
+        assert!(check_artifact_exists_on_disk(
+            &target_dir,
+            "contributing.md"
+        ));
 
         let _ = fs::remove_dir_all(&target_dir);
     }

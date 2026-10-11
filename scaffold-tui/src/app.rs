@@ -1494,12 +1494,68 @@ impl App {
                     let mut selected_artifacts = Vec::new();
                     let mut selected_skills = Vec::new();
 
+                    let has_agent = self.workspace.items.iter().any(|i| {
+                        i.selected
+                            && i.category == Category::Artifacts
+                            && i.label.eq_ignore_ascii_case("agent.md")
+                    });
+
+                    if has_agent && self.agent_overwrite_choice != Some(false) {
+                        let selected_personas: Vec<_> = self
+                            .workspace
+                            .items
+                            .iter()
+                            .filter(|i| i.selected && i.category == Category::AgentPersona)
+                            .collect();
+
+                        let persona_content = if !selected_personas.is_empty() {
+                            let mut text = String::new();
+                            for (idx, p) in selected_personas.iter().enumerate() {
+                                if idx > 0 {
+                                    text.push('\n');
+                                }
+                                if let Some(desc) = &p.description {
+                                    text.push_str(&format!("* **{}**: {}", p.label, desc));
+                                } else {
+                                    text.push_str(&format!("* **{}**", p.label));
+                                }
+                            }
+                            text
+                        } else {
+                            "* **Generic**: A versatile, unopinionated agent ready for general-purpose programming, debugging, and software architecture tasks without specific domain constraints.".to_string()
+                        };
+
+                        let target = std::path::PathBuf::from(&self.target_folder)
+                            .join(".agents")
+                            .join("AGENTS.md");
+
+                        selected_artifacts.push(crate::models::manifest::ArtifactEntry {
+                            id: "agent_personas".to_string(),
+                            label: "Agent Personas".to_string(),
+                            source: Some(
+                                self.payload_dir
+                                    .join(".templates")
+                                    .join("agent.md")
+                                    .to_string_lossy()
+                                    .to_string(),
+                            ),
+                            target: target.to_string_lossy().to_string(),
+                            method: "inject_persona".into(),
+                            content: Some(persona_content),
+                        });
+                    }
+
                     for item in &self.workspace.items {
                         if !item.selected {
                             continue;
                         }
                         match item.category {
                             Category::Artifacts => {
+                                if item.label.eq_ignore_ascii_case("agent.md")
+                                    || item.label.eq_ignore_ascii_case("contributing.md")
+                                {
+                                    continue;
+                                }
                                 let source = self.payload_dir.join(".templates").join(&item.label);
 
                                 let target_dir = if item.label.eq_ignore_ascii_case("readme.md")
@@ -1566,48 +1622,8 @@ impl App {
                                 });
                             }
                             Category::AgentPersona => {
-                                if self.agent_overwrite_choice == Some(false) {
-                                    continue;
-                                }
-                                let target = std::path::PathBuf::from(&self.target_folder)
-                                    .join(".agents")
-                                    .join("AGENTS.md");
-
-                                if let Some(existing) = selected_artifacts
-                                    .iter_mut()
-                                    .find(|a| a.method == "inject_persona")
-                                {
-                                    if let (Some(existing_content), Some(new_content)) =
-                                        (&mut existing.content, &item.description)
-                                    {
-                                        *existing_content = format!(
-                                            "{}\n* **{}**: {}",
-                                            existing_content, item.label, new_content
-                                        );
-                                    }
-                                } else {
-                                    let content = if let Some(desc) = &item.description {
-                                        Some(format!("* **{}**: {}", item.label, desc))
-                                    } else {
-                                        None
-                                    };
-                                    selected_artifacts.push(
-                                        crate::models::manifest::ArtifactEntry {
-                                            id: "agent_personas".to_string(),
-                                            label: "Agent Personas".to_string(),
-                                            source: Some(
-                                                self.payload_dir
-                                                    .join(".templates")
-                                                    .join("agent.md")
-                                                    .to_string_lossy()
-                                                    .to_string(),
-                                            ),
-                                            target: target.to_string_lossy().to_string(),
-                                            method: "inject_persona".into(),
-                                            content,
-                                        },
-                                    );
-                                }
+                                // Handled via consolidated inject_persona block above
+                                continue;
                             }
                             Category::ContributingTemplate => {
                                 if item.label == "None" {
