@@ -187,6 +187,7 @@ pub async fn run_headless(
                         || label_lower == ".env"
                         || label_lower == "license.md"
                         || label_lower == ".gitignore"
+                        || label_lower == "bump_version.ps1"
                         || label_lower == "apps/"
                         || label_lower == "packages/"
                     {

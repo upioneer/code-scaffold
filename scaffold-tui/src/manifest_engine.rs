@@ -12,9 +12,21 @@ use tokio::sync::mpsc::UnboundedSender;
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct DeploymentReport {
     pub dirs_created: usize,
+    #[serde(default)]
+    pub dirs_retained: usize,
     pub artifacts_provisioned: usize,
+    #[serde(default)]
+    pub artifacts_retained: usize,
     pub skills_provisioned: usize,
+    #[serde(default)]
+    pub skills_retained: usize,
+    #[serde(default)]
+    pub skills_total: usize,
     pub env_keys_written: usize,
+    #[serde(default)]
+    pub env_keys_preserved: usize,
+    #[serde(default)]
+    pub env_keys_total: usize,
     pub agents_bound: usize,
     pub files_measured: usize,
     pub bytes_measured: u64,
@@ -122,14 +134,50 @@ fn measure_target(root: &str) -> (usize, u64, u64, u64) {
 impl DeploymentReport {
     /// Render the report card body. `previous` is the last persisted deploy.
     pub fn card_lines(&self, previous: Option<&DeploymentReport>) -> Vec<String> {
+        let dirs_display = if self.dirs_retained > 0 {
+            format!(
+                "Directories created: {} ({} existing)",
+                self.dirs_created, self.dirs_retained
+            )
+        } else {
+            format!("Directories created: {}", self.dirs_created)
+        };
+
+        let artifacts_display = if self.artifacts_retained > 0 {
+            format!(
+                "Artifacts provisioned: {} ({} existing)",
+                self.artifacts_provisioned, self.artifacts_retained
+            )
+        } else {
+            format!("Artifacts provisioned: {}", self.artifacts_provisioned)
+        };
+
+        let skills_display = if self.skills_retained > 0 {
+            format!(
+                "Skills provisioned: {} ({} retained, {} total)",
+                self.skills_provisioned, self.skills_retained, self.skills_total
+            )
+        } else {
+            format!("Skills provisioned: {}", self.skills_provisioned)
+        };
+
+        let env_display = if self.env_keys_preserved > 0 {
+            format!(
+                ".env keys written: {} ({} preserved, {} total)",
+                self.env_keys_written, self.env_keys_preserved, self.env_keys_total
+            )
+        } else {
+            format!(".env keys written: {}", self.env_keys_written)
+        };
+
         let mut lines = vec![
             "*** DEPLOYMENT REPORT ***".to_string(),
             "".to_string(),
-            format!("Directories created: {}", self.dirs_created),
-            format!("Artifacts provisioned: {}", self.artifacts_provisioned),
-            format!("Skills provisioned: {}", self.skills_provisioned),
+            dirs_display,
+            artifacts_display,
+            skills_display,
             format!("Agent contexts bound: {}", self.agents_bound),
-            format!(".env keys written: {}", self.env_keys_written),
+            env_display,
             format!(
                 "Files in target: {} ({}, {} lines)",
                 self.files_measured,
@@ -232,6 +280,25 @@ fn platform_env_defaults(skill_id: &str) -> &'static [(&'static str, &'static st
     }
 }
 
+/// Extracts all environment variable keys from an existing `.env` file content.
+/// Skips comment lines (starting with '#') and blank lines.
+pub fn parse_env_keys(content: &str) -> std::collections::HashSet<String> {
+    let mut keys = std::collections::HashSet::new();
+    for line in content.lines() {
+        let trimmed = line.trim();
+        if trimmed.is_empty() || trimmed.starts_with('#') {
+            continue;
+        }
+        if let Some((k, _)) = trimmed.split_once('=') {
+            let key = k.trim().to_string();
+            if !key.is_empty() {
+                keys.insert(key);
+            }
+        }
+    }
+    keys
+}
+
 pub fn apply_skill_env_defaults(
     env: &mut std::collections::HashMap<String, String>,
     skills: &[crate::models::manifest::SkillEntry],
@@ -288,7 +355,8 @@ pub async fn execute(
                     let _ = tx.send(format!(" -> Created target directory: {}", app.target));
                 }
             } else {
-                let _ = tx.send(format!(" -> Directory exists (skipped): {}", app.target));
+                report.dirs_retained += 1;
+                let _ = tx.send(format!(" -> Directory exists (retained): {}", app.target));
             }
         }
     }
@@ -314,6 +382,12 @@ pub async fn execute(
                     report.artifacts_provisioned += 1;
                     let _ = tx.send(format!(" -> Initialized artifact: {}", artifact.target));
                 }
+            } else {
+                report.artifacts_retained += 1;
+                let _ = tx.send(format!(
+                    " -> Artifact exists (retained): {}",
+                    artifact.target
+                ));
             }
         } else if artifact.method == "inject_persona" {
             if let Some(src) = &artifact.source {
@@ -368,7 +442,11 @@ pub async fn execute(
                     let _ = fs::create_dir_all(parent);
                 }
                 if path.exists() {
-                    let _ = tx.send(format!(" -> Skipped (already exists): {}", artifact.target));
+                    report.artifacts_retained += 1;
+                    let _ = tx.send(format!(
+                        " -> Artifact exists (retained): {}",
+                        artifact.target
+                    ));
                 } else if let Err(e) = fs::write(&path, content) {
                     let _ = tx.send(format!(
                         " -> (Error) Failed to write artifact {}: {}",
@@ -406,8 +484,11 @@ pub async fn execute(
                             ));
                         }
                         Ok(false) => {
-                            let _ = tx
-                                .send(format!(" -> Skipped (already exists): {}", artifact.target));
+                            report.artifacts_retained += 1;
+                            let _ = tx.send(format!(
+                                " -> Artifact exists (retained): {}",
+                                artifact.target
+                            ));
                         }
                         Ok(true) => {
                             report.artifacts_provisioned += 1;
@@ -436,6 +517,7 @@ pub async fn execute(
     for skill in &manifest.skills {
         if skill.method == "copy" {
             let target_path = PathBuf::from(&skill.target);
+            let already_installed = target_path.exists();
             if let Some(src) = &skill.source {
                 let src_path = PathBuf::from(src);
                 if src_path.exists() {
@@ -452,6 +534,9 @@ pub async fn execute(
                             " -> (Error) Failed to provision: {} ({})",
                             skill.label, e
                         ));
+                    } else if already_installed {
+                        report.skills_retained += 1;
+                        let _ = tx.send(format!(" -> Retained existing module: {}", skill.label));
                     } else {
                         report.skills_provisioned += 1;
                         let _ = tx.send(format!(" -> Provisioned module: {}", skill.label));
@@ -475,6 +560,17 @@ pub async fn execute(
             ));
         }
     }
+    let total_on_disk =
+        if let Ok(entries) = fs::read_dir(PathBuf::from(target_folder).join(".skills")) {
+            entries
+                .flatten()
+                .filter(|e| e.file_type().map(|ft| ft.is_dir()).unwrap_or(false))
+                .count()
+        } else {
+            report.skills_provisioned + report.skills_retained
+        };
+    report.skills_total = total_on_disk.max(report.skills_provisioned + report.skills_retained);
+
     if !manifest.skills.is_empty() {
         let _ = tx.send(" -> Synchronizing Universal Agent Pointers (12 Agents)...".to_string());
         if let Ok(updated) = crate::skills_cli::pointers::sync_universal_agent_pointers(
@@ -496,25 +592,79 @@ pub async fn execute(
 
     // 5. Environmental Variable Export
     let _ = tx.send("".to_string());
-    let _ = tx.send("Generating .env block...".to_string());
+    let _ = tx.send("Synchronizing .env definitions...".to_string());
     // Seed platform placeholder keys for every selected platform skill so
     // the generated `.env` is created prepopulated and the owning skill can
     // self-heal real values with the user afterwards.
     let mut env = manifest.env.clone();
     apply_skill_env_defaults(&mut env, &manifest.skills);
-    let mut env_block = String::new();
-    for (k, v) in &env {
-        env_block.push_str(&format!("{}={}\n", k, v));
-    }
+
     let env_path = PathBuf::from(target_folder).join(".env");
-    if let Err(e) = fs::write(&env_path, env_block) {
-        let _ = tx.send(format!(
-            " -> (Error) Failed to write .env at {:?}: {}",
-            env_path, e
-        ));
+    if env_path.exists() {
+        let existing_raw = fs::read_to_string(&env_path).unwrap_or_default();
+        let existing_keys = parse_env_keys(&existing_raw);
+        report.env_keys_preserved = existing_keys.len();
+
+        let mut to_append = Vec::new();
+        let mut sorted_env: Vec<_> = env.into_iter().collect();
+        sorted_env.sort_by(|a, b| a.0.cmp(&b.0));
+
+        for (k, v) in sorted_env {
+            if !existing_keys.contains(&k) {
+                to_append.push(format!("{}={}", k, v));
+            }
+        }
+
+        report.env_keys_written = to_append.len();
+        report.env_keys_total = report.env_keys_preserved + report.env_keys_written;
+
+        if !to_append.is_empty() {
+            let mut updated_content = existing_raw;
+            if !updated_content.is_empty() && !updated_content.ends_with('\n') {
+                updated_content.push('\n');
+            }
+            for line in &to_append {
+                updated_content.push_str(line);
+                updated_content.push('\n');
+            }
+            if let Err(e) = fs::write(&env_path, updated_content) {
+                let _ = tx.send(format!(
+                    " -> (Error) Failed to append new keys to .env at {:?}: {}",
+                    env_path, e
+                ));
+            } else {
+                let _ = tx.send(format!(
+                    " -> Appended {} new .env keys ({} preserved, {} total)",
+                    report.env_keys_written, report.env_keys_preserved, report.env_keys_total
+                ));
+            }
+        } else {
+            let _ = tx.send(format!(
+                " -> All {} .env keys already present and preserved",
+                report.env_keys_preserved
+            ));
+        }
     } else {
-        report.env_keys_written = env.len();
-        let _ = tx.send(" -> Written localized .env definitions".to_string());
+        let mut sorted_env: Vec<_> = env.into_iter().collect();
+        sorted_env.sort_by(|a, b| a.0.cmp(&b.0));
+        let mut env_block = String::new();
+        for (k, v) in &sorted_env {
+            env_block.push_str(&format!("{}={}\n", k, v));
+        }
+        if let Err(e) = fs::write(&env_path, env_block) {
+            let _ = tx.send(format!(
+                " -> (Error) Failed to write .env at {:?}: {}",
+                env_path, e
+            ));
+        } else {
+            report.env_keys_written = sorted_env.len();
+            report.env_keys_preserved = 0;
+            report.env_keys_total = sorted_env.len();
+            let _ = tx.send(format!(
+                " -> Written localized .env definitions ({} keys)",
+                report.env_keys_written
+            ));
+        }
     }
 
     let _ = tx.send("".to_string());
@@ -637,6 +787,7 @@ mod tests {
             lines_measured: 48_210,
             elapsed_secs: 7.8,
             finished_unix: 1_000_100,
+            ..Default::default()
         };
         let previous = DeploymentReport {
             files_measured: 300,
@@ -651,6 +802,55 @@ mod tests {
         assert!(card.contains("Keystroke equivalent: ~13h 20m of typing at 60 wpm"));
         assert!(card.contains("Previous deploy: 300 files in 6.9s (1m ago)"));
         assert!(card.contains("Press [Esc] to exit."));
+    }
+
+    #[test]
+    fn test_card_reports_retained_deltas_formatting() {
+        let report = DeploymentReport {
+            dirs_created: 1,
+            dirs_retained: 7,
+            artifacts_provisioned: 2,
+            artifacts_retained: 12,
+            skills_provisioned: 1,
+            skills_retained: 10,
+            skills_total: 11,
+            env_keys_written: 0,
+            env_keys_preserved: 17,
+            env_keys_total: 17,
+            agents_bound: 12,
+            files_measured: 350,
+            bytes_measured: 1_500_000,
+            chars_measured: 250_000,
+            lines_measured: 50_000,
+            elapsed_secs: 5.5,
+            finished_unix: 1_000_200,
+        };
+        let card = report.card_lines(None).join("\n");
+        assert!(card.contains("Directories created: 1 (7 existing)"));
+        assert!(card.contains("Artifacts provisioned: 2 (12 existing)"));
+        assert!(card.contains("Skills provisioned: 1 (10 retained, 11 total)"));
+        assert!(card.contains(".env keys written: 0 (17 preserved, 17 total)"));
+        assert!(card.contains("Agent contexts bound: 12"));
+    }
+
+    #[test]
+    fn test_parse_env_keys_basic_and_comments() {
+        let sample = r#"
+# Project secrets
+GITHUB_USER=octocat
+GITHUB_REMOTE_URL=https://github.com/example/repo.git
+
+# Next.js Public
+NEXT_PUBLIC_API_URL=https://api.example.com
+EMPTY_KEY=
+"#;
+        let keys = parse_env_keys(sample);
+        assert!(keys.contains("GITHUB_USER"));
+        assert!(keys.contains("GITHUB_REMOTE_URL"));
+        assert!(keys.contains("NEXT_PUBLIC_API_URL"));
+        assert!(keys.contains("EMPTY_KEY"));
+        assert!(!keys.contains("# Project secrets"));
+        assert_eq!(keys.len(), 4);
     }
 
     #[test]
