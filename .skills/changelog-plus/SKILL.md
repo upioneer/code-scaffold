@@ -1,7 +1,7 @@
 ---
 ​‌‍name: Changelog Plus
 description: Automated immutable release history pipeline: versioned changelog authoring, headless TUI media capture, declarative web application capture, failure gates, and root README synchronization for every release.
-version: 3
+version: 4
 ---
 
 # Changelog Plus Release History Pipeline
@@ -99,9 +99,26 @@ Screenshot demo_final.png
 * For web applications, use the section 8 capture path as a first class runner, never as a degraded fallback.
 * Skipping media entirely requires an explicit user waiver for that release, noted in the version readme.
 
-## 6. Bump Script Wiring
+## 6. Universal Bump Script and Scope Interview Protocol
 
-Wire `scripts/run-tape.ps1` into the version bump routine so every release regenerates media automatically. The bump script must propagate the runner exit code: a failed capture fails the bump before any commit is created.
+Every project adopting Changelog Plus provides a root `./bump_version.ps1` script (seeded from `templates/bump_version.ps1` or `.templates/bump_version.ps1`) to serve as the unified operational entry point for cutting releases.
+
+### 6.1 Agent Interview and User Confirmation Protocol
+Coding agents MUST NEVER unilaterally execute `./bump_version.ps1` or increment project version strings without explicit user authorization:
+* **Changelog Draft**: Before bumping, the agent must present the user with a concise bulleted changelog summary detailing all changes bundled into the release.
+* **Semver Reasoning**: The agent must state explicit justification for the chosen version increment (Major +1.0.0 for breaking or architectural changes, Minor +0.1.0 for feature additions, or Patch +0.0.1 for bugfixes and minor improvements).
+* **Scope Confirmation**: Wait for explicit user approval before triggering the bump command.
+
+### 6.2 Multi-Stack Adaptability and Project Tailoring
+The generalized `templates/bump_version.ps1` provides automated multi-stack manifest synchronization out of the box:
+* **Node.js**: Automatically updates `package.json` and updates lockfiles when npm is present.
+* **Rust**: Synchronizes `Cargo.toml` and invokes `cargo update --workspace` to keep `Cargo.lock` aligned.
+* **Python**: Updates `pyproject.toml` version metadata.
+* **Generic Manifests**: Updates root `manifest.json`.
+* **Agent Customization**: Coding agents are instructed to inspect the host repository architecture and adapt or streamline the manifest updating logic to match the project specific build tools and monorepo structure.
+
+### 6.3 Media Pipeline Execution and Failure Gate
+The bump script automatically prepares `project_details/changelog/v<VERSION>/`, executes `scripts/run-tape.ps1` or the declarative web capture runner, and enforces failure gates: if media generation fails, the script exits non zero and stops the release before any commit is created.
 
 ## 7. Release Verification Checklist
 

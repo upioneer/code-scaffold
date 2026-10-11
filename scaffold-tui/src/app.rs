@@ -199,13 +199,15 @@ impl App {
             return;
         }
 
-        let has_agent = self
-            .workspace
-            .items
-            .iter()
-            .any(|i| i.selected && i.category == Category::Artifacts && i.label == "agent.md");
+        let has_agent = self.workspace.items.iter().any(|i| {
+            i.selected
+                && i.category == Category::Artifacts
+                && i.label.eq_ignore_ascii_case("agent.md")
+        });
         let has_contributing = self.workspace.items.iter().any(|i| {
-            i.selected && i.category == Category::Artifacts && i.label == "contributing.md"
+            i.selected
+                && i.category == Category::Artifacts
+                && i.label.eq_ignore_ascii_case("contributing.md")
         });
 
         // 1. Deployment Target
@@ -1504,6 +1506,7 @@ impl App {
                                     || item.label.eq_ignore_ascii_case(".env")
                                     || item.label.eq_ignore_ascii_case("license.md")
                                     || item.label.eq_ignore_ascii_case(".gitignore")
+                                    || item.label.eq_ignore_ascii_case("bump_version.ps1")
                                     || item.label.eq_ignore_ascii_case("apps/")
                                     || item.label.eq_ignore_ascii_case("packages/")
                                 {
@@ -1746,12 +1749,11 @@ impl App {
                             .workspace
                             .items
                             .iter()
-                            .any(|i| i.selected && i.label == "agent.md");
-                        let has_contributing = self
-                            .workspace
-                            .items
-                            .iter()
-                            .any(|i| i.selected && i.label == "contributing.md");
+                            .any(|i| i.selected && i.label.eq_ignore_ascii_case("agent.md"));
+                        let has_contributing =
+                            self.workspace.items.iter().any(|i| {
+                                i.selected && i.label.eq_ignore_ascii_case("contributing.md")
+                            });
 
                         if has_contributing {
                             self.wizard_state = WizardState::ContributingTemplate;
@@ -1772,7 +1774,7 @@ impl App {
                             .workspace
                             .items
                             .iter()
-                            .any(|i| i.selected && i.label == "agent.md");
+                            .any(|i| i.selected && i.label.eq_ignore_ascii_case("agent.md"));
                         if has_agent {
                             self.wizard_state = WizardState::AgentPersona;
                             self.workspace.set_category(Category::AgentPersona);
@@ -2066,6 +2068,7 @@ impl App {
                         // ENTER always advances immediately with the current
                         // target (CWD by default). [F] opens the folder
                         // browser, [R] resets to the launch directory.
+                        self.workspace.detect_installed(&self.target_folder);
                         self.wizard_state = WizardState::Artifacts;
                         self.workspace.set_category(Category::Artifacts);
                         self.nav_tree.set_selected(Category::Artifacts);
@@ -2077,12 +2080,11 @@ impl App {
                             .workspace
                             .items
                             .iter()
-                            .any(|i| i.selected && i.label == "agent.md");
-                        let has_contributing = self
-                            .workspace
-                            .items
-                            .iter()
-                            .any(|i| i.selected && i.label == "contributing.md");
+                            .any(|i| i.selected && i.label.eq_ignore_ascii_case("agent.md"));
+                        let has_contributing =
+                            self.workspace.items.iter().any(|i| {
+                                i.selected && i.label.eq_ignore_ascii_case("contributing.md")
+                            });
 
                         if has_agent {
                             self.wizard_state = WizardState::AgentPersona;
@@ -2099,11 +2101,10 @@ impl App {
                         }
                     }
                     WizardState::AgentPersona => {
-                        let has_contributing = self
-                            .workspace
-                            .items
-                            .iter()
-                            .any(|i| i.selected && i.label == "contributing.md");
+                        let has_contributing =
+                            self.workspace.items.iter().any(|i| {
+                                i.selected && i.label.eq_ignore_ascii_case("contributing.md")
+                            });
 
                         if has_contributing {
                             self.wizard_state = WizardState::ContributingTemplate;

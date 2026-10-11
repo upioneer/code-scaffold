@@ -91,7 +91,7 @@ Welcome to the official **Code Scaffold Skills Library**. This curated registry 
 | **Reveal.js** | Comprehensive toolkit and knowledge base for scaffolding, configuring, and exporting Reveal.js presentations. | `revealjs`, `html-presentations`, `3d-transitions` | v2 | `.skills/revealjs` |
 | **Slidev** | Comprehensive skill for building, configuring, and exporting Slidev markdown presentations. | `slidev`, `developer-slides`, `vue-slides` | v4 | `.skills/slidev` |
 | **tldraw** | Transforms tldraw into an advanced spatial computing engine. Beyond whiteboarding, this skill orchestrates cinematic scrollytelling, live-mutating data dashboards, multiplayer AI cursors, and Matter.js physics integrations for hyper-creative web experiences. | `tldraw`, `infinite-canvas`, `spatial-computing` | v3 | `.skills/tldraw` |
-| **Changelog Plus** | Automated immutable release history pipeline with versioned changelog authoring, headless terminal and declarative web capture, and README synchronization. | `changelog-plus`, `release-notes`, `version-history` | v3 | `.skills/changelog-plus` |
+| **Changelog Plus** | Automated immutable release history pipeline with versioned changelog authoring, headless terminal and declarative web capture, and README synchronization. | `changelog-plus`, `release-notes`, `version-history` | v4 | `.skills/changelog-plus` |
 
 ### Smart Home & IoT Automation
 

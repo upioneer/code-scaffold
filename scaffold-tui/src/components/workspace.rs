@@ -186,6 +186,7 @@ impl Workspace {
                         "packages/" => Some("Monorepo shared library directory for storing internal dependencies, shared UI components, TS types, and core backend crates.".to_string()),
                         "agent.md" => Some("System rules and behavioral instructions governing AI agent operations in the workspace.".to_string()),
                         "brand.md" => Some("Design system document encompassing typography, color palettes, and UI component standards.".to_string()),
+                        "bump_version.ps1" => Some("Universal, adaptable semantic version bumping script that synchronizes project package manifests (Node package.json, Rust Cargo.toml, Python pyproject.toml), enforces semver rules, triggers changelog generation, and automates media capture.".to_string()),
                         "contributing.md" => Some("Community contribution guidelines, PR policies, and codebase governance rules.".to_string()),
                         "design.md" => Some("Architectural blueprints, database schemas, and frontend UI mockups.".to_string()),
                         "env.example" => Some("Environment variable template demonstrating required configuration keys without exposing secrets.".to_string()),
@@ -526,7 +527,396 @@ impl Workspace {
         let actual_idx = visible.get(self.selected_idx)?;
         self.items[*actual_idx].logo.as_ref()
     }
+}
 
+// ---------------------------------------------------------------------------
+// Target Codebase Detection Engine Helpers
+// ---------------------------------------------------------------------------
+
+fn check_artifact_exists_on_disk(target: &std::path::Path, label: &str) -> bool {
+    let lower = label.to_lowercase();
+    match lower.as_str() {
+        "readme.md" => {
+            target.join("README.md").exists()
+                || target.join("readme.md").exists()
+                || target.join("Readme.md").exists()
+                || target.join("project_details").join("README.md").exists()
+                || target.join("project_details").join("readme.md").exists()
+        }
+        ".gitignore" => {
+            target.join(".gitignore").exists()
+                || target.join("project_details").join(".gitignore").exists()
+        }
+        "bump_version.ps1" => {
+            target.join("bump_version.ps1").exists()
+                || target
+                    .join("project_details")
+                    .join("playbooks")
+                    .join("bump_version.ps1")
+                    .exists()
+                || target
+                    .join("project_details")
+                    .join("bump_version.ps1")
+                    .exists()
+        }
+        "env.example" => {
+            target.join(".env.example").exists()
+                || target.join("env.example").exists()
+                || target.join(".env").exists()
+                || target.join("project_details").join(".env.example").exists()
+                || target.join("project_details").join("env.example").exists()
+        }
+        "agent.md" => {
+            target.join(".agents").join("AGENTS.md").exists()
+                || target.join(".agents").join("agent.md").exists()
+                || target.join(".agents").join("AGENTS").exists()
+                || target.join("AGENT.md").exists()
+                || target.join("agent.md").exists()
+                || target.join("project_details").join("agent.md").exists()
+                || target.join("project_details").join("AGENT.md").exists()
+        }
+        "contributing.md" => {
+            target.join("CONTRIBUTING.md").exists()
+                || target.join("contributing.md").exists()
+                || target.join(".github").join("CONTRIBUTING.md").exists()
+                || target
+                    .join("project_details")
+                    .join("CONTRIBUTING.md")
+                    .exists()
+                || target
+                    .join("project_details")
+                    .join("contributing.md")
+                    .exists()
+        }
+        "apps/" => {
+            let p = target.join("apps");
+            p.exists() && p.is_dir()
+        }
+        "packages/" => {
+            let p = target.join("packages");
+            p.exists() && p.is_dir()
+        }
+        "layout.tsx" => {
+            target.join("app").join("layout.tsx").exists()
+                || target.join("src").join("app").join("layout.tsx").exists()
+                || target.join("project_details").join("layout.tsx").exists()
+                || target.join("layout.tsx").exists()
+        }
+        "middleware.ts" => {
+            target.join("middleware.ts").exists()
+                || target.join("src").join("middleware.ts").exists()
+                || target
+                    .join("project_details")
+                    .join("middleware.ts")
+                    .exists()
+        }
+        "ratelimit.ts" => {
+            target.join("lib").join("ratelimit.ts").exists()
+                || target.join("src").join("lib").join("ratelimit.ts").exists()
+                || target.join("project_details").join("ratelimit.ts").exists()
+                || target.join("ratelimit.ts").exists()
+        }
+        "redis.ts" => {
+            target.join("lib").join("redis.ts").exists()
+                || target.join("src").join("lib").join("redis.ts").exists()
+                || target.join("project_details").join("redis.ts").exists()
+                || target.join("redis.ts").exists()
+        }
+        _ => {
+            let upper = label.to_uppercase();
+            target.join("project_details").join(label).exists()
+                || target.join("project_details").join(&upper).exists()
+                || target.join(label).exists()
+                || target.join(&upper).exists()
+        }
+    }
+}
+
+fn detect_contributing_template(
+    target: &std::path::Path,
+    manifest_content: Option<&str>,
+) -> Option<&'static str> {
+    let candidates = [
+        target.join("CONTRIBUTING.md"),
+        target.join("contributing.md"),
+        target.join(".github").join("CONTRIBUTING.md"),
+        target.join("project_details").join("CONTRIBUTING.md"),
+        target.join("project_details").join("contributing.md"),
+    ];
+
+    let mut found_content: Option<String> = None;
+    for path in &candidates {
+        if path.exists() {
+            if let Ok(c) = std::fs::read_to_string(path) {
+                found_content = Some(c);
+                break;
+            }
+        }
+    }
+
+    let text_to_check = found_content.as_deref().or(manifest_content);
+    if let Some(text) = text_to_check {
+        let text_lower = text.to_lowercase();
+        if text_lower.contains("strict-ownership")
+            || text_lower.contains("we do not accept or merge external")
+            || text_lower.contains("soft-closed")
+            || text_lower.contains("strict ownership")
+            || text_lower.contains("closed pr")
+        {
+            Some("strict-ownership")
+        } else {
+            Some("open-source")
+        }
+    } else {
+        None
+    }
+}
+
+fn detect_personas(
+    target: &std::path::Path,
+    manifest_persona_content: Option<&str>,
+) -> Vec<String> {
+    let candidates = [
+        target.join(".agents").join("AGENTS.md"),
+        target.join(".agents").join("agent.md"),
+        target.join(".agents").join("AGENTS"),
+        target.join("AGENT.md"),
+        target.join("agent.md"),
+        target.join("project_details").join("agent.md"),
+        target.join("project_details").join("AGENT.md"),
+    ];
+
+    let mut combined_text = String::new();
+    if let Some(mp) = manifest_persona_content {
+        combined_text.push_str(mp);
+        combined_text.push('\n');
+    }
+
+    for path in &candidates {
+        if path.exists() {
+            if let Ok(c) = std::fs::read_to_string(path) {
+                combined_text.push_str(&c);
+                combined_text.push('\n');
+            }
+        }
+    }
+
+    if combined_text.trim().is_empty() {
+        return Vec::new();
+    }
+
+    let text_lower = combined_text.to_lowercase();
+    let mut detected = Vec::new();
+
+    // 1. Generic
+    if text_lower.contains("**generic**")
+        || text_lower.contains("### generic")
+        || text_lower.contains("versatile, unopinionated agent")
+    {
+        detected.push("Generic".to_string());
+    }
+
+    // 2. AI Systems Engineer
+    if text_lower.contains("ai systems engineer")
+        || (text_lower.contains("llms") && text_lower.contains("comfyui"))
+        || text_lower.contains("openrouter")
+    {
+        detected.push("AI Systems Engineer".to_string());
+    }
+
+    // 3. Cloud & DevOps Architect
+    if text_lower.contains("cloud & devops architect")
+        || text_lower.contains("cloud & devops")
+        || (text_lower.contains("terraform") && text_lower.contains("cloudformation"))
+    {
+        detected.push("Cloud & DevOps Architect".to_string());
+    }
+
+    // 4. Containerization (Docker/K8s)
+    if text_lower.contains("containerization (docker/k8s)")
+        || text_lower.contains("containerization")
+        || (text_lower.contains("dockerfiles")
+            && text_lower.contains("docker-compose")
+            && text_lower.contains("kubernetes"))
+    {
+        detected.push("Containerization (Docker/K8s)".to_string());
+    }
+
+    // 5. Data Scientist / ML
+    if text_lower.contains("data scientist / ml")
+        || text_lower.contains("data scientist")
+        || (text_lower.contains("pandas") && text_lower.contains("pytorch"))
+    {
+        detected.push("Data Scientist / ML".to_string());
+    }
+
+    // 6. DBA
+    if text_lower.contains("**dba**")
+        || text_lower.contains("### dba")
+        || text_lower.contains("database administrator")
+        || (text_lower.contains("sql/nosql schema design")
+            && text_lower.contains("indexing strategies"))
+    {
+        detected.push("DBA".to_string());
+    }
+
+    // 7. Embedded / IoT
+    if text_lower.contains("embedded / iot")
+        || text_lower.contains("embedded")
+        || (text_lower.contains("bare-metal rust") && text_lower.contains("microcontrollers"))
+    {
+        detected.push("Embedded / IoT".to_string());
+    }
+
+    // 8. Game Developer
+    if text_lower.contains("game developer")
+        || (text_lower.contains("physics engines") && text_lower.contains("game loops"))
+    {
+        detected.push("Game Developer".to_string());
+    }
+
+    // 9. Mobile (iOS/And)
+    if text_lower.contains("mobile (ios/and)")
+        || text_lower.contains("mobile (ios/android)")
+        || (text_lower.contains("ios (swift)") && text_lower.contains("android (kotlin)"))
+    {
+        detected.push("Mobile (iOS/And)".to_string());
+    }
+
+    // 10. Security Analyst
+    if text_lower.contains("security analyst")
+        || (text_lower.contains("auditor-style agent")
+            && text_lower.contains("cryptographic protocols"))
+    {
+        detected.push("Security Analyst".to_string());
+    }
+
+    // 11. Systems Scripting
+    if text_lower.contains("systems scripting")
+        || (text_lower.contains("low-level os tasks")
+            && text_lower.contains("powershell scripting"))
+    {
+        detected.push("Systems Scripting".to_string());
+    }
+
+    // 12. Web Dev
+    if text_lower.contains("web dev")
+        || text_lower.contains("web developer")
+        || (text_lower.contains("full-stack web technologies")
+            && text_lower.contains("mobile-first responsive design"))
+    {
+        detected.push("Web Dev".to_string());
+    }
+
+    detected
+}
+
+fn detect_license(
+    target: &std::path::Path,
+    manifest_license_str: Option<&str>,
+) -> Option<&'static str> {
+    let candidates = [
+        target.join("LICENSE.md"),
+        target.join("LICENSE"),
+        target.join("license.md"),
+        target.join("project_details").join("license.md"),
+        target.join("project_details").join("LICENSE.md"),
+    ];
+
+    let mut found_content: Option<String> = None;
+    for path in &candidates {
+        if path.exists() {
+            if let Ok(c) = std::fs::read_to_string(path) {
+                found_content = Some(c);
+                break;
+            }
+        }
+    }
+
+    if let Some(content) = found_content {
+        let lower = content.to_lowercase();
+        if lower.contains("apache license, version 2.0") || lower.contains("apache-2.0") {
+            return Some("Apache 2.0");
+        }
+        if lower.contains("gnu affero general public license") || lower.contains("agpl") {
+            return Some("AGPL v3");
+        }
+        if lower.contains("gnu lesser general public license") || lower.contains("lgpl") {
+            return Some("LGPL v3");
+        }
+        if lower.contains("gnu general public license")
+            || lower.contains("gpl-3.0")
+            || lower.contains("gpl v3")
+        {
+            return Some("GPL v3");
+        }
+        if lower.contains("mozilla public license, version 2.0") || lower.contains("mpl-2.0") {
+            return Some("Mozilla Public License 2.0");
+        }
+        if lower.contains("the unlicense") || lower.contains("unlicense.org") {
+            return Some("The Unlicense");
+        }
+        if lower
+            .contains("neither the name of the copyright holder nor the names of its contributors")
+        {
+            return Some("BSD 3-Clause");
+        }
+        if lower.contains("redistribution and use in source and binary forms") {
+            return Some("BSD 2-Clause");
+        }
+        if lower.contains("all rights reserved")
+            || lower.contains("strictly prohibiting redistribution")
+            || lower.contains("proprietary")
+        {
+            return Some("All Rights Reserved");
+        }
+        if lower.contains("mit license")
+            || lower.contains("permission is hereby granted, free of charge")
+            || lower.contains("mit")
+        {
+            return Some("MIT License");
+        }
+        return Some("MIT License");
+    }
+
+    if let Some(m_lic) = manifest_license_str {
+        let m_lower = m_lic.to_lowercase();
+        if m_lower.contains("mit") {
+            return Some("MIT License");
+        }
+        if m_lower.contains("apache") {
+            return Some("Apache 2.0");
+        }
+        if m_lower.contains("agpl") {
+            return Some("AGPL v3");
+        }
+        if m_lower.contains("lgpl") {
+            return Some("LGPL v3");
+        }
+        if m_lower.contains("gpl") {
+            return Some("GPL v3");
+        }
+        if m_lower.contains("mozilla") || m_lower.contains("mpl") {
+            return Some("Mozilla Public License 2.0");
+        }
+        if m_lower.contains("unlicense") {
+            return Some("The Unlicense");
+        }
+        if m_lower.contains("bsd 3") {
+            return Some("BSD 3-Clause");
+        }
+        if m_lower.contains("bsd 2") {
+            return Some("BSD 2-Clause");
+        }
+        if m_lower.contains("all rights reserved") || m_lower.contains("proprietary") {
+            return Some("All Rights Reserved");
+        }
+    }
+
+    None
+}
+
+impl Workspace {
     pub fn detect_installed(&mut self, target_folder: &str) {
         self.target_folder = target_folder.to_string();
         let target = std::path::PathBuf::from(target_folder);
@@ -534,59 +924,241 @@ impl Workspace {
             return;
         }
 
-        // 1. Reset
+        // 1. Reset all detection flags
         for item in &mut self.items {
             item.exists_in_target = false;
             item.target_version = None;
         }
 
         let manifest_path = target.join("manifest.json");
+        let mut manifest_contributing_content: Option<String> = None;
+        let mut manifest_persona_content: Option<String> = None;
+        let mut manifest_license_str: Option<String> = None;
 
+        // 2. Parse manifest.json if present
         if let Ok(content) = std::fs::read_to_string(&manifest_path) {
-            if let Ok(manifest) =
-                serde_json::from_str::<crate::models::manifest::Manifest>(&content)
-            {
-                for artifact in manifest.artifacts {
-                    if let Some(item) = self.items.iter_mut().find(|i| i.label == artifact.label) {
-                        item.exists_in_target = true;
-                        item.selected = true;
+            if let Ok(json) = serde_json::from_str::<serde_json::Value>(&content) {
+                if let Some(artifacts_arr) = json.get("artifacts").and_then(|v| v.as_array()) {
+                    for art in artifacts_arr {
+                        let id = art.get("id").and_then(|v| v.as_str()).unwrap_or("");
+                        let label = art.get("label").and_then(|v| v.as_str()).unwrap_or("");
+                        let method = art.get("method").and_then(|v| v.as_str()).unwrap_or("");
+                        let art_target = art.get("target").and_then(|v| v.as_str()).unwrap_or("");
+                        let art_content = art.get("content").and_then(|v| v.as_str());
+
+                        if id == "agent_personas"
+                            || method == "inject_persona"
+                            || label.eq_ignore_ascii_case("Agent Personas")
+                        {
+                            if let Some(c) = art_content {
+                                manifest_persona_content = Some(c.to_string());
+                            }
+                        }
+
+                        if id == "contributing"
+                            || label.eq_ignore_ascii_case("CONTRIBUTING.md")
+                            || art_target.to_lowercase().ends_with("contributing.md")
+                        {
+                            if let Some(c) = art_content {
+                                manifest_contributing_content = Some(c.to_string());
+                            } else if id == "strict-ownership"
+                                || label.eq_ignore_ascii_case("strict-ownership")
+                            {
+                                manifest_contributing_content =
+                                    Some("strict-ownership".to_string());
+                            } else if id == "open-source"
+                                || label.eq_ignore_ascii_case("open-source")
+                            {
+                                manifest_contributing_content = Some("open-source".to_string());
+                            }
+                        }
+
+                        if id == "license"
+                            || label.to_lowercase().contains("license")
+                            || art_target.to_lowercase().ends_with("license.md")
+                        {
+                            manifest_license_str = Some(label.to_string());
+                        }
+
+                        for item in self
+                            .items
+                            .iter_mut()
+                            .filter(|i| i.category == Category::Artifacts)
+                        {
+                            let matches_label = item.label.eq_ignore_ascii_case(label);
+                            let matches_id = item.label.eq_ignore_ascii_case(id);
+                            let matches_target_filename = std::path::Path::new(art_target)
+                                .file_name()
+                                .and_then(|f| f.to_str())
+                                .map(|f| f.eq_ignore_ascii_case(&item.label))
+                                .unwrap_or(false);
+                            let matches_special = (item.label.eq_ignore_ascii_case("agent.md")
+                                && (id == "agent"
+                                    || id == "agent_personas"
+                                    || label.eq_ignore_ascii_case("AGENT.md")
+                                    || label.eq_ignore_ascii_case("Agent Personas")))
+                                || (item.label.eq_ignore_ascii_case("readme.md")
+                                    && (id == "readme" || label.eq_ignore_ascii_case("README.md")))
+                                || (item.label.eq_ignore_ascii_case("env.example")
+                                    && (id == "env"
+                                        || label.eq_ignore_ascii_case(".env.example")
+                                        || label.eq_ignore_ascii_case("env.example")))
+                                || (item.label.eq_ignore_ascii_case("contributing.md")
+                                    && (id == "contributing"
+                                        || label.eq_ignore_ascii_case("CONTRIBUTING.md")));
+
+                            if matches_label
+                                || matches_id
+                                || matches_target_filename
+                                || matches_special
+                            {
+                                item.exists_in_target = true;
+                            }
+                        }
                     }
                 }
-                for skill in manifest.skills {
-                    if let Some(item) = self.items.iter_mut().find(|i| i.label == skill.label) {
-                        item.exists_in_target = true;
-                        item.selected = true;
+
+                if let Some(skills_arr) = json.get("skills").and_then(|v| v.as_array()) {
+                    for skill in skills_arr {
+                        let id = skill.get("id").and_then(|v| v.as_str()).unwrap_or("");
+                        let label = skill.get("label").and_then(|v| v.as_str()).unwrap_or("");
+                        for item in self
+                            .items
+                            .iter_mut()
+                            .filter(|i| i.category == Category::AgentSkills)
+                        {
+                            if item.label.eq_ignore_ascii_case(id)
+                                || item.label.eq_ignore_ascii_case(label)
+                            {
+                                item.exists_in_target = true;
+                            }
+                        }
                     }
                 }
             }
         }
 
-        for item in &mut self.items {
-            if item.category == Category::Artifacts {
-                let p2 = if item.label.eq_ignore_ascii_case("apps/")
-                    || item.label.eq_ignore_ascii_case("packages/")
-                {
-                    target.join(&item.label)
-                } else {
-                    target.join("project_details").join(&item.label)
-                };
-                if p2.exists() {
-                    item.exists_in_target = true;
-                    item.selected = true;
+        // 3. Filesystem Artifact Detection
+        for item in self
+            .items
+            .iter_mut()
+            .filter(|i| i.category == Category::Artifacts)
+        {
+            if check_artifact_exists_on_disk(&target, &item.label) {
+                item.exists_in_target = true;
+            }
+        }
+
+        // 4. Contributing Template Detection
+        if let Some(chosen_contributing) =
+            detect_contributing_template(&target, manifest_contributing_content.as_deref())
+        {
+            if let Some(art) = self.items.iter_mut().find(|i| {
+                i.category == Category::Artifacts && i.label.eq_ignore_ascii_case("contributing.md")
+            }) {
+                art.exists_in_target = true;
+            }
+            for item in self
+                .items
+                .iter_mut()
+                .filter(|i| i.category == Category::ContributingTemplate)
+            {
+                item.exists_in_target = item.label.eq_ignore_ascii_case(chosen_contributing);
+            }
+        }
+
+        // 5. Agent Personas Detection
+        let detected_personas = detect_personas(&target, manifest_persona_content.as_deref());
+        if !detected_personas.is_empty() {
+            if let Some(art) = self.items.iter_mut().find(|i| {
+                i.category == Category::Artifacts && i.label.eq_ignore_ascii_case("agent.md")
+            }) {
+                art.exists_in_target = true;
+            }
+            for item in self
+                .items
+                .iter_mut()
+                .filter(|i| i.category == Category::AgentPersona)
+            {
+                item.exists_in_target = detected_personas
+                    .iter()
+                    .any(|dp| dp.eq_ignore_ascii_case(&item.label));
+            }
+        }
+
+        // 6. License Detection
+        if let Some(chosen_license) = detect_license(&target, manifest_license_str.as_deref()) {
+            for item in self
+                .items
+                .iter_mut()
+                .filter(|i| i.category == Category::License)
+            {
+                item.exists_in_target = item.label.eq_ignore_ascii_case(chosen_license);
+            }
+        }
+
+        // 7. Skills Detection & Version Inspection
+        let skills_dir = target.join(".skills");
+        let lockfile = crate::skills_cli::lockfile::LockfileManager::new(&target).read();
+
+        for item in self
+            .items
+            .iter_mut()
+            .filter(|i| i.category == Category::AgentSkills)
+        {
+            let skill_folder = skills_dir.join(&item.label);
+            let skill_meta = skill_folder.join("meta.json");
+            let skill_manifest = skill_folder.join("skill-manifest.json");
+
+            let exists = skill_meta.exists()
+                || skill_manifest.exists()
+                || skill_folder.is_dir()
+                || item.exists_in_target;
+
+            if exists {
+                item.exists_in_target = true;
+
+                if let Ok(meta_content) = std::fs::read_to_string(&skill_meta) {
+                    if let Ok(json) = serde_json::from_str::<serde_json::Value>(&meta_content) {
+                        if let Some(v) = json.get("version").and_then(|v| v.as_str()) {
+                            item.target_version = Some(v.to_string());
+                        }
+                    }
                 }
-            } else if item.category == Category::AgentSkills {
-                let skill_meta = target.join(".skills").join(&item.label).join("meta.json");
-                if skill_meta.exists() {
-                    item.exists_in_target = true;
-                    item.selected = true;
-                    if let Ok(content) = std::fs::read_to_string(&skill_meta) {
-                        if let Ok(json) = serde_json::from_str::<serde_json::Value>(&content) {
+                if item.target_version.is_none() {
+                    if let Ok(manifest_content) = std::fs::read_to_string(&skill_manifest) {
+                        if let Ok(json) =
+                            serde_json::from_str::<serde_json::Value>(&manifest_content)
+                        {
                             if let Some(v) = json.get("version").and_then(|v| v.as_str()) {
                                 item.target_version = Some(v.to_string());
                             }
                         }
                     }
                 }
+                if item.target_version.is_none() {
+                    if let Some(lock_entry) = lockfile
+                        .skills
+                        .iter()
+                        .find(|s| s.slug.eq_ignore_ascii_case(&item.label))
+                    {
+                        item.target_version = Some(lock_entry.version.clone());
+                    }
+                }
+            }
+        }
+
+        // 8. Reconcile Selection States
+        let is_existing_codebase = self.items.iter().any(|i| i.exists_in_target);
+        if is_existing_codebase {
+            for item in &mut self.items {
+                item.selected = item.exists_in_target;
+            }
+        } else {
+            for item in &mut self.items {
+                item.selected = item.category == Category::Artifacts
+                    && (item.label.eq_ignore_ascii_case("readme.md")
+                        || item.label.eq_ignore_ascii_case("agent.md"));
             }
         }
     }
@@ -929,5 +1501,622 @@ impl Component for Workspace {
         self.state.select(Some(self.selected_idx));
         f.render_stateful_widget(list, area, &mut self.state);
         Ok(())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::fs;
+    use std::path::PathBuf;
+
+    fn create_test_dir(prefix: &str) -> PathBuf {
+        let dir = std::env::temp_dir().join(format!(
+            "scaffold_test_{}_{}_{}",
+            prefix,
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        fs::create_dir_all(&dir).unwrap();
+        dir
+    }
+
+    #[test]
+    fn test_detect_installed_clean_directory() {
+        let target_dir = create_test_dir("clean");
+        let payload_dir = PathBuf::from("/nonexistent/dummy/path");
+        let mut workspace = Workspace::new(payload_dir);
+
+        workspace.detect_installed(target_dir.to_str().unwrap());
+
+        // For clean directory, none exist in target
+        assert!(workspace.items.iter().all(|i| !i.exists_in_target));
+
+        // Default scaffold selections apply
+        let selected_labels: Vec<_> = workspace
+            .items
+            .iter()
+            .filter(|i| i.selected)
+            .map(|i| i.label.as_str())
+            .collect();
+
+        // Either default artifacts or empty if dummy payload loaded no templates
+        for label in &selected_labels {
+            assert!(
+                label.eq_ignore_ascii_case("readme.md") || label.eq_ignore_ascii_case("agent.md")
+            );
+        }
+
+        let _ = fs::remove_dir_all(&target_dir);
+    }
+
+    #[test]
+    fn test_detect_installed_filesystem_artifacts_and_contributing_and_personas() {
+        let target_dir = create_test_dir("existing_fs");
+
+        // 1. Create root artifacts
+        fs::write(target_dir.join("README.md"), "# Test Project").unwrap();
+        fs::write(target_dir.join(".gitignore"), "target/\nnode_modules/").unwrap();
+        fs::write(target_dir.join(".env.example"), "PORT=3000").unwrap();
+
+        // 2. Create CONTRIBUTING.md with strict-ownership text
+        fs::write(
+            target_dir.join("CONTRIBUTING.md"),
+            "# Contributing\n\nTo preserve architectural vision, we do not accept or merge external pull requests. Soft-closed PRs only.",
+        )
+        .unwrap();
+
+        // 3. Create .agents/AGENTS.md with Web Dev and Security Analyst personas
+        let agents_dir = target_dir.join(".agents");
+        fs::create_dir_all(&agents_dir).unwrap();
+        fs::write(
+            agents_dir.join("AGENTS.md"),
+            "# Custom Agent Rules\n\n## Roles\n* **Web Dev**: Specialized in modern full-stack web technologies.\n* **Security Analyst**: An auditor-style agent focused on network security.\n\n## Protocols",
+        )
+        .unwrap();
+
+        // 4. Create LICENSE.md with MIT license
+        fs::write(
+            target_dir.join("LICENSE.md"),
+            "MIT License\n\nPermission is hereby granted, free of charge, to any person...",
+        )
+        .unwrap();
+
+        // 5. Create project_details/TODO.md and PLAN.md
+        let details_dir = target_dir.join("project_details");
+        fs::create_dir_all(&details_dir).unwrap();
+        fs::write(details_dir.join("TODO.md"), "* [ ] Item 1").unwrap();
+        fs::write(details_dir.join("PLAN.md"), "# Project Plan").unwrap();
+
+        // 6. Create .skills/docker
+        let docker_skill_dir = target_dir.join(".skills").join("docker");
+        fs::create_dir_all(&docker_skill_dir).unwrap();
+        fs::write(
+            docker_skill_dir.join("meta.json"),
+            r#"{"label": "Docker Containerization", "version": "3", "description": "Docker containerization"}"#,
+        )
+        .unwrap();
+
+        let payload_dir = PathBuf::from("/nonexistent/dummy/path");
+        let mut workspace = Workspace::new(payload_dir);
+
+        // Manually seed template items that would come from .templates
+        workspace.items.push(WorkspaceItem {
+            label: "readme.md".into(),
+            selected: true,
+            category: Category::Artifacts,
+            description: None,
+            version: None,
+            exists_in_target: false,
+            target_version: None,
+            logo: None,
+        });
+        workspace.items.push(WorkspaceItem {
+            label: ".gitignore".into(),
+            selected: false,
+            category: Category::Artifacts,
+            description: None,
+            version: None,
+            exists_in_target: false,
+            target_version: None,
+            logo: None,
+        });
+        workspace.items.push(WorkspaceItem {
+            label: "env.example".into(),
+            selected: false,
+            category: Category::Artifacts,
+            description: None,
+            version: None,
+            exists_in_target: false,
+            target_version: None,
+            logo: None,
+        });
+        workspace.items.push(WorkspaceItem {
+            label: "contributing.md".into(),
+            selected: false,
+            category: Category::Artifacts,
+            description: None,
+            version: None,
+            exists_in_target: false,
+            target_version: None,
+            logo: None,
+        });
+        workspace.items.push(WorkspaceItem {
+            label: "agent.md".into(),
+            selected: true,
+            category: Category::Artifacts,
+            description: None,
+            version: None,
+            exists_in_target: false,
+            target_version: None,
+            logo: None,
+        });
+        workspace.items.push(WorkspaceItem {
+            label: "todo.md".into(),
+            selected: false,
+            category: Category::Artifacts,
+            description: None,
+            version: None,
+            exists_in_target: false,
+            target_version: None,
+            logo: None,
+        });
+        workspace.items.push(WorkspaceItem {
+            label: "plan.md".into(),
+            selected: false,
+            category: Category::Artifacts,
+            description: None,
+            version: None,
+            exists_in_target: false,
+            target_version: None,
+            logo: None,
+        });
+        workspace.items.push(WorkspaceItem {
+            label: "brand.md".into(),
+            selected: false,
+            category: Category::Artifacts,
+            description: None,
+            version: None,
+            exists_in_target: false,
+            target_version: None,
+            logo: None,
+        });
+        workspace.items.push(WorkspaceItem {
+            label: "docker".into(),
+            selected: false,
+            category: Category::AgentSkills,
+            description: None,
+            version: Some("3".into()),
+            exists_in_target: false,
+            target_version: None,
+            logo: None,
+        });
+        workspace.items.push(WorkspaceItem {
+            label: "ansible".into(),
+            selected: false,
+            category: Category::AgentSkills,
+            description: None,
+            version: Some("1".into()),
+            exists_in_target: false,
+            target_version: None,
+            logo: None,
+        });
+        workspace.items.push(WorkspaceItem {
+            label: "MIT License".into(),
+            selected: false,
+            category: Category::License,
+            description: None,
+            version: None,
+            exists_in_target: false,
+            target_version: None,
+            logo: None,
+        });
+        workspace.items.push(WorkspaceItem {
+            label: "Apache 2.0".into(),
+            selected: false,
+            category: Category::License,
+            description: None,
+            version: None,
+            exists_in_target: false,
+            target_version: None,
+            logo: None,
+        });
+
+        // Run detection
+        workspace.detect_installed(target_dir.to_str().unwrap());
+
+        // Verify Artifacts
+        let readme = workspace
+            .items
+            .iter()
+            .find(|i| i.label == "readme.md")
+            .unwrap();
+        assert!(readme.exists_in_target, "README.md must be detected");
+        assert!(readme.selected, "README.md must be selected");
+
+        let gitignore = workspace
+            .items
+            .iter()
+            .find(|i| i.label == ".gitignore")
+            .unwrap();
+        assert!(gitignore.exists_in_target, ".gitignore must be detected");
+        assert!(gitignore.selected, ".gitignore must be selected");
+
+        let env = workspace
+            .items
+            .iter()
+            .find(|i| i.label == "env.example")
+            .unwrap();
+        assert!(env.exists_in_target, "env.example must be detected");
+        assert!(env.selected, "env.example must be selected");
+
+        let contributing = workspace
+            .items
+            .iter()
+            .find(|i| i.label == "contributing.md")
+            .unwrap();
+        assert!(
+            contributing.exists_in_target,
+            "contributing.md must be detected"
+        );
+        assert!(contributing.selected, "contributing.md must be selected");
+
+        let agent = workspace
+            .items
+            .iter()
+            .find(|i| i.label == "agent.md")
+            .unwrap();
+        assert!(agent.exists_in_target, "agent.md must be detected");
+        assert!(agent.selected, "agent.md must be selected");
+
+        let todo = workspace
+            .items
+            .iter()
+            .find(|i| i.label == "todo.md")
+            .unwrap();
+        assert!(todo.exists_in_target, "todo.md must be detected");
+        assert!(todo.selected, "todo.md must be selected");
+
+        let plan = workspace
+            .items
+            .iter()
+            .find(|i| i.label == "plan.md")
+            .unwrap();
+        assert!(plan.exists_in_target, "plan.md must be detected");
+        assert!(plan.selected, "plan.md must be selected");
+
+        let brand = workspace
+            .items
+            .iter()
+            .find(|i| i.label == "brand.md")
+            .unwrap();
+        assert!(!brand.exists_in_target, "brand.md must NOT be detected");
+        assert!(!brand.selected, "brand.md must NOT be selected");
+
+        // Verify ContributingTemplate
+        let strict = workspace
+            .items
+            .iter()
+            .find(|i| i.label == "strict-ownership" && i.category == Category::ContributingTemplate)
+            .unwrap();
+        assert!(
+            strict.exists_in_target,
+            "strict-ownership template must be detected"
+        );
+        assert!(
+            strict.selected,
+            "strict-ownership template must be selected"
+        );
+
+        let open_src = workspace
+            .items
+            .iter()
+            .find(|i| i.label == "open-source" && i.category == Category::ContributingTemplate)
+            .unwrap();
+        assert!(
+            !open_src.exists_in_target,
+            "open-source template must NOT be detected"
+        );
+        assert!(
+            !open_src.selected,
+            "open-source template must NOT be selected"
+        );
+
+        // Verify AgentPersona
+        let web_dev = workspace
+            .items
+            .iter()
+            .find(|i| i.label == "Web Dev" && i.category == Category::AgentPersona)
+            .unwrap();
+        assert!(web_dev.exists_in_target, "Web Dev persona must be detected");
+        assert!(web_dev.selected, "Web Dev persona must be selected");
+
+        let sec_analyst = workspace
+            .items
+            .iter()
+            .find(|i| i.label == "Security Analyst" && i.category == Category::AgentPersona)
+            .unwrap();
+        assert!(
+            sec_analyst.exists_in_target,
+            "Security Analyst persona must be detected"
+        );
+        assert!(
+            sec_analyst.selected,
+            "Security Analyst persona must be selected"
+        );
+
+        let dba = workspace
+            .items
+            .iter()
+            .find(|i| i.label == "DBA" && i.category == Category::AgentPersona)
+            .unwrap();
+        assert!(!dba.exists_in_target, "DBA persona must NOT be detected");
+        assert!(!dba.selected, "DBA persona must NOT be selected");
+
+        // Verify License
+        let mit = workspace
+            .items
+            .iter()
+            .find(|i| i.label == "MIT License" && i.category == Category::License)
+            .unwrap();
+        assert!(mit.exists_in_target, "MIT License must be detected");
+        assert!(mit.selected, "MIT License must be selected");
+
+        // Verify Skills
+        let docker = workspace
+            .items
+            .iter()
+            .find(|i| i.label == "docker")
+            .unwrap();
+        assert!(docker.exists_in_target, "docker skill must be detected");
+        assert!(docker.selected, "docker skill must be selected");
+        assert_eq!(docker.target_version.as_deref(), Some("3"));
+
+        let ansible = workspace
+            .items
+            .iter()
+            .find(|i| i.label == "ansible")
+            .unwrap();
+        assert!(
+            !ansible.exists_in_target,
+            "ansible skill must NOT be detected"
+        );
+        assert!(!ansible.selected, "ansible skill must NOT be selected");
+
+        let _ = fs::remove_dir_all(&target_dir);
+    }
+
+    #[test]
+    fn test_detect_installed_manifest_matching() {
+        let target_dir = create_test_dir("manifest_test");
+
+        let manifest_json = r#"{
+            "metadata": {
+                "version": "7.34.0",
+                "lastUpdated": "2026-10-10T12:00:00Z"
+            },
+            "env": {},
+            "apps": [],
+            "artifacts": [
+                {
+                    "id": "readme",
+                    "label": "README.md",
+                    "target": "README.md",
+                    "method": "copy"
+                },
+                {
+                    "id": "agent_personas",
+                    "label": "Agent Personas",
+                    "target": ".agents/AGENTS.md",
+                    "method": "inject_persona",
+                    "content": "* **AI Systems Engineer**: Specialized in LLMs and ComfyUI.\n* **Cloud & DevOps Architect**: Infrastructure as code."
+                },
+                {
+                    "id": "contributing",
+                    "label": "CONTRIBUTING.md",
+                    "target": "CONTRIBUTING.md",
+                    "method": "copy",
+                    "content": "open-source"
+                },
+                {
+                    "id": "license",
+                    "label": "Apache 2.0",
+                    "target": "LICENSE.md",
+                    "method": "copy"
+                },
+                {
+                    "id": "todo",
+                    "label": "TODO.md",
+                    "target": "project_details/TODO.md",
+                    "method": "copy"
+                }
+            ],
+            "skills": [
+                {
+                    "id": "github",
+                    "label": "GitHub Automation",
+                    "target": ".skills/github",
+                    "method": "copy"
+                }
+            ]
+        }"#;
+
+        fs::write(target_dir.join("manifest.json"), manifest_json).unwrap();
+
+        let payload_dir = PathBuf::from("/nonexistent/dummy/path");
+        let mut workspace = Workspace::new(payload_dir);
+
+        // Seed items
+        workspace.items.push(WorkspaceItem {
+            label: "readme.md".into(),
+            selected: true,
+            category: Category::Artifacts,
+            description: None,
+            version: None,
+            exists_in_target: false,
+            target_version: None,
+            logo: None,
+        });
+        workspace.items.push(WorkspaceItem {
+            label: "agent.md".into(),
+            selected: true,
+            category: Category::Artifacts,
+            description: None,
+            version: None,
+            exists_in_target: false,
+            target_version: None,
+            logo: None,
+        });
+        workspace.items.push(WorkspaceItem {
+            label: "todo.md".into(),
+            selected: false,
+            category: Category::Artifacts,
+            description: None,
+            version: None,
+            exists_in_target: false,
+            target_version: None,
+            logo: None,
+        });
+        workspace.items.push(WorkspaceItem {
+            label: "contributing.md".into(),
+            selected: false,
+            category: Category::Artifacts,
+            description: None,
+            version: None,
+            exists_in_target: false,
+            target_version: None,
+            logo: None,
+        });
+        workspace.items.push(WorkspaceItem {
+            label: "github".into(),
+            selected: false,
+            category: Category::AgentSkills,
+            description: None,
+            version: Some("5".into()),
+            exists_in_target: false,
+            target_version: None,
+            logo: None,
+        });
+        workspace.items.push(WorkspaceItem {
+            label: "Apache 2.0".into(),
+            selected: false,
+            category: Category::License,
+            description: None,
+            version: None,
+            exists_in_target: false,
+            target_version: None,
+            logo: None,
+        });
+        workspace.items.push(WorkspaceItem {
+            label: "MIT License".into(),
+            selected: false,
+            category: Category::License,
+            description: None,
+            version: None,
+            exists_in_target: false,
+            target_version: None,
+            logo: None,
+        });
+
+        // Run detection
+        workspace.detect_installed(target_dir.to_str().unwrap());
+
+        // Verify Artifacts
+        let readme = workspace
+            .items
+            .iter()
+            .find(|i| i.label == "readme.md")
+            .unwrap();
+        assert!(readme.exists_in_target);
+        assert!(readme.selected);
+
+        let agent = workspace
+            .items
+            .iter()
+            .find(|i| i.label == "agent.md")
+            .unwrap();
+        assert!(agent.exists_in_target);
+        assert!(agent.selected);
+
+        let todo = workspace
+            .items
+            .iter()
+            .find(|i| i.label == "todo.md")
+            .unwrap();
+        assert!(todo.exists_in_target);
+        assert!(todo.selected);
+
+        let contributing = workspace
+            .items
+            .iter()
+            .find(|i| i.label == "contributing.md")
+            .unwrap();
+        assert!(contributing.exists_in_target);
+        assert!(contributing.selected);
+
+        // Verify ContributingTemplate
+        let open_src = workspace
+            .items
+            .iter()
+            .find(|i| i.label == "open-source" && i.category == Category::ContributingTemplate)
+            .unwrap();
+        assert!(open_src.exists_in_target);
+        assert!(open_src.selected);
+
+        let strict = workspace
+            .items
+            .iter()
+            .find(|i| i.label == "strict-ownership" && i.category == Category::ContributingTemplate)
+            .unwrap();
+        assert!(!strict.exists_in_target);
+        assert!(!strict.selected);
+
+        // Verify Personas
+        let ai = workspace
+            .items
+            .iter()
+            .find(|i| i.label == "AI Systems Engineer" && i.category == Category::AgentPersona)
+            .unwrap();
+        assert!(ai.exists_in_target);
+        assert!(ai.selected);
+
+        let devops = workspace
+            .items
+            .iter()
+            .find(|i| i.label == "Cloud & DevOps Architect" && i.category == Category::AgentPersona)
+            .unwrap();
+        assert!(devops.exists_in_target);
+        assert!(devops.selected);
+
+        let web = workspace
+            .items
+            .iter()
+            .find(|i| i.label == "Web Dev" && i.category == Category::AgentPersona)
+            .unwrap();
+        assert!(!web.exists_in_target);
+        assert!(!web.selected);
+
+        // Verify License
+        let apache = workspace
+            .items
+            .iter()
+            .find(|i| i.label == "Apache 2.0" && i.category == Category::License)
+            .unwrap();
+        assert!(apache.exists_in_target);
+        assert!(apache.selected);
+
+        // Verify Skill
+        let gh = workspace
+            .items
+            .iter()
+            .find(|i| i.label == "github")
+            .unwrap();
+        assert!(gh.exists_in_target);
+        assert!(gh.selected);
+
+        let _ = fs::remove_dir_all(&target_dir);
     }
 }

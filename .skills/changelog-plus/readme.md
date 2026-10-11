@@ -1,6 +1,6 @@
 # Changelog Plus
 
-**Version:** 3
+**Version:** 4
 
 **Target:** `.skills/changelog-plus`
 
@@ -23,11 +23,13 @@ Automated immutable release history pipeline that authors versioned changelog fo
 * Converts run recordings to `demo.gif` with ffmpeg, adds mobile viewport proof shots, and supports authenticated routes via browser state files.
 * Defines honest fallbacks: still slideshow for `demo.gif` when no recording is produced, explicit user waiver when media is skipped.
 * Ships a declarative capture workflow template that runs the slot contract through the Playwright Plus dispatcher for fully replayable releases.
+* Provides a universal adaptable version bump script template with multi stack manifest detection and baked in user interview protocols.
 
 ## Usage
 Agents can invoke this skill when cutting a release that needs immutable, media backed version history, when wiring automated terminal or web capture into a version bump routine, or when a user asks where release history should live and how it stays tamper evident.
 
 ## Changelog
+* **v4** : Added universal adaptable version bump script template with multi stack manifest synchronization and baked in user interview protocols.
 * **v3** : Added the declarative capture workflow template backed by the Playwright Plus dispatcher.
 * **v2** : Added first class web application capture with route manifests, run recording to gif conversion, viewport matrix proof, and a maintained selftest.
 * **v1** : Initial implementation of the immutable release history pipeline with headless capture, failure gates, and directory preference init.
