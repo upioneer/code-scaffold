@@ -1,0 +1,52 @@
+{
+  "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
+  "specification": "https://code-scaffold.com/spec/v1",
+  "name": "cadence",
+  "version": "2",
+  "description": "Browser-native live coding music studio, algorithmic pattern synthesis engine, tracker-style arranger, and stage performance suite for artists, producers, and performers.",
+  "entryPoint": "./SKILL.md",
+  "engines": {
+    "node": ">=18"
+  },
+  "requiredPermissions": [
+    "fs:read",
+    "fs:write",
+    "net:connect"
+  ],
+  "category": "Audio & Creative Media",
+  "keywords": [
+    "cadence",
+    "live-coding",
+    "algorithmic-music",
+    "music-composition",
+    "pattern-synthesis",
+    "mini-notation",
+    "web-audio-api",
+    "euclidean-rhythms",
+    "polymeter",
+    "breakbeat",
+    "synthwave",
+    "techno-synthesis",
+    "audio-dsp",
+    "sound-design",
+    "creative-coding",
+    "generative-music",
+    "beat-making",
+    "acid-bassline",
+    "frequency-modulation",
+    "audio-visualizer",
+    "oscilloscope",
+    "live-performance",
+    "step-sequencer",
+    "chords-scales",
+    "midi-clock",
+    "tracker-arranger",
+    "stage-cueing",
+    "trance-gate",
+    "orbit-soloing",
+    "acid-envelope",
+    "scale-quantizer"
+  ],
+  "hasSandbox": true,
+  "integrity": "cs:sha256:f6a94fcc1a7e4d72e839fee0f3aeae8cd624d0b111200249e50fac527da4c6cc"
+}

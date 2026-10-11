@@ -1,0 +1,15 @@
+{
+  "label": "Cadence Algorithmic Audio",
+  "description": "Browser-native live coding music studio and algorithmic pattern synthesis engine for artists, producers, and performers.",
+  "version": "2",
+  "target": ".skills/cadence",
+  "hasSandbox": true,
+  "logo": [
+    "   ██████╗ █████╗ ██████╗ ███████╗███╗   ██╗ ██████╗███████╗  ",
+    "  ██╔════╝██╔══██╗██╔══██╗██╔════╝████╗  ██║██╔════╝██╔════╝  ",
+    "  ██║     ███████║██║  ██║█████╗  ██╔██╗ ██║██║     █████╗    ",
+    "  ██║     ██╔══██║██║  ██║██╔══╝  ██║╚██╗██║██║     ██╔══╝    ",
+    "  ╚██████╗██║  ██║██████╔╝███████╗██║ ╚████║╚██████╗███████╗  ",
+    "   ╚═════╝╚═╝  ╚═╝╚═════╝ ╚══════╝╚═╝  ╚═══╝ ╚═════╝╚══════╝  "
+  ]
+}
