@@ -533,60 +533,66 @@ impl Workspace {
 // Target Codebase Detection Engine Helpers
 // ---------------------------------------------------------------------------
 
+fn path_exists_case_insensitive(dir: &std::path::Path, filename: &str) -> bool {
+    if !dir.is_dir() {
+        return false;
+    }
+    if dir.join(filename).exists() {
+        return true;
+    }
+    if let Ok(entries) = std::fs::read_dir(dir) {
+        for entry in entries.flatten() {
+            if entry
+                .file_name()
+                .to_string_lossy()
+                .eq_ignore_ascii_case(filename)
+            {
+                return true;
+            }
+        }
+    }
+    false
+}
+
 fn check_artifact_exists_on_disk(target: &std::path::Path, label: &str) -> bool {
     let lower = label.to_lowercase();
     match lower.as_str() {
         "readme.md" => {
-            target.join("README.md").exists()
-                || target.join("readme.md").exists()
-                || target.join("Readme.md").exists()
-                || target.join("project_details").join("README.md").exists()
-                || target.join("project_details").join("readme.md").exists()
+            path_exists_case_insensitive(target, "README.md")
+                || path_exists_case_insensitive(&target.join("project_details"), "README.md")
         }
         ".gitignore" => {
-            target.join(".gitignore").exists()
-                || target.join("project_details").join(".gitignore").exists()
+            path_exists_case_insensitive(target, ".gitignore")
+                || path_exists_case_insensitive(&target.join("project_details"), ".gitignore")
         }
         "bump_version.ps1" => {
-            target.join("bump_version.ps1").exists()
-                || target
-                    .join("project_details")
-                    .join("playbooks")
-                    .join("bump_version.ps1")
-                    .exists()
-                || target
-                    .join("project_details")
-                    .join("bump_version.ps1")
-                    .exists()
+            path_exists_case_insensitive(target, "bump_version.ps1")
+                || path_exists_case_insensitive(
+                    &target.join("project_details").join("playbooks"),
+                    "bump_version.ps1",
+                )
+                || path_exists_case_insensitive(&target.join("project_details"), "bump_version.ps1")
         }
         "env.example" => {
-            target.join(".env.example").exists()
-                || target.join("env.example").exists()
-                || target.join(".env").exists()
-                || target.join("project_details").join(".env.example").exists()
-                || target.join("project_details").join("env.example").exists()
+            path_exists_case_insensitive(target, ".env.example")
+                || path_exists_case_insensitive(target, "env.example")
+                || path_exists_case_insensitive(target, ".env")
+                || path_exists_case_insensitive(&target.join("project_details"), ".env.example")
+                || path_exists_case_insensitive(&target.join("project_details"), "env.example")
         }
         "agent.md" => {
-            target.join(".agents").join("AGENTS.md").exists()
-                || target.join(".agents").join("agent.md").exists()
-                || target.join(".agents").join("AGENTS").exists()
-                || target.join("AGENT.md").exists()
-                || target.join("agent.md").exists()
-                || target.join("project_details").join("agent.md").exists()
-                || target.join("project_details").join("AGENT.md").exists()
+            path_exists_case_insensitive(&target.join(".agents"), "AGENTS.md")
+                || path_exists_case_insensitive(&target.join(".agents"), "agent.md")
+                || path_exists_case_insensitive(&target.join(".agents"), "AGENTS")
+                || path_exists_case_insensitive(target, "AGENT.md")
+                || path_exists_case_insensitive(target, "agent.md")
+                || path_exists_case_insensitive(&target.join("project_details"), "agent.md")
+                || path_exists_case_insensitive(&target.join("project_details"), "AGENT.md")
         }
         "contributing.md" => {
-            target.join("CONTRIBUTING.md").exists()
-                || target.join("contributing.md").exists()
-                || target.join(".github").join("CONTRIBUTING.md").exists()
-                || target
-                    .join("project_details")
-                    .join("CONTRIBUTING.md")
-                    .exists()
-                || target
-                    .join("project_details")
-                    .join("contributing.md")
-                    .exists()
+            path_exists_case_insensitive(target, "CONTRIBUTING.md")
+                || path_exists_case_insensitive(&target.join(".github"), "CONTRIBUTING.md")
+                || path_exists_case_insensitive(&target.join("project_details"), "CONTRIBUTING.md")
         }
         "apps/" => {
             let p = target.join("apps");
@@ -597,37 +603,31 @@ fn check_artifact_exists_on_disk(target: &std::path::Path, label: &str) -> bool 
             p.exists() && p.is_dir()
         }
         "layout.tsx" => {
-            target.join("app").join("layout.tsx").exists()
-                || target.join("src").join("app").join("layout.tsx").exists()
-                || target.join("project_details").join("layout.tsx").exists()
-                || target.join("layout.tsx").exists()
+            path_exists_case_insensitive(&target.join("app"), "layout.tsx")
+                || path_exists_case_insensitive(&target.join("src").join("app"), "layout.tsx")
+                || path_exists_case_insensitive(&target.join("project_details"), "layout.tsx")
+                || path_exists_case_insensitive(target, "layout.tsx")
         }
         "middleware.ts" => {
-            target.join("middleware.ts").exists()
-                || target.join("src").join("middleware.ts").exists()
-                || target
-                    .join("project_details")
-                    .join("middleware.ts")
-                    .exists()
+            path_exists_case_insensitive(target, "middleware.ts")
+                || path_exists_case_insensitive(&target.join("src"), "middleware.ts")
+                || path_exists_case_insensitive(&target.join("project_details"), "middleware.ts")
         }
         "ratelimit.ts" => {
-            target.join("lib").join("ratelimit.ts").exists()
-                || target.join("src").join("lib").join("ratelimit.ts").exists()
-                || target.join("project_details").join("ratelimit.ts").exists()
-                || target.join("ratelimit.ts").exists()
+            path_exists_case_insensitive(&target.join("lib"), "ratelimit.ts")
+                || path_exists_case_insensitive(&target.join("src").join("lib"), "ratelimit.ts")
+                || path_exists_case_insensitive(&target.join("project_details"), "ratelimit.ts")
+                || path_exists_case_insensitive(target, "ratelimit.ts")
         }
         "redis.ts" => {
-            target.join("lib").join("redis.ts").exists()
-                || target.join("src").join("lib").join("redis.ts").exists()
-                || target.join("project_details").join("redis.ts").exists()
-                || target.join("redis.ts").exists()
+            path_exists_case_insensitive(&target.join("lib"), "redis.ts")
+                || path_exists_case_insensitive(&target.join("src").join("lib"), "redis.ts")
+                || path_exists_case_insensitive(&target.join("project_details"), "redis.ts")
+                || path_exists_case_insensitive(target, "redis.ts")
         }
         _ => {
-            let upper = label.to_uppercase();
-            target.join("project_details").join(label).exists()
-                || target.join("project_details").join(&upper).exists()
-                || target.join(label).exists()
-                || target.join(&upper).exists()
+            path_exists_case_insensitive(&target.join("project_details"), label)
+                || path_exists_case_insensitive(target, label)
         }
     }
 }
