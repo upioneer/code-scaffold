@@ -1,6 +1,6 @@
 {
     "metadata": {
-        "version": "7.34.0",
+        "version": "7.35.0",
         "lastUpdated": "2026-09-07T01:09:00Z"
     },
     "env": {
@@ -115,6 +115,27 @@
     ],
     "skills": [
         {
+            "id": "a2a",
+            "label": "A2A Agent Bridge",
+            "source": ".skills/a2a",
+            "target": ".skills/a2a",
+            "method": "copy"
+        },
+        {
+            "id": "a2ui",
+            "label": "A2UI",
+            "source": ".skills/a2ui",
+            "target": ".skills/a2ui",
+            "method": "copy"
+        },
+        {
+            "id": "ansible",
+            "label": "Ansible",
+            "source": ".skills/ansible",
+            "target": ".skills/ansible",
+            "method": "copy"
+        },
+        {
             "id": "braille-animations",
             "label": "Braille Animations",
             "source": ".skills/braille-animations",
@@ -122,15 +143,64 @@
             "method": "copy"
         },
         {
+            "id": "cad-tools",
+            "label": "CAD Tools",
+            "source": ".skills/cad-tools",
+            "target": ".skills/cad-tools",
+            "method": "copy"
+        },
+        {
+            "id": "changelog-plus",
+            "label": "Changelog Plus",
+            "source": ".skills/changelog-plus",
+            "target": ".skills/changelog-plus",
+            "method": "copy"
+        },
+        {
+            "id": "clerk",
+            "label": "Clerk Authentication Perimeter",
+            "source": ".skills/clerk",
+            "target": ".skills/clerk",
+            "method": "copy"
+        },
+        {
+            "id": "code-scaffold",
+            "label": "Code Scaffold Harness",
+            "source": ".skills/code-scaffold",
+            "target": ".skills/code-scaffold",
+            "method": "copy"
+        },
+        {
+            "id": "codebase-memory-mcp",
+            "label": "Codebase Memory MCP",
+            "source": ".skills/codebase-memory-mcp",
+            "target": ".skills/codebase-memory-mcp",
+            "method": "copy"
+        },
+        {
+            "id": "cybersecurity-toolkit",
+            "label": "CyberSecurity Toolkit",
+            "source": ".skills/cybersecurity-toolkit",
+            "target": ".skills/cybersecurity-toolkit",
+            "method": "copy"
+        },
+        {
+            "id": "docker",
+            "label": "Docker Engine",
+            "source": ".skills/docker",
+            "target": ".skills/docker",
+            "method": "copy"
+        },
+        {
             "id": "excalidraw",
-            "label": "Excalidraw Diagrams",
+            "label": "Excalidraw",
             "source": ".skills/excalidraw",
             "target": ".skills/excalidraw",
             "method": "copy"
         },
         {
             "id": "firebase",
-            "label": "Firebase Management",
+            "label": "Firebase",
             "source": ".skills/firebase",
             "target": ".skills/firebase",
             "method": "copy"
@@ -143,17 +213,38 @@
             "method": "copy"
         },
         {
+            "id": "ghostimprint",
+            "label": "GhostImprint Engine",
+            "source": ".skills/ghostimprint",
+            "target": ".skills/ghostimprint",
+            "method": "copy"
+        },
+        {
             "id": "github",
-            "label": "GitHub Automation",
+            "label": "GitHub",
             "source": ".skills/github",
             "target": ".skills/github",
             "method": "copy"
         },
         {
             "id": "hyperframes",
-            "label": "Hyperframes Video",
+            "label": "Hyperframes",
             "source": ".skills/hyperframes",
             "target": ".skills/hyperframes",
+            "method": "copy"
+        },
+        {
+            "id": "kinetic-canvas",
+            "label": "Kinetic Canvas",
+            "source": ".skills/kinetic-canvas",
+            "target": ".skills/kinetic-canvas",
+            "method": "copy"
+        },
+        {
+            "id": "lingo",
+            "label": "Lingo",
+            "source": ".skills/lingo",
+            "target": ".skills/lingo",
             "method": "copy"
         },
         {
@@ -164,24 +255,52 @@
             "method": "copy"
         },
         {
+            "id": "markmap",
+            "label": "Markmap",
+            "source": ".skills/markmap",
+            "target": ".skills/markmap",
+            "method": "copy"
+        },
+        {
             "id": "marp",
-            "label": "Marp Presentations",
+            "label": "Marp",
             "source": ".skills/marp",
             "target": ".skills/marp",
             "method": "copy"
         },
         {
+            "id": "mcp-generator",
+            "label": "MCP Generator",
+            "source": ".skills/mcp-generator",
+            "target": ".skills/mcp-generator",
+            "method": "copy"
+        },
+        {
             "id": "mermaid",
-            "label": "Mermaid Diagrams",
-            "source": ".skills/mermaid/template.md",
-            "target": "SKILLS.md",
-            "method": "append"
+            "label": "Mermaid",
+            "source": ".skills/mermaid",
+            "target": ".skills/mermaid",
+            "method": "copy"
+        },
+        {
+            "id": "mobile-pwa",
+            "label": "Mobile PWA",
+            "source": ".skills/mobile-pwa",
+            "target": ".skills/mobile-pwa",
+            "method": "copy"
         },
         {
             "id": "node",
-            "label": "Node Development",
+            "label": "Node",
             "source": ".skills/node",
             "target": ".skills/node",
+            "method": "copy"
+        },
+        {
+            "id": "officecli",
+            "label": "OfficeCLI",
+            "source": ".skills/officecli",
+            "target": ".skills/officecli",
             "method": "copy"
         },
         {
@@ -193,7 +312,7 @@
         },
         {
             "id": "opencli",
-            "label": "OpenCLI Bridge",
+            "label": "OpenCLI",
             "source": ".skills/opencli",
             "target": ".skills/opencli",
             "method": "copy"
@@ -228,9 +347,37 @@
         },
         {
             "id": "playwright",
-            "label": "Playwright Automation",
+            "label": "Playwright Plus",
             "source": ".skills/playwright",
             "target": ".skills/playwright",
+            "method": "copy"
+        },
+        {
+            "id": "privacy-policy",
+            "label": "Privacy Policy Generator",
+            "source": ".skills/privacy-policy",
+            "target": ".skills/privacy-policy",
+            "method": "copy"
+        },
+        {
+            "id": "proxmox",
+            "label": "Proxmox VE Container Engineering",
+            "source": ".skills/proxmox",
+            "target": ".skills/proxmox",
+            "method": "copy"
+        },
+        {
+            "id": "quarto",
+            "label": "Quarto Scientific Publishing",
+            "source": ".skills/quarto",
+            "target": ".skills/quarto",
+            "method": "copy"
+        },
+        {
+            "id": "quiver",
+            "label": "Quiver AI Vector Studio",
+            "source": ".skills/quiver",
+            "target": ".skills/quiver",
             "method": "copy"
         },
         {
@@ -238,6 +385,111 @@
             "label": "Ratatui TUI Framework",
             "source": ".skills/ratatui",
             "target": ".skills/ratatui",
+            "method": "copy"
+        },
+        {
+            "id": "react-modernization",
+            "label": "React Modernization",
+            "source": ".skills/react-modernization",
+            "target": ".skills/react-modernization",
+            "method": "copy"
+        },
+        {
+            "id": "resend",
+            "label": "Resend",
+            "source": ".skills/resend",
+            "target": ".skills/resend",
+            "method": "copy"
+        },
+        {
+            "id": "revealjs",
+            "label": "Reveal.js",
+            "source": ".skills/revealjs",
+            "target": ".skills/revealjs",
+            "method": "copy"
+        },
+        {
+            "id": "rust",
+            "label": "Rust",
+            "source": ".skills/rust",
+            "target": ".skills/rust",
+            "method": "copy"
+        },
+        {
+            "id": "scrollytelling",
+            "label": "Scrollytelling",
+            "source": ".skills/scrollytelling",
+            "target": ".skills/scrollytelling",
+            "method": "copy"
+        },
+        {
+            "id": "seo-geo-aeo-auditor",
+            "label": "SEO GEO AEO Auditor",
+            "source": ".skills/seo-geo-aeo-auditor",
+            "target": ".skills/seo-geo-aeo-auditor",
+            "method": "copy"
+        },
+        {
+            "id": "skeleton",
+            "label": "Skeleton Performance Studio",
+            "source": ".skills/skeleton",
+            "target": ".skills/skeleton",
+            "method": "copy"
+        },
+        {
+            "id": "slidev",
+            "label": "Slidev",
+            "source": ".skills/slidev",
+            "target": ".skills/slidev",
+            "method": "copy"
+        },
+        {
+            "id": "smart-home",
+            "label": "Smart Home",
+            "source": ".skills/smart-home",
+            "target": ".skills/smart-home",
+            "method": "copy"
+        },
+        {
+            "id": "stealth-browser",
+            "label": "Stealth Browser",
+            "source": ".skills/stealth-browser",
+            "target": ".skills/stealth-browser",
+            "method": "copy"
+        },
+        {
+            "id": "supabase",
+            "label": "Supabase",
+            "source": ".skills/supabase",
+            "target": ".skills/supabase",
+            "method": "copy"
+        },
+        {
+            "id": "tasty",
+            "label": "Tasty",
+            "source": ".skills/tasty",
+            "target": ".skills/tasty",
+            "method": "copy"
+        },
+        {
+            "id": "telegram",
+            "label": "Telegram",
+            "source": ".skills/telegram",
+            "target": ".skills/telegram",
+            "method": "copy"
+        },
+        {
+            "id": "terraform",
+            "label": "Terraform",
+            "source": ".skills/terraform",
+            "target": ".skills/terraform",
+            "method": "copy"
+        },
+        {
+            "id": "tldraw",
+            "label": "tldraw",
+            "source": ".skills/tldraw",
+            "target": ".skills/tldraw",
             "method": "copy"
         },
         {
@@ -249,37 +501,30 @@
         },
         {
             "id": "tui-tools",
-            "label": "TUI Tools Architecture",
+            "label": "TUI Tools",
             "source": ".skills/tui-tools",
             "target": ".skills/tui-tools",
             "method": "copy"
         },
         {
-            "id": "resend",
-            "label": "Resend Email Services",
-            "source": ".skills/resend",
-            "target": ".skills/resend",
+            "id": "ui-primitives",
+            "label": "UI Primitives & Micro-Interactions",
+            "source": ".skills/ui-primitives",
+            "target": ".skills/ui-primitives",
             "method": "copy"
         },
         {
-            "id": "seo-geo-aeo-auditor",
-            "label": "SEO GEO AEO Auditor",
-            "source": ".skills/seo-geo-aeo-auditor",
-            "target": ".skills/seo-geo-aeo-auditor",
+            "id": "upstash",
+            "label": "Upstash Redis Management",
+            "source": ".skills/upstash",
+            "target": ".skills/upstash",
             "method": "copy"
         },
         {
-            "id": "supabase",
-            "label": "Supabase Management",
-            "source": ".skills/supabase/db",
-            "target": "src/db",
-            "method": "copy"
-        },
-        {
-            "id": "telegram",
-            "label": "Telegram Notifications",
-            "source": ".skills/telegram",
-            "target": ".skills/telegram",
+            "id": "vercel",
+            "label": "Vercel Deployment Routine",
+            "source": ".skills/vercel",
+            "target": ".skills/vercel",
             "method": "copy"
         },
         {
@@ -287,48 +532,6 @@
             "label": "Website Deploy Linux",
             "source": ".skills/website-deploy-linux",
             "target": ".skills/website-deploy-linux",
-            "method": "copy"
-        },
-        {
-            "id": "vercel-routine",
-            "label": "Vercel Deployment Routine",
-            "source": ".skills/vercel",
-            "target": ".skills/vercel",
-            "method": "copy"
-        },
-        {
-            "id": "clerk-perimeter",
-            "label": "Clerk Authentication Perimeter",
-            "source": ".skills/clerk",
-            "target": ".skills/clerk",
-            "method": "copy"
-        },
-        {
-            "id": "upstash-redis",
-            "label": "Upstash Redis Management",
-            "source": ".skills/upstash",
-            "target": ".skills/upstash",
-            "method": "copy"
-        },
-        {
-            "id": "privacy-policy",
-            "label": "Privacy Policy Generator",
-            "source": ".skills/privacy-policy",
-            "target": ".skills/privacy-policy",
-            "method": "copy"
-        },
-        {
-            "id": "mcp-generator",
-            "label": "MCP Generator",
-            "source": ".skills/mcp-generator",
-            "target": ".skills/mcp-generator",
-            "method": "copy"
-        },
-        {
-            "id": "mobile-pwa",
-            "label": "Mobile PWA",
-            "source": ".skills/mobile-pwa",
-            "target": ".skills/mobile-pwa",
             "method": "copy"
         }
     ]

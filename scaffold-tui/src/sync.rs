@@ -65,8 +65,10 @@ pub async fn sync_payload() -> Result<std::path::PathBuf> {
                 // payload. Without this write every production run falls back
                 // to the empty manifest and provisions almost nothing.
                 let manifest_path = cache_dir.join("manifest.json");
-                let payloads_present =
-                    cache_dir.join(".templates").is_dir() && cache_dir.join(".skills").is_dir();
+                let payloads_present = cache_dir.join(".templates").is_dir()
+                    && cache_dir.join(".skills").is_dir()
+                    && cache_dir.join(".licenses").is_dir()
+                    && cache_dir.join(".contributions").is_dir();
                 if remote_version != local_version || !payloads_present || !manifest_path.exists() {
                     println!("Syncing remote payload library v{}...", remote_version);
                     if let Err(e) =
