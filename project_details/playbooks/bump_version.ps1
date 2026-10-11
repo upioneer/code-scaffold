@@ -91,6 +91,9 @@ vhs '$wslTapePath'
         if (Test-Path demo.gif) { Move-Item -Force demo.gif "$ChangelogDir\demo.gif" }
         if (Test-Path demo.png) { Move-Item -Force demo.png "$ChangelogDir\demo.png" }
         if (Test-Path demo_splash.png) { Move-Item -Force demo_splash.png "$ChangelogDir\demo_splash.png" }
+        if (Test-Path demo_deploy.png) { Move-Item -Force demo_deploy.png "$ChangelogDir\demo_deploy.png" }
+        if (Test-Path demo_report.png) { Move-Item -Force demo_report.png "$ChangelogDir\demo_report.png" }
+        if (Test-Path demo_report_full.png) { Move-Item -Force demo_report_full.png "$ChangelogDir\demo_report_full.png" }
         if (Test-Path demo_main.png) { Move-Item -Force demo_main.png "$ChangelogDir\demo_main.png" }
         if (Test-Path demo_final.png) { Move-Item -Force demo_final.png "$ChangelogDir\demo_final.png" }
         

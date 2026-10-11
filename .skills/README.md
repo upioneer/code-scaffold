@@ -29,6 +29,12 @@ Welcome to the official **Code Scaffold Skills Library**. This curated registry 
 | **PlayCanvas SuperSplat** | High-performance tool for editing and optimizing 3D Gaussian Splats. | `gaussian-splats`, `3d-splatting`, `point-cloud` | v3 | `.skills/playcanvas-supersplat` |
 | **Quiver AI Vector Studio** | Enterprise vector graphics generation, raster image vectorization, SVG editing, animation, and Model Context Protocol (MCP) agent integrations using Quiver AI Arrow foundation models and REST APIs. | `quiver`, `quiver-ai`, `vector-graphics`, `svg-generation`, `image-vectorization`, `arrow-2`, `mcp-server` | v2 | `.skills/quiver` |
 
+### Audio & Creative Media
+
+| Skill | Description | Search Keywords | Version | Path |
+| :--- | :--- | :--- | :--- | :--- |
+| **Cadence Algorithmic Audio** | Browser-native live coding music studio, pattern compiler, and stage performance suite for artists, producers, and performers. | `cadence`, `live-coding`, `algorithmic-music`, `tracker-arranger`, `stage-cueing`, `trance-gate` | v2 | `.skills/cadence` |
+
 ### Data, Databases & Storage
 
 | Skill | Description | Search Keywords | Version | Path |

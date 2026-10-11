@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Code Scaffold Specification Schema: https://code-scaffold.com/spec/v1 -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadence - Algorithmic Audio & Live Coding Studio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body, html {
+      width: 100vw;
+      min-height: 100vh;
+      background-color: #020617;
+      color: #f8fafc;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      overflow-x: hidden;
+    }
+    .grid-bg {
+      background-image: radial-gradient(rgba(34, 211, 238, 0.08) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(34, 211, 238, 0.2);
+    }
+    .glow-cyan {
+      box-shadow: 0 0 20px rgba(34, 211, 238, 0.35);
+    }
+    .glow-pulse {
+      animation: pulseGlow 2s infinite alternate ease-in-out;
+    }
+    @keyframes pulseGlow {
+      from { box-shadow: 0 0 10px rgba(34, 211, 238, 0.2); }
+      to { box-shadow: 0 0 25px rgba(34, 211, 238, 0.55); }
+    }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #020617; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #06b6d4; }
+  </style>
+</head>
+<body class="grid-bg min-h-screen flex flex-col justify-between selection:bg-cyan-500/30">
+
+  <!-- Top App Bar -->
+  <header class="glass-panel border-x-0 border-t-0 px-6 py-3 sticky top-0 z-50 flex items-center justify-between">
+    <div class="flex items-center gap-4">
+      <div class="w-9 h-9 rounded-lg bg-cyan-950/70 border border-cyan-400/50 flex items-center justify-center text-cyan-400 font-black shadow-lg">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+        </svg>
+      </div>
+      <div>
+        <h1 class="text-base font-black tracking-wider text-white flex items-center gap-2">
+          CADENCE <span class="text-cyan-400 text-xs px-2 py-0.5 rounded-full bg-cyan-950/80 border border-cyan-800">AUDIO CORE v2</span>
+        </h1>
+        <p class="text-xs text-slate-400 hidden sm:block">Algorithmic Live Coding Pattern & Tracker Studio</p>
+      </div>
+    </div>
+
+    <!-- Central Transport Controls -->
+    <div class="flex items-center gap-2">
+      <button id="btnPlay" class="px-4 py-1.5 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs flex items-center gap-1.5 transition-all shadow-md active:scale-95">
+        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        PLAY
+      </button>
+      <button id="btnPause" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs flex items-center gap-1 transition-all active:scale-95">
+        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+        PAUSE
+      </button>
+      <button id="btnStop" class="px-3 py-1.5 rounded-lg bg-rose-950/60 hover:bg-rose-900 border border-rose-800/60 text-rose-300 font-semibold text-xs flex items-center gap-1 transition-all active:scale-95">
+        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg>
+        HUSH
+      </button>
+      <button id="btnEval" class="px-4 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-1.5 transition-all active:scale-95 ml-2 shadow-sm">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        EVAL (Ctrl+↵)
+      </button>
+    </div>
+
+    <!-- Audio Telemetry & Meters -->
+    <div class="flex items-center gap-4 text-xs font-mono">
+      <div class="flex items-center gap-2">
+        <span class="text-slate-400">BPM</span>
+        <input type="range" id="bpmRange" min="60" max="180" value="128" class="w-20 accent-cyan-400 cursor-pointer">
+        <span id="bpmVal" class="text-cyan-400 font-bold w-7">128</span>
+      </div>
+      <div class="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded bg-slate-900 border border-slate-800">
+        <span id="statusIndicator" class="w-2 h-2 rounded-full bg-slate-500"></span>
+        <span id="statusText" class="text-slate-400 text-[11px]">STANDBY</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Stage Cue Transition Ribbon -->
+  <div class="glass-panel border-x-0 border-t-0 px-6 py-2 flex items-center justify-between text-xs bg-slate-950/90 z-40">
+    <div class="flex items-center gap-2">
+      <span class="text-slate-400 text-xs font-bold uppercase tracking-wider">Stage Cues:</span>
+      <button class="cue-btn px-2.5 py-1 rounded bg-cyan-950/80 border border-cyan-500 text-cyan-300 font-bold active:scale-95 transition-all" data-cue="0">
+        0 • Intro
+      </button>
+      <button class="cue-btn px-2.5 py-1 rounded bg-slate-900 border border-slate-700 text-slate-300 hover:border-cyan-400 active:scale-95 transition-all" data-cue="1">
+        1 • Verse
+      </button>
+      <button class="cue-btn px-2.5 py-1 rounded bg-slate-900 border border-slate-700 text-slate-300 hover:border-cyan-400 active:scale-95 transition-all" data-cue="2">
+        2 • Drop / Climax
+      </button>
+      <button class="cue-btn px-2.5 py-1 rounded bg-slate-900 border border-slate-700 text-slate-300 hover:border-cyan-400 active:scale-95 transition-all" data-cue="3">
+        3 • Breakdown
+      </button>
+    </div>
+    <div class="flex items-center gap-4 text-xs font-mono">
+      <span class="text-slate-400">Active Cue: <span id="currentCueDisplay" class="text-cyan-400 font-bold">0</span></span>
+      <span class="text-slate-600">|</span>
+      <span class="text-slate-400">Trance Gate: <input type="range" id="tgateRange" min="0" max="100" value="0" class="w-16 accent-cyan-400 align-middle"> <span id="tgateVal" class="text-cyan-300 font-bold">OFF</span></span>
+    </div>
+  </div>
+
+  <!-- Main Studio Workspace -->
+  <main class="max-w-7xl mx-auto w-full p-4 md:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 flex-1">
+    
+    <!-- Left Column: Code Editor & Presets (7 cols) -->
+    <section class="lg:col-span-7 flex flex-col gap-4">
+      <div class="glass-panel rounded-xl p-4 flex flex-col flex-1 shadow-2xl relative overflow-hidden">
+        <!-- Editor Header -->
+        <div class="flex items-center justify-between pb-3 border-b border-slate-800/80 mb-3">
+          <div class="flex items-center gap-3">
+            <span class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-cyan-400"></span> Pattern Workspace
+            </span>
+            <span id="cycleCounter" class="text-[11px] font-mono text-cyan-400/80 bg-cyan-950/40 px-2 py-0.5 rounded border border-cyan-900/60">
+              Cycle: 0.00
+            </span>
+          </div>
+
+          <!-- Preset Selector -->
+          <div class="flex items-center gap-2">
+            <label for="presetSelect" class="text-xs text-slate-400">Preset:</label>
+            <select id="presetSelect" class="bg-slate-900 border border-slate-700 text-cyan-300 text-xs rounded px-2.5 py-1 focus:outline-none focus:border-cyan-400 cursor-pointer">
+              <option value="breakbeat">Cyberpunk Breakbeat</option>
+              <option value="acid">Acid Techno 303 (with Cues)</option>
+              <option value="tracker">Tracker Multi-Track Arranger</option>
+              <option value="trancegate">Trance Gate Uplifter</option>
+              <option value="ambient">Deep Ambient Drift</option>
+              <option value="euclidean">Euclidean Poly-Rhythm</option>
+              <option value="lofi">Liquid Lo-Fi Chill</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Code Editor Area -->
+        <div class="relative flex-1 min-h-[300px]">
+          <textarea id="codeEditor" spellcheck="false" class="w-full h-full min-h-[320px] bg-slate-950/90 text-cyan-200 text-xs md:text-sm font-mono p-4 rounded-lg border border-slate-800/90 focus:border-cyan-400/80 focus:outline-none resize-none leading-relaxed shadow-inner" placeholder="// Type Cadence pattern mini-notation here..."></textarea>
+        </div>
+
+        <!-- Editor Footer Tools -->
+        <div class="mt-3 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
+          <div class="flex items-center gap-2">
+            <span class="text-emerald-400 text-xs">● Hot Reload</span>
+            <span class="text-slate-600">|</span>
+            <span>Macros: track, cue, solo/mute, tgate, acidenv</span>
+          </div>
+          <button id="btnRandomBeat" class="text-cyan-400 hover:text-cyan-300 text-xs font-semibold flex items-center gap-1 transition-colors">
+            🎲 Randomize Pattern
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick AI Generative Assistant Drawer -->
+      <div class="glass-panel rounded-xl p-4 shadow-xl">
+        <div class="flex items-center justify-between mb-2">
+          <div class="flex items-center gap-2 text-xs font-bold text-slate-300">
+            <span class="text-cyan-400">✦</span> AI Prompt-to-Pattern Generator
+          </div>
+          <span class="text-[10px] text-slate-500 uppercase tracking-wider font-mono">Cognitive Audio Engine</span>
+        </div>
+        <div class="flex gap-2">
+          <input type="text" id="aiPromptInput" class="flex-1 bg-slate-950 border border-slate-800 text-slate-200 text-xs rounded-lg px-3 py-2 focus:border-cyan-400 focus:outline-none" placeholder="e.g. 'Acid techno with stage cues and trance gate chops'">
+          <button id="btnAiGenerate" class="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold text-xs rounded-lg transition-all active:scale-95 whitespace-nowrap shadow-md">
+            Generate
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right Column: Visualizers, Beat Grid, Channel Mixer, Soundboard (5 cols) -->
+    <section class="lg:col-span-5 flex flex-col gap-4">
+      
+      <!-- Real-Time Audio Canvas Visualizer -->
+      <div class="glass-panel rounded-xl p-4 shadow-2xl flex flex-col">
+        <div class="flex items-center justify-between mb-2 text-xs">
+          <span class="font-bold text-slate-300 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-cyan-400"></span> Audio Telemetry
+          </span>
+          <div class="flex items-center gap-3 text-slate-400">
+            <span>Spectrum / Oscilloscope</span>
+          </div>
+        </div>
+        <div class="w-full h-40 bg-slate-950 rounded-lg border border-slate-800 relative overflow-hidden">
+          <canvas id="audioCanvas" class="w-full h-full block"></canvas>
+          <div class="absolute bottom-1 right-2 text-[10px] font-mono text-cyan-400/60 pointer-events-none">
+            FFT 1024 • 48kHz
+          </div>
+        </div>
+      </div>
+
+      <!-- 16-Step Rhythm Sequencer Grid -->
+      <div class="glass-panel rounded-xl p-4 shadow-xl">
+        <div class="flex items-center justify-between mb-3 text-xs">
+          <span class="font-bold text-slate-300">16-Step Cycle Pulse Matrix</span>
+          <span id="stepDisplay" class="text-cyan-400 font-mono font-bold">Step: 1 / 16</span>
+        </div>
+        <div class="grid grid-cols-16 gap-1.5" id="stepGrid">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </div>
+
+      <!-- Channel Orbit Solo/Mute Mixer -->
+      <div class="glass-panel rounded-xl p-4 shadow-xl">
+        <div class="flex items-center justify-between mb-3 text-xs">
+          <span class="font-bold text-slate-300">Live Orbit Solo / Mute Matrix</span>
+          <span class="text-slate-500 text-[10px]">Stem Isolation</span>
+        </div>
+        <div class="grid grid-cols-4 gap-2 text-xs font-mono">
+          <div class="p-2 bg-slate-900 border border-slate-800 rounded flex flex-col items-center gap-1.5">
+            <span class="text-[11px] text-cyan-300 font-bold">1 • Kick</span>
+            <div class="flex gap-1 w-full">
+              <button class="orbit-mute flex-1 py-0.5 bg-slate-800 hover:bg-rose-950 text-[10px] rounded" data-orbit="1">M</button>
+              <button class="orbit-solo flex-1 py-0.5 bg-slate-800 hover:bg-emerald-950 text-[10px] rounded" data-orbit="1">S</button>
+            </div>
+          </div>
+          <div class="p-2 bg-slate-900 border border-slate-800 rounded flex flex-col items-center gap-1.5">
+            <span class="text-[11px] text-cyan-300 font-bold">2 • Snare</span>
+            <div class="flex gap-1 w-full">
+              <button class="orbit-mute flex-1 py-0.5 bg-slate-800 hover:bg-rose-950 text-[10px] rounded" data-orbit="2">M</button>
+              <button class="orbit-solo flex-1 py-0.5 bg-slate-800 hover:bg-emerald-950 text-[10px] rounded" data-orbit="2">S</button>
+            </div>
+          </div>
+          <div class="p-2 bg-slate-900 border border-slate-800 rounded flex flex-col items-center gap-1.5">
+            <span class="text-[11px] text-cyan-300 font-bold">3 • Hats</span>
+            <div class="flex gap-1 w-full">
+              <button class="orbit-mute flex-1 py-0.5 bg-slate-800 hover:bg-rose-950 text-[10px] rounded" data-orbit="3">M</button>
+              <button class="orbit-solo flex-1 py-0.5 bg-slate-800 hover:bg-emerald-950 text-[10px] rounded" data-orbit="3">S</button>
+            </div>
+          </div>
+          <div class="p-2 bg-slate-900 border border-slate-800 rounded flex flex-col items-center gap-1.5">
+            <span class="text-[11px] text-cyan-300 font-bold">4 • Synth</span>
+            <div class="flex gap-1 w-full">
+              <button class="orbit-mute flex-1 py-0.5 bg-slate-800 hover:bg-rose-950 text-[10px] rounded" data-orbit="4">M</button>
+              <button class="orbit-solo flex-1 py-0.5 bg-slate-800 hover:bg-emerald-950 text-[10px] rounded" data-orbit="4">S</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Drum Pad / Jam Soundboard -->
+      <div class="glass-panel rounded-xl p-4 shadow-xl flex flex-col">
+        <div class="flex items-center justify-between mb-2 text-xs">
+          <span class="font-bold text-slate-300">Manual Trigger Pads</span>
+          <span class="text-slate-500 text-[10px]">Zero-Latency Triggers</span>
+        </div>
+        <div class="grid grid-cols-3 gap-2">
+          <button class="pad-btn p-2.5 bg-slate-900/90 hover:bg-cyan-950/70 active:bg-cyan-500/40 border border-slate-800 hover:border-cyan-400 rounded-lg text-left transition-all" data-sound="bd">
+            <div class="text-[9px] text-slate-500 font-mono">Q • Kick</div>
+            <div class="text-xs font-bold text-cyan-300">808 KICK</div>
+          </button>
+          <button class="pad-btn p-2.5 bg-slate-900/90 hover:bg-cyan-950/70 active:bg-cyan-500/40 border border-slate-800 hover:border-cyan-400 rounded-lg text-left transition-all" data-sound="sd">
+            <div class="text-[9px] text-slate-500 font-mono">W • Snare</div>
+            <div class="text-xs font-bold text-cyan-300">CRACK SNARE</div>
+          </button>
+          <button class="pad-btn p-2.5 bg-slate-900/90 hover:bg-cyan-950/70 active:bg-cyan-500/40 border border-slate-800 hover:border-cyan-400 rounded-lg text-left transition-all" data-sound="hh">
+            <div class="text-[9px] text-slate-500 font-mono">E • Hat</div>
+            <div class="text-xs font-bold text-cyan-300">CH HAT</div>
+          </button>
+          <button class="pad-btn p-2.5 bg-slate-900/90 hover:bg-cyan-950/70 active:bg-cyan-500/40 border border-slate-800 hover:border-cyan-400 rounded-lg text-left transition-all" data-sound="cp">
+            <div class="text-[9px] text-slate-500 font-mono">A • Clap</div>
+            <div class="text-xs font-bold text-cyan-300">RETRO CLAP</div>
+          </button>
+          <button class="pad-btn p-2.5 bg-slate-900/90 hover:bg-cyan-950/70 active:bg-cyan-500/40 border border-slate-800 hover:border-cyan-400 rounded-lg text-left transition-all" data-sound="bass">
+            <div class="text-[9px] text-slate-500 font-mono">S • Bass</div>
+            <div class="text-xs font-bold text-cyan-300">ACID 303</div>
+          </button>
+          <button class="pad-btn p-2.5 bg-slate-900/90 hover:bg-cyan-950/70 active:bg-cyan-500/40 border border-slate-800 hover:border-cyan-400 rounded-lg text-left transition-all" data-sound="space">
+            <div class="text-[9px] text-slate-500 font-mono">D • Lead</div>
+            <div class="text-xs font-bold text-cyan-300">COSMIC GLIDE</div>
+          </button>
+        </div>
+      </div>
+      
+    </section>
+  </main>
+
+  <!-- Footer Information -->
+  <footer class="glass-panel border-x-0 border-b-0 px-6 py-3 text-xs text-slate-400 flex flex-col sm:flex-row items-center justify-between gap-2">
+    <div>
+      <span class="text-slate-300 font-semibold">Cadence Algorithmic Audio</span> : Code Scaffold Skill Library
+    </div>
+    <div class="flex items-center gap-4 text-xs font-mono">
+      <span>Command: <code class="text-cyan-400 bg-cyan-950/60 px-1.5 py-0.5 rounded border border-cyan-900/80">code-scaffold skills install cadence</code></span>
+    </div>
+  </footer>
+
+  <!-- Web Audio Synthesis & Sequencer Engine Script -->
+  <script>
+    // --- 1. Sound & Preset Blueprints ---
+    const PRESETS = {
+      breakbeat: `// Cyberpunk Breakbeat
+s("bd [~ bd] [~ sd] [bd bd]", "[~ hh]*4, [hh*8]/2")
+  .bank("808")
+  .room(0.2)
+  .o(1)
+
+note("c1 [~ c1] [eb1 f1] [g1 ~]")
+  .s("sawtooth")
+  .lpf(750)
+  .resonance(14)
+  .decay(0.35)
+  .o(4)`,
+
+      acid: `// Acid Techno 303 (with Stage Cues & Accents)
+s("bd*4", "[~ cp]*2", "hh(7,16)")
+  .cue("1", "2")
+  .room(0.25)
+  .o(1)
+
+note("c2 c2 eb2 f2 g2 bb2 c3 bb2")
+  .s("sawtooth")
+  .acidenv("<0.3 0.6 0.9 0.4>")
+  .accent("<0 0 1 0 0 1 0 2>")
+  .cue("2")
+  .o(4)`,
+
+      tracker: `// Tracker-Style Multi-Track Arranger
+// Timeline matrix arranging stems across cycle blocks
+track(
+  [bd, sd, hat, clap, bass],
+  2, "--------0------1-------1--------0", // Intro
+  2, "1-------0------1-------D--------0", // Verse
+  4, "1-------1------1-------1--------1", // Drop
+  [['D', (pat) => pat.delay(0.5)]]
+)`,
+
+      trancegate: `// Trance Gate Uplifter (with Rhythmic Pad Chop)
+note("<c'min9 f'min9 g'min7 ab'maj7>")
+  .s("sawtooth")
+  .tgate(0.75, 4, 16)
+  .room(0.65)
+  .o(4)
+
+s("bd*4", "[~ cp]*2", "hh*16")
+  .o(1)`,
+
+      ambient: `// Deep Ambient Harmonic Drift
+note("<c'min9 f'min9 g'min7 ab'maj7>")
+  .s("sine")
+  .attack(0.8)
+  .decay(2.8)
+  .room(0.85)
+  .o(4)
+
+s("[~ hh]/2", "bd/4")
+  .lpf(400)
+  .o(1)`,
+
+      euclidean: `// Interlocking Euclidean Polyrhythms
+s("bd(3,8)", "sd(5,16)", "hh(7,12)", "cp(2,5)")
+  .gain(0.85)
+  .room(0.3)
+  .o(1)`,
+
+      lofi: `// Liquid Lo-Fi Chill Hop
+s("bd ~ [~ sd] ~", "[~ hh]*4")
+  .lpf(1400)
+  .room(0.4)
+  .o(1)
+
+note("c2 [~ eb2] g2 [bb2 d3]")
+  .s("triangle")
+  .attack(0.08)
+  .decay(0.6)
+  .o(4)`
+    };
+
+    // --- 2. Web Audio Synthesis Architecture ---
+    let audioCtx = null;
+    let masterGain = null;
+    let analyser = null;
+    let isPlaying = false;
+    let timerId = null;
+    let bpm = 128;
+    let currentStep = 0;
+    let currentCycle = 0;
+    let activeCue = "0";
+    let tranceGateDensity = 0;
+
+    // Orbit mute / solo tracking
+    const orbitMuted = new Set();
+    const orbitSolo = new Set();
+
+    function initAudio() {
+      if (audioCtx) return;
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      audioCtx = new AudioContext();
+
+      // Master Gain
+      masterGain = audioCtx.createGain();
+      masterGain.gain.setValueAtTime(0.8, audioCtx.currentTime);
+
+      // Dynamics Compressor Limiter
+      const limiter = audioCtx.createDynamicsCompressor();
+      limiter.threshold.setValueAtTime(-1.0, audioCtx.currentTime);
+      limiter.knee.setValueAtTime(0.0, audioCtx.currentTime);
+      limiter.ratio.setValueAtTime(20.0, audioCtx.currentTime);
+      limiter.attack.setValueAtTime(0.002, audioCtx.currentTime);
+      limiter.release.setValueAtTime(0.1, audioCtx.currentTime);
+
+      // Analyser for Waveforms
+      analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 512;
+
+      masterGain.connect(limiter);
+      limiter.connect(analyser);
+      analyser.connect(audioCtx.destination);
+
+      updateStatus(true);
+    }
+
+    function isOrbitActive(orbit) {
+      if (orbitMuted.has(orbit)) return false;
+      if (orbitSolo.size > 0 && !orbitSolo.has(orbit)) return false;
+      return true;
+    }
+
+    function updateStatus(active) {
+      const indicator = document.getElementById('statusIndicator');
+      const text = document.getElementById('statusText');
+      if (active) {
+        indicator.className = 'w-2 h-2 rounded-full bg-cyan-400 glow-pulse';
+        text.className = 'text-cyan-400 text-[11px] font-bold';
+        text.textContent = 'LIVE AUDIO';
+      } else {
+        indicator.className = 'w-2 h-2 rounded-full bg-slate-500';
+        text.className = 'text-slate-400 text-[11px]';
+        text.textContent = 'STANDBY';
+      }
+    }
+
+    // Synth Voices: BD, SD, HH, CP, Acid Bass, Cosmic Lead
+    function triggerKick(time, gainScale = 1) {
+      if (!audioCtx || !isOrbitActive(1)) return;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(140, time);
+      osc.frequency.exponentialRampToValueAtTime(38, time + 0.12);
+
+      gain.gain.setValueAtTime(1.0 * gainScale, time);
+      gain.gain.exponentialRampToValueAtTime(0.001, time + 0.32);
+
+      osc.connect(gain);
+      gain.connect(masterGain);
+
+      osc.start(time);
+      osc.stop(time + 0.33);
+    }
+
+    function triggerSnare(time, gainScale = 1) {
+      if (!audioCtx || !isOrbitActive(2)) return;
+      // Noise component
+      const bufferSize = audioCtx.sampleRate * 0.2;
+      const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = Math.random() * 2 - 1;
+      }
+      const noise = audioCtx.createBufferSource();
+      noise.buffer = buffer;
+
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'highpass';
+      filter.frequency.setValueAtTime(1000, time);
+
+      const noiseGain = audioCtx.createGain();
+      noiseGain.gain.setValueAtTime(0.8 * gainScale, time);
+      noiseGain.gain.exponentialRampToValueAtTime(0.01, time + 0.2);
+
+      noise.connect(filter);
+      filter.connect(noiseGain);
+      noiseGain.connect(masterGain);
+
+      // Body tone
+      const osc = audioCtx.createOscillator();
+      const toneGain = audioCtx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(180, time);
+      osc.frequency.exponentialRampToValueAtTime(80, time + 0.1);
+      toneGain.gain.setValueAtTime(0.6 * gainScale, time);
+      toneGain.gain.exponentialRampToValueAtTime(0.01, time + 0.1);
+
+      osc.connect(toneGain);
+      toneGain.connect(masterGain);
+
+      noise.start(time);
+      noise.stop(time + 0.2);
+      osc.start(time);
+      osc.stop(time + 0.1);
+    }
+
+    function triggerHiHat(time, gainScale = 1) {
+      if (!audioCtx || !isOrbitActive(3)) return;
+      const bufferSize = audioCtx.sampleRate * 0.08;
+      const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = Math.random() * 2 - 1;
+      }
+      const noise = audioCtx.createBufferSource();
+      noise.buffer = buffer;
+
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(7500, time);
+      filter.Q.setValueAtTime(3.0, time);
+
+      const gain = audioCtx.createGain();
+      gain.gain.setValueAtTime(0.5 * gainScale, time);
+      gain.gain.exponentialRampToValueAtTime(0.01, time + 0.06);
+
+      noise.connect(filter);
+      filter.connect(gain);
+      gain.connect(masterGain);
+
+      noise.start(time);
+      noise.stop(time + 0.08);
+    }
+
+    function triggerClap(time, gainScale = 1) {
+      if (!audioCtx || !isOrbitActive(2)) return;
+      // Staggered micro-bursts of noise
+      [0, 0.015, 0.03].forEach(offset => {
+        const bufferSize = audioCtx.sampleRate * 0.1;
+        const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          data[i] = Math.random() * 2 - 1;
+        }
+        const noise = audioCtx.createBufferSource();
+        noise.buffer = buffer;
+
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.frequency.setValueAtTime(1200, time + offset);
+        filter.Q.setValueAtTime(1.5, time + offset);
+
+        const gain = audioCtx.createGain();
+        gain.gain.setValueAtTime(0.7 * gainScale, time + offset);
+        gain.gain.exponentialRampToValueAtTime(0.01, time + offset + 0.12);
+
+        noise.connect(filter);
+        filter.connect(gain);
+        gain.connect(masterGain);
+
+        noise.start(time + offset);
+        noise.stop(time + offset + 0.13);
+      });
+    }
+
+    function triggerAcidBass(time, freq = 65.41, cutoff = 850, q = 15, duration = 0.28) {
+      if (!audioCtx || !isOrbitActive(4)) return;
+
+      // Trance Gate check
+      if (tranceGateDensity > 0 && (currentStep % 2 !== 0)) {
+        return; // Gate chop
+      }
+
+      const osc = audioCtx.createOscillator();
+      const filter = audioCtx.createBiquadFilter();
+      const gain = audioCtx.createGain();
+
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(freq, time);
+
+      filter.type = 'lowpass';
+      filter.Q.setValueAtTime(q, time);
+      filter.frequency.setValueAtTime(cutoff * 2.5, time);
+      filter.frequency.exponentialRampToValueAtTime(cutoff * 0.4, time + duration);
+
+      gain.gain.setValueAtTime(0.7, time);
+      gain.gain.exponentialRampToValueAtTime(0.001, time + duration);
+
+      osc.connect(filter);
+      filter.connect(gain);
+      gain.connect(masterGain);
+
+      osc.start(time);
+      osc.stop(time + duration);
+    }
+
+    function triggerLead(time, freq = 261.63, duration = 0.6) {
+      if (!audioCtx || !isOrbitActive(4)) return;
+      const osc1 = audioCtx.createOscillator();
+      const osc2 = audioCtx.createOscillator();
+      const filter = audioCtx.createBiquadFilter();
+      const gain = audioCtx.createGain();
+
+      osc1.type = 'triangle';
+      osc2.type = 'sine';
+      osc1.frequency.setValueAtTime(freq, time);
+      osc2.frequency.setValueAtTime(freq * 1.003, time);
+
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(1800, time);
+
+      gain.gain.setValueAtTime(0.01, time);
+      gain.gain.linearRampToValueAtTime(0.4, time + 0.06);
+      gain.gain.exponentialRampToValueAtTime(0.001, time + duration);
+
+      osc1.connect(filter);
+      osc2.connect(filter);
+      filter.connect(gain);
+      gain.connect(masterGain);
+
+      osc1.start(time);
+      osc2.start(time);
+      osc1.stop(time + duration);
+      osc2.stop(time + duration);
+    }
+
+    // --- 3. Step Sequencer & Mini-Notation Evaluator ---
+    const NOTES = {
+      c1: 32.70, eb1: 38.89, f1: 43.65, g1: 49.00, bb1: 58.27,
+      c2: 65.41, eb2: 77.78, f2: 87.31, g2: 98.00, bb2: 116.54,
+      c3: 130.81, eb3: 155.56, g3: 196.00, bb3: 233.08, d3: 146.83
+    };
+
+    function generateEuclidean(k, n) {
+      const pattern = new Array(n).fill(false);
+      let bucket = 0;
+      for (let i = 0; i < n; i++) {
+        bucket += k;
+        if (bucket >= n) {
+          bucket -= n;
+          pattern[i] = true;
+        }
+      }
+      return pattern;
+    }
+
+    function parseActiveCode() {
+      const code = document.getElementById('codeEditor').value;
+      const stepTracks = {
+        bd: new Array(16).fill(false),
+        sd: new Array(16).fill(false),
+        hh: new Array(16).fill(false),
+        cp: new Array(16).fill(false),
+        bass: new Array(16).fill(null),
+        lead: new Array(16).fill(null)
+      };
+
+      // Check cues: if cue specified in code, verify activeCue
+      const hasCueDirective = code.includes('.cue(');
+      const cueMatches = !hasCueDirective || code.includes(`.cue("${activeCue}"`) || code.includes(`.cue('${activeCue}'`);
+
+      // 1. Kick checks
+      if (cueMatches || activeCue === "2") {
+        if (code.includes('bd*4')) {
+          [0, 4, 8, 12].forEach(s => stepTracks.bd[s] = true);
+        } else if (code.includes('bd(3,8)')) {
+          [0, 3, 6, 8, 11, 14].forEach(s => stepTracks.bd[s] = true);
+        } else if (code.includes('bd')) {
+          [0, 6, 8, 14].forEach(s => stepTracks.bd[s] = true);
+        }
+      }
+
+      // 2. Snare / Clap checks
+      if (cueMatches || activeCue === "1" || activeCue === "2") {
+        if (code.includes('[~ sd]*2') || code.includes('[~ cp]*2')) {
+          [4, 12].forEach(s => { stepTracks.sd[s] = true; stepTracks.cp[s] = true; });
+        } else if (code.includes('sd(5,16)')) {
+          generateEuclidean(5, 16).forEach((active, s) => { if (active) stepTracks.sd[s] = true; });
+        } else if (code.includes('sd')) {
+          [4, 12].forEach(s => stepTracks.sd[s] = true);
+        }
+      }
+
+      // 3. Hi-Hat checks
+      if (code.includes('hh*8') || code.includes('hh(7,16)') || code.includes('hh*16')) {
+        for (let i = 0; i < 16; i += 2) stepTracks.hh[i] = true;
+        if (code.includes('hh(7,16)')) {
+          [3, 7, 11, 15].forEach(s => stepTracks.hh[s] = true);
+        }
+      } else if (code.includes('hh')) {
+        [2, 6, 10, 14].forEach(s => stepTracks.hh[s] = true);
+      }
+
+      // 4. Bass note parsing
+      if (code.includes('note(')) {
+        const acidScale = [NOTES.c2, NOTES.c2, NOTES.eb2, NOTES.f2, NOTES.g2, NOTES.bb2, NOTES.c3, NOTES.bb2];
+        for (let i = 0; i < 16; i++) {
+          if (i % 2 === 0) {
+            stepTracks.bass[i] = acidScale[(i / 2) % acidScale.length];
+          }
+        }
+      }
+
+      return stepTracks;
+    }
+
+    let compiledTracks = parseActiveCode();
+
+    function stepSequencer() {
+      if (!isPlaying || !audioCtx) return;
+
+      const now = audioCtx.currentTime;
+      const stepDuration = (60 / bpm) / 4; // 16th note
+
+      // Fire sounds for current step
+      if (compiledTracks.bd[currentStep]) triggerKick(now);
+      if (compiledTracks.sd[currentStep]) triggerSnare(now);
+      if (compiledTracks.hh[currentStep]) triggerHiHat(now);
+      if (compiledTracks.cp[currentStep]) triggerClap(now);
+      if (compiledTracks.bass[currentStep]) {
+        const cutoff = 600 + (Math.sin(currentCycle * 2) * 500 + 500);
+        triggerAcidBass(now, compiledTracks.bass[currentStep], cutoff, 16, stepDuration * 0.9);
+      }
+
+      // Update UI grid
+      updateStepUI(currentStep);
+
+      // Increment clock
+      currentStep = (currentStep + 1) % 16;
+      if (currentStep === 0) {
+        currentCycle += 1;
+        document.getElementById('cycleCounter').textContent = `Cycle: ${currentCycle}.00`;
+      } else {
+        document.getElementById('cycleCounter').textContent = `Cycle: ${currentCycle}.${Math.floor((currentStep/16)*100).toString().padStart(2, '0')}`;
+      }
+
+      timerId = setTimeout(stepSequencer, stepDuration * 1000);
+    }
+
+    function startPlayback() {
+      initAudio();
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      if (!isPlaying) {
+        isPlaying = true;
+        stepSequencer();
+        updateStatus(true);
+      }
+    }
+
+    function pausePlayback() {
+      isPlaying = false;
+      if (timerId) clearTimeout(timerId);
+      updateStatus(false);
+    }
+
+    function stopPlayback() {
+      pausePlayback();
+      currentStep = 0;
+      currentCycle = 0;
+      document.getElementById('cycleCounter').textContent = 'Cycle: 0.00';
+      updateStepUI(-1);
+    }
+
+    // --- 4. Interactive Step Grid UI ---
+    const stepGridContainer = document.getElementById('stepGrid');
+    function initStepGrid() {
+      stepGridContainer.innerHTML = '';
+      for (let i = 0; i < 16; i++) {
+        const stepEl = document.createElement('div');
+        stepEl.id = `step-${i}`;
+        stepEl.className = 'h-10 rounded bg-slate-900 border border-slate-800 flex flex-col items-center justify-center transition-all cursor-pointer hover:border-cyan-500/50';
+        stepEl.innerHTML = `<span class="text-[9px] font-mono text-slate-500">${i + 1}</span><span class="w-1.5 h-1.5 rounded-full bg-slate-700 mt-1 dot"></span>`;
+        stepGridContainer.appendChild(stepEl);
+      }
+    }
+    initStepGrid();
+
+    function updateStepUI(activeIdx) {
+      document.getElementById('stepDisplay').textContent = activeIdx >= 0 ? `Step: ${activeIdx + 1} / 16` : 'Stopped';
+      for (let i = 0; i < 16; i++) {
+        const el = document.getElementById(`step-${i}`);
+        if (!el) continue;
+        const dot = el.querySelector('.dot');
+        if (i === activeIdx) {
+          el.className = 'h-10 rounded bg-cyan-950/90 border border-cyan-400 glow-cyan flex flex-col items-center justify-center scale-105 transition-all';
+          dot.className = 'w-1.5 h-1.5 rounded-full bg-cyan-400 mt-1 dot';
+        } else {
+          el.className = 'h-10 rounded bg-slate-900 border border-slate-800 flex flex-col items-center justify-center transition-all hover:border-cyan-500/50';
+          dot.className = 'w-1.5 h-1.5 rounded-full bg-slate-700 mt-1 dot';
+        }
+      }
+    }
+
+    // --- 5. Real-Time Oscilloscope & Spectrum Canvas ---
+    const canvas = document.getElementById('audioCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = canvas.parentElement.clientHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function renderAudioVisualizer() {
+      requestAnimationFrame(renderAudioVisualizer);
+      if (!ctx) return;
+
+      ctx.fillStyle = '#020617';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      if (!analyser || !isPlaying) {
+        // Render idle resting wave
+        ctx.strokeStyle = 'rgba(34, 211, 238, 0.2)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        const midY = canvas.height / 2;
+        ctx.moveTo(0, midY);
+        for (let x = 0; x < canvas.width; x += 4) {
+          ctx.lineTo(x, midY + Math.sin(x * 0.05 + Date.now() * 0.003) * 3);
+        }
+        ctx.stroke();
+        return;
+      }
+
+      // Spectrum Bars (FFT)
+      const freqData = new Uint8Array(analyser.frequencyBinCount);
+      analyser.getByteFrequencyData(freqData);
+
+      const barWidth = (canvas.width / freqData.length) * 2.5;
+      let barX = 0;
+      for (let i = 0; i < freqData.length; i++) {
+        const barHeight = (freqData[i] / 255) * canvas.height * 0.85;
+        ctx.fillStyle = `rgba(34, 211, 238, ${0.15 + (freqData[i] / 255) * 0.4})`;
+        ctx.fillRect(barX, canvas.height - barHeight, barWidth, barHeight);
+        barX += barWidth + 1;
+        if (barX > canvas.width) break;
+      }
+
+      // Oscilloscope Waveform
+      const timeData = new Uint8Array(analyser.fftSize);
+      analyser.getByteTimeDomainData(timeData);
+
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = '#22d3ee';
+      ctx.shadowBlur = 12;
+      ctx.shadowColor = '#22d3ee';
+      ctx.beginPath();
+
+      const sliceWidth = canvas.width / analyser.fftSize;
+      let x = 0;
+      for (let i = 0; i < analyser.fftSize; i++) {
+        const v = timeData[i] / 128.0;
+        const y = (v * canvas.height) / 2;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+        x += sliceWidth;
+      }
+      ctx.stroke();
+      ctx.shadowBlur = 0; // reset shadow
+    }
+    renderAudioVisualizer();
+
+    // --- 6. Event Listeners & UI Wiring ---
+    const editor = document.getElementById('codeEditor');
+    editor.value = PRESETS.acid;
+
+    document.getElementById('btnPlay').addEventListener('click', startPlayback);
+    document.getElementById('btnPause').addEventListener('click', pausePlayback);
+    document.getElementById('btnStop').addEventListener('click', stopPlayback);
+
+    document.getElementById('btnEval').addEventListener('click', () => {
+      compiledTracks = parseActiveCode();
+      const btn = document.getElementById('btnEval');
+      btn.textContent = 'EVALUATED ✓';
+      btn.classList.add('bg-cyan-500');
+      setTimeout(() => {
+        btn.textContent = 'EVAL (Ctrl+↵)';
+        btn.classList.remove('bg-cyan-500');
+      }, 1000);
+      if (!isPlaying) startPlayback();
+    });
+
+    // Keyboard Shortcut (Ctrl+Enter or Cmd+Enter)
+    window.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault();
+        document.getElementById('btnEval').click();
+      }
+    });
+
+    // BPM Slider
+    const bpmRange = document.getElementById('bpmRange');
+    const bpmVal = document.getElementById('bpmVal');
+    bpmRange.addEventListener('input', (e) => {
+      bpm = parseInt(e.target.value, 10);
+      bpmVal.textContent = bpm;
+    });
+
+    // Trance Gate Slider
+    const tgateRange = document.getElementById('tgateRange');
+    const tgateVal = document.getElementById('tgateVal');
+    tgateRange.addEventListener('input', (e) => {
+      tranceGateDensity = parseInt(e.target.value, 10);
+      tgateVal.textContent = tranceGateDensity > 0 ? `${tranceGateDensity}%` : 'OFF';
+    });
+
+    // Stage Cue Buttons
+    document.querySelectorAll('.cue-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        activeCue = btn.dataset.cue;
+        document.getElementById('currentCueDisplay').textContent = activeCue;
+        document.querySelectorAll('.cue-btn').forEach(b => {
+          b.className = 'cue-btn px-2.5 py-1 rounded bg-slate-900 border border-slate-700 text-slate-300 hover:border-cyan-400 active:scale-95 transition-all';
+        });
+        btn.className = 'cue-btn px-2.5 py-1 rounded bg-cyan-950/80 border border-cyan-500 text-cyan-300 font-bold active:scale-95 transition-all';
+        compiledTracks = parseActiveCode();
+      });
+    });
+
+    // Orbit Mute / Solo Handlers
+    document.querySelectorAll('.orbit-mute').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const orbit = parseInt(btn.dataset.orbit, 10);
+        if (orbitMuted.has(orbit)) {
+          orbitMuted.delete(orbit);
+          btn.className = 'orbit-mute flex-1 py-0.5 bg-slate-800 hover:bg-rose-950 text-[10px] rounded text-slate-300';
+        } else {
+          orbitMuted.add(orbit);
+          btn.className = 'orbit-mute flex-1 py-0.5 bg-rose-600 text-white font-bold text-[10px] rounded';
+        }
+      });
+    });
+
+    document.querySelectorAll('.orbit-solo').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const orbit = parseInt(btn.dataset.orbit, 10);
+        if (orbitSolo.has(orbit)) {
+          orbitSolo.delete(orbit);
+          btn.className = 'orbit-solo flex-1 py-0.5 bg-slate-800 hover:bg-emerald-950 text-[10px] rounded text-slate-300';
+        } else {
+          orbitSolo.add(orbit);
+          btn.className = 'orbit-solo flex-1 py-0.5 bg-emerald-500 text-slate-950 font-bold text-[10px] rounded';
+        }
+      });
+    });
+
+    // Preset Selection
+    document.getElementById('presetSelect').addEventListener('change', (e) => {
+      const selected = PRESETS[e.target.value];
+      if (selected) {
+        editor.value = selected;
+        compiledTracks = parseActiveCode();
+        if (isPlaying) {
+          document.getElementById('btnEval').click();
+        }
+      }
+    });
+
+    // Randomize Beat
+    document.getElementById('btnRandomBeat').addEventListener('click', () => {
+      const keys = Object.keys(PRESETS);
+      const randomKey = keys[Math.floor(Math.random() * keys.length)];
+      document.getElementById('presetSelect').value = randomKey;
+      editor.value = PRESETS[randomKey];
+      compiledTracks = parseActiveCode();
+      document.getElementById('btnEval').click();
+    });
+
+    // AI Generator Mockup
+    document.getElementById('btnAiGenerate').addEventListener('click', () => {
+      const prompt = document.getElementById('aiPromptInput').value.trim().toLowerCase();
+      if (!prompt) return;
+
+      initAudio();
+      if (prompt.includes('acid') || prompt.includes('303') || prompt.includes('cue')) {
+        editor.value = PRESETS.acid;
+        document.getElementById('presetSelect').value = 'acid';
+      } else if (prompt.includes('tracker') || prompt.includes('arrange') || prompt.includes('timeline')) {
+        editor.value = PRESETS.tracker;
+        document.getElementById('presetSelect').value = 'tracker';
+      } else if (prompt.includes('trance') || prompt.includes('gate') || prompt.includes('chop')) {
+        editor.value = PRESETS.trancegate;
+        document.getElementById('presetSelect').value = 'trancegate';
+      } else if (prompt.includes('ambient') || prompt.includes('chill') || prompt.includes('drift')) {
+        editor.value = PRESETS.ambient;
+        document.getElementById('presetSelect').value = 'ambient';
+      } else if (prompt.includes('lofi') || prompt.includes('hip') || prompt.includes('relax')) {
+        editor.value = PRESETS.lofi;
+        document.getElementById('presetSelect').value = 'lofi';
+      } else if (prompt.includes('polyrhythm') || prompt.includes('euclidean') || prompt.includes('drum')) {
+        editor.value = PRESETS.euclidean;
+        document.getElementById('presetSelect').value = 'euclidean';
+      } else {
+        editor.value = PRESETS.breakbeat;
+        document.getElementById('presetSelect').value = 'breakbeat';
+      }
+      compiledTracks = parseActiveCode();
+      document.getElementById('btnEval').click();
+    });
+
+    // Trigger Soundboard Pads
+    document.querySelectorAll('.pad-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        initAudio();
+        const sound = btn.dataset.sound;
+        const now = audioCtx.currentTime;
+        if (sound === 'bd') triggerKick(now);
+        else if (sound === 'sd') triggerSnare(now);
+        else if (sound === 'hh') triggerHiHat(now);
+        else if (sound === 'cp') triggerClap(now);
+        else if (sound === 'bass') triggerAcidBass(now, NOTES.c2, 900, 15, 0.35);
+        else if (sound === 'space') triggerLead(now, NOTES.c3, 0.7);
+      });
+    });
+
+    // Keyboard trigger bindings (Q, W, E, A, S, D)
+    window.addEventListener('keydown', (e) => {
+      if (document.activeElement === editor || document.activeElement.tagName === 'INPUT') return;
+      initAudio();
+      const now = audioCtx.currentTime;
+      if (e.key === 'q' || e.key === 'Q') triggerKick(now);
+      else if (e.key === 'w' || e.key === 'W') triggerSnare(now);
+      else if (e.key === 'e' || e.key === 'E') triggerHiHat(now);
+      else if (e.key === 'a' || e.key === 'A') triggerClap(now);
+      else if (e.key === 's' || e.key === 'S') triggerAcidBass(now, NOTES.c2, 900, 15, 0.35);
+      else if (e.key === 'd' || e.key === 'D') triggerLead(now, NOTES.c3, 0.7);
+    });
+  </script>
+</body>
+</html>
