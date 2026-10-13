@@ -1,0 +1,31 @@
+{
+  "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
+  "specification": "https://code-scaffold.com/spec/v1",
+  "name": "code_scaffold_nexus_rsi_skill",
+  "version": "1",
+  "description": "Domain-general Recursive Self-Improvement (RSI) framework with predictive world models, joint embedding latent state simulation, counterfactual trajectory planning, and safe co-evolution loops.",
+  "entryPoint": "./SKILL.md",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "requiredPermissions": [
+    "fs:read",
+    "fs:write",
+    "net:connect"
+  ],
+  "category": "AI, MCP & Developer Tools",
+  "keywords": [
+    "nexus-rsi",
+    "recursive-self-improvement",
+    "world-models",
+    "predictive-simulation",
+    "joint-embedding",
+    "counterfactual-planning",
+    "agent-evolution",
+    "policy-optimization",
+    "code-repair",
+    "synthetic-trajectories"
+  ],
+  "hasSandbox": true,
+  "integrity": "cs:sha256:8054fc81702bf8706e18410c27e89cae3213dda2b8c7cb80dd584450a03c65d7"
+}

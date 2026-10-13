@@ -13,6 +13,7 @@ Welcome to the official **Code Scaffold Skills Library**. This curated registry 
 | **Codebase Memory MCP** | High-performance code intelligence MCP server. Indexes codebases into a persistent knowledge graph. | `codebase-memory`, `mcp-server`, `vector-embeddings` | v2 | `.skills/codebase-memory-mcp` |
 | **MCP Generator** | Assists with creating new custom Model Context Protocol (MCP) servers, clients, and apps using official SDKs and best practices. | `mcp-generator`, `model-context-protocol`, `fastmcp` | v4 | `.skills/mcp-generator` |
 | **Node** | Bootstraps a Node.js runtime environment | `node`, `nodejs`, `npm` | v4 | `.skills/node` |
+| **Nexus RSI Engine** | Domain-general Recursive Self-Improvement (RSI) framework with predictive world models, joint embedding latent state simulation, counterfactual trajectory planning, and safe co-evolution loops. | `nexus-rsi`, `recursive-self-improvement`, `world-models`, `predictive-simulation`, `joint-embedding` | v1 | `.skills/nexus-rsi` |
 | **Rust** | Orchestrates Rust workspace topologies, optimized compilation profiles, and local automation scripts. | `rust`, `cargo`, `cargo-clippy` | v1 | `.skills/rust` |
 
 ### Animation & Graphics
@@ -68,6 +69,7 @@ Welcome to the official **Code Scaffold Skills Library**. This curated registry 
 | :--- | :--- | :--- | :--- | :--- |
 | **Decipher Reverse Engineer Arsenal** | Reverse engineer any application, native binary, Electron bundle, mobile package, or managed runtime with verifiable evidence ledgers and clean-room reconstruction. | `reverse-engineer`, `reverse-engineering`, `decipher`, `binary-analysis`, `decompilation` | v1 | `.skills/decipher` |
 | **GhostImprint Engine** | Industrial grade cryptographic code provenance, 9-layer steganographic entanglement matrix, hierarchical deterministic key ceremony, and digital forensics suite. | `ghostimprint`, `ghost-imprint`, `code-provenance`, `steganography`, `copyright-protection`, `digital-forensics`, `anti-tamper` | v5 | `.skills/ghostimprint` |
+| **Sentinel Strike** | Autonomous red-team security assessment and continuous penetration testing orchestrator with multi-agent reconnaissance, exploit synthesis, sandboxed container verification, and dual-memory attack surface mapping. | `sentinel-strike`, `penetration-testing`, `red-team`, `autonomous-security`, `attack-surface-mapping` | v1 | `.skills/sentinel-strike` |
 
 ### Frontend & UI Design
 

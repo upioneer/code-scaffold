@@ -1,0 +1,32 @@
+{
+  "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
+  "specification": "https://code-scaffold.com/spec/v1",
+  "name": "code_scaffold_sentinel_strike_skill",
+  "version": "1",
+  "description": "Autonomous red-team security assessment and continuous penetration testing orchestrator. Coordinates multi-agent reconnaissance, exploit synthesis, sandboxed container verification, dual-memory attack surface mapping, and remediation validation.",
+  "entryPoint": "./SKILL.md",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "requiredPermissions": [
+    "fs:read",
+    "fs:write",
+    "net:connect"
+  ],
+  "category": "Security & Cryptography",
+  "keywords": [
+    "sentinel-strike",
+    "penetration-testing",
+    "red-team",
+    "autonomous-security",
+    "attack-surface-mapping",
+    "vulnerability-assessment",
+    "docker-sandbox",
+    "security-audit",
+    "knowledge-graph",
+    "threat-modeling",
+    "remediation-verification"
+  ],
+  "hasSandbox": true,
+  "integrity": "cs:sha256:f2778b072f7f971ab8215a050bf6afc99485daa5687851c1e3a0cab0be89a5c3"
+}

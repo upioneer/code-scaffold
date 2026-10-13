@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Code Scaffold Specification Schema: https://code-scaffold.com/spec/v1 -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexus RSI - Recursive Self-Improvement Engine</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;600;700&display=swap');
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #090a10;
+      color: #e2e8f0;
+    }
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .grid-bg {
+      background-size: 24px 24px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    }
+  </style>
+</head>
+<body class="min-h-screen grid-bg p-6 flex flex-col">
+  <!-- Header Bar -->
+  <header class="flex flex-wrap items-center justify-between border-b border-indigo-900/50 pb-4 mb-6">
+    <div class="flex items-center space-x-3">
+      <div class="w-10 h-10 rounded-lg bg-indigo-950 border border-indigo-500/40 flex items-center justify-center font-mono font-bold text-indigo-400">
+        NX
+      </div>
+      <div>
+        <h1 class="text-xl font-bold text-slate-100 tracking-wide flex items-center space-x-2">
+          <span>Nexus RSI Engine</span>
+          <span class="text-xs px-2 py-0.5 rounded bg-indigo-950 border border-indigo-500/50 text-indigo-300 font-mono">v1.0 ACTIVE</span>
+        </h1>
+        <p class="text-xs text-slate-400">Recursive Self-Improvement & Predictive World Modeling Matrix</p>
+      </div>
+    </div>
+    <div class="flex items-center space-x-4 mt-3 sm:mt-0 font-mono text-xs">
+      <div class="flex items-center space-x-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-indigo-400 animate-pulse"></span>
+        <span class="text-slate-300">World Model: Synchronized</span>
+      </div>
+      <div class="px-3 py-1 rounded border border-slate-700 bg-slate-900/80 text-indigo-400">
+        Latent Dim: 512-d JEPA
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Grid Dashboard -->
+  <main class="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-grow">
+    <!-- Col 1: Self-Improvement Convergence Telemetry -->
+    <section class="border border-slate-800 rounded-xl bg-slate-900/60 p-5 flex flex-col justify-between">
+      <div>
+        <h2 class="text-sm font-mono uppercase text-slate-400 mb-4 flex items-center justify-between">
+          <span>Recursive Evolution</span>
+          <span class="text-indigo-400 font-mono">Round 3 / 5</span>
+        </h2>
+        <div class="space-y-4 font-mono text-xs">
+          <!-- Baseline vs Current -->
+          <div class="p-3 rounded-lg border border-slate-800 bg-slate-950/60">
+            <div class="flex justify-between items-center mb-1 text-slate-400 text-[11px]">
+              <span>Task Completion Accuracy</span>
+              <span class="text-emerald-400 font-bold">+13.8% Delta</span>
+            </div>
+            <div class="text-xl font-bold text-slate-100">88.0% <span class="text-xs text-slate-500 font-normal">(Baseline: 74.2%)</span></div>
+            <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden mt-2">
+              <div class="bg-gradient-to-r from-indigo-500 to-emerald-400 h-full w-[88%]"></div>
+            </div>
+          </div>
+
+          <!-- Token Efficiency -->
+          <div class="p-3 rounded-lg border border-slate-800 bg-slate-950/60">
+            <div class="flex justify-between items-center mb-1 text-slate-400 text-[11px]">
+              <span>Mean Trajectory Cost</span>
+              <span class="text-indigo-400 font-bold">-32% Tokens</span>
+            </div>
+            <div class="text-xl font-bold text-slate-100">965 <span class="text-xs text-slate-500 font-normal">tokens/task (from 1,420)</span></div>
+          </div>
+
+          <!-- Domain Adapter -->
+          <div class="p-3 rounded-lg border border-slate-800 bg-slate-950/60">
+            <span class="text-slate-500 block text-[10px] mb-1">ACTIVE DOMAIN ADAPTER</span>
+            <div class="text-sm font-bold text-indigo-300">Autonomous Code Repair & AST Reasoning</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-6 border-t border-slate-800 pt-4">
+        <div class="flex items-center justify-between text-xs font-mono text-slate-400">
+          <span>Safety Rollback Guard:</span>
+          <span class="text-emerald-400 font-bold">LOCKED & VERIFIED</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Col 2: Counterfactual Latent Simulation Tree -->
+    <section class="border border-slate-800 rounded-xl bg-slate-900/60 p-5 flex flex-col justify-between">
+      <div>
+        <h2 class="text-sm font-mono uppercase text-slate-400 mb-4 flex items-center justify-between">
+          <span>Latent Space Simulation</span>
+          <span class="text-xs text-slate-500 font-mono">100 Paths / Round</span>
+        </h2>
+        <div class="relative w-full h-56 bg-slate-950/80 rounded-lg border border-slate-800 overflow-hidden flex items-center justify-center p-4">
+          <!-- Simulation Node Diagram -->
+          <svg class="w-full h-full text-slate-600" viewBox="0 0 300 180">
+            <!-- Root State -->
+            <circle cx="40" cy="90" r="12" fill="#1e1b4b" stroke="#6366f1" stroke-width="2" />
+            <text x="40" y="94" font-size="7" fill="#e2e8f0" text-anchor="middle" font-family="monospace">z_0</text>
+
+            <!-- Branch 1 (Pruned) -->
+            <line x1="52" y1="90" x2="130" y2="40" stroke="#475569" stroke-width="1.5" stroke-dasharray="2,2" />
+            <circle cx="130" cy="40" r="10" fill="#0f172a" stroke="#64748b" stroke-width="1.5" />
+            <text x="130" y="43" font-size="6" fill="#94a3b8" text-anchor="middle" font-family="monospace">PRUNED</text>
+
+            <!-- Branch 2 (Optimal) -->
+            <line x1="52" y1="90" x2="130" y2="90" stroke="#6366f1" stroke-width="2" />
+            <circle cx="130" cy="90" r="12" fill="#1e1b4b" stroke="#818cf8" stroke-width="2" />
+            <text x="130" y="94" font-size="7" fill="#e2e8f0" text-anchor="middle" font-family="monospace">z_1*</text>
+
+            <!-- Branch 3 (Exploratory) -->
+            <line x1="52" y1="90" x2="130" y2="140" stroke="#475569" stroke-width="1.5" stroke-dasharray="2,2" />
+            <circle cx="130" cy="140" r="10" fill="#0f172a" stroke="#64748b" stroke-width="1.5" />
+            <text x="130" y="143" font-size="6" fill="#94a3b8" text-anchor="middle" font-family="monospace">DISCARD</text>
+
+            <!-- Leaf State (High Convergence) -->
+            <line x1="142" y1="90" x2="240" y2="90" stroke="#10b981" stroke-width="2" />
+            <circle cx="240" cy="90" r="14" fill="#064e3b" stroke="#10b981" stroke-width="2" />
+            <text x="240" y="94" font-size="7" fill="#e2e8f0" text-anchor="middle" font-family="monospace">GOAL z*</text>
+          </svg>
+        </div>
+        <div class="mt-4 grid grid-cols-2 gap-3 text-xs font-mono">
+          <div class="p-2.5 rounded bg-slate-950/60 border border-slate-800">
+            <span class="text-slate-500 block text-[10px]">PRUNING EFFICIENCY</span>
+            <span class="text-indigo-400 font-bold">82% Cut Off</span>
+          </div>
+          <div class="p-2.5 rounded bg-slate-950/60 border border-slate-800">
+            <span class="text-slate-500 block text-[10px]">LATENT ROLLOUT SPEED</span>
+            <span class="text-emerald-400 font-bold">1.4ms / Trajectory</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-4 pt-4 border-t border-slate-800 flex justify-between items-center text-xs font-mono">
+        <span class="text-slate-400">Co-Evolution Status:</span>
+        <span class="text-indigo-400 font-bold">Dual-Model Synced</span>
+      </div>
+    </section>
+
+    <!-- Col 3: Policy Iteration & Checkpoint Stream -->
+    <section class="border border-slate-800 rounded-xl bg-slate-900/60 p-5 flex flex-col justify-between">
+      <div>
+        <h2 class="text-sm font-mono uppercase text-slate-400 mb-4 flex items-center justify-between">
+          <span>Iteration Stream</span>
+          <span class="text-xs text-indigo-400 font-mono">live telemetry</span>
+        </h2>
+        <div class="bg-black/80 rounded-lg p-3 font-mono text-xs text-slate-300 border border-slate-800 h-64 overflow-y-auto space-y-2">
+          <div class="text-slate-500">[00:00:01] Nexus World Model initialized (dim: 512-d).</div>
+          <div class="text-indigo-400">[00:00:03] Round 1: Mental simulation of 100 paths complete.</div>
+          <div class="text-slate-400">[00:00:04] Pruned 84 low-confidence counterfactuals.</div>
+          <div class="text-emerald-400">[00:00:06] Checkpoint nexus-cp-r1 saved: +4.6% accuracy delta.</div>
+          <div class="text-indigo-400">[00:00:08] Round 2: World model recalibrated with error loss.</div>
+          <div class="text-emerald-400">[00:00:11] Checkpoint nexus-cp-r2 saved: +9.2% cumulative delta.</div>
+          <div class="text-indigo-300 font-bold">[00:00:14] Round 3: Policy co-evolution converged (88.0% acc).</div>
+          <div class="text-slate-500">[00:00:15] Convergence threshold satisfied. Ready for export.</div>
+        </div>
+      </div>
+
+      <div class="mt-4 pt-4 border-t border-slate-800 flex items-center justify-between">
+        <button onclick="simulateIteration()" class="w-full py-2 px-4 rounded bg-indigo-600 hover:bg-indigo-500 text-slate-100 font-bold font-mono text-xs transition">
+          TRIGGER NEXT RECURSIVE CYCLE
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer Info -->
+  <footer class="mt-6 border-t border-slate-800 pt-4 flex flex-wrap items-center justify-between text-xs text-slate-500 font-mono">
+    <div>Code Scaffold Architectural Specification: Nexus RSI Framework</div>
+    <div class="mt-2 sm:mt-0">Joint Embedding Latent World Model Architecture</div>
+  </footer>
+
+  <script>
+    function simulateIteration() {
+      alert("Triggering recursive simulation cycle. Evaluated 100 latent trajectories. Policy improved by +4.2% on frozen evaluation suite.");
+    }
+  </script>
+</body>
+</html>

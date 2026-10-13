@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Code Scaffold Specification Schema: https://code-scaffold.com/spec/v1 -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sentinel Strike - Autonomous Red-Team Matrix</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;600;700&display=swap');
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #080c14;
+      color: #e2e8f0;
+    }
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .glow-cyan {
+      box-shadow: 0 0 25px rgba(6, 182, 212, 0.25);
+    }
+    .glow-red {
+      box-shadow: 0 0 25px rgba(239, 68, 68, 0.25);
+    }
+    .grid-bg {
+      background-size: 24px 24px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    }
+  </style>
+</head>
+<body class="min-h-screen grid-bg p-6 flex flex-col">
+  <!-- Header Bar -->
+  <header class="flex flex-wrap items-center justify-between border-b border-cyan-900/50 pb-4 mb-6">
+    <div class="flex items-center space-x-3">
+      <div class="w-10 h-10 rounded-lg bg-cyan-950 border border-cyan-500/40 flex items-center justify-center font-mono font-bold text-cyan-400">
+        SS
+      </div>
+      <div>
+        <h1 class="text-xl font-bold text-slate-100 tracking-wide flex items-center space-x-2">
+          <span>Sentinel Strike</span>
+          <span class="text-xs px-2 py-0.5 rounded bg-cyan-950 border border-cyan-500/50 text-cyan-300 font-mono">v1.0 ACTIVE</span>
+        </h1>
+        <p class="text-xs text-slate-400">Autonomous Red-Team Matrix & Continuous Posture Validator</p>
+      </div>
+    </div>
+    <div class="flex items-center space-x-4 mt-3 sm:mt-0 font-mono text-xs">
+      <div class="flex items-center space-x-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span class="text-slate-300">Sandbox Chamber: Isolated</span>
+      </div>
+      <div class="px-3 py-1 rounded border border-slate-700 bg-slate-900/80 text-cyan-400">
+        Scope: Strict Whitelist
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Grid Dashboard -->
+  <main class="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-grow">
+    <!-- Col 1: Multi-Agent Mesh Telemetry -->
+    <section class="border border-slate-800 rounded-xl bg-slate-900/60 p-5 flex flex-col justify-between">
+      <div>
+        <h2 class="text-sm font-mono uppercase text-slate-400 mb-4 flex items-center justify-between">
+          <span>Multi-Agent Swarm</span>
+          <span class="text-cyan-400">4 Active Nodes</span>
+        </h2>
+        <div class="space-y-3 font-mono text-xs">
+          <!-- Orchestrator -->
+          <div class="p-3 rounded-lg border border-cyan-500/30 bg-cyan-950/20 flex items-center justify-between">
+            <div>
+              <div class="text-cyan-300 font-bold">Orchestrator Core</div>
+              <div class="text-slate-400 text-[11px]">Lifecycle & Scope Enforcer</div>
+            </div>
+            <span class="px-2 py-0.5 rounded bg-cyan-900/50 text-cyan-300 text-[10px]">COORDINATING</span>
+          </div>
+          <!-- Scout -->
+          <div class="p-3 rounded-lg border border-slate-800 bg-slate-950/40 flex items-center justify-between">
+            <div>
+              <div class="text-slate-200 font-bold">Reconnaissance Scout</div>
+              <div class="text-slate-400 text-[11px]">Asset Fingerprinting & Port Scan</div>
+            </div>
+            <span class="px-2 py-0.5 rounded bg-emerald-950/50 text-emerald-400 text-[10px]">DISCOVERED</span>
+          </div>
+          <!-- Synthesizer -->
+          <div class="p-3 rounded-lg border border-slate-800 bg-slate-950/40 flex items-center justify-between">
+            <div>
+              <div class="text-slate-200 font-bold">Vector Synthesizer</div>
+              <div class="text-slate-400 text-[11px]">Proof-of-Concept Generator</div>
+            </div>
+            <span class="px-2 py-0.5 rounded bg-amber-950/50 text-amber-400 text-[10px]">ANALYZING</span>
+          </div>
+          <!-- Sandbox Executor -->
+          <div class="p-3 rounded-lg border border-slate-800 bg-slate-950/40 flex items-center justify-between">
+            <div>
+              <div class="text-slate-200 font-bold">Sandboxed Executor</div>
+              <div class="text-slate-400 text-[11px]">Docker Ephemeral Chamber</div>
+            </div>
+            <span class="px-2 py-0.5 rounded bg-purple-950/50 text-purple-300 text-[10px]">CONTAINED</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-6 border-t border-slate-800 pt-4">
+        <div class="flex items-center justify-between text-xs font-mono text-slate-400 mb-2">
+          <span>Overall Posture Health</span>
+          <span class="text-emerald-400 font-bold">96% Hardened</span>
+        </div>
+        <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+          <div class="bg-gradient-to-r from-cyan-500 to-emerald-400 h-full w-[96%]"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Col 2: Attack Surface Graph & Vector Trace -->
+    <section class="border border-slate-800 rounded-xl bg-slate-900/60 p-5 flex flex-col justify-between">
+      <div>
+        <h2 class="text-sm font-mono uppercase text-slate-400 mb-4 flex items-center justify-between">
+          <span>Attack Surface Map</span>
+          <span class="text-xs text-slate-500 font-mono">Dual-Memory Graph</span>
+        </h2>
+        <div class="relative w-full h-56 bg-slate-950/80 rounded-lg border border-slate-800 overflow-hidden flex items-center justify-center p-4">
+          <!-- Canvas Simulation Diagram -->
+          <svg class="w-full h-full text-slate-600" viewBox="0 0 300 180">
+            <!-- Graph Lines -->
+            <line x1="50" y1="90" x2="150" y2="40" stroke="#0e7490" stroke-width="1.5" stroke-dasharray="3,3" />
+            <line x1="50" y1="90" x2="150" y2="140" stroke="#0e7490" stroke-width="1.5" />
+            <line x1="150" y1="40" x2="250" y2="90" stroke="#059669" stroke-width="1.5" />
+            <line x1="150" y1="140" x2="250" y2="90" stroke="#059669" stroke-width="1.5" />
+
+            <!-- Node 1: Ingress Gateway -->
+            <circle cx="50" cy="90" r="14" fill="#083344" stroke="#06b6d4" stroke-width="2" />
+            <text x="50" y="94" font-size="8" fill="#e2e8f0" text-anchor="middle" font-family="monospace">GATEWAY</text>
+
+            <!-- Node 2: Internal Auth -->
+            <circle cx="150" cy="40" r="14" fill="#022c22" stroke="#10b981" stroke-width="2" />
+            <text x="150" y="44" font-size="8" fill="#e2e8f0" text-anchor="middle" font-family="monospace">AUTH</text>
+
+            <!-- Node 3: DB Endpoint -->
+            <circle cx="150" cy="140" r="14" fill="#083344" stroke="#06b6d4" stroke-width="2" />
+            <text x="150" y="144" font-size="8" fill="#e2e8f0" text-anchor="middle" font-family="monospace">DATA</text>
+
+            <!-- Node 4: Target Service -->
+            <circle cx="250" cy="90" r="14" fill="#022c22" stroke="#10b981" stroke-width="2" />
+            <text x="250" y="94" font-size="8" fill="#e2e8f0" text-anchor="middle" font-family="monospace">SECURE</text>
+          </svg>
+        </div>
+        <div class="mt-4 grid grid-cols-2 gap-3 text-xs font-mono">
+          <div class="p-2.5 rounded bg-slate-950/60 border border-slate-800">
+            <span class="text-slate-500 block text-[10px]">EPISODIC GRAPH</span>
+            <span class="text-cyan-400 font-bold">128 Nodes / 312 Edges</span>
+          </div>
+          <div class="p-2.5 rounded bg-slate-950/60 border border-slate-800">
+            <span class="text-slate-500 block text-[10px]">VECTOR MEMORY</span>
+            <span class="text-emerald-400 font-bold">1,024 Trajectories</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-4 pt-4 border-t border-slate-800 flex justify-between items-center text-xs font-mono">
+        <span class="text-slate-400">Containment Enforcement:</span>
+        <span class="text-emerald-400 font-bold">ACTIVE (0 Leaks)</span>
+      </div>
+    </section>
+
+    <!-- Col 3: Live Sandbox Execution Stream -->
+    <section class="border border-slate-800 rounded-xl bg-slate-900/60 p-5 flex flex-col justify-between">
+      <div>
+        <h2 class="text-sm font-mono uppercase text-slate-400 mb-4 flex items-center justify-between">
+          <span>Execution Chamber Log</span>
+          <span class="text-xs text-cyan-400 font-mono">tty0: live</span>
+        </h2>
+        <div class="bg-black/80 rounded-lg p-3 font-mono text-xs text-slate-300 border border-slate-800 h-64 overflow-y-auto space-y-2">
+          <div class="text-slate-500">[00:00:01] Container chamber initialized: ID cs-strike-ch-091</div>
+          <div class="text-cyan-400">[00:00:02] Ingress scope verified: 10.0.0.0/24 whitelisted</div>
+          <div class="text-slate-400">[00:00:05] Synthesizing non-destructive probe for CVE-2026-X</div>
+          <div class="text-amber-400">[00:00:08] Diagnostic injection executed: 200 OK (Safe Proof)</div>
+          <div class="text-emerald-400">[00:00:12] Patch applied: input boundary sanitizer active</div>
+          <div class="text-emerald-300 font-bold">[00:00:15] Replay validation test: 403 FORBIDDEN (Verified Closed)</div>
+          <div class="text-slate-500">[00:00:16] Signed Proof-of-Mitigation certificate generated.</div>
+        </div>
+      </div>
+
+      <div class="mt-4 pt-4 border-t border-slate-800 flex items-center justify-between">
+        <button onclick="simulateScan()" class="w-full py-2 px-4 rounded bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-bold font-mono text-xs transition">
+          RE-RUN REMEDIATION VALIDATION
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer Info -->
+  <footer class="mt-6 border-t border-slate-800 pt-4 flex flex-wrap items-center justify-between text-xs text-slate-500 font-mono">
+    <div>Code Scaffold Architectural Specification: Sentinel Strike Matrix</div>
+    <div class="mt-2 sm:mt-0">Containment: Hardware Isolated Docker Sandbox</div>
+  </footer>
+
+  <script>
+    function simulateScan() {
+      alert("Simulating full remediation validation sweep across all discovered attack vectors. Security status: 100% verified.");
+    }
+  </script>
+</body>
+</html>
