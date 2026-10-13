@@ -23,6 +23,7 @@ Welcome to the official **Code Scaffold Skills Library**. This curated registry 
 | **CAD Tools** | Comprehensive CAD/CAM engineering skill for AI agents : orchestrating generative design, topology optimization with the Alien Meter slider, DfAM/DFM production auditing, orthographic engineering blueprints, FreeCAD socket automation, parametric 3D modeling, and multi-format conversion. | `cad`, `generative-design`, `topology-optimization`, `alien-meter`, `freecad` | v10 | `.skills/cad-tools` |
 | **Kinetic Canvas** | Ultra-fast, zero-dependency WebGL shaders and interactive HTML canvases wrapped as native React components. | `kinetic-canvas`, `canvas-api`, `physics-simulation` | v7 | `.skills/kinetic-canvas` |
 | **Manim Math Animations** | Mathematical animations using the Manim library. | `manim`, `math-animation`, `python-video` | v5 | `.skills/manim` |
+| **Mechanica Physical Metaphors** | Physical machine metaphor engine, kinematic cutaway illustrator, and interactive hardware explainer. | `mechanica`, `isometric-illustration`, `physical-metaphor`, `cutaway-diagram`, `four-tone-shading` | v1 | `.skills/mechanica` |
 | **p5.js Creative Coding** | Creative coding and visual animations using the p5.js library. | `p5js`, `creative-coding`, `canvas2d` | v5 | `.skills/p5js` |
 | **PlayCanvas Editor** | Visual development environment for real-time 3D collaboration. | `playcanvas-editor`, `3d-engine`, `webgl` | v3 | `.skills/playcanvas-editor` |
 | **PlayCanvas Engine** | Modular 3D/2D game engine for the web supporting WebGL and WebGPU. | `playcanvas-engine`, `3d-rendering`, `shader-graph` | v3 | `.skills/playcanvas-engine` |
@@ -64,6 +65,7 @@ Welcome to the official **Code Scaffold Skills Library**. This curated registry 
 
 | Skill | Description | Search Keywords | Version | Path |
 | :--- | :--- | :--- | :--- | :--- |
+| **Decipher Reverse Engineer Arsenal** | Reverse engineer any application, native binary, Electron bundle, mobile package, or managed runtime with verifiable evidence ledgers and clean-room reconstruction. | `reverse-engineer`, `reverse-engineering`, `decipher`, `binary-analysis`, `decompilation` | v1 | `.skills/decipher` |
 | **GhostImprint Engine** | Industrial grade cryptographic code provenance, 9-layer steganographic entanglement matrix, hierarchical deterministic key ceremony, and digital forensics suite. | `ghostimprint`, `ghost-imprint`, `code-provenance`, `steganography`, `copyright-protection`, `digital-forensics`, `anti-tamper` | v5 | `.skills/ghostimprint` |
 
 ### Frontend & UI Design

@@ -1,0 +1,41 @@
+{
+  "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
+  "specification": "https://code-scaffold.com/spec/v1",
+  "name": "decipher",
+  "version": "1",
+  "description": "Reverse engineer any application, compiled binary, desktop bundle, mobile package, or managed runtime with verifiable evidence ledgers and clean-room reconstruction.",
+  "entryPoint": "./SKILL.md",
+  "engines": {
+    "node": ">=18"
+  },
+  "requiredPermissions": [
+    "fs:read",
+    "fs:write",
+    "net:connect",
+    "process:exec"
+  ],
+  "category": "Security & Cryptography",
+  "keywords": [
+    "reverse-engineer",
+    "reverse-engineering",
+    "reverse-engineering-tools",
+    "reverse-engineer-anything",
+    "decipher",
+    "binary-analysis",
+    "decompilation",
+    "disassembly",
+    "macho-elf-pe",
+    "electron-asar",
+    "sourcemap-recovery",
+    "reconstruction-ledger",
+    "evidence-provenance",
+    "clean-room-implementation",
+    "frida-instrumentation",
+    "wasm-decompilation",
+    "go-pclntab",
+    "call-graph-analysis",
+    "dynamic-observation"
+  ],
+  "hasSandbox": true,
+  "integrity": "cs:sha256:e21da89606efa0c2ec4c57b6bf7287a58b7b2c4aa99af2895c4b4f3f656ed5cb"
+}

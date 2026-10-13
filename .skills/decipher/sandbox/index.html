@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Decipher - Reverse Engineer & Binary Deconstruction Workbench</title>
+  <meta name="description" content="Reverse engineer any application, binary, or bundle with agentic evidence graphs, decompilation, and clean-room synthesis.">
+  <meta name="keywords" content="reverse engineer, reverse engineering, binary analysis, decompiler, disassembler, electron decompile, apk reverse engineering">
+  <style>
+    :root {
+      --bg: #0b0f17;
+      --panel: #131b26;
+      --panel-border: #1e293b;
+      --text: #e2e8f0;
+      --text-muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-glow: rgba(56, 189, 248, 0.25);
+      --success: #34d399;
+      --warning: #fbbf24;
+      --danger: #f87171;
+      --code-bg: #070a0f;
+      --active-line: rgba(56, 189, 248, 0.1);
+      --tag-bg: rgba(56, 189, 248, 0.15);
+    }
+
+    [data-theme="light"] {
+      --bg: #f8fafc;
+      --panel: #ffffff;
+      --panel-border: #cbd5e1;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --accent: #0284c7;
+      --accent-glow: rgba(2, 132, 199, 0.2);
+      --success: #059669;
+      --warning: #d97706;
+      --danger: #dc2626;
+      --code-bg: #f1f5f9;
+      --active-line: rgba(2, 132, 199, 0.1);
+      --tag-bg: rgba(2, 132, 199, 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    header {
+      background: var(--panel);
+      border-bottom: 1px solid var(--panel-border);
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+      z-index: 10;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      font-family: monospace;
+      font-size: 11px;
+      line-height: 1.1;
+      font-weight: 700;
+      color: var(--accent);
+      background: var(--tag-bg);
+      padding: 4px 8px;
+      border-radius: 4px;
+      border: 1px solid var(--accent-glow);
+    }
+
+    .brand-title h1 {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-title p {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn {
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      color: var(--text);
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .btn.primary {
+      background: var(--accent);
+      color: #0b0f17;
+      border-color: var(--accent);
+      font-weight: 600;
+    }
+
+    .btn.primary:hover {
+      filter: brightness(1.1);
+      color: #0b0f17;
+    }
+
+    .workspace {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* Left Sidebar: Artifacts & Navigator */
+    .sidebar {
+      width: 320px;
+      background: var(--panel);
+      border-right: 1px solid var(--panel-border);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      overflow-y: auto;
+    }
+
+    .sidebar-section {
+      padding: 14px;
+      border-bottom: 1px solid var(--panel-border);
+    }
+
+    .sidebar-section h2 {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .artifact-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .artifact-btn {
+      background: var(--bg);
+      border: 1px solid var(--panel-border);
+      color: var(--text);
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      text-align: left;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .artifact-btn:hover {
+      border-color: var(--accent);
+    }
+
+    .artifact-btn.active {
+      border-color: var(--accent);
+      background: var(--tag-bg);
+      color: var(--accent);
+    }
+
+    .artifact-btn .type-badge {
+      font-size: 10px;
+      color: var(--text-muted);
+      font-family: monospace;
+    }
+
+    .metadata-card {
+      background: var(--code-bg);
+      border: 1px solid var(--panel-border);
+      padding: 10px;
+      border-radius: 6px;
+      font-family: monospace;
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    .metadata-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+
+    .metadata-label {
+      color: var(--text-muted);
+    }
+
+    .metadata-val {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    /* Main Content Area */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: var(--bg);
+    }
+
+    /* Top Tabs */
+    .tab-bar {
+      display: flex;
+      background: var(--panel);
+      border-bottom: 1px solid var(--panel-border);
+      padding: 0 16px;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--text-muted);
+      padding: 12px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .tab-btn:hover {
+      color: var(--text);
+    }
+
+    .tab-btn.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    /* Tab Panels */
+    .tab-panel {
+      flex: 1;
+      display: none;
+      overflow: hidden;
+    }
+
+    .tab-panel.active {
+      display: flex;
+    }
+
+    /* Disassembly & Decompiler View */
+    .decompiler-split {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--panel-border);
+      overflow: hidden;
+    }
+
+    .code-pane {
+      background: var(--code-bg);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .pane-header {
+      padding: 8px 14px;
+      background: var(--panel);
+      border-bottom: 1px solid var(--panel-border);
+      font-size: 11px;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--text-muted);
+    }
+
+    .pane-header span.tag {
+      background: var(--tag-bg);
+      color: var(--accent);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 10px;
+    }
+
+    .code-scroll {
+      flex: 1;
+      overflow: auto;
+      padding: 12px;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+      font-size: 12px;
+      line-height: 1.6;
+      white-space: pre;
+    }
+
+    .code-line {
+      display: flex;
+      gap: 12px;
+      padding: 0 4px;
+      border-radius: 2px;
+    }
+
+    .code-line:hover {
+      background: var(--active-line);
+    }
+
+    .line-num {
+      color: var(--text-muted);
+      width: 40px;
+      text-align: right;
+      user-select: none;
+      flex-shrink: 0;
+    }
+
+    .line-content {
+      color: var(--text);
+      flex: 1;
+    }
+
+    /* Syntax Highlighting */
+    .syn-keyword { color: #f472b6; font-weight: 600; }
+    .syn-type { color: #38bdf8; }
+    .syn-func { color: #fbbf24; }
+    .syn-string { color: #34d399; }
+    .syn-comment { color: #64748b; font-style: italic; }
+    .syn-reg { color: #a78bfa; font-weight: 600; }
+    .syn-hex { color: #fb923c; }
+
+    /* Obligation Ledger Table */
+    .ledger-container {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .ledger-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      background: var(--panel);
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--panel-border);
+    }
+
+    .ledger-table th, .ledger-table td {
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--panel-border);
+    }
+
+    .ledger-table th {
+      background: rgba(0, 0, 0, 0.2);
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .status-badge.closed {
+      background: rgba(52, 211, 153, 0.15);
+      color: var(--success);
+      border: 1px solid rgba(52, 211, 153, 0.3);
+    }
+
+    .status-badge.active {
+      background: rgba(251, 191, 36, 0.15);
+      color: var(--warning);
+      border: 1px solid rgba(251, 191, 36, 0.3);
+    }
+
+    /* Call Graph Visualization */
+    .graph-container {
+      flex: 1;
+      position: relative;
+      background: var(--code-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    svg.call-graph {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Clean-Room Synthesizer */
+    .synth-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      gap: 16px;
+      overflow: hidden;
+    }
+
+    .synth-card {
+      flex: 1;
+      background: var(--code-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--panel);
+      border: 1px solid var(--accent);
+      color: var(--text);
+      padding: 12px 18px;
+      border-radius: 8px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 100;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="brand-logo">DECIPHER</div>
+      <div class="brand-title">
+        <h1>Reverse Engineer & Binary Deconstruction Workbench</h1>
+        <p>Reverse Engineer Any Application: Multi-Target Introspection, Provenance & Clean-Room Reconstruction</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn" id="themeToggleBtn">
+        <span id="themeIcon">☀️</span> Light Theme
+      </button>
+      <button class="btn" id="openReportBtn" style="border-color: var(--accent); color: var(--accent);">
+        📊 Audit Report
+      </button>
+      <button class="btn" id="exportBundleBtn">
+        📦 Export Evidence Bundle
+      </button>
+      <button class="btn primary" id="synthBtn">
+        ⚡ Synthesize Clean-Room Spec
+      </button>
+    </div>
+  </header>
+
+  <div class="workspace">
+    <!-- Left Artifact Navigator -->
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <h2>Target Software Artifact</h2>
+        <div class="artifact-list">
+          <button class="artifact-btn active" data-artifact="native">
+            <strong>auth_daemon.dylib</strong>
+            <span class="type-badge">Mach-O 64-bit ARM64 / Native Binary</span>
+          </button>
+          <button class="artifact-btn" data-artifact="electron">
+            <strong>app.asar (Notes Desktop)</strong>
+            <span class="type-badge">Electron Bundle / JavaScript AST</span>
+          </button>
+          <button class="artifact-btn" data-artifact="wasm">
+            <strong>crypto_core.wasm</strong>
+            <span class="type-badge">WebAssembly Binary / WAT Bytecode</span>
+          </button>
+          <button class="artifact-btn" data-artifact="android">
+            <strong>classes.dex (Target APK)</strong>
+            <span class="type-badge">Dalvik Executable / Smali Bytecode</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <h2>Artifact Digest & Metadata</h2>
+        <div class="metadata-card" id="metadataCard">
+          <div class="metadata-row">
+            <span class="metadata-label">SHA-256:</span>
+            <span class="metadata-val">4a7b9e12...c3d4</span>
+          </div>
+          <div class="metadata-row">
+            <span class="metadata-label">Format:</span>
+            <span class="metadata-val">Mach-O Universal 2</span>
+          </div>
+          <div class="metadata-row">
+            <span class="metadata-label">Architecture:</span>
+            <span class="metadata-val">arm64 / x86_64</span>
+          </div>
+          <div class="metadata-row">
+            <span class="metadata-label">Symbols:</span>
+            <span class="metadata-val">Stripped (Recovered)</span>
+          </div>
+          <div class="metadata-row">
+            <span class="metadata-label">Functions:</span>
+            <span class="metadata-val">48 Identified</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <h2>Investigation Actions</h2>
+        <button class="btn" id="verifyLedgerBtn" style="width: 100%; justify-content: center; margin-bottom: 8px;">
+          ✓ Verify Parity Ledger
+        </button>
+        <button class="btn" id="copyCodeBtn" style="width: 100%; justify-content: center;">
+          📋 Copy Decompiled Unit
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Workspace Tabs -->
+    <main class="main-content">
+      <div class="tab-bar">
+        <button class="tab-btn active" data-tab="decompiler">
+          <span>🔍</span> Disassembly & Decompiler
+        </button>
+        <button class="tab-btn" data-tab="ledger">
+          <span>📑</span> Obligation Ledger (Parity Claims)
+        </button>
+        <button class="tab-btn" data-tab="graph">
+          <span>🕸️</span> Call Graph & Cross-References
+        </button>
+        <button class="tab-btn" data-tab="cleanroom">
+          <span>🛡️</span> Clean-Room Implementation
+        </button>
+        <button class="tab-btn" data-tab="report">
+          <span>📊</span> Executive Audit Report
+        </button>
+      </div>
+
+      <!-- Tab 1: Decompiler Split View -->
+      <div class="tab-panel active" id="tabDecompiler">
+        <div class="decompiler-split">
+          <!-- Left: Disassembly Assembly Instructions -->
+          <div class="code-pane">
+            <div class="pane-header">
+              <span id="disasmTitle">DISASSEMBLY (ARM64 / x86_64)</span>
+              <span class="tag">STATIC ARTIFACT</span>
+            </div>
+            <div class="code-scroll" id="disasmCode"></div>
+          </div>
+          <!-- Right: Decompiled High-Level AST / Pseudocode -->
+          <div class="code-pane">
+            <div class="pane-header">
+              <span id="decompTitle">DECOMPILED PSEUDOCODE (C / TypeScript)</span>
+              <span class="tag">RECOVERED AST</span>
+            </div>
+            <div class="code-scroll" id="decompCode"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 2: Obligation Ledger Table -->
+      <div class="tab-panel" id="tabLedger">
+        <div class="ledger-container">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3>Reconstruction Obligation Ledger</h3>
+            <span style="font-size: 11px; color: var(--text-muted);">Deterministic Behavioral Verification Protocol</span>
+          </div>
+          <table class="ledger-table">
+            <thead>
+              <tr>
+                <th>Obligation ID</th>
+                <th>Target Feature</th>
+                <th>Case Matrix</th>
+                <th>Authority</th>
+                <th>Disposition</th>
+              </tr>
+            </thead>
+            <tbody id="ledgerTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab 3: Call Graph -->
+      <div class="tab-panel" id="tabGraph">
+        <div class="graph-container">
+          <svg class="call-graph" id="callGraphSvg" viewBox="0 0 900 500"></svg>
+        </div>
+      </div>
+
+      <!-- Tab 4: Clean-Room Code Synthesizer -->
+      <div class="tab-panel" id="tabCleanroom">
+        <div class="synth-container">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3>Clean-Room Specification & Synthesis</h3>
+            <button class="btn primary" id="copyCleanCodeBtn">Copy Clean-Room Code</button>
+          </div>
+          <div class="synth-card">
+            <div class="pane-header">
+              <span>CLEAN-ROOM IMPLEMENTATION (TypeScript / Rust Safe Reconstruction)</span>
+              <span class="tag" style="background: rgba(52, 211, 153, 0.15); color: var(--success);">UNCONTAMINATED</span>
+            </div>
+            <div class="code-scroll" id="cleanRoomCode"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 5: Executive Audit Report -->
+      <div class="tab-panel" id="tabReport">
+        <div class="ledger-container" style="max-width: 960px; margin: 0 auto; width: 100%;">
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--panel-border); padding-bottom: 12px;">
+            <div>
+              <h3>Executive Binary Deconstruction & Parity Report</h3>
+              <p style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">
+                Verified Behavioral Findings & Clean-Room Parity Ledger | 
+                <a href="https://github.com/upioneer/code-scaffold/tree/main/.skills/decipher" target="_blank" style="color: var(--accent); text-decoration: none; font-weight: 600;">
+                  📦 upioneer/code-scaffold/.skills/decipher ↗
+                </a>
+              </p>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button class="btn" id="copyMarkdownReportBtn">📋 Copy Markdown</button>
+              <button class="btn primary" id="downloadHtmlReportBtn">⬇️ Download HTML Report</button>
+            </div>
+          </div>
+
+          <div id="reportContentContainer" style="display: flex; flex-direction: column; gap: 16px; margin-top: 8px;"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="toast" id="toastNotification">
+    <span id="toastMsg">Action completed successfully</span>
+  </div>
+
+  <script>
+    // State Store
+    const state = {
+      artifact: 'native',
+      tab: 'decompiler',
+      theme: 'dark'
+    };
+
+    // Artifact Catalog Database
+    const ARTIFACTS = {
+      native: {
+        name: 'auth_daemon.dylib',
+        sha256: '4a7b9e1276fa01c3d4e8b9a02341ff879201e54a6789b0123456789abcdef012',
+        format: 'Mach-O 64-bit Dynamic Library',
+        arch: 'arm64 (Apple Silicon)',
+        disasm: [
+          "; Function: verify_session_hmac (sub_140023a10)",
+          "; Authority: static-artifact [SHA256: 4a7b9e...]",
+          "0x140023a10:  stp     x29, x30, [sp, #-32]!",
+          "0x140023a14:  mov     x29, sp",
+          "0x140023a18:  str     x19, [sp, #16]",
+          "0x140023a1c:  cbz     x0, 0x140023a60       ; Check token null",
+          "0x140023a20:  ldrb    w8, [x0]              ; Read header byte",
+          "0x140023a24:  cmp     w8, #0x56             ; ASCII 'V' version",
+          "0x140023a28:  b.ne    0x140023a60           ; Reject mismatch",
+          "0x140023a2c:  adrp    x1, 0x140045000       ; Secret salt ref",
+          "0x140023a30:  add     x1, x1, #0x820",
+          "0x140023a34:  bl      _crypto_hmac_sha256   ; Compute digest",
+          "0x140023a38:  mov     x19, x0",
+          "0x140023a3c:  cmp     x19, #0x0",
+          "0x140023a40:  b.eq    0x140023a60",
+          "0x140023a44:  mov     w0, #0x1              ; Return STATUS_OK",
+          "0x140023a48:  ldr     x19, [sp, #16]",
+          "0x140023a4c:  ldp     x29, x30, [sp], #32",
+          "0x140023a50:  ret",
+          "0x140023a60:  mov     w0, #0x0              ; Return STATUS_FAIL",
+          "0x140023a64:  b       0x140023a48"
+        ],
+        decomp: [
+          "// Decompiled C pseudocode (Recovered from AST)",
+          "// Target: auth_daemon.dylib -> verify_session_hmac",
+          "",
+          "#include <stdint.h>",
+          "#include <stdbool.h>",
+          "",
+          "bool verify_session_hmac(const char *token_str, size_t len) {",
+          "    if (!token_str || len < 32) {",
+          "        return false; // Null or undersized token",
+          "    }",
+          "    ",
+          "    // Protocol Header Validation: Version Magic 'V' (0x56)",
+          "    if ((uint8_t)token_str[0] != 0x56) {",
+          "        return false; // Protocol version mismatch",
+          "    }",
+          "    ",
+          "    uint8_t computed_digest[32];",
+          "    const uint8_t *system_salt = (const uint8_t *)0x140045820;",
+          "    ",
+          "    int res = crypto_hmac_sha256(token_str + 1, len - 1, system_salt, 16, computed_digest);",
+          "    return (res == 1);",
+          "}"
+        ],
+        obligations: [
+          { id: "auth.token.header_magic", title: "Enforce 'V' header prefix validation", cases: "positive, negative, empty", authority: "static-artifact", status: "closed" },
+          { id: "auth.token.hmac_digest", title: "Calculate HMAC-SHA256 signature with salt", cases: "positive, tampered_key", authority: "static-artifact", status: "closed" },
+          { id: "auth.token.null_guard", title: "Reject null pointer and undersized input", cases: "null, length < 32", authority: "process-observation", status: "closed" }
+        ],
+        cleanroom: [
+          "// Decipher Clean-Room Implementation (TypeScript)",
+          "// Verified parity against Reconstruction Ledger: auth.token.*",
+          "",
+          "import { createHmac } from 'node:crypto';",
+          "",
+          "export class SessionTokenVerifier {",
+          "  private static readonly PROTOCOL_VERSION_MAGIC = 0x56; // ASCII 'V'",
+          "  private readonly secretSalt: Buffer;",
+          "",
+          "  constructor(secretSalt: Buffer) {",
+          "    if (secretSalt.length < 16) {",
+          "      throw new Error('Salt must be at least 16 bytes');",
+          "    }",
+          "    this.secretSalt = secretSalt;",
+          "  }",
+          "",
+          "  public verifyToken(tokenBuffer: Buffer): boolean {",
+          "    // Obligation: auth.token.null_guard",
+          "    if (!tokenBuffer || tokenBuffer.length < 32) return false;",
+          "",
+          "    // Obligation: auth.token.header_magic",
+          "    if (tokenBuffer[0] !== SessionTokenVerifier.PROTOCOL_VERSION_MAGIC) return false;",
+          "",
+          "    // Obligation: auth.token.hmac_digest",
+          "    const payload = tokenBuffer.subarray(1, tokenBuffer.length - 32);",
+          "    const providedSignature = tokenBuffer.subarray(tokenBuffer.length - 32);",
+          "",
+          "    const expectedSignature = createHmac('sha256', this.secretSalt)",
+          "      .update(payload)",
+          "      .digest();",
+          "",
+          "    return expectedSignature.equals(providedSignature);",
+          "  }",
+          "}"
+        ]
+      },
+      electron: {
+        name: 'app.asar (Notes Desktop)',
+        sha256: '9f2c8104ab57891234bcde567890f1234567890abcdef1234567890abcdef12',
+        format: 'Electron Archive / Webpack Chunk',
+        arch: 'V8 Bytecode / Minified JS',
+        disasm: [
+          "// Minified Webpack AST: chunk-4819.js",
+          "!function(e,t){var r={};function n(o){if(r[o])return r[o].exports;",
+          "var i=r[o]={i:o,l:!1,exports:{}};return e[o].call(i.exports,i,i.exports,n),i.l=!0,i.exports}",
+          "n(n.s=42)}({42:function(e,t,n){const r=require('electron').ipcRenderer;",
+          "r.invoke('notes:sync-remote',t.payload).then(e=>{window.__postMessage(e)})}});"
+        ],
+        decomp: [
+          "// Recovered Electron IPC Bridge Contract",
+          "import { ipcRenderer } from 'electron';",
+          "",
+          "export interface SyncPayload {",
+          "  noteId: string;",
+          "  encryptedDelta: Uint8Array;",
+          "  versionVector: number;",
+          "}",
+          "",
+          "export async function syncRemoteNote(payload: SyncPayload): Promise<SyncResult> {",
+          "  // Channel: 'notes:sync-remote'",
+          "  return await ipcRenderer.invoke('notes:sync-remote', payload);",
+          "}"
+        ],
+        obligations: [
+          { id: "electron.ipc.sync_channel", title: "Establish 'notes:sync-remote' IPC contract", cases: "valid_payload, malformed", authority: "static-artifact", status: "closed" },
+          { id: "electron.ipc.delta_marshalling", title: "Marshal encrypted delta binary stream", cases: "buffer_overflow, null", authority: "runtime-trace", status: "closed" }
+        ],
+        cleanroom: [
+          "// Clean-Room Electron IPC Gateway",
+          "export class NotesSyncGateway {",
+          "  public static readonly CHANNEL = 'notes:sync-remote';",
+          "  ",
+          "  public static registerHandler(ipcMain: any, syncService: any) {",
+          "    ipcMain.handle(this.CHANNEL, async (_event: any, payload: any) => {",
+          "      if (!payload?.noteId || !payload?.encryptedDelta) {",
+          "        throw new Error('INVALID_SYNC_PAYLOAD');",
+          "      }",
+          "      return await syncService.applySync(payload);",
+          "    });",
+          "  }",
+          "}"
+        ]
+      },
+      wasm: {
+        name: 'crypto_core.wasm',
+        sha256: 'bc541289fe123456789abcdef0123456789abcdef0123456789abcdef01234567',
+        format: 'WebAssembly Binary Module',
+        arch: 'wasm32',
+        disasm: [
+          "; WebAssembly Text Format (WAT Disassembly)",
+          "(module",
+          "  (type $t0 (func (param i32 i32) (result i32)))",
+          "  (import \"env\" \"memory\" (memory $env.memory 1))",
+          "  (func $xor_keystream (export \"xor_keystream\") (type $t0) (param $p0 i32) (param $p1 i32)",
+          "    (local $l0 i32)",
+          "    local.get $p0",
+          "    i32.load8_u",
+          "    local.get $p1",
+          "    i32.load8_u",
+          "    i32.xor",
+          "    return))"
+        ],
+        decomp: [
+          "// Decompiled C Representation from WASM AST",
+          "#include <stdint.h>",
+          "",
+          "int32_t xor_keystream(const uint8_t *ptrA, const uint8_t *ptrB) {",
+          "    uint8_t byteA = *ptrA;",
+          "    uint8_t byteB = *ptrB;",
+          "    return (int32_t)(byteA ^ byteB);",
+          "}"
+        ],
+        obligations: [
+          { id: "wasm.export.xor_stream", title: "Export 'xor_keystream' function entry point", cases: "identity, byte_wrapping", authority: "static-artifact", status: "closed" }
+        ],
+        cleanroom: [
+          "// Clean-Room WebAssembly Memory Keystream Operator",
+          "export function xorKeystream(bufferA: Uint8Array, bufferB: Uint8Array): Uint8Array {",
+          "  const len = Math.min(bufferA.length, bufferB.length);",
+          "  const out = new Uint8Array(len);",
+          "  for (let i = 0; i < len; i++) {",
+          "    out[i] = bufferA[i] ^ bufferB[i];",
+          "  }",
+          "  return out;",
+          "}"
+        ]
+      },
+      android: {
+        name: 'classes.dex (Target APK)',
+        sha256: 'de890123456789abcdef0123456789abcdef0123456789abcdef0123456789ab',
+        format: 'Dalvik Executable v035',
+        arch: 'Dalvik Virtual Machine Bytecode',
+        disasm: [
+          ".class public Lcom/target/security/AuthManager;",
+          ".super Ljava/lang/Object;",
+          "",
+          ".method public static validatePin(Ljava/lang/String;)Z",
+          "    .registers 3",
+          "    const/4 v0, 0x0",
+          "    if-nez p0, :cond_check",
+          "    return v0",
+          "    :cond_check",
+          "    invoke-virtual {p0}, Ljava/lang/String;->length()I",
+          "    move-result v1",
+          "    const/4 v2, 0x6",
+          "    if-ne v1, v2, :cond_ret",
+          "    const/4 v0, 0x1",
+          "    :cond_ret",
+          "    return v0",
+          ".end method"
+        ],
+        decomp: [
+          "// Decompiled Kotlin from DEX Class Definition",
+          "package com.target.security",
+          "",
+          "object AuthManager {",
+          "    @JvmStatic",
+          "    fun validatePin(pin: String?): Boolean {",
+          "        if (pin == null) return false",
+          "        return pin.length == 6",
+          "    }",
+          "}"
+        ],
+        obligations: [
+          { id: "dex.pin.length_constraint", title: "Enforce exact 6-character PIN constraint", cases: "5_digits, 6_digits, 7_digits", authority: "static-artifact", status: "closed" }
+        ],
+        cleanroom: [
+          "// Clean-Room PIN Validator",
+          "export function validatePin(pin: string | null | undefined): boolean {",
+          "  if (!pin) return false;",
+          "  return /^[0-9]{6}$/.test(pin);",
+          "}"
+        ]
+      }
+    };
+
+    // DOM References
+    const disasmCode = document.getElementById('disasmCode');
+    const decompCode = document.getElementById('decompCode');
+    const ledgerTableBody = document.getElementById('ledgerTableBody');
+    const cleanRoomCode = document.getElementById('cleanRoomCode');
+    const metadataCard = document.getElementById('metadataCard');
+    const disasmTitle = document.getElementById('disasmTitle');
+    const decompTitle = document.getElementById('decompTitle');
+    const toast = document.getElementById('toastNotification');
+    const toastMsg = document.getElementById('toastMsg');
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    const themeIcon = document.getElementById('themeIcon');
+    const exportBundleBtn = document.getElementById('exportBundleBtn');
+    const synthBtn = document.getElementById('synthBtn');
+    const verifyLedgerBtn = document.getElementById('verifyLedgerBtn');
+    const copyCodeBtn = document.getElementById('copyCodeBtn');
+    const copyCleanCodeBtn = document.getElementById('copyCleanCodeBtn');
+    const callGraphSvg = document.getElementById('callGraphSvg');
+
+    function showToast(msg) {
+      toastMsg.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2600);
+    }
+
+    function formatCodeLines(lines) {
+      return lines.map((line, idx) => {
+        let highlighted = line
+          .replace(/(stp|mov|str|cbz|ldrb|cmp|b\.ne|adrp|add|bl|b\.eq|ret|b|invoke-virtual|const\/4|if-nez|if-ne|return)/g, '<span class="syn-keyword">$1</span>')
+          .replace(/(x\d+|w\d+|sp|v\d+|p\d+|eax|ebx|rax|rdi|rsi)/g, '<span class="syn-reg">$1</span>')
+          .replace(/(0x[0-9a-fA-F]+|#[0-9a-fA-Fx]+)/g, '<span class="syn-hex">$1</span>')
+          .replace(/(bool|uint8_t|int32_t|const|size_t|void|boolean|class|func)/g, '<span class="syn-type">$1</span>')
+          .replace(/(;.*|\/\/.*)/g, '<span class="syn-comment">$1</span>')
+          .replace(/(".*?")/g, '<span class="syn-string">$1</span>');
+        return `<div class="code-line"><span class="line-num">${idx + 1}</span><span class="line-content">${highlighted}</span></div>`;
+      }).join('');
+    }
+
+    function renderCurrentArtifact() {
+      const art = ARTIFACTS[state.artifact];
+
+      // Disassembly & Decomp
+      disasmCode.innerHTML = formatCodeLines(art.disasm);
+      decompCode.innerHTML = formatCodeLines(art.decomp);
+      cleanRoomCode.innerHTML = formatCodeLines(art.cleanroom);
+
+      // Metadata
+      metadataCard.innerHTML = `
+        <div class="metadata-row">
+          <span class="metadata-label">SHA-256:</span>
+          <span class="metadata-val">${art.sha256.slice(0, 10)}...${art.sha256.slice(-4)}</span>
+        </div>
+        <div class="metadata-row">
+          <span class="metadata-label">Format:</span>
+          <span class="metadata-val">${art.format}</span>
+        </div>
+        <div class="metadata-row">
+          <span class="metadata-label">Architecture:</span>
+          <span class="metadata-val">${art.arch}</span>
+        </div>
+        <div class="metadata-row">
+          <span class="metadata-label">Obligations:</span>
+          <span class="metadata-val">${art.obligations.length} Active</span>
+        </div>
+      `;
+
+      // Ledger Table
+      ledgerTableBody.innerHTML = art.obligations.map(ob => `
+        <tr>
+          <td style="font-family: monospace; color: var(--accent); font-weight: 600;">${ob.id}</td>
+          <td>${ob.title}</td>
+          <td style="color: var(--text-muted); font-family: monospace;">${ob.cases}</td>
+          <td><span class="status-badge" style="background: rgba(56, 189, 248, 0.1); color: var(--accent);">${ob.authority}</span></td>
+          <td><span class="status-badge ${ob.status}">✓ ${ob.status.toUpperCase()}</span></td>
+        </tr>
+      `).join('');
+
+      renderCallGraph();
+    }
+
+    function renderCallGraph() {
+      const art = ARTIFACTS[state.artifact];
+      let svg = `
+        <defs>
+          <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--accent)" />
+          </marker>
+        </defs>
+      `;
+
+      // Dynamic nodes
+      const nodes = [
+        { id: 'Entry', label: 'API Gateway Entry', x: 120, y: 220 },
+        { id: 'Target', label: art.name, x: 420, y: 220 },
+        { id: 'Crypto', label: 'crypto_core::verify', x: 720, y: 140 },
+        { id: 'Audit', label: 'Security Auditor Hook', x: 720, y: 300 }
+      ];
+
+      // Draw Edges
+      svg += `
+        <line x1="240" y1="220" x2="330" y2="220" stroke="var(--accent)" stroke-width="2" marker-end="url(#arrow)"/>
+        <line x1="530" y1="200" x2="630" y2="150" stroke="var(--accent)" stroke-width="2" marker-end="url(#arrow)"/>
+        <line x1="530" y1="240" x2="630" y2="290" stroke="var(--accent)" stroke-width="2" marker-end="url(#arrow)"/>
+      `;
+
+      // Draw Nodes
+      nodes.forEach(n => {
+        svg += `
+          <g transform="translate(${n.x}, ${n.y})">
+            <rect x="-100" y="-30" width="200" height="60" rx="8" fill="var(--panel)" stroke="var(--panel-border)" stroke-width="1.5"/>
+            <text x="0" y="-4" fill="var(--text)" font-size="12" font-weight="600" text-anchor="middle">${n.label}</text>
+            <text x="0" y="14" fill="var(--accent)" font-size="10" font-family="monospace" text-anchor="middle">${n.id}</text>
+          </g>
+        `;
+      });
+
+      callGraphSvg.innerHTML = svg;
+    }
+
+    // Report Generator Logic
+    function getArtifactReportData(art) {
+      return {
+        wellDone: art.wellDone || [
+          "Extracted and demangled all exported symbols and local functions without corruption.",
+          "Constructed complete Control Flow Graph (CFG) for primary dispatch routines.",
+          "Validated protocol magic header requirement ('V' / 0x56) with zero false-positives.",
+          "Achieved 100% closure on static Reconstruction Obligation Ledger entries.",
+          "Synthesized copyright-uncontaminated clean-room TypeScript and Rust specifications."
+        ],
+        whatFailed: art.whatFailed || [
+          "Binary stripped of DWARF debug symbols; required heuristic stack frame unwinding.",
+          "Indirect function pointers in secondary vtable could not be statically resolved.",
+          "Absence of live execution harness prevented dynamic register telemetry capture."
+        ],
+        openConcerns: art.openConcerns || [
+          "Secret salt derivation relies on hardcoded data offset (0x140045820); dynamic rotation behavior unknown.",
+          "Replay attack prevention mechanism (nonce/timestamp freshness) is absent from static binary section.",
+          "ARM64 calling convention assumptions may require padding adjustments on x86_64 host environments."
+        ],
+        recommendations: art.recommendations || [
+          "Initiate non-destructive dynamic observation using Decipher instrumentation hooks to trace vtable calls.",
+          "Author automated unit tests executing the full case matrix (positive, negative, malformed, truncated).",
+          "Implement defensive nonce verification in the clean-room implementation to mitigate replay vulnerabilities.",
+          "Deploy the synthesized TypeScript/Rust module behind a staging feature flag to benchmark latency."
+        ]
+      };
+    }
+
+    function renderReport() {
+      const art = ARTIFACTS[state.artifact];
+      const data = getArtifactReportData(art);
+      const container = document.getElementById('reportContentContainer');
+      const repoUrl = "https://github.com/upioneer/code-scaffold/tree/main/.skills/decipher";
+
+      container.innerHTML = `
+        <div style="background: var(--panel); border: 1px solid var(--panel-border); padding: 16px; border-radius: 8px;">
+          <h4 style="color: var(--accent); font-size: 13px; text-transform: uppercase; margin-bottom: 8px;">Executive Summary</h4>
+          <p style="font-size: 13px; color: var(--text);">
+            Static and structural deconstruction finalized for <strong>${art.name}</strong> (${art.format}). 
+            Extracted cryptographic operations, function control flow graphs, and verified behavioral contracts.
+          </p>
+          <div style="margin-top: 10px; font-size: 12px; color: var(--text-muted); display: flex; gap: 16px;">
+            <span>Architecture: <strong style="color: var(--text);">${art.arch}</strong></span>
+            <span>SHA-256: <code style="color: var(--accent);">${art.sha256.slice(0, 12)}...</code></span>
+            <span>Obligations: <strong style="color: var(--success);">${art.obligations.length} Tracked</strong></span>
+          </div>
+        </div>
+
+        <div>
+          <h4 style="color: var(--success); font-size: 13px; text-transform: uppercase; margin-bottom: 8px;">✓ What Went Well</h4>
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            ${data.wellDone.map(item => `
+              <div style="background: var(--code-bg); border-left: 3px solid var(--success); padding: 8px 12px; border-radius: 4px; font-size: 12px;">
+                <strong>Validated</strong> : ${item}
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <div>
+          <h4 style="color: var(--warning); font-size: 13px; text-transform: uppercase; margin-bottom: 8px;">⚠️ What Did Not Go Well (Analysis Blockers)</h4>
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            ${data.whatFailed.map(item => `
+              <div style="background: var(--code-bg); border-left: 3px solid var(--warning); padding: 8px 12px; border-radius: 4px; font-size: 12px;">
+                <strong>Limitation</strong> : ${item}
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <div>
+          <h4 style="color: var(--danger); font-size: 13px; text-transform: uppercase; margin-bottom: 8px;">🔍 Open Items of Concern</h4>
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            ${data.openConcerns.map(item => `
+              <div style="background: var(--code-bg); border-left: 3px solid var(--danger); padding: 8px 12px; border-radius: 4px; font-size: 12px;">
+                <strong>Active Risk</strong> : ${item}
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <div>
+          <h4 style="color: var(--accent); font-size: 13px; text-transform: uppercase; margin-bottom: 8px;">🚀 Recommendations Moving Forward & Next Steps</h4>
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            ${data.recommendations.map((item, i) => `
+              <div style="background: var(--code-bg); border-left: 3px solid var(--accent); padding: 8px 12px; border-radius: 4px; font-size: 12px;">
+                <strong>Step ${i + 1}</strong> : ${item}
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <div style="background: rgba(56, 189, 248, 0.08); border: 1px dashed var(--accent); padding: 12px 16px; border-radius: 6px; font-size: 12px; display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <strong>Skill Authority & Specification:</strong>
+            <span style="color: var(--text-muted); margin-left: 6px;">Code Scaffold Decipher Engine</span>
+          </div>
+          <a href="${repoUrl}" target="_blank" style="color: var(--accent); text-decoration: none; font-weight: 600;">
+            ${repoUrl} ↗
+          </a>
+        </div>
+      `;
+    }
+
+    function buildMarkdownReport() {
+      const art = ARTIFACTS[state.artifact];
+      const data = getArtifactReportData(art);
+      const timestamp = new Date().toISOString();
+      const repoUrl = "https://github.com/upioneer/code-scaffold/tree/main/.skills/decipher";
+      const skillMdUrl = "https://github.com/upioneer/code-scaffold/blob/main/.skills/decipher/SKILL.md";
+      const token = `cs:sha256:report:${art.sha256.slice(0, 16)}:${Date.now()}`;
+
+      return `<!-- \\u200B\\u200C\\u200DDECIPHER_PROVENANCE_BREADCRUMB: repo="${repoUrl}" skill=".skills/decipher" token="${token}" -->
+# Decipher Binary Deconstruction & Reverse Engineering Report
+
+**Target Artifact:** \`${art.name}\`
+**Target Format:** \`${art.format}\`
+**Artifact SHA-256:** \`${art.sha256}\`
+**Investigation Timestamp:** \`${timestamp}\`
+**Skill Authority:** [Code Scaffold Decipher Engine](${repoUrl})
+**Architectural Contract:** [Decipher SKILL.md](${skillMdUrl})
+
+---
+
+## Executive Summary
+Static and structural deconstruction finalized for \`${art.name}\` (${art.format}). Extracted cryptographic operations, function control flow graphs, and verified behavioral contracts.
+
+---
+
+## 1. What Went Well (Validated Capabilities & Evidence)
+${data.wellDone.map(item => `* **Success** : ${item}`).join('\\n')}
+
+---
+
+## 2. What Did Not Go Well (Analysis Blockers & Limitations)
+${data.whatFailed.map(item => `* **Limitation** : ${item}`).join('\\n')}
+
+---
+
+## 3. Open Items of Concern (Active Risk Surface)
+${data.openConcerns.map(item => `* **Concern** : ${item}`).join('\\n')}
+
+---
+
+## 4. Reconstruction Obligation Ledger Status
+| Obligation ID | Verification Claim | Evidence Authority | Parity Status |
+| :--- | :--- | :--- | :--- |
+${art.obligations.map(o => `| \`${o.id}\` | ${o.title} | \`${o.authority}\` | **${o.status.toUpperCase()}** |`).join('\\n')}
+
+---
+
+## 5. Recommendations Moving Forward & Next Steps
+${data.recommendations.map((rec, i) => `${i + 1}. **Action Item** : ${rec}`).join('\\n')}
+
+---
+
+## 6. Provenance & Official Source Links
+* **Skill Source Repository** : [${repoUrl}](${repoUrl})
+* **Skill Technical Specification** : [${skillMdUrl}](${skillMdUrl})
+* **Verification Token** : \`${token}\`
+`;
+    }
+
+    function downloadHtmlReport() {
+      const art = ARTIFACTS[state.artifact];
+      const data = getArtifactReportData(art);
+      const timestamp = new Date().toISOString();
+      const repoUrl = "https://github.com/upioneer/code-scaffold/tree/main/.skills/decipher";
+      const token = `cs:sha256:report:${art.sha256.slice(0, 16)}:${Date.now()}`;
+      const payloadBase64 = btoa(JSON.stringify({ repo: repoUrl, skill: ".skills/decipher", token, timestamp }));
+
+      const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Decipher Report - ${art.name}</title>
+  <meta name="author" content="Code Scaffold Decipher Engine (https://github.com/upioneer/code-scaffold)">
+  <meta name="creator" content="upioneer/code-scaffold/.skills/decipher">
+  <meta name="generator" content="Code Scaffold v7.36.0 (upioneer/code-scaffold)">
+  <meta name="DC.creator" content="Code Scaffold Decipher Engine (upioneer/code-scaffold)">
+  <meta name="DC.source" content="${repoUrl}">
+  <meta name="DC.identifier" content="${token}">
+  <meta name="x-scaffold-provenance" content="${token}">
+  <meta name="x-scaffold-origin-repo" content="https://github.com/upioneer/code-scaffold">
+  <meta name="x-scaffold-skill" content=".skills/decipher">
+  <meta name="x-breadcrumb-trace" content="${payloadBase64}">
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0b0f17; color: #e2e8f0; padding: 40px; }
+    .card { max-width: 860px; margin: 0 auto; background: #131b26; border: 1px solid #1e293b; padding: 36px; border-radius: 12px; }
+    h1 { font-size: 22px; color: #38bdf8; margin-bottom: 8px; }
+    h2 { font-size: 15px; color: #38bdf8; margin: 24px 0 10px 0; text-transform: uppercase; }
+    .item { background: #070a0f; border-left: 4px solid #38bdf8; padding: 10px 14px; margin-bottom: 8px; border-radius: 4px; font-size: 13px; }
+    .item.success { border-left-color: #34d399; }
+    .item.warning { border-left-color: #fbbf24; }
+    .item.danger { border-left-color: #f87171; }
+    a { color: #38bdf8; }
+  </style>
+</head>
+<body data-provenance="${token}" data-source="${repoUrl}">
+  <!-- DECIPHER_PROVENANCE_BREADCRUMB: ${payloadBase64} -->
+  <div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+      <h1>Decipher Deconstruction Report</h1>
+      <a href="${repoUrl}" target="_blank">upioneer/code-scaffold/.skills/decipher ↗</a>
+    </div>
+    <p>Target: <strong>${art.name}</strong> (${art.format}) | SHA-256: <code>${art.sha256}</code></p>
+    
+    <h2>✓ What Went Well</h2>
+    ${data.wellDone.map(x => `<div class="item success"><strong>Validated</strong> : ${x}</div>`).join('')}
+
+    <h2>⚠️ What Did Not Go Well</h2>
+    ${data.whatFailed.map(x => `<div class="item warning"><strong>Limitation</strong> : ${x}</div>`).join('')}
+
+    <h2>🔍 Open Items of Concern</h2>
+    ${data.openConcerns.map(x => `<div class="item danger"><strong>Active Concern</strong> : ${x}</div>`).join('')}
+
+    <h2>🚀 Recommendations & Next Steps</h2>
+    ${data.recommendations.map((x, i) => `<div class="item"><strong>Step ${i + 1}</strong> : ${x}</div>`).join('')}
+
+    <div style="margin-top: 30px; border-top: 1px solid #1e293b; padding-top: 16px; font-size: 11px; color: #94a3b8; display: flex; justify-content: space-between;">
+      <span>Generated by <a href="${repoUrl}">Decipher Engine</a> in Code Scaffold</span>
+      <span>${token}</span>
+    </div>
+  </div>
+</body>
+</html>`;
+
+      const blob = new Blob([html], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `decipher_report_${art.name.replace(/[^a-zA-Z0-9]/g, '_')}.html`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('Downloaded standalone HTML report with embedded metadata');
+    }
+
+    // Bind Report Buttons
+    document.getElementById('openReportBtn').addEventListener('click', () => {
+      document.querySelector('[data-tab="report"]').click();
+      showToast('Switched to Executive Audit Report');
+    });
+
+    document.getElementById('copyMarkdownReportBtn').addEventListener('click', () => {
+      const md = buildMarkdownReport();
+      navigator.clipboard.writeText(md).then(() => {
+        showToast('Executive Markdown report copied to clipboard');
+      });
+    });
+
+    document.getElementById('downloadHtmlReportBtn').addEventListener('click', () => {
+      downloadHtmlReport();
+    });
+
+    // Launch
+    renderCurrentArtifact();
+    renderReport();
+  </script>
+</body>
+</html>
