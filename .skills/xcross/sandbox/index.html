@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Code Scaffold Specification Schema: https://code-scaffold.com/spec/v1 -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XCross - Cross-Platform iOS Engine & Development Workbench</title>
+  <meta name="description" content="Cross-platform iOS build, signing, and device deployment engine for SwiftPM packages on Linux, Windows WSL, and macOS without Xcode dependencies.">
+  <meta name="keywords" content="xcross, ios development, swiftpm, cross-platform ios, xcode alternative, linux ios, windows ios, wsl ios, usbmuxd, code signing">
+  <style>
+    :root {
+      --bg: #070a0f;
+      --panel: #0d131f;
+      --panel-border: #1a2333;
+      --text: #e2e8f0;
+      --text-muted: #8492a6;
+      --accent: #00f0ff;
+      --accent-glow: rgba(0, 240, 255, 0.25);
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --code-bg: #05070b;
+      --apple-blue: #0071e3;
+    }
+
+    [data-theme="light"] {
+      --bg: #f5f7fb;
+      --panel: #ffffff;
+      --panel-border: #dbe2ea;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --accent: #0284c7;
+      --accent-glow: rgba(2, 132, 199, 0.2);
+      --success: #059669;
+      --warning: #d97706;
+      --danger: #dc2626;
+      --code-bg: #f8fafc;
+      --apple-blue: #0071e3;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Header */
+    header {
+      background: var(--panel);
+      border-bottom: 1px solid var(--panel-border);
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+      z-index: 10;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      font-family: monospace;
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--accent);
+      background: rgba(0, 240, 255, 0.1);
+      padding: 4px 8px;
+      border-radius: 4px;
+      border: 1px solid var(--accent-glow);
+      letter-spacing: 0.1em;
+    }
+
+    .brand-title h1 {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-title p {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn {
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      color: var(--text);
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #000;
+      border-color: var(--accent);
+      font-weight: 600;
+    }
+
+    .btn-primary:hover {
+      background: #38bdf8;
+      color: #000;
+    }
+
+    .btn-tour {
+      border-color: var(--warning);
+      color: var(--warning);
+    }
+
+    .btn-tour:hover {
+      background: rgba(245, 158, 11, 0.1);
+    }
+
+    /* Main Container */
+    .workbench {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* Left Sidebar: File Tree & Config */
+    .sidebar {
+      width: 280px;
+      background: var(--panel);
+      border-right: 1px solid var(--panel-border);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+
+    .sidebar-section {
+      padding: 14px;
+      border-bottom: 1px solid var(--panel-border);
+    }
+
+    .sidebar-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .file-tree {
+      list-style: none;
+      font-size: 12px;
+    }
+
+    .file-tree li {
+      padding: 5px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+
+    .file-tree li:hover {
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+    }
+
+    .file-tree li.active {
+      background: rgba(0, 240, 255, 0.1);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .device-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px;
+      background: var(--code-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 6px;
+      font-size: 11px;
+      margin-top: 8px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 6px var(--success);
+    }
+
+    /* Center: Code / Manifest Editor & Terminal */
+    .main-editor {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: var(--code-bg);
+      overflow: hidden;
+    }
+
+    .tab-bar {
+      display: flex;
+      background: var(--panel);
+      border-bottom: 1px solid var(--panel-border);
+      padding: 0 10px;
+    }
+
+    .tab {
+      padding: 9px 16px;
+      font-size: 12px;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tab.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+      font-weight: 600;
+    }
+
+    .editor-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .editor-view {
+      flex: 1;
+      display: none;
+      padding: 16px;
+      overflow-y: auto;
+      font-family: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+      font-size: 12px;
+      line-height: 1.6;
+      white-space: pre;
+    }
+
+    .editor-view.active {
+      display: block;
+    }
+
+    /* Terminal Console Drawer */
+    .terminal-drawer {
+      height: 180px;
+      background: #020408;
+      border-top: 1px solid var(--panel-border);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .terminal-header {
+      padding: 6px 14px;
+      background: var(--panel);
+      font-size: 11px;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--panel-border);
+    }
+
+    .terminal-output {
+      flex: 1;
+      padding: 10px 14px;
+      overflow-y: auto;
+      font-family: monospace;
+      font-size: 11px;
+      line-height: 1.5;
+      color: #94a3b8;
+    }
+
+    .log-success { color: var(--success); }
+    .log-accent { color: var(--accent); }
+    .log-warn { color: var(--warning); }
+
+    /* Right Panel: Simulated Device & Telemetry */
+    .device-preview {
+      width: 360px;
+      background: var(--panel);
+      border-left: 1px solid var(--panel-border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      flex-shrink: 0;
+      overflow-y: auto;
+    }
+
+    .phone-frame {
+      width: 260px;
+      height: 520px;
+      background: #000;
+      border-radius: 44px;
+      border: 4px solid #334155;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 240, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .dynamic-island {
+      width: 80px;
+      height: 20px;
+      background: #000;
+      border-radius: 12px;
+      margin: 8px auto 0;
+      z-index: 5;
+    }
+
+    .phone-screen {
+      flex: 1;
+      background: #080d1a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      text-align: center;
+      position: relative;
+    }
+
+    .phone-app-icon {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, #00f0ff, #0071e3);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin-bottom: 16px;
+      box-shadow: 0 8px 16px rgba(0, 240, 255, 0.3);
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .phone-app-icon:hover {
+      transform: scale(1.05);
+    }
+
+    .phone-app-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+
+    .phone-app-sub {
+      font-size: 11px;
+      color: #94a3b8;
+      margin-bottom: 24px;
+    }
+
+    .phone-counter-btn {
+      background: var(--accent);
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 240, 255, 0.3);
+      transition: transform 0.1s, background 0.2s;
+    }
+
+    .phone-counter-btn:active {
+      transform: scale(0.96);
+    }
+
+    .phone-home-indicator {
+      width: 100px;
+      height: 4px;
+      background: #ffffff;
+      border-radius: 2px;
+      margin: 10px auto 6px;
+      opacity: 0.6;
+    }
+
+    .telemetry-card {
+      width: 100%;
+      background: var(--code-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 8px;
+      padding: 12px;
+      margin-top: 20px;
+      font-size: 11px;
+    }
+
+    .telemetry-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      color: var(--text-muted);
+    }
+
+    .telemetry-row span:last-child {
+      color: var(--text);
+      font-weight: 600;
+      font-family: monospace;
+    }
+
+    /* Onboarding Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .onboard-modal {
+      width: 580px;
+      max-width: 90vw;
+      background: var(--panel);
+      border: 1px solid var(--accent);
+      box-shadow: 0 0 30px var(--accent-glow);
+      border-radius: 14px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-header {
+      padding: 16px 22px;
+      background: rgba(0, 240, 255, 0.05);
+      border-bottom: 1px solid var(--panel-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h2 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .modal-body {
+      padding: 24px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .step-indicator {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 18px;
+    }
+
+    .step-dot {
+      flex: 1;
+      height: 4px;
+      background: var(--panel-border);
+      border-radius: 2px;
+      transition: background 0.3s;
+    }
+
+    .step-dot.active {
+      background: var(--accent);
+    }
+
+    .step-content {
+      display: none;
+    }
+
+    .step-content.active {
+      display: block;
+    }
+
+    .step-content h3 {
+      font-size: 15px;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .step-box {
+      background: var(--code-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 8px;
+      padding: 12px;
+      font-family: monospace;
+      font-size: 11px;
+      color: var(--accent);
+      margin: 12px 0;
+    }
+
+    .modal-footer {
+      padding: 14px 22px;
+      background: rgba(0, 0, 0, 0.2);
+      border-top: 1px solid var(--panel-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Header -->
+  <header>
+    <div class="brand">
+      <div class="brand-logo">XCROSS</div>
+      <div class="brand-title">
+        <h1>Cross-Platform iOS Development Engine</h1>
+        <p>Compile SwiftPM Packages, Sign IPAs & Deploy to Hardware Without Xcode</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-tour" id="openTourBtn">
+        🧭 Onboarding Tour
+      </button>
+      <button class="btn" id="themeToggleBtn">
+        <span id="themeIcon">☀️</span> Theme
+      </button>
+      <button class="btn btn-primary" id="buildDeployBtn">
+        ⚡ Build & Deploy (.ipa)
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Workbench -->
+  <div class="workbench">
+
+    <!-- Left Sidebar -->
+    <div class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-title">
+          <span>Project Explorer</span>
+          <span style="color: var(--accent); cursor: pointer;" id="newProjBtn">+ New</span>
+        </div>
+        <ul class="file-tree">
+          <li class="active" data-file="contentView">📄 ContentView.swift</li>
+          <li data-file="appSwift">📄 SolarTrackerApp.swift</li>
+          <li data-file="packageSwift">📦 Package.swift</li>
+          <li data-file="xcrossYml">⚙️ xcross.yml</li>
+          <li data-file="bspJson">🔌 .bsp/xcross.json</li>
+        </ul>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-title">Target Device</div>
+        <select id="deviceSelect" style="width: 100%; background: var(--code-bg); color: var(--text); border: 1px solid var(--panel-border); padding: 6px; border-radius: 4px; font-size: 11px;">
+          <option value="iphone15">iPhone 15 Pro (USB - Paired)</option>
+          <option value="ipadAir">iPad Air (WiFi - Paired)</option>
+          <option value="simulator">Virtual Simulator (ARM64)</option>
+        </select>
+        <div class="device-badge">
+          <div class="status-dot"></div>
+          <div>
+            <div style="font-weight: 600;">usbmuxd Socket Active</div>
+            <div style="color: var(--text-muted); font-size: 10px;">Port: 27015 | UDID: 00008130-...001E</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-section" style="flex: 1;">
+        <div class="sidebar-title">Developer Credentials</div>
+        <div style="font-size: 11px; color: var(--text-muted); line-height: 1.5;">
+          <div>Key ID: <span style="color: var(--text); font-family: monospace;">ABC123XYZ</span></div>
+          <div>Issuer ID: <span style="color: var(--text); font-family: monospace;">5724...072a</span></div>
+          <div style="margin-top: 8px; color: var(--success);">✓ Apple Developer Signed</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Center Main Editor & Terminal -->
+    <div class="main-editor">
+      <div class="tab-bar">
+        <div class="tab active" data-tab="contentView">ContentView.swift</div>
+        <div class="tab" data-tab="appSwift">SolarTrackerApp.swift</div>
+        <div class="tab" data-tab="packageSwift">Package.swift</div>
+        <div class="tab" data-tab="xcrossYml">xcross.yml</div>
+        <div class="tab" data-tab="bspJson">xcross.json</div>
+      </div>
+
+      <div class="editor-container">
+        <!-- ContentView.swift -->
+        <div class="editor-view active" id="view-contentView">import SwiftUI
+
+struct ContentView: View {
+    @State private var trackerActive = false
+    @State private var telemetryCount = 42
+
+    var body: some View {
+        ZStack {
+            Color(red: 0.05, green: 0.07, blue: 0.11)
+                .ignoresSafeArea()
+
+            VStack(spacing: 20) {
+                Image(systemName: "sun.max.fill")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 72, height: 72)
+                    .foregroundColor(Color(red: 0.0, green: 0.94, blue: 1.0))
+
+                Text("SolarTracker")
+                    .font(.system(size: 26, weight: .bold, design: .rounded))
+                    .foregroundColor(.white)
+
+                Text("Cross-compiled with XCross on Linux/WSL")
+                    .font(.caption)
+                    .foregroundColor(.gray)
+
+                Button(action: {
+                    telemetryCount += 1
+                }) {
+                    Text("Telemetry Ping: \(telemetryCount)")
+                        .font(.headline)
+                        .foregroundColor(.black)
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 12)
+                        .background(Color(red: 0.0, green: 0.94, blue: 1.0))
+                        .cornerRadius(10)
+                }
+            }
+        }
+    }
+}</div>
+
+        <!-- SolarTrackerApp.swift -->
+        <div class="editor-view" id="view-appSwift">import SwiftUI
+
+@main
+struct SolarTrackerApp: App {
+    var body: some Scene {
+        WindowGroup {
+            ContentView()
+        }
+    }
+}</div>
+
+        <!-- Package.swift -->
+        <div class="editor-view" id="view-packageSwift">// swift-tools-version: 6.0
+import PackageDescription
+
+let package = Package(
+    name: "SolarTracker",
+    platforms: [
+        .iOS(.v17)
+    ],
+    products: [
+        .library(name: "SolarTracker", targets: ["SolarTracker"])
+    ],
+    dependencies: [],
+    targets: [
+        .target(name: "SolarTracker", dependencies: [], path: "Sources/SolarTracker")
+    ]
+)</div>
+
+        <!-- xcross.yml -->
+        <div class="editor-view" id="view-xcrossYml">name: SolarTracker
+bundleID: com.codescaffold.solartracker
+version: 1.0.0
+build: 1
+target: SolarTracker
+deploymentTarget: "17.0"
+capabilities:
+  - camera
+  - location_when_in_use
+resources:
+  - Resources/
+entitlements:
+  get-task-allow: true</div>
+
+        <!-- .bsp/xcross.json -->
+        <div class="editor-view" id="view-bspJson">{
+  "name": "xcross",
+  "version": "1.0.0",
+  "bspVersion": "2.1.0",
+  "languages": ["swift"],
+  "argv": ["xcross", "bsp"]
+}</div>
+      </div>
+
+      <!-- Live Terminal Drawer -->
+      <div class="terminal-drawer">
+        <div class="terminal-header">
+          <span>XCross Live Build & Deployment Terminal</span>
+          <span id="clearLogsBtn" style="cursor: pointer;">Clear Console</span>
+        </div>
+        <div class="terminal-output" id="terminalOutput">
+          <div><span class="log-accent">[READY]</span> XCross environment initialized. Swift 6.0.1 (x86_64-unknown-linux-gnu).</div>
+          <div><span class="log-success">[INFO]</span> usbmuxd daemon active on 127.0.0.1:27015.</div>
+          <div><span class="log-accent">[DEVICE]</span> Paired with iPhone 15 Pro (UDID: 00008130-001234567890001E, iOS 17.5.1).</div>
+          <div><span class="log-success">[HINT]</span> Press 'Build & Deploy' or type 'xtool dev' to launch directly on iPhone.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Panel: Device Preview & Telemetry -->
+    <div class="device-preview">
+      <div class="phone-frame">
+        <div class="dynamic-island"></div>
+        <div class="phone-screen">
+          <div class="phone-app-icon" id="phoneAppIcon">☀️</div>
+          <div class="phone-app-title">SolarTracker</div>
+          <div class="phone-app-sub">Built on Linux via XCross</div>
+          <button class="phone-counter-btn" id="phoneCounterBtn">
+            Telemetry Ping: <span id="counterVal">42</span>
+          </button>
+        </div>
+        <div class="phone-home-indicator"></div>
+      </div>
+
+      <div class="telemetry-card">
+        <div style="font-weight: 700; color: var(--accent); margin-bottom: 8px;">Binary & Build Telemetry</div>
+        <div class="telemetry-row">
+          <span>Mach-O Target:</span>
+          <span>arm64-apple-ios17.0</span>
+        </div>
+        <div class="telemetry-row">
+          <span>Executable Size:</span>
+          <span>4.82 MB</span>
+        </div>
+        <div class="telemetry-row">
+          <span>Incremental Build:</span>
+          <span>1.14s</span>
+        </div>
+        <div class="telemetry-row">
+          <span>Code Signing:</span>
+          <span style="color: var(--success);">SHA-256 Valid</span>
+        </div>
+        <div class="telemetry-row">
+          <span>usbmuxd Transfer:</span>
+          <span>0.42 MB/s (USB)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive Onboarding Modal with Skip Option -->
+  <div class="modal-overlay" id="onboardModal">
+    <div class="onboard-modal">
+      <div class="modal-header">
+        <h2>🚀 Welcome to XCross</h2>
+        <span style="font-size: 11px; color: var(--text-muted);">Step <span id="currentStepNum">1</span> of 5</span>
+      </div>
+
+      <div class="modal-body">
+        <div class="step-indicator">
+          <div class="step-dot active" id="dot-1"></div>
+          <div class="step-dot" id="dot-2"></div>
+          <div class="step-dot" id="dot-3"></div>
+          <div class="step-dot" id="dot-4"></div>
+          <div class="step-dot" id="dot-5"></div>
+        </div>
+
+        <!-- Step 1 -->
+        <div class="step-content active" id="step-1">
+          <h3>Step 1: Build iOS Apps Anywhere</h3>
+          <p>XCross lets you write and compile iOS apps on <strong>Linux, Windows WSL, and macOS</strong> without installing Xcode. Standard Swift Package Manager packages are cross-compiled directly into native iOS arm64 Mach-O binaries.</p>
+          <div class="step-box">$ node .skills/xcross/scripts/xcross_bridge.mjs doctor</div>
+          <p style="font-size: 11px; color: var(--text-muted);">Run the diagnostic tool anytime to verify your Swift toolchain and USB connection daemons.</p>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="step-content" id="step-2">
+          <h3>Step 2: Apple Developer Credentials</h3>
+          <p>Physical iOS devices require cryptographic code signatures. XCross integrates with the App Store Connect API to generate development certificates and provisioning profiles automatically.</p>
+          <div class="step-box">export APPLE_KEY_ID="ABC123XYZ"<br>export APPLE_ISSUER_ID="57246542-..."<br>export APPLE_PRIVATE_KEY_PATH="~/.keys/AuthKey.p8"</div>
+          <p style="font-size: 11px; color: var(--text-muted);">Configure these variables once, and XCross handles signing without manual portal navigation.</p>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="step-content" id="step-3">
+          <h3>Step 3: Lightweight Project Anatomy</h3>
+          <p>Instead of heavy <code>.xcodeproj</code> directories, an XCross project consists of standard files:</p>
+          <div class="step-box">SolarTracker/<br>├── Package.swift    # SwiftPM manifest<br>├── xcross.yml       # Bundle ID, icons, entitlements<br>└── Sources/         # SwiftUI App.swift & ContentView.swift</div>
+          <p style="font-size: 11px; color: var(--text-muted);">Scaffold a new project in one command: <code>xcross init MyApp</code></p>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="step-content" id="step-4">
+          <h3>Step 4: Connecting Physical Hardware</h3>
+          <p>Plug in your iPhone or iPad via USB cable. XCross uses <code>usbmuxd</code> to talk directly to the iOS kernel.</p>
+          <div class="step-box">* Unlock your iPhone and tap "Trust This Computer"<br>* On iOS 16+, enable Developer Mode in Settings<br>* On Windows WSL2: usbipd attach --wsl --busid &lt;ID&gt;</div>
+          <p style="font-size: 11px; color: var(--text-muted);">Verify with <code>xcross devices</code> to view connected hardware.</p>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="step-content" id="step-5">
+          <h3>Step 5: One-Command Live Deployment</h3>
+          <p>Run the development loop to cross-compile SwiftPM sources, compile asset catalogs, sign the binary, and deploy straight to your iPhone:</p>
+          <div class="step-box">$ xtool dev</div>
+          <p style="font-size: 11px; color: var(--success);">🎉 You are ready to develop iOS apps with absolute freedom from heavy macOS workstations!</p>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn" id="skipOnboardBtn" style="color: var(--text-muted);">
+          Skip Tour (Expert Mode)
+        </button>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn" id="prevStepBtn" style="display: none;">Back</button>
+          <button class="btn btn-primary" id="nextStepBtn">Next Step →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Tab Switching
+    const tabs = document.querySelectorAll('.tab');
+    const editorViews = document.querySelectorAll('.editor-view');
+    const fileTreeItems = document.querySelectorAll('.file-tree li');
+
+    function setActiveTab(fileId) {
+      tabs.forEach(t => t.classList.toggle('active', t.dataset.tab === fileId));
+      editorViews.forEach(v => v.classList.toggle('active', v.id === `view-${fileId}`));
+      fileTreeItems.forEach(i => i.classList.toggle('active', i.dataset.file === fileId));
+    }
+
+    tabs.forEach(t => t.addEventListener('click', () => setActiveTab(t.dataset.tab)));
+    fileTreeItems.forEach(i => i.addEventListener('click', () => setActiveTab(i.dataset.file)));
+
+    // Theme Toggle
+    const themeBtn = document.getElementById('themeToggleBtn');
+    themeBtn.addEventListener('click', () => {
+      const isLight = document.body.getAttribute('data-theme') === 'light';
+      document.body.setAttribute('data-theme', isLight ? 'dark' : 'light');
+      document.getElementById('themeIcon').textContent = isLight ? '☀️' : '🌙';
+    });
+
+    // Simulated Interactive Phone Screen
+    let pings = 42;
+    const phoneBtn = document.getElementById('phoneCounterBtn');
+    const counterVal = document.getElementById('counterVal');
+    const terminalOutput = document.getElementById('terminalOutput');
+
+    phoneBtn.addEventListener('click', () => {
+      pings++;
+      counterVal.textContent = pings;
+      const logLine = document.createElement('div');
+      logLine.innerHTML = `<span class="log-accent">[APP_LOG]</span> Telemetry ping event emitted: count=${pings} (timestamp: ${new Date().toLocaleTimeString()})`;
+      terminalOutput.appendChild(logLine);
+      terminalOutput.scrollTop = terminalOutput.scrollHeight;
+    });
+
+    // Build & Deploy Action Simulator
+    const buildDeployBtn = document.getElementById('buildDeployBtn');
+    buildDeployBtn.addEventListener('click', () => {
+      buildDeployBtn.disabled = true;
+      buildDeployBtn.textContent = '⏳ Compiling...';
+      
+      const steps = [
+        '[BUILD] Cross-compiling Swift sources for arm64-apple-ios17.0...',
+        '[ASSETS] actool: Compiling asset catalog into Assets.car...',
+        '[BUNDLE] Packaging SolarTracker.app structure with Info.plist...',
+        '[SIGN] Applying Apple Developer SHA-256 signature to Mach-O binary...',
+        '[USB] usbmuxd: Uploading SolarTracker.ipa (4.82 MB) to iPhone 15 Pro...',
+        '[LAUNCH] Launching com.codescaffold.solartracker on device... Live!'
+      ];
+
+      steps.forEach((msg, idx) => {
+        setTimeout(() => {
+          const l = document.createElement('div');
+          l.innerHTML = `<span class="${idx === steps.length - 1 ? 'log-success' : 'log-accent'}">${msg}</span>`;
+          terminalOutput.appendChild(l);
+          terminalOutput.scrollTop = terminalOutput.scrollHeight;
+
+          if (idx === steps.length - 1) {
+            buildDeployBtn.disabled = false;
+            buildDeployBtn.textContent = '⚡ Build & Deploy (.ipa)';
+            // Trigger visual pulse on phone screen
+            phoneBtn.style.transform = 'scale(1.1)';
+            setTimeout(() => { phoneBtn.style.transform = 'scale(1)'; }, 200);
+          }
+        }, (idx + 1) * 600);
+      });
+    });
+
+    // Clear Console
+    document.getElementById('clearLogsBtn').addEventListener('click', () => {
+      terminalOutput.innerHTML = '<div><span class="log-accent">[READY]</span> Console cleared.</div>';
+    });
+
+    // Onboarding Wizard & Skip Logic
+    const onboardModal = document.getElementById('onboardModal');
+    const openTourBtn = document.getElementById('openTourBtn');
+    const skipOnboardBtn = document.getElementById('skipOnboardBtn');
+    const nextStepBtn = document.getElementById('nextStepBtn');
+    const prevStepBtn = document.getElementById('prevStepBtn');
+    const currentStepNum = document.getElementById('currentStepNum');
+    let currentStep = 1;
+    const totalSteps = 5;
+
+    function showStep(step) {
+      currentStep = step;
+      currentStepNum.textContent = step;
+      for (let i = 1; i <= totalSteps; i++) {
+        document.getElementById(`step-${i}`).classList.toggle('active', i === step);
+        document.getElementById(`dot-${i}`).classList.toggle('active', i <= step);
+      }
+      prevStepBtn.style.display = step > 1 ? 'block' : 'none';
+      nextStepBtn.textContent = step === totalSteps ? 'Finish & Open Workbench' : 'Next Step →';
+    }
+
+    openTourBtn.addEventListener('click', () => {
+      showStep(1);
+      onboardModal.classList.add('active');
+    });
+
+    skipOnboardBtn.addEventListener('click', () => {
+      onboardModal.classList.remove('active');
+    });
+
+    nextStepBtn.addEventListener('click', () => {
+      if (currentStep < totalSteps) {
+        showStep(currentStep + 1);
+      } else {
+        onboardModal.classList.remove('active');
+      }
+    });
+
+    prevStepBtn.addEventListener('click', () => {
+      if (currentStep > 1) {
+        showStep(currentStep - 1);
+      }
+    });
+
+    // Automatically prompt onboarding on initial load
+    window.addEventListener('load', () => {
+      showStep(1);
+      onboardModal.classList.add('active');
+    });
+  </script>
+</body>
+</html>

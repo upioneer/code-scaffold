@@ -1,0 +1,15 @@
+{
+  "label": "XCross Cross-Platform iOS Engine",
+  "description": "Cross-platform iOS build, signing, and device deployment engine for SwiftPM packages on Linux, Windows WSL, and macOS without Xcode dependencies.",
+  "version": "1",
+  "target": ".skills/xcross",
+  "hasSandbox": true,
+  "logo": [
+    "  ██╗  ██╗ ██████╗██████╗  ██████╗ ███████╗███████╗  ",
+    "  ╚██╗██╔╝██╔════╝██╔══██╗██╔═══██╗██╔════╝██╔════╝  ",
+    "   ╚███╔╝ ██║     ██████╔╝██║   ██║███████╗███████╗  ",
+    "   ██╔██╗ ██║     ██╔══██╗██║   ██║╚════██║╚════██║  ",
+    "  ██╔╝ ██╗╚██████╗██║  ██║╚██████╔╝███████║███████║  ",
+    "  ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚══════╝  "
+  ]
+}

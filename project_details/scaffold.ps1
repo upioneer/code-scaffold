@@ -367,7 +367,7 @@ function Show-AgentDomainSubmenu {
     Write-Host "`n  Select the AGENT.md Focus Domain:" -ForegroundColor Cyan
     
     $agentDomains = [ordered]@{
-        "Web Dev"            = "Focuses on UI UX, API design, authentication, and state management."
+        "Web Dev"            = "Focuses on UI UX, API design, authentication, state management, mobile-first design, SEO/GEO/AEO, and zero pre-consent privacy protection."
         "Docker / DevOps"    = "Focuses on containerization, CI CD pipelines, and infrastructure hardening."
         "Mobile (iOS/And)"   = "Focuses on native mobile architectures, device permissions, and offline sync."
         "DBA"                = "When the project requires heavy schema design, migration strategies, or data orchestration."
@@ -427,13 +427,13 @@ function Show-AgentDomainSubmenu {
     
     $script:selectedAgentDomain = $domainKeys[$domainIndex]
     if ($script:selectedAgentDomain -eq "Web Dev") {
-        $selectedWebDevComponents = @("playwright", "middleware", "layout", "redis", "ratelimit")
+        $selectedWebDevComponents = @("playwright", "middleware", "layout", "redis", "ratelimit", "privacy-policy")
         foreach ($item in $state) {
             if ($selectedWebDevComponents -contains $item.Id) {
                 $item.Selected = $true
             }
         }
-        Write-Host "`n  ${fgCyan}[QoL Option] Automatically selected Playwright skill and Edge/Auth middleware for Web Dev focus!${resetColor}"
+        Write-Host "`n  ${fgCyan}[QoL Option] Automatically selected Playwright, Privacy Policy, and Edge/Auth middleware for Web Dev focus!${resetColor}"
         Start-Sleep -Seconds 2
     }
     Write-Host $showCursor -NoNewline
@@ -447,7 +447,7 @@ function Get-AgentDomainRoleContent {
     $roleText = ""
     switch ($domain) {
         "Web Dev" {
-            $roleText = "You are an expert Web Developer specializing in UI UX, API design, authentication, and state management. Your goal is to build and maintain the web applications and APIs for this project.`n`n### CRITICAL SECURITY PROTOCOLS`n1. **Privacy Statement Required:** All web properties must include a comprehensive Privacy Statement accessible from the footer.`n2. **Rate Limiting:** Implement strict rate limiting on all API routes to prevent abuse, DoS, and brute-force attacks.`n3. **Password Security:** All passwords and sensitive credentials must be securely hashed (e.g., Argon2 or bcrypt) and never stored in plain text.`n4. **General Security:** Follow OWASP best practices (XSS, CSRF, and SQLi protection) across all endpoints."
+            $roleText = "You are an expert Web Developer specializing in UI UX, API design, authentication, and state management. Your goal is to build and maintain the web applications and APIs for this project.`n`n### CRITICAL SECURITY & PRIVACY PROTOCOLS`n1. **Zero Pre-Consent Tracking Barrier:** Strict zero pre-consent rule. NEVER load, initialize, or execute tracking pixels (Meta, TikTok, LinkedIn), analytics SDKs (Google Analytics, PostHog, Mixpanel), heatmaps, or third-party marketing scripts until the user explicitly clicks 'Accept' on the cookie consent banner. Functional/essential cookies (auth, CSRF) are exempt. Provide persistent consent storage, revocation controls, and automated verification tests asserting zero pre-consent network requests.`n2. **Privacy Statement Required:** All web properties must include a comprehensive Privacy Statement accessible from the footer.`n3. **Rate Limiting:** Implement strict rate limiting on all API routes to prevent abuse, DoS, and brute-force attacks.`n4. **Password Security:** All passwords and sensitive credentials must be securely hashed (e.g., Argon2 or bcrypt) and never stored in plain text.`n5. **General Security:** Follow OWASP best practices (XSS, CSRF, and SQLi protection) across all endpoints.`n6. **Mobile-First & SEO/GEO/AEO:** Enforce mobile-first responsive design (320px+ baseline, >=48px touch targets) and dynamic structured metadata (JSON-LD, sitemap.xml, robots.txt)."
         }
         "Docker / DevOps" {
             $roleText = "You are an expert DevOps Engineer specializing in containerization, CI CD pipelines, and infrastructure hardening. Your goal is to manage container orchestration and deployment pipelines."
@@ -560,6 +560,7 @@ All subsequent code additions by the agent or developer must satisfy the followi
 * Semantic DOM Elements: Main layout files must contain clear structural land markers (e.g., header, main, footer).
 * Asset Map Ingestion: Core configuration files must map asset pathways deterministically to prevent broken compilation pipelines.
 * Clean Compilation Targets: Client side bootstrap entry points must resolve without dangling dependencies or unresolved relative paths.
+* Zero Pre-Consent Tracking: Tracking pixels, analytics SDKs, and third-party marketing tags must never load or execute until the user clicks Accept on the cookie consent banner.
 * Code Quality: Source code should be clean, contain no residual debuggers or console statements, and follow SPA best practices.
 "@
     }
@@ -715,7 +716,7 @@ if ($packageJson.Count -gt 0) {
 }
 
 # 5. Serverless, Auth & In-Memory Store Checks
-Write-Host "[5/5] Verifying Serverless, Auth & In-Memory Store setup..." -ForegroundColor Gray
+Write-Host "[5/6] Verifying Serverless, Auth & In-Memory Store setup..." -ForegroundColor Gray
 $vercelCheck = Test-Path -Path (Join-Path -Path . -ChildPath "vercel.json")
 if ($vercelCheck) {
     Write-Host "  PASS: vercel.json configuration exists." -ForegroundColor Green
@@ -754,6 +755,23 @@ if ($middlewareCheck) {
 } else {
     Write-Host "  FAIL: Middleware file is missing." -ForegroundColor Red
     $success = $false
+}
+
+# 6. Pre-Consent Privacy & Tracking Isolation check
+Write-Host "[6/6] Checking Pre-Consent Privacy & Tracking Script Isolation..." -ForegroundColor Gray
+$trackingMatches = 0
+$clientFiles = Get-ChildItem -Path . -Include "*.html", "*.jsx", "*.tsx", "*.js", "*.ts" -Recurse -Exclude "scaffold.ps1" -ErrorAction SilentlyContinue
+foreach ($file in $clientFiles) {
+    if ($file.FullName -match "node_modules|\.git") { continue }
+    $content = Get-Content -Path $file.FullName -Raw
+    if (($content -match '<script[^>]*src=["''][^"'']*(google-analytics\.com|googletagmanager\.com|connect\.facebook\.net|clarity\.ms|analytics\.tiktok\.com|snap\.licdn\.com)') -and (-not ($content -match 'cookie_consent|consent|cookieBanner|hasConsent'))) {
+        Write-Host "  FAIL: $($file.FullName) contains unguarded third-party tracking script reference without consent gating." -ForegroundColor Red
+        $trackingMatches++
+        $success = $false
+    }
+}
+if ($trackingMatches -eq 0) {
+    Write-Host "  PASS: No unguarded third-party tracking scripts or tracking pixels detected." -ForegroundColor Green
 }
 
 if ($success) {

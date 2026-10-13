@@ -2,8 +2,8 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_ui_primitives_skill",
-  "version": "6",
-  "description": "High-fidelity interactive web UI components, GSAP choreography timelines, WebGL Three.js 3D scenes, WebGPU halftone cursor trails, premium gradient borders, perimeter border beams, liquid gooey physics, spring magnification docks, spotlight bento grids, universal transitions, kinetic typography, atomic tokens, and high-conversion landing page architecture.",
+  "version": "7",
+  "description": "High-fidelity interactive web UI components, 86-component Tactile Kinetic Registry, GSAP choreography timelines, WebGL Three.js 3D scenes, WebGPU halftone cursor trails, premium gradient borders, perimeter border beams, liquid gooey physics, spring magnification docks, spotlight bento grids, universal transitions, kinetic typography, atomic tokens, and high-conversion landing page architecture.",
   "entryPoint": "./SKILL.md",
   "engines": {
     "node": ">=18.0.0"
@@ -17,6 +17,9 @@
   "keywords": [
     "ui-primitives",
     "micro-interactions",
+    "tactile-components",
+    "86-primitives",
+    "agent-ui",
     "gsap",
     "scroll-trigger",
     "scroll-driven-animation",
@@ -66,5 +69,5 @@
     "particle-drift"
   ],
   "hasSandbox": true,
-  "integrity": "cs:sha256:e6de57b2bcf2452a6cb2d00c956295bd4425e32325c3e1047046226be186e725"
+  "integrity": "cs:sha256:21e2f6469f9c9c2bd6efe4de7fdaad69348adf2786e9885d21023ea21b4ccaf3"
 }

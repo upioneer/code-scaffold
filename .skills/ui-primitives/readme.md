@@ -1,19 +1,20 @@
 # UI Primitives & Micro-Interactions
 
-**Version:** 6
+**Version:** 7
 
 **Target:** `.skills/ui-primitives`
 
 **Category:** Frontend & UI Design
 
-**Keywords:** `ui-primitives`, `micro-interactions`, `gsap`, `scroll-trigger`, `threejs`, `webgpu-shader`, `cursor-trail`, `gradient-borders`, `css-alpha-masking`, `design-first-prompting`, `landing-page-architecture`, `border-beam`, `gooey-fluid`, `spring-dock`, `bento-grid`, `kinetic-typography`, `atomic-tokens`
+**Keywords:** `ui-primitives`, `micro-interactions`, `tactile-components`, `86-primitives`, `agent-ui`, `gsap`, `scroll-trigger`, `threejs`, `webgpu-shader`, `cursor-trail`, `gradient-borders`, `css-alpha-masking`, `design-first-prompting`, `landing-page-architecture`, `border-beam`, `gooey-fluid`, `spring-dock`, `bento-grid`, `kinetic-typography`, `atomic-tokens`
 
 ## Description
 
-The UI Primitives & Micro-Interactions skill is the complete high-fidelity web interface production engine for Code Scaffold agents: from atomic CSS tokens and kinetic component primitives through GSAP choreography timelines, WebGL Three.js 3D scene architecture, WebGPU halftone cursor shader trails, and structured landing page conversion frameworks.
+The UI Primitives & Micro-Interactions skill is the complete high-fidelity web interface production engine for Code Scaffold agents: from the 86-component Tactile Kinetic Matrix and CLI export bridge through atomic CSS tokens, GSAP choreography timelines, WebGL Three.js 3D scene architecture, WebGPU halftone cursor shader trails, and structured landing page conversion frameworks.
 
 ## Capabilities & Use Cases
 
+* **Tactile Kinetic Component Matrix**: 86 production-ready tactile React components across 7 functional categories (Interactive Controls, Navigation and Layout, Marketing and Conversion, Forms and Progression, Realtime Telemetry, Agentic AI Surfaces, and Kinetic Data Charts). Ships with zero heavy animation dependencies, pure Web Animations API with cubic-bezier easing, tabular numeral safety, and a dedicated CLI export bridge (`scripts/primitive_registry.mjs`).
 * **GSAP Choreography Engine**: Professional hero intro timeline composition, scroll-reveal stagger sequences, parallax depth layers, pinned scroll sections, and reduced-motion safe guards using `gsap.matchMedia`. Covers `gsap.to/from/fromTo`, timeline position parameter syntax (absolute, relative, overlap, label), `ease` catalogue (`power`, `expo`, `elastic`, `back`), and stagger patterns (`from: "start|center|end|random"`, `grid`).
 * **ScrollTrigger Scrub Architecture**: Scroll-driven storytelling with `trigger`, `start/end`, `scrub`, `pin`, `snap`, and `onUpdate` callbacks. Horizontal scroll sequences, image parallax depth, and `ScrollTrigger.refresh()` for dynamic content. SPA cleanup via `ctx.revert()`.
 * **WebGL Three.js 3D Scene Controller**: Full `SceneController` class with bootstrapped renderer, perspective camera, `OrbitControls` with damping, ambient and key lighting, GLTF/Draco model loading, `IntersectionObserver`-based off-screen render pause, pixel ratio clamping at `2`, and complete SPA memory disposal (geometry, material, texture, renderer, controls, RAF).
@@ -55,10 +56,10 @@ Invoke this skill when an agent is asked to:
 * Build a motion presentation stage for product demos or marketing collateral
 
 ## Changelog
+* **v7** : Integrated the 86-component Tactile Kinetic Component Matrix with CLI export bridge, covering interactive controls, navigation, conversion surfaces, realtime telemetry, AI agent conversational surfaces, and kinetic data charts.
 * **v6** : Kinetic Typography Reveal System (staggered blur reveals, split-letter rise, shine sweep, gradient display line, layout-reserve typewriter, circular rotating text). Component Motion Expansion (pixel dissolve, card stack, masonry). Micro Spring Kit (press, toggle, tooltip, toast queue, bursts). Ambient Backgrounds (aurora bands, drift field). Normalized version sync to 6.
 * **v5** : Standardized ASCII art logo to uniform 6-line ANSI Shadow format.
-
-* **v4**: Added GSAP Choreography Engine (Section 13), WebGL Three.js Scene Architecture (Section 14), WebGPU Halftone Cursor Shader Trail (Section 15), Design-First Constraint Specification Skeleton (Section 16), High-Conversion Landing Page Architecture (Section 17), Scroll-Driven Viewport Reveal (Section 18), Premium Surface Gradient Borders (Section 9 expansion), CSS Alpha Channel Masking (Section 11 expansion). Four new reference files bundled: `gsap-choreography.js`, `threejs-scene.js`, `cursor-shader.js`, `gradient-borders.css`, `css-masking.css`. Skill now covers 22 sections and 13 reference files.
-* **v3**: Added Perimeter Border Beam Engine, Visceral Liquid Gooey Fluid Engine, Spring Magnification Dock, Spotlight Bento Grid, Universal Motion Transition System, Kinetic Typography and 3D Perspective Tilt, Atomic Token Architecture. Nine reference files bundled.
-* **v2**: Added Motion Presentation Studio (6 signature looks), WebGL Chromatic Wave Light-Field, Synchronized Media Comparison Stage.
-* **v1**: Initial release with Kinetic Buttons, Elastic Range Sliders, Rolling Number Tickers, Progressive Optical Blur, Quantum Thinking Orbs.
+* **v4** : Added GSAP Choreography Engine (Section 13), WebGL Three.js Scene Architecture (Section 14), WebGPU Halftone Cursor Shader Trail (Section 15), Design-First Constraint Specification Skeleton (Section 16), High-Conversion Landing Page Architecture (Section 17), Scroll-Driven Viewport Reveal (Section 18), Premium Surface Gradient Borders (Section 9 expansion), CSS Alpha Channel Masking (Section 11 expansion). Four new reference files bundled: `gsap-choreography.js`, `threejs-scene.js`, `cursor-shader.js`, `gradient-borders.css`, `css-masking.css`. Skill now covers 22 sections and 13 reference files.
+* **v3** : Added Perimeter Border Beam Engine, Visceral Liquid Gooey Fluid Engine, Spring Magnification Dock, Spotlight Bento Grid, Universal Motion Transition System, Kinetic Typography and 3D Perspective Tilt, Atomic Token Architecture. Nine reference files bundled.
+* **v2** : Added Motion Presentation Studio (6 signature looks), WebGL Chromatic Wave Light-Field, Synchronized Media Comparison Stage.
+* **v1** : Initial release with Kinetic Buttons, Elastic Range Sliders, Rolling Number Tickers, Progressive Optical Blur, Quantum Thinking Orbs.

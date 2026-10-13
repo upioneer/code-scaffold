@@ -1,12 +1,12 @@
 # CAD Tools
 
-**Version:** 10
+**Version:** 11
 
 **Target:** `.skills/cad-tools`
 
 **Category:** Animation & Graphics
 
-**Keywords:** `cad`, `generative-design`, `topology-optimization`, `alien-meter`, `fea-stress`, `additive-manufacturing`, `dmls`, `sls`, `3d-modeling`, `step-files`, `stl`, `parametric-design`, `freecad`, `partdesign`, `b-rep`, `opencascade`, `sketcher`, `boolean-operations`, `streamable-http`, `headless-cad`, `offscreen-rendering`, `undo-transactions`, `3mf`, `dfam`, `dfm`, `engineering-drawing`, `orthographic`, `fasteners`, `blueprint`, `manufacturing-audit`
+**Keywords:** `cad`, `generative-design`, `topology-optimization`, `alien-meter`, `fea-stress`, `additive-manufacturing`, `dmls`, `sls`, `3d-modeling`, `step-files`, `stl`, `parametric-design`, `openscad`, `cadquery`, `parametric-scripts`, `csg-modeling`, `freecad`, `partdesign`, `b-rep`, `opencascade`, `sketcher`, `boolean-operations`, `streamable-http`, `headless-cad`, `offscreen-rendering`, `undo-transactions`, `3mf`, `dfam`, `dfm`, `engineering-drawing`, `orthographic`, `fasteners`, `blueprint`, `manufacturing-audit`
 
 ## Description
 
@@ -14,6 +14,8 @@ A comprehensive CAD/CAM engineering skill that equips AI agents with the full de
 
 ## Capabilities & Use Cases
 
+* **OpenSCAD Parametric Automation Bridge:** Standalone CLI bridge (`scripts/openscad_bridge.py`) for inspecting configurable parameters, Customizer range annotations, generating parametric .scad templates, injecting dynamic overrides (-D), and compiling headlessly to STL, 3MF, DXF, and offscreen PNG renders
+* **CadQuery Parametric Runner & Translation Matrix:** Headless execution runner (`scripts/cadquery_bridge.py`) for procedural Python B-Rep modeling with automated conversion and translation scaffolding to modern build123d context architecture
 * **Production DfAM & DFM Manufacturing Auditor:** Automated zero-dependency mesh printability and subtractive machining validator analyzing overhang angles, critical support thresholds, powder evacuation holes, CNC tool aspect ratios, sheet metal bend reliefs, and injection molding draft angles
 * **Automated 2D Orthographic Engineering Blueprints:** Standalone vector SVG generator rendering ISO standard drawing sheets with grid frames, third-angle projections (Front, Top, Right, Isometric), dimension extension lines, centerlines, and compliant engineering title blocks
 * **Standard Component & Fastener Vault:** Engineering design specifications for ISO metric screw clearances (M2 to M10), heat-set brass insert boss geometry, and miniature ball bearing fits
@@ -51,6 +53,8 @@ A comprehensive CAD/CAM engineering skill that equips AI agents with the full de
 Activate this skill for any task involving:
 * Simulating topology optimization and evaluating the Alien Meter tradeoff between stiffness and bio-morphology
 * Validating structural Factor of Safety and peak Von Mises stresses for additive manufacturing (DMLS, SLS)
+* Compiling OpenSCAD scripts headlessly with dynamic parameter overrides (-D)
+* Executing and transpiling CadQuery scripts into modern build123d models
 * Interacting with the 3D WebGL generative workbench sandbox to preview generative organic geometries
 * Automating FreeCAD via Streamable HTTP/SSE sockets or headless CLI execution
 * Designing parametric 3D parts, enclosures, brackets, or mechanical assemblies
@@ -62,6 +66,7 @@ Activate this skill for any task involving:
 * Maintaining structured BOM documentation and inspection renders alongside CAD models
 
 ## Changelog
+* **v11** : Integrated OpenSCAD headless parametric compilation bridge, Customizer parameter parser, CadQuery execution runner, and automated CadQuery to build123d translation matrix.
 * **v10** : Integrated Production DfAM/DFM Manufacturing Auditor, Automated Orthographic 2D Blueprint Generator with ISO title blocks, Standard Fastener and Hardware Vault, and interactive DfAM/Blueprint shaders in the WebGL workbench.
 * **v9** : Integrated In-Page Conversational AI Co-Pilot Chat Drawer with real-time parametric intent parsing, drag-and-drop local STL/OBJ mesh loader, and local sync daemon bridge.
 * **v8** : Established Real-Time Workbench Architecture & Interactive In-Page Chat Roadmap, defining the multi-tier bridge (Live Mesh Sync, In-Page Chat Drawer, Bidirectional WebSocket IPC, and Real-Time FEA Stream) linking user, agent, and 3D viewport.
