@@ -1,0 +1,15 @@
+{
+  "label": "Sentinel Strike Autonomous Red-Team Matrix",
+  "description": "Autonomous red-team security assessment and continuous penetration testing orchestrator with multi-agent reconnaissance, sandboxed container verification, and dual-memory attack surface mapping.",
+  "version": "1",
+  "target": ".skills/sentinel-strike",
+  "hasSandbox": true,
+  "logo": [
+    "  ███████╗███████╗███╗   ██╗████████╗██╗███╗   ██╗███████╗██╗       ",
+    "  ██╔════╝██╔════╝████╗  ██║╚══██╔══╝██║████╗  ██║██╔════╝██║       ",
+    "  ███████╗█████╗  ██╔██╗ ██║   ██║   ██║██╔██╗ ██║█████╗  ██║       ",
+    "  ╚════██║██╔══╝  ██║╚██╗██║   ██║   ██║██║╚██╗██║██╔══╝  ██║       ",
+    "  ███████║███████╗██║ ╚████║   ██║   ██║██║ ╚████║███████╗███████╗  ",
+    "  ╚══════╝╚══════╝╚═╝  ╚═══╝   ╚═╝   ╚═╝╚═╝  ╚═══╝╚══════╝╚══════╝  "
+  ]
+}

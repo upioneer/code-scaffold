@@ -2492,6 +2492,26 @@ mod visual_artifacts_tests {
                 });
         }
 
+        if !app
+            .workspace
+            .items
+            .iter()
+            .any(|i| i.label == "sentinel-strike" && i.category == Category::AgentSkills)
+        {
+            app.workspace
+                .items
+                .push(crate::components::workspace::WorkspaceItem {
+                    label: "sentinel-strike".into(),
+                    selected: false,
+                    category: Category::AgentSkills,
+                    description: None,
+                    version: None,
+                    exists_in_target: false,
+                    target_version: None,
+                    logo: None,
+                });
+        }
+
         // Switch to AgentPersona category
         app.workspace.set_category(Category::AgentPersona);
 
@@ -2514,7 +2534,7 @@ mod visual_artifacts_tests {
             .unwrap();
         assert!(sec_item.selected);
 
-        // Verify that ghostimprint and cybersecurity-toolkit are auto-selected
+        // Verify that ghostimprint, cybersecurity-toolkit, and sentinel-strike are auto-selected
         let ghost_item = app
             .workspace
             .items
@@ -2535,6 +2555,17 @@ mod visual_artifacts_tests {
         assert!(
             cyber_item.selected,
             "cybersecurity-toolkit should be auto-selected when Security Analyst is selected"
+        );
+
+        let sentinel_item = app
+            .workspace
+            .items
+            .iter()
+            .find(|i| i.label == "sentinel-strike" && i.category == Category::AgentSkills)
+            .unwrap();
+        assert!(
+            sentinel_item.selected,
+            "sentinel-strike should be auto-selected when Security Analyst is selected"
         );
     }
 

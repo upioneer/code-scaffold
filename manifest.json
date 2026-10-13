@@ -311,6 +311,13 @@
             "method": "copy"
         },
         {
+            "id": "nexus-rsi",
+            "label": "Nexus Recursive Self-Improvement Engine",
+            "source": ".skills/nexus-rsi",
+            "target": ".skills/nexus-rsi",
+            "method": "copy"
+        },
+        {
             "id": "node",
             "label": "Node",
             "source": ".skills/node",
@@ -448,6 +455,13 @@
             "label": "SEO GEO AEO Auditor",
             "source": ".skills/seo-geo-aeo-auditor",
             "target": ".skills/seo-geo-aeo-auditor",
+            "method": "copy"
+        },
+        {
+            "id": "sentinel-strike",
+            "label": "Sentinel Strike Autonomous Red-Team Matrix",
+            "source": ".skills/sentinel-strike",
+            "target": ".skills/sentinel-strike",
             "method": "copy"
         },
         {
