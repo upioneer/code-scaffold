@@ -1,6 +1,6 @@
 {
     "metadata": {
-        "version": "7.36.0",
+        "version": "7.37.0",
         "lastUpdated": "2026-09-07T01:09:00Z"
     },
     "env": {
@@ -192,6 +192,13 @@
             "method": "copy"
         },
         {
+            "id": "decipher",
+            "label": "Decipher Reverse Engineer Arsenal",
+            "source": ".skills/decipher",
+            "target": ".skills/decipher",
+            "method": "copy"
+        },
+        {
             "id": "docker",
             "label": "Docker Engine",
             "source": ".skills/docker",
@@ -280,6 +287,13 @@
             "label": "MCP Generator",
             "source": ".skills/mcp-generator",
             "target": ".skills/mcp-generator",
+            "method": "copy"
+        },
+        {
+            "id": "mechanica",
+            "label": "Mechanica Physical Metaphors",
+            "source": ".skills/mechanica",
+            "target": ".skills/mechanica",
             "method": "copy"
         },
         {
