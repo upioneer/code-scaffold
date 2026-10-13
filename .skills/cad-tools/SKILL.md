@@ -1,12 +1,12 @@
 ---
 name: CAD Tools
-description: Comprehensive CAD/CAM engineering skill for AI agents: orchestrating generative design, topology optimization with the Alien Meter slider, FreeCAD socket and headless automation, parametric 3D modeling, additive manufacturing (DMLS/SLS), and multi-format conversion. Trigger when the user requests parametric 3D CAD modeling, generative design, topology optimization, organic skeletal geometry, FreeCAD automation, PartDesign sketches, extrusion or pocketing, B-Rep solid generation, STEP/STL export, or CAD format conversion. Activate when interacting with FreeCAD via Streamable HTTP/SSE MCP socket or headless CLI, evaluating the Alien Meter tradeoff between rigidity and bio-morphology, script-based geometry with build123d/OpenCASCADE, desktop CAD via COM, or 3D print/CNC manufacturing validation.
-version: 10
+description: Comprehensive CAD/CAM engineering skill for AI agents: orchestrating generative design, topology optimization with the Alien Meter slider, FreeCAD socket and headless automation, parametric 3D modeling, OpenSCAD CSG compilation, CadQuery and build123d Python script modeling, additive manufacturing (DMLS/SLS), and multi-format conversion. Trigger when the user requests parametric 3D CAD modeling, OpenSCAD scripts, CadQuery code, generative design, topology optimization, organic skeletal geometry, FreeCAD automation, PartDesign sketches, extrusion or pocketing, B-Rep solid generation, STEP/STL export, or CAD format conversion. Activate when interacting with FreeCAD via Streamable HTTP/SSE MCP socket or headless CLI, compiling OpenSCAD designs with parameter overrides (-D), evaluating the Alien Meter tradeoff between rigidity and bio-morphology, script-based geometry with build123d/CadQuery/OpenCASCADE, desktop CAD via COM, or 3D print/CNC manufacturing validation.
+version: 11
 target: .skills/cad-tools
 ---
 ​‌‍# CAD Tools Skill
 
-A power-user engineering skill that equips AI agents with deep CAD/CAM capabilities across the full design-to-manufacture pipeline. Featuring generative design and topology optimization with the Alien Meter slider, native FreeCAD socket and headless automation, parametric Python scripting with `build123d` and OpenCASCADE, cloud-based generative B-Rep generation via the Zoo API, desktop COM automation for AutoCAD/ZWCAD, and a multi-format export pipeline (STEP, STL, DXF, 3MF, glTF, native FCStd), this skill is a complete engineering companion for autonomous technical workflows.
+A power-user engineering skill that equips AI agents with deep CAD/CAM capabilities across the full design-to-manufacture pipeline. Featuring generative design and topology optimization with the Alien Meter slider, native FreeCAD socket and headless automation, parametric OpenSCAD CSG compilation, CadQuery and `build123d` OpenCASCADE scripting, cloud-based generative B-Rep generation via the Zoo API, desktop COM automation for AutoCAD/ZWCAD, and a multi-format export pipeline (STEP, STL, DXF, 3MF, glTF, native FCStd), this skill is a complete engineering companion for autonomous technical workflows.
 
 ---
 
@@ -515,6 +515,107 @@ When integrating commercial off-the-shelf (COTS) hardware, agents must use stand
 * **Metric Screw Clearances (M2 to M10):** Apply standard Close, Normal, or Loose fit hole diameters and counterbore clearances defined in `references/FASTENER_VAULT.md`.
 * **Heat-Set Brass Inserts (Additive Parts):** Follow tapered insert boss dimensions (e.g. M3 insert: 4.4mm top hole diameter, 8 degree draft angle, minimum 1.6mm wall thickness around boss).
 * **Rotary Ball Bearings:** Implement standard press-fit (interference) and slip-fit bore tolerances for standard miniature bearings (608 skate, 688 slim, 625, 624).
+
+---
+
+## Section 14: Parametric Scripting with OpenSCAD
+
+For algorithmic Constructive Solid Geometry (CSG), rapid 3D printing slicing, and customizer-driven designs, OpenSCAD provides a declarative syntax compiling directly to polygon meshes.
+
+### 14.1 OpenSCAD Automation Bridge (`scripts/openscad_bridge.py`)
+The skill bundles a zero-dependency CLI bridge for inspecting, templating, and compiling OpenSCAD scripts headlessly:
+
+```bash
+# Check host OpenSCAD installation and binary version
+python scripts/openscad_bridge.py status
+
+# Inspect configurable parameters and Customizer boundaries from a .scad file
+python scripts/openscad_bridge.py inspect cad/models/bracket.scad
+
+# Compile .scad to STL with dynamic parameter overrides (-D)
+python scripts/openscad_bridge.py render cad/models/bracket.scad -o cad/output/bracket.stl -D bracket_width=75 -D wall_thickness=5.0
+
+# Render high-resolution offscreen PNG inspection snapshot
+python scripts/openscad_bridge.py render cad/models/enclosure.scad -o cad/output/enclosure.png --imgsize 1920,1080 --camera 0,0,0,60,0,45,250
+
+# Generate standard parametric templates (chassis_bracket or electronics_enclosure)
+python scripts/openscad_bridge.py template electronics_enclosure -o cad/models/enclosure.scad
+```
+
+### 14.2 Canonical Parametric OpenSCAD Model Pattern
+```openscad
+// Parametric Enclosure Base
+// Parameters in millimeters
+
+// [Dimensions]
+box_length    = 90.0;  // [30:250] Outer box length
+box_width     = 60.0;  // [20:180] Outer box width
+box_height    = 30.0;  // [10:100] Outer box height
+wall_thick    = 2.4;   // [1.2:5.0] Nominal wall thickness
+corner_radius = 4.0;   // [0:10] Corner rounding
+
+// [Fasteners]
+boss_diameter = 6.0;   // [4.0:10.0] Internal screw boss
+boss_hole_d   = 2.8;   // [1.5:4.5] M3 heat-set insert hole
+
+$fn = 64;
+
+module rounded_box(l, w, h, r) {
+    hull() {
+        translate([r, r, 0]) cylinder(h = h, r = r);
+        translate([l - r, r, 0]) cylinder(h = h, r = r);
+        translate([r, w - r, 0]) cylinder(h = h, r = r);
+        translate([l - r, w - r, 0]) cylinder(h = h, r = r);
+    }
+}
+
+module enclosure() {
+    difference() {
+        rounded_box(box_length, box_width, box_height, corner_radius);
+        translate([wall_thick, wall_thick, wall_thick])
+            rounded_box(box_length - 2*wall_thick, box_width - 2*wall_thick, box_height, max(0.1, corner_radius - wall_thick));
+    }
+}
+
+enclosure();
+```
+
+---
+
+## Section 15: CadQuery Scripting & Translation Matrix
+
+CadQuery provides a fluid, procedural Python API for generating boundary representation (B-Rep) solid geometry using the OpenCASCADE kernel.
+
+### 15.1 CadQuery Automation Bridge (`scripts/cadquery_bridge.py`)
+The skill provides a dedicated execution and conversion runner:
+
+```bash
+# Inspect parameters defined in a CadQuery script
+python scripts/cadquery_bridge.py inspect cad/models/flange.py
+
+# Execute CadQuery script headlessly and export solid STEP geometry
+python scripts/cadquery_bridge.py run cad/models/flange.py -o cad/output/flange.step -D FLANGE_DIA=120.0
+
+# Transpile legacy CadQuery scripts to modern build123d architecture
+python scripts/cadquery_bridge.py convert cad/models/flange.py -o cad/models/flange_build123d.py
+
+# Generate standard CadQuery parametric templates (chassis_bracket or flange_coupling)
+python scripts/cadquery_bridge.py template flange_coupling -o cad/models/flange.py
+```
+
+### 15.2 CadQuery to build123d Translation Matrix
+Because `build123d` is the modern next-generation successor to CadQuery created by the CadQuery core authors, both tools run on the same OpenCASCADE topological foundation. Agents can map concepts between both APIs:
+
+| Operation | CadQuery (Workplane Chain) | build123d (Context Manager) |
+| :--- | :--- | :--- |
+| Initialization | `cq.Workplane("XY")` | `with BuildPart() as p: with BuildSketch(Plane.XY):` |
+| Prismatic Solid | `.box(L, W, H)` | `Box(L, W, H)` or `Rectangle(L, W)` then `extrude(amount=H)` |
+| Circular Face | `.circle(R).extrude(H)` | `Circle(radius=R)` then `extrude(amount=H)` |
+| Hole Feature | `.faces(">Z").workplane().hole(D)` | `with Locations([(x, y, z)]): Hole(radius=D/2)` |
+| Edge Fillet | `.edges("|Z").fillet(R)` | `fillet(p.edges().filter_by(Axis.Z), radius=R)` |
+| Polar Pattern | `.polarArray(R, 0, 360, N).hole(D)` | `with PolarLocations(radius=R, count=N): Hole(radius=D/2)` |
+| Boolean Cut | `part_a.cut(part_b)` | `part_a - part_b` |
+| Boolean Union | `part_a.union(part_b)` | `part_a + part_b` |
 
 ---
 

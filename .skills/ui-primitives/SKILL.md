@@ -1,7 +1,7 @@
 ---
 ​‌‍name: UI Primitives & Micro-Interactions
-description: High-fidelity interactive web UI components, perimeter border beams, liquid gooey physics, spring magnification docks, spotlight bento grids, universal motion transitions, kinetic typography, staggered blur reveals, typewriter, circular text, atomic tokens, GSAP choreography timelines, ScrollTrigger scroll-driven animation, WebGL Three.js 3D scenes, WebGPU halftone cursor shader trails, premium surface gradient borders, design-first constraint prompting, and high-conversion landing page architecture.
-version: 6
+description: High-fidelity interactive web UI components, 86-component Tactile Kinetic Component Matrix, perimeter border beams, liquid gooey physics, spring magnification docks, spotlight bento grids, universal motion transitions, kinetic typography, staggered blur reveals, typewriter, circular text, atomic tokens, GSAP choreography timelines, ScrollTrigger scroll-driven animation, WebGL Three.js 3D scenes, WebGPU halftone cursor shader trails, premium surface gradient borders, design-first constraint prompting, and high-conversion landing page architecture.
+version: 7
 ---
 
 # UI Primitives & Micro-Interactions Skill
@@ -915,4 +915,137 @@ const controller = new ComparisonStageController(document.querySelector(".cs-mot
 4. **Accessible Button Wrapping**: For kinetic text rolls, hide duplicate optical text layers from screen readers using `aria-hidden="true"`.
 5. **SPA Memory Hygiene**: Dispose of Three.js geometries, materials, textures, and renderers on component unmount. Cancel `requestAnimationFrame` loops. Revert GSAP contexts with `ctx.revert()`.
 6. **Landing Page CTA Discipline**: Never present more than one primary CTA per fold. Competing calls to action statistically reduce conversions.
+
+---
+
+## 23. Tactile Kinetic Component Matrix (86-Component Registry)
+
+The Tactile Kinetic Matrix provides 86 production-ready, hand-tuned React components engineered for state transitions, tactile feedback, and next-generation agent interfaces. Every component operates with zero heavy animation dependencies, executing state transitions via the browser-native Web Animations API, CSS transforms, and resilient React state patterns.
+
+All 86 components reside in `.skills/ui-primitives/registry/components/` and are cataloged in `.skills/ui-primitives/registry/manifest.json`.
+
+### CLI Bridge Usage
+Agents and developers can inspect, query, and export components into any project workspace:
+```bash
+# List all components across 7 functional categories
+node .skills/ui-primitives/scripts/primitive_registry.mjs list
+
+# Filter list by category
+node .skills/ui-primitives/scripts/primitive_registry.mjs list agentic-interfaces
+
+# Inspect specific component metadata, props, and file dependencies
+node .skills/ui-primitives/scripts/primitive_registry.mjs info text-morph
+
+# Export a single component into a target project
+node .skills/ui-primitives/scripts/primitive_registry.mjs export cookie-banner src/components/ui
+
+# Export all 86 components into a project
+node .skills/ui-primitives/scripts/primitive_registry.mjs export-all src/components/ui
+
+# Validate registry health and file availability
+node .skills/ui-primitives/scripts/primitive_registry.mjs doctor
+```
+
+### Functional Component Categorization
+
+* **Interactive Controls (14 components)**:
+  * `text-morph`: Morphing typography where shared characters glide into new positions, new characters rise out of a blur, and layout width eases fluidly.
+  * `status-button`: Multi-state actionable button transitioning between idle, loading, success, and error states with tactile icon physics.
+  * `number-roll`: Odometer counter rolling individual digit columns with tabular numerals and zero layout shift.
+  * `code-input`: High-precision OTP and authentication code input with auto-advance and clipboard paste parsing.
+  * `hold-to-confirm`: Destructive action gate requiring sustained press with circular progress fill and haptic spring release.
+  * `precision-dial`: Rotary dial controller with angular velocity tracking, magnetic detents, and granular numeric readouts.
+  * `swipe-actions`: Mobile-first swipeable row revealing contextual edit and delete action trays with velocity decay.
+  * `radial-menu`: Circular popout menu expanding smoothly around cursor or touch origin with spring damping.
+  * `drop-zone`: Fluid file drop target with elastic membrane border deformation on hover and upload progress feedback.
+  * `wheel-picker`: Cylindrical roller drum picker for time, dates, and wheel selection with momentum flick physics.
+  * `range-ruler`: Calibrated graduated ruler with dual magnetic thumb sliders and non-overlapping constraint boundaries.
+  * `ratio-balancer`: Multi-segment fractional allocation slider with proportional redistribution and tactile dividers.
+  * `theme-toggle`: Morphing sun to moon SVG transition with radial theme clipping expander.
+  * `mode-switcher`: Segmented pill switch with elastic indicator glide for fast mode switching.
+
+* **Navigation, Layout & Menus (8 components)**:
+  * `pricing-toggle`: Bimodal billing cadence selector (monthly vs yearly) with discount badge bounce.
+  * `morphing-nav`: Floating dropdown navigation bar where background pill and dimensions glide smoothly to follow cursor focus.
+  * `feature-tabs`: Morphing panel selector where underline and active container morph between content tabs.
+  * `magnifying-dock`: macOS-style desktop dock utilizing Gaussian pointer-distance magnification and spring bounce.
+  * `split-pane`: Resizable dual-pane container with zero-lag divider drag and persistence to local storage.
+  * `command-palette`: ⌘K overlay palette with fuzzy filtering, keyboard navigation, and instant preview panels.
+  * `toast-stack`: Stacked alert notifications that fan out on hover and collapse smoothly into background tiers.
+  * `mention-menu`: Inline trigger menu activating on `@` mentions or `/` slash commands with keyboard focus trapping.
+
+* **Marketing & Conversion Surfaces (14 components)**:
+  * `waitlist-field`: High-conversion signup input that morphs into a confirmation receipt in place upon submission.
+  * `announcement-pill`: Micro badge floating above hero headlines expanding into rich changelog modals.
+  * `testimonials`: Kinetic quote carousel pairing prominent typographic excerpts with synchronized avatar spotlighting.
+  * `faq-accordion`: Clean accordion questions opening with smooth spring height interpolation and folding icons.
+  * `logo-marquee`: Infinite horizontal marquee strip easing velocity on hover and pausing offscreen.
+  * `expanding-gallery`: Grid thumbnail expanding into full-bleed lightbox viewer from its exact screen coordinates.
+  * `card-deck`: Interactive fanned card stack supporting swipe dismissal, click-to-focus, and re-stacking.
+  * `workflow-canvas`: Infinite nodal canvas with draggable process cards, animated orthogonal connection lines, and zoom pan.
+  * `image-compare`: Interactive visual before-and-after splitter with dual media sync and draggable center divide.
+  * `pricing-calculator`: Interactive sliding cost calculator recalculating tier breakdowns and usage forecasts in realtime.
+  * `comparison-table`: Multi-column competitive matrix with active column highlight gliding smoothly between tiers.
+  * `onboarding-checklist`: Stepped activation checklist with radial completion rings and item strikethrough animators.
+  * `cookie-banner`: Zero pre-consent privacy barrier banner with granular accept and decline gates and persistent revocation trigger.
+  * `newsletter-footer`: Reactive footer containing inline email subscription input and instant success confirmation.
+
+* **Forms, Dates & Progression (5 components)**:
+  * `steps-form`: Compact multi-step wizard in a single card dynamically easing height as step contents change.
+  * `date-range-picker`: Dual-month calendar surface where selected range renders as a connected liquid highlight band.
+  * `scroll-story`: Storytelling container pinning sequential narrative cards as user scrolls down the viewport.
+  * `stats-band`: Metric grid where animated border strokes draw themselves before numbers roll into final values.
+  * `sortable-list`: Drag-and-drop sortable list with FLIP layout animations and magnetic drag shadows.
+
+* **Realtime Telemetry & Live Activity (6 components)**:
+  * `live-activity`: Dynamic status pill updating realtime states and pulses without layout shifts.
+  * `live-cursors`: Multiplayer cursor overlay displaying remote user locations with smoothed spring interpolation.
+  * `live-map`: World map visualization rendering illuminated beacon points and activity pings.
+  * `changelog-timeline`: Vertical product release rail illuminating sequentially as reader scrolls through milestones.
+  * `changelog-trace`: Circuit-style changelog diagram routing glowing traces between releases.
+  * `changelog-scrubber`: Horizontal release scrubber allowing rapid timeline scrubbing across versions.
+
+* **Agentic & AI Conversational Surfaces (31 components)**:
+  * `prompt-composer`: Primary prompt input expanding dynamically as user types, with model selector and attachment chips.
+  * `agent-composer`: Heavy agent workspace input supporting branch toggling, system prompts, and multi-file context drops.
+  * `attachment-chip`: Context file badge showing uploading progress, token counts, and remove triggers.
+  * `model-picker`: Compact model pill expanding into reasoning tier menus with token pricing disclosures.
+  * `voice-input`: Live microphone waveform visualizer with frequency bars and silence auto-commit.
+  * `voice-note`: Audio player displaying scrubbable amplitude wave and synchronized spoken transcript lines.
+  * `thinking-indicator`: Subtle animated glyphs displaying internal reasoning states before first token emission.
+  * `thinking-trace`: Expandable reasoning disclosure showing step breakdowns, elapsed time, and collapsed thoughts.
+  * `tool-call`: Agent tool invocation card rendering function parameters, execution status, and formatted output.
+  * `clarifying-question`: Interactive decision prompt offering numbered options and instant choice dispatch.
+  * `approval-card`: Security gate card displaying pending mutations with explicit Confirm and Reject actions.
+  * `plan`: Interactive multi-step execution checklist that ticks off completed tasks in realtime.
+  * `web-research`: Search activity card displaying active queries, crawled domain icons, and snippet extraction states.
+  * `command-output`: Terminal execution card streaming stdout and stderr with collapsible output buffers.
+  * `task-progress`: High-level timeline for multi-minute agent workflows with phase labels and active countdowns.
+  * `task-log`: Detailed granular operational log tracking agent tasks, mutated files, and execution timestamps.
+  * `streaming-answer`: Token-by-token answer renderer supporting markdown formatting and seamless code extraction.
+  * `code-block`: Syntax-highlighted code viewport streaming incoming lines with one-click copy and language tags.
+  * `citation`: Inline superscript source tag opening instant hover card previews with domain favicon and quote excerpt.
+  * `response-versions`: Pagination controls for regenerated model responses (`2 of 3`) with diff indicators.
+  * `selection-actions`: Floating context pill appearing upon text selection offering Rewrite, Explain, and Expand shortcuts.
+  * `inline-rewrite`: In-situ text editor that morphs prose based on tone or length slider adjustments.
+  * `diff-review`: Granular word-level diff review card allowing individual line acceptance or rejection.
+  * `action-receipt`: Immutable receipt record verifying external mutations and file modifications.
+  * `chat-notice`: Graceful degradation notification for rate limits, context overflow, or connection interruptions.
+  * `usage-meter`: Compact circular or linear progress meter indicating remaining token allowance.
+  * `usage-limits`: Detailed context window breakdown partitioned between prompt tokens, completion tokens, and caching.
+  * `chat-scroll`: Floating jump-to-latest button with new message indicator that unhooks during manual scroll.
+  * `message-edit`: In-place sent message editor preserving conversation branching history.
+  * `chat-history`: Searchable conversation sidebar organized chronologically with title editing and deletion.
+  * `agent-playback`: Hands-free demo player that automatically simulates user prompts and streaming agent output on a loop.
+
+* **Kinetic Charts & Data Visualization (8 components)**:
+  * `morphing-chart`: Polymorphic chart container morphing smoothly between bars, lines, and areas with continuous point paths.
+  * `earnings-chart`: Animated financial bar chart morphing bar heights with numeric tooltip anchors.
+  * `steps-chart`: Habit tracking chart displaying progress against daily targets with fill milestones.
+  * `revenue-chart`: Dual-series area chart comparing current performance against previous year baselines.
+  * `area-chart`: Multi-series stacked area chart with smooth Bezier splines and legend hover filtering.
+  * `combo-chart`: Composite chart rendering simultaneous bar volumes and trend lines on shared horizontal axes.
+  * `stage-bars`: Horizontal funnel conversion visualization displaying dropoff percentages at each stage.
+  * `activity-rings`: Concentric fitness-style radial rings tracking tri-metric progress with rounded caps.
+
 * **Architectural Compliance**: When synthesizing or scaffolding project code, align generated components with Code Scaffold architectural specification standards.

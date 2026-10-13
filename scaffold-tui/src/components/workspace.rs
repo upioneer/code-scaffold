@@ -138,7 +138,7 @@ impl Workspace {
                 label: "Web Dev".into(),
                 selected: false,
                 category: Category::AgentPersona,
-                description: Some("Specialized in modern full-stack web technologies (React, Next.js, Vue, Node.js, HTML/CSS). MUST strictly enforce mobile-first responsive design (320px+ viewports, fluid typography, >=48px touch targets, zero horizontal overflow) and automated SEO/GEO/AEO lifecycle maintenance (dynamic metadata, canonical URLs, JSON-LD structured schemas, sitemap.xml, robots.txt, semantic HTML hierarchies). MUST strictly enforce security best practices: rate limiting, secure password hashing, and OWASP protection.".into()),
+                description: Some("Specialized in modern full-stack web technologies (React, Next.js, Vue, Node.js, HTML/CSS). MUST strictly enforce zero pre-consent tracking: ensure no tracking pixels, analytics SDKs (e.g., Google Analytics, PostHog, Mixpanel), marketing tags, or third-party scripts load or execute until the user explicitly clicks 'Accept' on the cookie consent banner; provide a categorized consent model (strictly essential vs analytics/marketing), persistent state storage with revocation controls, and automated verification tests asserting zero pre-consent network requests. MUST strictly enforce mobile-first responsive design (320px+ viewports, fluid typography, >=48px touch targets, zero horizontal overflow) and automated SEO/GEO/AEO lifecycle maintenance (dynamic metadata, canonical URLs, JSON-LD structured schemas, sitemap.xml, robots.txt, semantic HTML hierarchies). MUST strictly enforce security best practices: rate limiting, secure password hashing, and OWASP protection.".into()),
                 version: None,
                 exists_in_target: false,
                 target_version: None, logo: None,
@@ -988,7 +988,8 @@ fn detect_personas(
     if text_lower.contains("web dev")
         || text_lower.contains("web developer")
         || (text_lower.contains("full-stack web technologies")
-            && text_lower.contains("mobile-first responsive design"))
+            && (text_lower.contains("mobile-first responsive design")
+                || text_lower.contains("zero pre-consent tracking")))
     {
         detected.push("Web Dev".to_string());
     }
@@ -1533,6 +1534,20 @@ impl Component for Workspace {
                     if (label == "Web Dev" || label == "Mobile (iOS/And)") && new_state {
                         if let Some(companion) = self.items.iter_mut().find(|i| {
                             i.label == "privacy-policy" && i.category == Category::AgentSkills
+                        }) {
+                            companion.selected = true;
+                        }
+                    }
+                    if label == "Mobile (iOS/And)" && new_state {
+                        if let Some(companion) = self
+                            .items
+                            .iter_mut()
+                            .find(|i| i.label == "xcross" && i.category == Category::AgentSkills)
+                        {
+                            companion.selected = true;
+                        }
+                        if let Some(companion) = self.items.iter_mut().find(|i| {
+                            i.label == "mobile-pwa" && i.category == Category::AgentSkills
                         }) {
                             companion.selected = true;
                         }

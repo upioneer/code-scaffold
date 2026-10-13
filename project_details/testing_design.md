@@ -61,9 +61,11 @@ This workspace includes an automated UI structure validation engine. Run the fol
 
 ## 2. Quality Gates & Validation Protocols
 All subsequent code additions by the agent or developer must satisfy the following structural requirements:
-- Semantic DOM Elements: Main layout files must contain clear structural land markers (e.g., header, main, footer).
-- Asset Map Ingestion: Core configuration files must map asset pathways deterministically to prevent broken compilation pipelines.
-- Clean Compilation Targets: Client side bootstrap entry points must resolve without dangling dependencies or unresolved relative paths.
+* Semantic DOM Elements: Main layout files must contain clear structural land markers (e.g., header, main, footer).
+* Asset Map Ingestion: Core configuration files must map asset pathways deterministically to prevent broken compilation pipelines.
+* Clean Compilation Targets: Client side bootstrap entry points must resolve without dangling dependencies or unresolved relative paths.
+* Zero Pre-Consent Tracking: Tracking pixels, analytics SDKs, and third-party marketing tags must never load or execute until the user clicks Accept on the cookie consent banner.
+* Code Quality: Source code should be clean, contain no residual debuggers or console statements, and follow SPA best practices.
 
 ---
 

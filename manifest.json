@@ -554,6 +554,13 @@
             "source": ".skills/website-deploy-linux",
             "target": ".skills/website-deploy-linux",
             "method": "copy"
+        },
+        {
+            "id": "xcross",
+            "label": "XCross Cross-Platform iOS Engine",
+            "source": ".skills/xcross",
+            "target": ".skills/xcross",
+            "method": "copy"
         }
     ]
 }

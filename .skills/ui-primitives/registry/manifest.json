@@ -1,0 +1,1344 @@
+{
+  "registryVersion": "1.0.0",
+  "totalComponents": 86,
+  "description": "Code Scaffold Tactile Kinetic Component Matrix: 86 high-fidelity React micro-interaction primitives and agentic UI surfaces.",
+  "categories": [
+    "interactive-controls",
+    "navigation-and-layout",
+    "conversion-surfaces",
+    "forms-and-storytelling",
+    "realtime-telemetry",
+    "agentic-interfaces",
+    "kinetic-charts"
+  ],
+  "components": [
+    {
+      "slug": "text-morph",
+      "title": "Text morph",
+      "description": "Text that changes the way it should: shared letters slide over, new ones rise out of a blur, the width eases.",
+      "category": "interactive-controls",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "text-morph.tsx",
+          "relativePath": "registry/components/text-morph.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "status-button",
+      "title": "Status button",
+      "description": "Save, Saving, Saved: the spinner opens in, the check draws itself, errors shake, and the label morphs between them.",
+      "category": "interactive-controls",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "status-button.tsx",
+          "relativePath": "registry/components/status-button.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "number-roll",
+      "title": "Number roll",
+      "description": "Numbers that change like an odometer: every digit rolls in the direction the number moved.",
+      "category": "interactive-controls",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "number-roll.tsx",
+          "relativePath": "registry/components/number-roll.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "pricing-toggle",
+      "title": "Pricing toggle",
+      "description": "Monthly or yearly: the thumb slides with a little give, and every price on the page rolls to its new amount.",
+      "category": "navigation-and-layout",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "pricing-toggle.tsx",
+          "relativePath": "registry/components/pricing-toggle.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "waitlist-field",
+      "title": "Waitlist field",
+      "description": "An email field that becomes its own answer: the button stretches across it, then settles as \"You’re on the list · #1,248\".",
+      "category": "conversion-surfaces",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "waitlist-field.tsx",
+          "relativePath": "registry/components/waitlist-field.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "code-input",
+      "title": "Code input",
+      "description": "The six boxes, done properly: digits rise in, a paste cascades, a wrong code shakes and clears, the right one becomes a pill with a check.",
+      "category": "interactive-controls",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "code-input.tsx",
+          "relativePath": "registry/components/code-input.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "steps-form",
+      "title": "Steps form",
+      "description": "A multi-step form in one card that changes shape: steps slide in from the way you’re going, checks shake and explain, and Create turns into what comes next.",
+      "category": "forms-and-storytelling",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "fileName": "steps-form.tsx",
+          "relativePath": "registry/components/steps-form.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "date-range-picker",
+      "title": "Date range picker",
+      "description": "A range is one liquid band: it follows your pointer between days, presets flow it to their span, and the dates morph as it moves.",
+      "category": "forms-and-storytelling",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "fileName": "date-range-picker.tsx",
+          "relativePath": "registry/components/date-range-picker.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "morphing-nav",
+      "title": "Morphing nav",
+      "description": "One dropdown that follows you along the menu, gliding and resizing to each item’s content.",
+      "category": "navigation-and-layout",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "morphing-nav.tsx",
+          "relativePath": "registry/components/morphing-nav.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "feature-tabs",
+      "title": "Feature tabs",
+      "description": "One panel, many features: the line slides between tabs, fills as autoplay runs, and the panel eases to each.",
+      "category": "navigation-and-layout",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "feature-tabs.tsx",
+          "relativePath": "registry/components/feature-tabs.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "scroll-story",
+      "title": "Scroll story",
+      "description": "A how-it-works section that tells itself as you scroll: steps light up at the middle, a rail fills, and one card reshapes into each step’s picture.",
+      "category": "forms-and-storytelling",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "scroll-story.tsx",
+          "relativePath": "registry/components/scroll-story.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "stats-band",
+      "title": "Stats band",
+      "description": "Numbers that arrive when you do: precision strokes draw themselves, then each figure rolls up from zero in turn.",
+      "category": "forms-and-storytelling",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "stats-band.tsx",
+          "relativePath": "registry/components/stats-band.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "announcement-pill",
+      "title": "Announcement pill",
+      "description": "\"New: …\" above your headline that opens into the news: the pill itself grows into a changelog card.",
+      "category": "conversion-surfaces",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "announcement-pill.tsx",
+          "relativePath": "registry/components/announcement-pill.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "testimonials",
+      "title": "Testimonials",
+      "description": "One quote, chosen by its people: faces step forward, the words cross-fade through a blur, a ring keeps time.",
+      "category": "conversion-surfaces",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "testimonials.tsx",
+          "relativePath": "registry/components/testimonials.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "faq-accordion",
+      "title": "FAQ accordion",
+      "description": "Questions on precision strokes that open like they mean it: the answer eases to its height, the plus folds into a minus.",
+      "category": "conversion-surfaces",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "faq-accordion.tsx",
+          "relativePath": "registry/components/faq-accordion.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "logo-marquee",
+      "title": "Logo marquee",
+      "description": "A quiet strip of logos that notices you: it eases to a stop on hover and the logo you point at stays bright.",
+      "category": "conversion-surfaces",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "logo-marquee.tsx",
+          "relativePath": "registry/components/logo-marquee.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "expanding-gallery",
+      "title": "Expanding gallery",
+      "description": "An image opens from its exact place in the grid, becomes a spacious viewer, and finds its way back.",
+      "category": "conversion-surfaces",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "fileName": "expanding-gallery.tsx",
+          "relativePath": "registry/components/expanding-gallery.tsx"
+        },
+        {
+          "fileName": "gallery-picture.tsx",
+          "relativePath": "registry/components/gallery-picture.tsx"
+        },
+        {
+          "fileName": "gallery-viewer.tsx",
+          "relativePath": "registry/components/gallery-viewer.tsx"
+        },
+        {
+          "fileName": "ui-interaction-motion.ts",
+          "relativePath": "registry/components/ui-interaction-motion.ts"
+        }
+      ]
+    },
+    {
+      "slug": "card-deck",
+      "title": "Card deck",
+      "description": "A tactile stack that fans out, follows your hand, and deals the next card with a measured flick.",
+      "category": "conversion-surfaces",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "fileName": "card-deck.tsx",
+          "relativePath": "registry/components/card-deck.tsx"
+        },
+        {
+          "fileName": "use-card-deck-gesture.ts",
+          "relativePath": "registry/components/use-card-deck-gesture.ts"
+        },
+        {
+          "fileName": "ui-interaction-motion.ts",
+          "relativePath": "registry/components/ui-interaction-motion.ts"
+        }
+      ]
+    },
+    {
+      "slug": "workflow-canvas",
+      "title": "Workflow canvas",
+      "description": "Connected steps you can move, inspect and follow as work flows through them.",
+      "category": "conversion-surfaces",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "fileName": "workflow-canvas.tsx",
+          "relativePath": "registry/components/workflow-canvas.tsx"
+        },
+        {
+          "fileName": "workflow-types.ts",
+          "relativePath": "registry/components/workflow-types.ts"
+        },
+        {
+          "fileName": "workflow-connections.tsx",
+          "relativePath": "registry/components/workflow-connections.tsx"
+        },
+        {
+          "fileName": "workflow-status.tsx",
+          "relativePath": "registry/components/workflow-status.tsx"
+        },
+        {
+          "fileName": "workflow-inspector.tsx",
+          "relativePath": "registry/components/workflow-inspector.tsx"
+        },
+        {
+          "fileName": "use-workflow-viewport.ts",
+          "relativePath": "registry/components/use-workflow-viewport.ts"
+        },
+        {
+          "fileName": "ui-interaction-motion.ts",
+          "relativePath": "registry/components/ui-interaction-motion.ts"
+        }
+      ]
+    },
+    {
+      "slug": "image-compare",
+      "title": "Image compare",
+      "description": "Two images, one precise divide. Drag to reveal what changed, then let the handle settle.",
+      "category": "conversion-surfaces",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "fileName": "image-compare.tsx",
+          "relativePath": "registry/components/image-compare.tsx"
+        },
+        {
+          "fileName": "ui-interaction-motion.ts",
+          "relativePath": "registry/components/ui-interaction-motion.ts"
+        }
+      ]
+    },
+    {
+      "slug": "magnifying-dock",
+      "title": "Magnifying dock",
+      "description": "A dock that makes room for the tool you reach for, then opens it in place.",
+      "category": "navigation-and-layout",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "magnifying-dock.tsx",
+          "relativePath": "registry/components/magnifying-dock.tsx"
+        },
+        {
+          "fileName": "use-dock-lens.ts",
+          "relativePath": "registry/components/use-dock-lens.ts"
+        },
+        {
+          "fileName": "ui-interaction-motion.ts",
+          "relativePath": "registry/components/ui-interaction-motion.ts"
+        }
+      ]
+    },
+    {
+      "slug": "hold-to-confirm",
+      "title": "Hold to confirm",
+      "description": "A deliberate action, held for a moment: the ring fills, the label changes, and confirmation settles into a check.",
+      "category": "interactive-controls",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "fileName": "hold-to-confirm.tsx",
+          "relativePath": "registry/components/hold-to-confirm.tsx"
+        },
+        {
+          "fileName": "use-hold-confirm.ts",
+          "relativePath": "registry/components/use-hold-confirm.ts"
+        },
+        {
+          "fileName": "ui-interaction-motion.ts",
+          "relativePath": "registry/components/ui-interaction-motion.ts"
+        }
+      ]
+    },
+    {
+      "slug": "precision-dial",
+      "title": "Precision dial",
+      "description": "A small instrument for getting a value just right. Drag to tune; hold Shift for the finer details.",
+      "category": "interactive-controls",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "precision-dial.tsx",
+          "relativePath": "registry/components/precision-dial.tsx"
+        },
+        {
+          "fileName": "use-precision-dial.ts",
+          "relativePath": "registry/components/use-precision-dial.ts"
+        },
+        {
+          "fileName": "ui-interaction-motion.ts",
+          "relativePath": "registry/components/ui-interaction-motion.ts"
+        }
+      ]
+    },
+    {
+      "slug": "swipe-actions",
+      "title": "Swipe actions",
+      "description": "A row that makes room for its next step. Swipe to reveal, then choose what happens.",
+      "category": "interactive-controls",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "swipe-actions.tsx",
+          "relativePath": "registry/components/swipe-actions.tsx"
+        },
+        {
+          "fileName": "use-swipe-reveal.ts",
+          "relativePath": "registry/components/use-swipe-reveal.ts"
+        },
+        {
+          "fileName": "ui-interaction-motion.ts",
+          "relativePath": "registry/components/ui-interaction-motion.ts"
+        }
+      ]
+    },
+    {
+      "slug": "radial-menu",
+      "title": "Radial menu",
+      "description": "One starting point, a few ways forward. Commands unfold into a small clockwise constellation.",
+      "category": "interactive-controls",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "radial-menu.tsx",
+          "relativePath": "registry/components/radial-menu.tsx"
+        },
+        {
+          "fileName": "use-radial-menu.ts",
+          "relativePath": "registry/components/use-radial-menu.ts"
+        },
+        {
+          "fileName": "ui-interaction-motion.ts",
+          "relativePath": "registry/components/ui-interaction-motion.ts"
+        }
+      ]
+    },
+    {
+      "slug": "drop-zone",
+      "title": "Drop zone",
+      "description": "A drop zone whose border is a membrane: it reaches for the file, holds it, swallows it and passes it through to its row.",
+      "category": "interactive-controls",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "fileName": "drop-zone.tsx",
+          "relativePath": "registry/components/drop-zone.tsx"
+        },
+        {
+          "fileName": "use-membrane.ts",
+          "relativePath": "registry/components/use-membrane.ts"
+        },
+        {
+          "fileName": "ui-interaction-motion.ts",
+          "relativePath": "registry/components/ui-interaction-motion.ts"
+        }
+      ]
+    },
+    {
+      "slug": "wheel-picker",
+      "title": "Wheel picker",
+      "description": "Drums you can fling: each column is a real cylinder that decays onto a row, with a lens in full colour over the middle.",
+      "category": "interactive-controls",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "wheel-picker.tsx",
+          "relativePath": "registry/components/wheel-picker.tsx"
+        },
+        {
+          "fileName": "use-wheel-drum.ts",
+          "relativePath": "registry/components/use-wheel-drum.ts"
+        },
+        {
+          "fileName": "ui-interaction-motion.ts",
+          "relativePath": "registry/components/ui-interaction-motion.ts"
+        }
+      ]
+    },
+    {
+      "slug": "morphing-chart",
+      "title": "Morphing chart",
+      "description": "Bars, line and area as one set of marks: bars condense into beads, a thread is strung through them, the fill pours down. Drag the switch to scrub it.",
+      "category": "kinetic-charts",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "morphing-chart.tsx",
+          "relativePath": "registry/components/morphing-chart.tsx"
+        },
+        {
+          "fileName": "use-chart-morph.ts",
+          "relativePath": "registry/components/use-chart-morph.ts"
+        },
+        {
+          "fileName": "ui-interaction-motion.ts",
+          "relativePath": "registry/components/ui-interaction-motion.ts"
+        }
+      ]
+    },
+    {
+      "slug": "range-ruler",
+      "title": "Range ruler",
+      "description": "Two precision needles across a graduated scale. Thumbs glide without layout thrash and repel each other on contact.",
+      "category": "interactive-controls",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "range-ruler.tsx",
+          "relativePath": "registry/components/range-ruler.tsx"
+        },
+        {
+          "fileName": "use-range-ruler.ts",
+          "relativePath": "registry/components/use-range-ruler.ts"
+        },
+        {
+          "fileName": "ui-interaction-motion.ts",
+          "relativePath": "registry/components/ui-interaction-motion.ts"
+        }
+      ]
+    },
+    {
+      "slug": "ratio-balancer",
+      "title": "Ratio balancer",
+      "description": "A multi-segment allocation track. Drag dividers to rebalance constrained percentages with lockable pins.",
+      "category": "interactive-controls",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "ratio-balancer.tsx",
+          "relativePath": "registry/components/ratio-balancer.tsx"
+        },
+        {
+          "fileName": "use-ratio-balancer.ts",
+          "relativePath": "registry/components/use-ratio-balancer.ts"
+        },
+        {
+          "fileName": "ui-interaction-motion.ts",
+          "relativePath": "registry/components/ui-interaction-motion.ts"
+        }
+      ]
+    },
+    {
+      "slug": "split-pane",
+      "title": "Split pane",
+      "description": "A desktop-grade resizable dual panel. Zero-lag drag, rubber-band spring limits, and double-click preset snapping.",
+      "category": "navigation-and-layout",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "split-pane.tsx",
+          "relativePath": "registry/components/split-pane.tsx"
+        },
+        {
+          "fileName": "use-split-pane.ts",
+          "relativePath": "registry/components/use-split-pane.ts"
+        },
+        {
+          "fileName": "ui-interaction-motion.ts",
+          "relativePath": "registry/components/ui-interaction-motion.ts"
+        }
+      ]
+    },
+    {
+      "slug": "command-palette",
+      "title": "Command palette",
+      "description": "⌘K that grows out of the search pill: fuzzy search, nested lists, and commands that run in place.",
+      "category": "navigation-and-layout",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "command-palette.tsx",
+          "relativePath": "registry/components/command-palette.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "toast-stack",
+      "title": "Toast stack",
+      "description": "Notifications that stack, fan out on hover, follow a promise in one toast, and swipe away.",
+      "category": "navigation-and-layout",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "toast-stack.tsx",
+          "relativePath": "registry/components/toast-stack.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "live-activity",
+      "title": "Live activity",
+      "description": "One pill for whatever is happening now: it updates in place, tap it and it grows into a panel, done blurs into a check.",
+      "category": "realtime-telemetry",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "live-activity.tsx",
+          "relativePath": "registry/components/live-activity.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "live-cursors",
+      "title": "Live cursors",
+      "description": "Other people’s cursors gliding over the same page: names that turn into speech bubbles, click ripples, and selections that follow them around.",
+      "category": "realtime-telemetry",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "live-cursors.tsx",
+          "relativePath": "registry/components/live-cursors.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "live-map",
+      "title": "Live map",
+      "description": "The world as dots, lighting up where things happen: pings ripple, the light lingers, and one card follows the newest event from city to city.",
+      "category": "realtime-telemetry",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "live-map.tsx",
+          "relativePath": "registry/components/live-map.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "theme-toggle",
+      "title": "Theme toggle",
+      "description": "The sun sets into a moon, and the new theme spreads from the button in a circle.",
+      "category": "interactive-controls",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "theme-toggle.tsx",
+          "relativePath": "registry/components/theme-toggle.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "pricing-calculator",
+      "title": "Pricing calculator",
+      "description": "Drag to your size and watch the price roll, the plan morph and, at the top, “Let’s talk”.",
+      "category": "conversion-surfaces",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "pricing-calculator.tsx",
+          "relativePath": "registry/components/pricing-calculator.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "comparison-table",
+      "title": "Comparison table",
+      "description": "Plans side by side, with a column that glides to the plan under your pointer and prices that roll.",
+      "category": "conversion-surfaces",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "comparison-table.tsx",
+          "relativePath": "registry/components/comparison-table.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "onboarding-checklist",
+      "title": "Onboarding checklist",
+      "description": "The first five things, ticked off in place: a ring that fills, checks that draw, and a finish worth seeing.",
+      "category": "conversion-surfaces",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "onboarding-checklist.tsx",
+          "relativePath": "registry/components/onboarding-checklist.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "sortable-list",
+      "title": "Sortable list",
+      "description": "Drag to reorder and everything moves: rows slide out of the way, the dropped one settles, every rank rolls, and presets re-sort the lot.",
+      "category": "forms-and-storytelling",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "sortable-list.tsx",
+          "relativePath": "registry/components/sortable-list.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "changelog-timeline",
+      "title": "Changelog timeline",
+      "description": "What shipped, drawn as you read: a rail that fills, dots that light, filters that fold the rest away.",
+      "category": "realtime-telemetry",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "changelog-timeline.tsx",
+          "relativePath": "registry/components/changelog-timeline.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "changelog-trace",
+      "title": "Changelog trace",
+      "description": "What shipped, routed like a circuit: the line steps aside between releases, and a bead runs down it as you read.",
+      "category": "realtime-telemetry",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "changelog-trace.tsx",
+          "relativePath": "registry/components/changelog-trace.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "changelog-scrubber",
+      "title": "Changelog scrubber",
+      "description": "Your release history on a ruler you scrub: drag the playhead, or press play and watch the product ship.",
+      "category": "realtime-telemetry",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "changelog-scrubber.tsx",
+          "relativePath": "registry/components/changelog-scrubber.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "cookie-banner",
+      "title": "Cookie banner",
+      "description": "Asks once, plainly, then folds into a small cookie button in the corner that grows back into the preferences.",
+      "category": "conversion-surfaces",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "cookie-banner.tsx",
+          "relativePath": "registry/components/cookie-banner.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "newsletter-footer",
+      "title": "Newsletter footer",
+      "description": "A footer that’s still alive: a signup that becomes its own confirmation, drawn link underlines and your name in outline.",
+      "category": "conversion-surfaces",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "newsletter-footer.tsx",
+          "relativePath": "registry/components/newsletter-footer.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "prompt-composer",
+      "title": "Prompt composer",
+      "description": "The input that starts it all: grows as you type, takes files, and turns Send into Stop while answering.",
+      "category": "agentic-interfaces",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "fileName": "prompt-composer.tsx",
+          "relativePath": "registry/components/prompt-composer.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "agent-composer",
+      "title": "Agent composer",
+      "description": "The taller composer for agent surfaces: branch, folder and context on a tab above, permissions and model as pills that grow into their lists.",
+      "category": "agentic-interfaces",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "fileName": "agent-composer.tsx",
+          "relativePath": "registry/components/agent-composer.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "mention-menu",
+      "title": "Mentions and commands",
+      "description": "Type @ to pull in context or / for a command. The menu grows from the caret and your text becomes a chip.",
+      "category": "navigation-and-layout",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "mention-menu.tsx",
+          "relativePath": "registry/components/mention-menu.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "attachment-chip",
+      "title": "Attachment chip",
+      "description": "A file on its way into a prompt: uploading, being read, ready or failed.",
+      "category": "agentic-interfaces",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "fileName": "attachment-chip.tsx",
+          "relativePath": "registry/components/attachment-chip.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "mode-switcher",
+      "title": "Mode switcher",
+      "description": "Fast, Thinking, Research: a segmented switch with a sliding pill and locked paid modes.",
+      "category": "interactive-controls",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "fileName": "mode-switcher.tsx",
+          "relativePath": "registry/components/mode-switcher.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "model-picker",
+      "title": "Model picker",
+      "description": "The model pill in your composer grows into the menu: what each model is for, speed, smarts and thinking effort.",
+      "category": "agentic-interfaces",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "fileName": "model-picker.tsx",
+          "relativePath": "registry/components/model-picker.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "voice-input",
+      "title": "Voice input",
+      "description": "Dictate a prompt: a waveform from your real mic level, a timer, then transcribing.",
+      "category": "agentic-interfaces",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "fileName": "voice-input.tsx",
+          "relativePath": "registry/components/voice-input.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "voice-note",
+      "title": "Voice note",
+      "description": "A voice message you can scrub and read along with: the waveform fills, the time rolls, and the transcript highlights each word as it’s said.",
+      "category": "agentic-interfaces",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "fileName": "voice-note.tsx",
+          "relativePath": "registry/components/voice-note.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "thinking-indicator",
+      "title": "Thinking indicator",
+      "description": "Four quiet loaders for the gap before the first token, with a label, a rolling timer and a finish that draws itself.",
+      "category": "agentic-interfaces",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "thinking-indicator.tsx",
+          "relativePath": "registry/components/thinking-indicator.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "thinking-trace",
+      "title": "Thinking trace",
+      "description": "An expandable record of what an agent did: steps, reasoning, search or tool calls.",
+      "category": "agentic-interfaces",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "fileName": "thinking-trace.tsx",
+          "relativePath": "registry/components/thinking-trace.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "tool-call",
+      "title": "Tool call",
+      "description": "One tool invocation from arguments to result: preparing, running, done, failed or denied.",
+      "category": "agentic-interfaces",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "fileName": "tool-call.tsx",
+          "relativePath": "registry/components/tool-call.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "clarifying-question",
+      "title": "Clarifying question",
+      "description": "The agent pauses to ask. Pick with a click or a number key, or type your own; it folds into a one-line receipt.",
+      "category": "agentic-interfaces",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "fileName": "clarifying-question.tsx",
+          "relativePath": "registry/components/clarifying-question.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "approval-card",
+      "title": "Approval card",
+      "description": "The agent asks before it acts: what it wants to do, the details, Approve or Deny.",
+      "category": "agentic-interfaces",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "fileName": "approval-card.tsx",
+          "relativePath": "registry/components/approval-card.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "plan",
+      "title": "Plan",
+      "description": "An agent’s checklist that ticks itself off: pending, in progress, done, skipped or failed.",
+      "category": "agentic-interfaces",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "fileName": "plan.tsx",
+          "relativePath": "registry/components/plan.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "web-research",
+      "title": "Web research",
+      "description": "Watch the agent search: the query types in, page icons stack up as it reads, then it folds into a trail of searches and the pages each one found.",
+      "category": "agentic-interfaces",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "fileName": "web-research.tsx",
+          "relativePath": "registry/components/web-research.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "command-output",
+      "title": "Command output",
+      "description": "A command the agent runs: the log streams in, folds away on success, and stays open on failure.",
+      "category": "agentic-interfaces",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "fileName": "command-output.tsx",
+          "relativePath": "registry/components/command-output.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "task-progress",
+      "title": "Task progress",
+      "description": "For work that takes minutes: phases, a live timer, stats, cancel, and the result when it’s done.",
+      "category": "agentic-interfaces",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "fileName": "task-progress.tsx",
+          "relativePath": "registry/components/task-progress.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "task-log",
+      "title": "Task log",
+      "description": "What the agent did, task by task, as it does it: steps arrive on a precision trail, files sit in chips, titles turn past tense.",
+      "category": "agentic-interfaces",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "fileName": "task-log.tsx",
+          "relativePath": "registry/components/task-log.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "streaming-answer",
+      "title": "Streaming answer",
+      "description": "An answer as it arrives, with inline citations, actions, sources and follow-ups.",
+      "category": "agentic-interfaces",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "fileName": "streaming-answer.tsx",
+          "relativePath": "registry/components/streaming-answer.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "code-block",
+      "title": "Code block",
+      "description": "Code in an answer: highlighted as it streams, copy and wrap, long files folded, and an optional Apply.",
+      "category": "agentic-interfaces",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "fileName": "code-block.tsx",
+          "relativePath": "registry/components/code-block.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "citation",
+      "title": "Citation",
+      "description": "An inline numbered source that previews the site, title and snippet on hover or focus.",
+      "category": "agentic-interfaces",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "fileName": "citation.tsx",
+          "relativePath": "registry/components/citation.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "response-versions",
+      "title": "Response versions",
+      "description": "Step between regenerated answers with \"2 / 3\", and regenerate without losing the old ones.",
+      "category": "agentic-interfaces",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "fileName": "response-versions.tsx",
+          "relativePath": "registry/components/response-versions.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "selection-actions",
+      "title": "Selection actions",
+      "description": "Select text and a pill appears under it. Pick an action or describe an edit, and the rewrite streams in place.",
+      "category": "agentic-interfaces",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "fileName": "selection-actions.tsx",
+          "relativePath": "registry/components/selection-actions.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "inline-rewrite",
+      "title": "Inline rewrite",
+      "description": "Drag a dial and the paragraph rewrites itself in place: shared words glide, the rest blur out and rise in.",
+      "category": "agentic-interfaces",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "inline-rewrite.tsx",
+          "relativePath": "registry/components/inline-rewrite.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "diff-review",
+      "title": "Diff review",
+      "description": "Accept or reject what the AI changed, word by word for prose or line by line for code.",
+      "category": "agentic-interfaces",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "fileName": "diff-review.tsx",
+          "relativePath": "registry/components/diff-review.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "action-receipt",
+      "title": "Action receipts",
+      "description": "What the agent actually did, one quiet line each, with Undo while a ring drains. Several stack into one.",
+      "category": "agentic-interfaces",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "fileName": "action-receipt.tsx",
+          "relativePath": "registry/components/action-receipt.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "chat-notice",
+      "title": "Error and limit states",
+      "description": "Calm, specific notices for failed answers, being offline, rate limits and chats that grow too long.",
+      "category": "agentic-interfaces",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "fileName": "chat-notice.tsx",
+          "relativePath": "registry/components/chat-notice.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "usage-meter",
+      "title": "Usage meter",
+      "description": "Credits, messages or context left: quiet when there’s plenty, clear before it runs out.",
+      "category": "agentic-interfaces",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "usage-meter.tsx",
+          "relativePath": "registry/components/usage-meter.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "usage-limits",
+      "title": "Usage limits",
+      "description": "What an agent has left: the context window split by what fills it, and each plan limit with its share and a live reset countdown.",
+      "category": "agentic-interfaces",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "fileName": "usage-limits.tsx",
+          "relativePath": "registry/components/usage-limits.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "chat-scroll",
+      "title": "Jump to latest",
+      "description": "A chat that follows the answer as it streams, lets go the moment you scroll up, and brings you back.",
+      "category": "agentic-interfaces",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "fileName": "chat-scroll.tsx",
+          "relativePath": "registry/components/chat-scroll.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "message-edit",
+      "title": "Edit and resend",
+      "description": "Fix a sent message where it sits. The bubble grows into an editor, then folds back and branches the reply.",
+      "category": "agentic-interfaces",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "fileName": "message-edit.tsx",
+          "relativePath": "registry/components/message-edit.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "chat-history",
+      "title": "Chat history",
+      "description": "Past chats grouped by day, searchable, with titles that write themselves, rename in place and delete with Undo.",
+      "category": "agentic-interfaces",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "fileName": "chat-history.tsx",
+          "relativePath": "registry/components/chat-history.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "earnings-chart",
+      "title": "Earnings chart",
+      "description": "A bar chart that changes instead of redrawing: bars glide between periods, the scale and the total roll, a readout follows the pointer.",
+      "category": "kinetic-charts",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "earnings-chart.tsx",
+          "relativePath": "registry/components/earnings-chart.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "steps-chart",
+      "title": "Steps chart",
+      "description": "A week against a daily goal: days that make it fill in, a wave runs the way you step through the weeks, the totals roll.",
+      "category": "kinetic-charts",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "steps-chart.tsx",
+          "relativePath": "registry/components/steps-chart.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "revenue-chart",
+      "title": "Revenue chart",
+      "description": "This year as an area, last year behind it; point at a month and the header becomes the readout, switch the measure and the lines reshape.",
+      "category": "kinetic-charts",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "revenue-chart.tsx",
+          "relativePath": "registry/components/revenue-chart.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "area-chart",
+      "title": "Area chart",
+      "description": "Several series stacked, overlapping or as shares: every band morphs between layouts, and the tiles are the legend, the switches and the readout.",
+      "category": "kinetic-charts",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "area-chart.tsx",
+          "relativePath": "registry/components/area-chart.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "combo-chart",
+      "title": "Combo chart",
+      "description": "Every day as a bar and the trend as a line on one scale: point at a day and the header becomes its readout while the line’s dot pings where it lands.",
+      "category": "kinetic-charts",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "combo-chart.tsx",
+          "relativePath": "registry/components/combo-chart.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "stage-bars",
+      "title": "Stage bars",
+      "description": "A funnel you can read at a glance: every stage as a bar against the first, the drop-off between them, and widths that ease when the period changes.",
+      "category": "kinetic-charts",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "stage-bars.tsx",
+          "relativePath": "registry/components/stage-bars.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "activity-rings",
+      "title": "Activity rings",
+      "description": "Three daily goals as concentric rings beside a tight legend, with the week underneath: pick a day and the rings sweep to it.",
+      "category": "kinetic-charts",
+      "dependencies": [],
+      "files": [
+        {
+          "fileName": "activity-rings.tsx",
+          "relativePath": "registry/components/activity-rings.tsx"
+        }
+      ]
+    },
+    {
+      "slug": "agent-playback",
+      "title": "Agent playback",
+      "description": "Your AI product working, hands-off and on a loop: the hero demo built from the real components.",
+      "category": "agentic-interfaces",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "fileName": "agent-playback.tsx",
+          "relativePath": "registry/components/agent-playback.tsx"
+        }
+      ]
+    }
+  ]
+}
