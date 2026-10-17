@@ -2629,4 +2629,184 @@ mod visual_artifacts_tests {
             "skeleton should be auto-selected when Web Dev is selected"
         );
     }
+
+    #[tokio::test]
+    async fn test_academic_research_persona_auto_selects_companions() {
+        let payload_dir = std::path::PathBuf::from("../.skills");
+        let mut app = App::new(payload_dir);
+
+        for skill in &["quarto", "marp", "mermaid"] {
+            if !app
+                .workspace
+                .items
+                .iter()
+                .any(|i| i.label == *skill && i.category == Category::AgentSkills)
+            {
+                app.workspace
+                    .items
+                    .push(crate::components::workspace::WorkspaceItem {
+                        label: (*skill).into(),
+                        selected: false,
+                        category: Category::AgentSkills,
+                        description: None,
+                        version: None,
+                        exists_in_target: false,
+                        target_version: None,
+                        logo: None,
+                    });
+            }
+        }
+
+        app.workspace.set_category(Category::AgentPersona);
+        let visible = app.workspace.visible_indices();
+        let idx = visible
+            .iter()
+            .position(|&actual| app.workspace.items[actual].label == "Academic / Research")
+            .expect("Academic / Research persona not found");
+
+        app.workspace.selected_idx = idx;
+        let _ = app.workspace.update(Action::Char(' '));
+
+        let item = app
+            .workspace
+            .items
+            .iter()
+            .find(|i| i.label == "Academic / Research" && i.category == Category::AgentPersona)
+            .unwrap();
+        assert!(item.selected);
+
+        for skill in &["quarto", "marp", "mermaid"] {
+            let skill_item = app
+                .workspace
+                .items
+                .iter()
+                .find(|i| i.label == *skill && i.category == Category::AgentSkills)
+                .unwrap();
+            assert!(
+                skill_item.selected,
+                "{} should be auto-selected when Academic / Research is selected",
+                skill
+            );
+        }
+    }
+
+    #[tokio::test]
+    async fn test_cad_mech_engineering_persona_auto_selects_companions() {
+        let payload_dir = std::path::PathBuf::from("../.skills");
+        let mut app = App::new(payload_dir);
+
+        for skill in &["cad-tools", "mechanica"] {
+            if !app
+                .workspace
+                .items
+                .iter()
+                .any(|i| i.label == *skill && i.category == Category::AgentSkills)
+            {
+                app.workspace
+                    .items
+                    .push(crate::components::workspace::WorkspaceItem {
+                        label: (*skill).into(),
+                        selected: false,
+                        category: Category::AgentSkills,
+                        description: None,
+                        version: None,
+                        exists_in_target: false,
+                        target_version: None,
+                        logo: None,
+                    });
+            }
+        }
+
+        app.workspace.set_category(Category::AgentPersona);
+        let visible = app.workspace.visible_indices();
+        let idx = visible
+            .iter()
+            .position(|&actual| app.workspace.items[actual].label == "CAD & Mech Engineering")
+            .expect("CAD & Mech Engineering persona not found");
+
+        app.workspace.selected_idx = idx;
+        let _ = app.workspace.update(Action::Char(' '));
+
+        let item = app
+            .workspace
+            .items
+            .iter()
+            .find(|i| i.label == "CAD & Mech Engineering" && i.category == Category::AgentPersona)
+            .unwrap();
+        assert!(item.selected);
+
+        for skill in &["cad-tools", "mechanica"] {
+            let skill_item = app
+                .workspace
+                .items
+                .iter()
+                .find(|i| i.label == *skill && i.category == Category::AgentSkills)
+                .unwrap();
+            assert!(
+                skill_item.selected,
+                "{} should be auto-selected when CAD & Mech Engineering is selected",
+                skill
+            );
+        }
+    }
+
+    #[tokio::test]
+    async fn test_simulation_fea_cfd_persona_auto_selects_companions() {
+        let payload_dir = std::path::PathBuf::from("../.skills");
+        let mut app = App::new(payload_dir);
+
+        for skill in &["cad-tools", "manim"] {
+            if !app
+                .workspace
+                .items
+                .iter()
+                .any(|i| i.label == *skill && i.category == Category::AgentSkills)
+            {
+                app.workspace
+                    .items
+                    .push(crate::components::workspace::WorkspaceItem {
+                        label: (*skill).into(),
+                        selected: false,
+                        category: Category::AgentSkills,
+                        description: None,
+                        version: None,
+                        exists_in_target: false,
+                        target_version: None,
+                        logo: None,
+                    });
+            }
+        }
+
+        app.workspace.set_category(Category::AgentPersona);
+        let visible = app.workspace.visible_indices();
+        let idx = visible
+            .iter()
+            .position(|&actual| app.workspace.items[actual].label == "Simulation (FEA/CFD)")
+            .expect("Simulation (FEA/CFD) persona not found");
+
+        app.workspace.selected_idx = idx;
+        let _ = app.workspace.update(Action::Char(' '));
+
+        let item = app
+            .workspace
+            .items
+            .iter()
+            .find(|i| i.label == "Simulation (FEA/CFD)" && i.category == Category::AgentPersona)
+            .unwrap();
+        assert!(item.selected);
+
+        for skill in &["cad-tools", "manim"] {
+            let skill_item = app
+                .workspace
+                .items
+                .iter()
+                .find(|i| i.label == *skill && i.category == Category::AgentSkills)
+                .unwrap();
+            assert!(
+                skill_item.selected,
+                "{} should be auto-selected when Simulation (FEA/CFD) is selected",
+                skill
+            );
+        }
+    }
 }

@@ -7,10 +7,10 @@ This design document provides structural blueprints and clear engineering specif
 When a workspace is initialized, the scaffolding engine reads the selected core profile mode from AGENT.md. It then dynamically provisions a matching execution harness and validation workflow within TESTING.md. This architecture guarantees that both human developers and autonomous AI entities operate inside a predictable, self-validating sandbox tailored exactly to the project's technical domain.
 
 [Scaffolding Engine Execution Flow]
-- Reads AGENT.md Profile
-- Selects Profile Blueprint (Web Dev / Database / Systems Auto)
-- Provisions Targeted Functional Validation Framework
-- Emits Production Readiness Quality Gates to TESTING.md
+* Reads AGENT.md Profile
+* Selects Profile Blueprint (Web Dev / Database / Systems Auto / Engineering & Science)
+* Provisions Targeted Functional Validation Framework
+* Emits Production Readiness Quality Gates to TESTING.md
 
 ---
 
@@ -30,6 +30,42 @@ The following specific agent profiles govern how the environmental verification 
 * Operational Focus: Operating system interfaces, file system manipulation boundaries, hardware configurations, API clients, and execution pipeline runners.
 * Harness Target: Mock file system boundary sandboxing, administrative boundary validation, environmental flag testing, and idempotent execution checks.
 
+### 2.4 Academic & Research Profile (academic-research)
+* Operational Focus: Scientific citation integrity (BibTeX/LaTeX), structured hypothesis tracking, PRISMA review standards, and reproducible document compilation via Quarto and Pandoc.
+* Harness Target: Citation validation linters, bibliography cross-reference assertions, document compilation pipelines, and reproducible notebook execution gates.
+
+### 2.5 AEC / BIM & Parametric Profile (aec-bim)
+* Operational Focus: Building information modeling (BIM), IFC schema data extraction (IfcOpenShell), structural load scripts, spatial daylight/thermal analysis, and parametric geometry.
+* Harness Target: IFC schema integrity assertions, spatial boundary collision validation, and building energy/zoning compliance checks.
+
+### 2.6 CAD & Mechanical Engineering Profile (cad-mech)
+* Operational Focus: Parametric 3D CAD modeling (OpenSCAD, CadQuery, FreeCAD), GD&T (Geometric Dimensioning & Tolerancing), tolerance stack-up analysis, BOM generation, and DFM (Design for Manufacturing) validation.
+* Harness Target: Parametric geometry generation tests, tolerance stack interval validation, headless STEP/STL artifact export verification, and assembly interference detection.
+
+### 2.7 Computational Science Profile (computational-science)
+* Operational Focus: Numerical stability, floating-point precision bounds, SI unit consistency, ordinary/partial differential equations, and scientific modeling with NumPy/SciPy, SymPy, Julia, and R.
+* Harness Target: Verification & Validation (V&V) suites, analytical benchmark solution comparisons, conservation of energy/mass checks, and numerical convergence assertions.
+
+### 2.8 EDA & Hardware Profile (eda-hardware)
+* Operational Focus: Digital and analog circuit design, HDL synthesis and verification (Verilog, VHDL), KiCad PCB layout scripting, SPICE simulation, and register-transfer level (RTL) timing closure.
+* Harness Target: HDL testbench execution, netlist syntax linting, static timing analysis (STA) closure validation, and design rule checking (DRC) verification.
+
+### 2.9 GIS & Spatial Systems Profile (gis-spatial)
+* Operational Focus: Coordinate reference systems (CRS), geospatial data pipelines (GDAL, PostGIS, GeoJSON, Shapely), LiDAR point cloud processing, and spatial indexing.
+* Harness Target: CRS reprojection accuracy tests, spatial topology boundary assertions, bounding box R-tree index validation, and geospatial schema verification.
+
+### 2.10 Quant & Econometrics Profile (quant-econometrics)
+* Operational Focus: Financial risk modeling, time-series forecasting, algorithmic backtesting rigor, look-ahead bias prevention, and Monte Carlo stochastic simulations.
+* Harness Target: Strict in-sample versus out-of-sample data partitioning tests, look-ahead bias detection suites, risk metric bounds (Sharpe, Drawdown, VaR), and statistical hypothesis testing.
+
+### 2.11 Robotics & Controls Profile (robotics-controls)
+* Operational Focus: Real-time loop constraints, kinematics and dynamics, sensor fusion (Kalman filters), URDF/SDF modeling, Gazebo simulation, and robot operating systems (ROS2).
+* Harness Target: URDF tree validation, kinematic workspace reachability checks, hardware-in-the-loop (HIL) safety asserts, and real-time deadline monitoring.
+
+### 2.12 Simulation Profile (simulation-fea-cfd)
+* Operational Focus: Finite element analysis (FEA) and computational fluid dynamics (CFD) workflows, mesh generation (Gmsh), boundary condition setup, convergence verification, and thermal/structural post-processing.
+* Harness Target: Verification & Validation (V&V) suites, mesh independence studies (grid convergence index), residual convergence tolerance monitoring, and boundary flux conservation checks.
+
 ---
 
 ## 3. Structural Implementation Blueprint
@@ -48,9 +84,9 @@ During project instantiation, the scaffolding engine executes the following auto
 ### 4.1 Web Development Profile (web-dev)
 
 #### Target File Structure
-- AGENT.md (Web Dev Configuration)
-- TESTING.md
-- .scaffold/scripts/validate-web-base.ps1
+* AGENT.md (Web Dev Configuration)
+* TESTING.md
+* .scaffold/scripts/validate-web-base.ps1
 
 #### Generated TESTING.md Specification
 # TESTING.md - Web Development Verification Suite
@@ -72,9 +108,9 @@ All subsequent code additions by the agent or developer must satisfy the followi
 ### 4.2 Database Profile (database)
 
 #### Target File Structure
-- AGENT.md (Database Configuration)
-- TESTING.md
-- .scaffold/scripts/validate-db-schema.ps1
+* AGENT.md (Database Configuration)
+* TESTING.md
+* .scaffold/scripts/validate-db-schema.ps1
 
 #### Generated TESTING.md Specification
 # TESTING.md - Database Infrastructure Verification Suite
@@ -85,18 +121,18 @@ This workspace contains local validation frameworks for schema correctness. Run 
 
 ## 2. Quality Gates & Validation Protocols
 All data layouts, migration files, and table structures must pass these criteria:
-- Deterministic Key Enforcement: Every newly defined structural table model must explicitly configure a primary identification boundary.
-- Migration Sequential Continuity: Migration files must contain sequential timestamp increments or monotonic sequence numbers to ensure forward and backward consistency.
-- Transaction Integrity Check: Script structures handling mutating operations must explicitly encapsulate execution blocks within named transaction boundaries to prevent partial execution drift.
+* Deterministic Key Enforcement: Every newly defined structural table model must explicitly configure a primary identification boundary.
+* Migration Sequential Continuity: Migration files must contain sequential timestamp increments or monotonic sequence numbers to ensure forward and backward consistency.
+* Transaction Integrity Check: Script structures handling mutating operations must explicitly encapsulate execution blocks within named transaction boundaries to prevent partial execution drift.
 
 ---
 
 ### 4.3 Systems Automation Profile (systems-auto)
 
 #### Target File Structure
-- AGENT.md (Systems Automation Configuration)
-- TESTING.md
-- .scaffold/scripts/validate-sys-sandbox.ps1
+* AGENT.md (Systems Automation Configuration)
+* TESTING.md
+* .scaffold/scripts/validate-sys-sandbox.ps1
 
 #### Generated TESTING.md Specification
 # TESTING.md - Systems Automation Verification Suite
@@ -107,9 +143,9 @@ To verify that runtime execution privileges, file system paths, and OS boundarie
 
 ## 2. Quality Gates & Validation Protocols
 Automation routines, execution blocks, and environment wrappers must verify the following constraints:
-- Idempotent Path Resolution: Scripts target paths must support arbitrary re-run capabilities without generating duplicated mutations or configuration pollution.
-- Explicit Exception Defenses: All system calls interacting with external execution packages or underlying filesystems must map specific try/catch or rescue boundaries.
-- Privilege Level Tracking: Automation scripts requiring administrative capabilities must explicitly check current process execution context flags immediately on boot to handle clean degradation.
+* Idempotent Path Resolution: Scripts target paths must support arbitrary re-run capabilities without generating duplicated mutations or configuration pollution.
+* Explicit Exception Defenses: All system calls interacting with external execution packages or underlying filesystems must map specific try/catch or rescue boundaries.
+* Privilege Level Tracking: Automation scripts requiring administrative capabilities must explicitly check current process execution context flags immediately on boot to handle clean degradation.
 
 ---
 

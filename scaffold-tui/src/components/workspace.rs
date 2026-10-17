@@ -41,8 +41,29 @@ impl Workspace {
                 category: Category::AgentPersona,
                 description: Some("A versatile, unopinionated agent ready for general-purpose programming, debugging, and software architecture tasks without specific domain constraints.".into()),
                 version: None,
-                    exists_in_target: false,
-                    target_version: None, logo: None,
+                exists_in_target: false,
+                target_version: None,
+                logo: None,
+            },
+            WorkspaceItem {
+                label: "Academic / Research".into(),
+                selected: false,
+                category: Category::AgentPersona,
+                description: Some("Enforce strict citation integrity (BibTeX/LaTeX), hypothesis tracking, reproducible research methodology, PRISMA review standards, and document compilation via Quarto and Pandoc.".into()),
+                version: None,
+                exists_in_target: false,
+                target_version: None,
+                logo: None,
+            },
+            WorkspaceItem {
+                label: "AEC / BIM & Parametric".into(),
+                selected: false,
+                category: Category::AgentPersona,
+                description: Some("Automate building information modeling (BIM), IFC data extraction (IfcOpenShell), structural load scripts, spatial daylight/thermal analysis, and parametric geometry.".into()),
+                version: None,
+                exists_in_target: false,
+                target_version: None,
+                logo: None,
             },
             WorkspaceItem {
                 label: "AI Systems Engineer".into(),
@@ -50,8 +71,19 @@ impl Workspace {
                 category: Category::AgentPersona,
                 description: Some("Specialized in LLMs (hosted/local), multimodal generation (ComfyUI), and AI APIs (Claude, Gemini, Grok). Expert in AI CLI tools, OpenRouter, and advanced RAG/Agentic frameworks (LangGraph, PixelRAG, Dify).".into()),
                 version: None,
-                    exists_in_target: false,
-                    target_version: None, logo: None,
+                exists_in_target: false,
+                target_version: None,
+                logo: None,
+            },
+            WorkspaceItem {
+                label: "CAD & Mech Engineering".into(),
+                selected: false,
+                category: Category::AgentPersona,
+                description: Some("Emphasize parametric 3D CAD modeling (OpenSCAD, CadQuery, FreeCAD), GD&T, tolerance stack-up analysis, bill of materials (BOM) generation, and design for manufacturing (DFM).".into()),
+                version: None,
+                exists_in_target: false,
+                target_version: None,
+                logo: None,
             },
             WorkspaceItem {
                 label: "Cloud & DevOps Architect".into(),
@@ -59,8 +91,19 @@ impl Workspace {
                 category: Category::AgentPersona,
                 description: Some("Specialized in infrastructure-as-code (Terraform, CloudFormation), CI/CD pipeline automation (GitHub Actions), and provisioning robust cloud environments on AWS, Azure, or GCP.".into()),
                 version: None,
-                    exists_in_target: false,
-                    target_version: None, logo: None,
+                exists_in_target: false,
+                target_version: None,
+                logo: None,
+            },
+            WorkspaceItem {
+                label: "Computational Science".into(),
+                selected: false,
+                category: Category::AgentPersona,
+                description: Some("Focus on numerical stability, floating-point precision, SI unit consistency, differential equations, and scientific modeling with NumPy/SciPy, SymPy, Julia, and R.".into()),
+                version: None,
+                exists_in_target: false,
+                target_version: None,
+                logo: None,
             },
             WorkspaceItem {
                 label: "Containerization (Docker/K8s)".into(),
@@ -68,8 +111,9 @@ impl Workspace {
                 category: Category::AgentPersona,
                 description: Some("Focused strictly on container ecosystems. Excels at writing Dockerfiles, optimizing multi-stage image builds, orchestrating docker-compose, and building Kubernetes manifests.".into()),
                 version: None,
-                    exists_in_target: false,
-                    target_version: None, logo: None,
+                exists_in_target: false,
+                target_version: None,
+                logo: None,
             },
             WorkspaceItem {
                 label: "Data Scientist / ML".into(),
@@ -77,8 +121,9 @@ impl Workspace {
                 category: Category::AgentPersona,
                 description: Some("Specialized in the Python data ecosystem (Pandas, PyTorch, TensorFlow). Highly effective at data wrangling, model training, Jupyter notebooks, and statistical analysis.".into()),
                 version: None,
-                    exists_in_target: false,
-                    target_version: None, logo: None,
+                exists_in_target: false,
+                target_version: None,
+                logo: None,
             },
             WorkspaceItem {
                 label: "DBA".into(),
@@ -86,8 +131,19 @@ impl Workspace {
                 category: Category::AgentPersona,
                 description: Some("Database Administrator focused on SQL/NoSQL schema design, query optimization, indexing strategies, and database migration safety.".into()),
                 version: None,
-                    exists_in_target: false,
-                    target_version: None, logo: None,
+                exists_in_target: false,
+                target_version: None,
+                logo: None,
+            },
+            WorkspaceItem {
+                label: "EDA & Hardware (HDL)".into(),
+                selected: false,
+                category: Category::AgentPersona,
+                description: Some("Focus on digital/analog circuit design, HDL synthesis and verification (Verilog, VHDL), KiCad PCB layout scripting, SPICE simulation, and register-transfer level (RTL) timing closure.".into()),
+                version: None,
+                exists_in_target: false,
+                target_version: None,
+                logo: None,
             },
             WorkspaceItem {
                 label: "Embedded / IoT".into(),
@@ -95,8 +151,9 @@ impl Workspace {
                 category: Category::AgentPersona,
                 description: Some("Focused on strict memory management and hardware interactions (C, C++, bare-metal Rust). Specialized in microcontrollers, RTOS, and highly constrained computational environments.".into()),
                 version: None,
-                    exists_in_target: false,
-                    target_version: None, logo: None,
+                exists_in_target: false,
+                target_version: None,
+                logo: None,
             },
             WorkspaceItem {
                 label: "Game Developer".into(),
@@ -104,8 +161,19 @@ impl Workspace {
                 category: Category::AgentPersona,
                 description: Some("Tuned for physics engines, 3D rendering pipelines, game loops, and state machines within environments like Unity (C#) or Unreal Engine (C++).".into()),
                 version: None,
-                    exists_in_target: false,
-                    target_version: None, logo: None,
+                exists_in_target: false,
+                target_version: None,
+                logo: None,
+            },
+            WorkspaceItem {
+                label: "GIS & Spatial Systems".into(),
+                selected: false,
+                category: Category::AgentPersona,
+                description: Some("Handle coordinate reference systems (CRS), geospatial data pipelines (GDAL, PostGIS, GeoJSON, Shapely), LiDAR point clouds, and spatial indexing.".into()),
+                version: None,
+                exists_in_target: false,
+                target_version: None,
+                logo: None,
             },
             WorkspaceItem {
                 label: "Mobile (iOS/And)".into(),
@@ -113,8 +181,29 @@ impl Workspace {
                 category: Category::AgentPersona,
                 description: Some("Expert in mobile app development, including iOS (Swift) and Android (Kotlin) as well as cross-platform frameworks like React Native and Flutter.".into()),
                 version: None,
-                    exists_in_target: false,
-                    target_version: None, logo: None,
+                exists_in_target: false,
+                target_version: None,
+                logo: None,
+            },
+            WorkspaceItem {
+                label: "Quant & Econometrics".into(),
+                selected: false,
+                category: Category::AgentPersona,
+                description: Some("Prioritize financial risk modeling, time-series analysis, algorithmic backtesting rigor, look-ahead bias prevention, and Monte Carlo simulation with quantitative libraries.".into()),
+                version: None,
+                exists_in_target: false,
+                target_version: None,
+                logo: None,
+            },
+            WorkspaceItem {
+                label: "Robotics & Controls".into(),
+                selected: false,
+                category: Category::AgentPersona,
+                description: Some("Enforce real-time loop constraints, kinematics/dynamics, sensor fusion (Kalman filters), URDF modeling, Gazebo simulation, and robot operating systems (ROS2).".into()),
+                version: None,
+                exists_in_target: false,
+                target_version: None,
+                logo: None,
             },
             WorkspaceItem {
                 label: "Security Analyst".into(),
@@ -122,8 +211,19 @@ impl Workspace {
                 category: Category::AgentPersona,
                 description: Some("An auditor-style agent focused on network security, cryptographic protocols, vulnerability scanning, and hardening systems against modern exploit techniques.".into()),
                 version: None,
-                    exists_in_target: false,
-                    target_version: None, logo: None,
+                exists_in_target: false,
+                target_version: None,
+                logo: None,
+            },
+            WorkspaceItem {
+                label: "Simulation (FEA/CFD)".into(),
+                selected: false,
+                category: Category::AgentPersona,
+                description: Some("Manage finite element analysis (FEA) and computational fluid dynamics (CFD) workflows, mesh generation (Gmsh), boundary condition setup, convergence verification, and stress/flow post-processing.".into()),
+                version: None,
+                exists_in_target: false,
+                target_version: None,
+                logo: None,
             },
             WorkspaceItem {
                 label: "Systems Scripting".into(),
@@ -131,8 +231,9 @@ impl Workspace {
                 category: Category::AgentPersona,
                 description: Some("Aimed at low-level OS tasks, bash/powershell scripting, automation, system performance tuning, and CLI tool development.".into()),
                 version: None,
-                    exists_in_target: false,
-                    target_version: None, logo: None,
+                exists_in_target: false,
+                target_version: None,
+                logo: None,
             },
             WorkspaceItem {
                 label: "Web Dev".into(),
@@ -141,7 +242,8 @@ impl Workspace {
                 description: Some("Specialized in modern full-stack web technologies (React, Next.js, Vue, Node.js, HTML/CSS). MUST strictly enforce zero pre-consent tracking: ensure no tracking pixels, analytics SDKs (e.g., Google Analytics, PostHog, Mixpanel), marketing tags, or third-party scripts load or execute until the user explicitly clicks 'Accept' on the cookie consent banner; provide a categorized consent model (strictly essential vs analytics/marketing), persistent state storage with revocation controls, and automated verification tests asserting zero pre-consent network requests. MUST strictly enforce mobile-first responsive design (320px+ viewports, fluid typography, >=48px touch targets, zero horizontal overflow) and automated SEO/GEO/AEO lifecycle maintenance (dynamic metadata, canonical URLs, JSON-LD structured schemas, sitemap.xml, robots.txt, semantic HTML hierarchies). MUST strictly enforce security best practices: rate limiting, secure password hashing, and OWASP protection.".into()),
                 version: None,
                 exists_in_target: false,
-                target_version: None, logo: None,
+                target_version: None,
+                logo: None,
             },
         ]);
 
@@ -891,7 +993,28 @@ fn detect_personas(
         detected.push("Generic".to_string());
     }
 
-    // 2. AI Systems Engineer
+    // 2. Academic / Research
+    if text_lower.contains("academic / research")
+        || text_lower.contains("academic & research")
+        || (text_lower.contains("bibtex") && text_lower.contains("latex"))
+        || text_lower.contains("citation integrity")
+        || text_lower.contains("prisma review")
+        || (text_lower.contains("quarto") && text_lower.contains("pandoc"))
+    {
+        detected.push("Academic / Research".to_string());
+    }
+
+    // 3. AEC / BIM & Parametric
+    if text_lower.contains("aec / bim & parametric")
+        || text_lower.contains("aec / bim")
+        || text_lower.contains("ifcopenshell")
+        || text_lower.contains("building information modeling")
+        || text_lower.contains("bim data extraction")
+    {
+        detected.push("AEC / BIM & Parametric".to_string());
+    }
+
+    // 4. AI Systems Engineer
     if text_lower.contains("ai systems engineer")
         || (text_lower.contains("llms") && text_lower.contains("comfyui"))
         || text_lower.contains("openrouter")
@@ -900,7 +1023,19 @@ fn detect_personas(
         detected.push("AI Systems Engineer".to_string());
     }
 
-    // 3. Cloud & DevOps Architect
+    // 5. CAD & Mech Engineering
+    if text_lower.contains("cad & mech engineering")
+        || text_lower.contains("cad & mech")
+        || text_lower.contains("parametric 3d cad")
+        || text_lower.contains("cadquery")
+        || text_lower.contains("openscad")
+        || text_lower.contains("tolerance stack-up")
+        || text_lower.contains("design for manufacturing")
+    {
+        detected.push("CAD & Mech Engineering".to_string());
+    }
+
+    // 6. Cloud & DevOps Architect
     if text_lower.contains("cloud & devops architect")
         || text_lower.contains("cloud & devops")
         || (text_lower.contains("terraform") && text_lower.contains("cloudformation"))
@@ -909,7 +1044,17 @@ fn detect_personas(
         detected.push("Cloud & DevOps Architect".to_string());
     }
 
-    // 4. Containerization (Docker/K8s)
+    // 7. Computational Science
+    if text_lower.contains("computational science")
+        || (text_lower.contains("numerical stability")
+            && text_lower.contains("floating-point precision"))
+        || (text_lower.contains("scipy") && text_lower.contains("sympy"))
+        || text_lower.contains("scientific modeling")
+    {
+        detected.push("Computational Science".to_string());
+    }
+
+    // 8. Containerization (Docker/K8s)
     if text_lower.contains("containerization (docker/k8s)")
         || text_lower.contains("containerization")
         || text_lower.contains("container ecosystems")
@@ -920,7 +1065,7 @@ fn detect_personas(
         detected.push("Containerization (Docker/K8s)".to_string());
     }
 
-    // 5. Data Scientist / ML
+    // 9. Data Scientist / ML
     if text_lower.contains("data scientist / ml")
         || text_lower.contains("data scientist")
         || (text_lower.contains("pandas") && text_lower.contains("pytorch"))
@@ -929,7 +1074,7 @@ fn detect_personas(
         detected.push("Data Scientist / ML".to_string());
     }
 
-    // 6. DBA
+    // 10. DBA
     if text_lower.contains("**dba**")
         || text_lower.contains("### dba")
         || text_lower.contains("database administrator")
@@ -940,7 +1085,18 @@ fn detect_personas(
         detected.push("DBA".to_string());
     }
 
-    // 7. Embedded / IoT
+    // 11. EDA & Hardware (HDL)
+    if text_lower.contains("eda & hardware (hdl)")
+        || text_lower.contains("eda & hardware")
+        || text_lower.contains("verilog")
+        || text_lower.contains("vhdl")
+        || (text_lower.contains("circuit design") && text_lower.contains("timing closure"))
+        || text_lower.contains("kicad pcb layout")
+    {
+        detected.push("EDA & Hardware (HDL)".to_string());
+    }
+
+    // 12. Embedded / IoT
     if text_lower.contains("embedded / iot")
         || text_lower.contains("embedded")
         || (text_lower.contains("bare-metal rust") && text_lower.contains("microcontrollers"))
@@ -949,7 +1105,7 @@ fn detect_personas(
         detected.push("Embedded / IoT".to_string());
     }
 
-    // 8. Game Developer
+    // 13. Game Developer
     if text_lower.contains("game developer")
         || (text_lower.contains("physics engines") && text_lower.contains("game loops"))
         || text_lower.contains("3d rendering pipelines")
@@ -957,7 +1113,18 @@ fn detect_personas(
         detected.push("Game Developer".to_string());
     }
 
-    // 9. Mobile (iOS/And)
+    // 14. GIS & Spatial Systems
+    if text_lower.contains("gis & spatial systems")
+        || text_lower.contains("gis & spatial")
+        || text_lower.contains("coordinate reference systems")
+        || text_lower.contains("geospatial data pipelines")
+        || text_lower.contains("postgis")
+        || text_lower.contains("shapely")
+    {
+        detected.push("GIS & Spatial Systems".to_string());
+    }
+
+    // 15. Mobile (iOS/And)
     if text_lower.contains("mobile (ios/and)")
         || text_lower.contains("mobile (ios/android)")
         || (text_lower.contains("ios (swift)") && text_lower.contains("android (kotlin)"))
@@ -966,7 +1133,27 @@ fn detect_personas(
         detected.push("Mobile (iOS/And)".to_string());
     }
 
-    // 10. Security Analyst
+    // 16. Quant & Econometrics
+    if text_lower.contains("quant & econometrics")
+        || text_lower.contains("financial risk modeling")
+        || text_lower.contains("algorithmic backtesting")
+        || text_lower.contains("look-ahead bias")
+        || text_lower.contains("monte carlo simulation")
+    {
+        detected.push("Quant & Econometrics".to_string());
+    }
+
+    // 17. Robotics & Controls
+    if text_lower.contains("robotics & controls")
+        || text_lower.contains("real-time loop constraints")
+        || text_lower.contains("ros2")
+        || text_lower.contains("urdf")
+        || (text_lower.contains("sensor fusion") && text_lower.contains("kalman"))
+    {
+        detected.push("Robotics & Controls".to_string());
+    }
+
+    // 18. Security Analyst
     if text_lower.contains("security analyst")
         || (text_lower.contains("auditor-style agent")
             && text_lower.contains("cryptographic protocols"))
@@ -975,7 +1162,18 @@ fn detect_personas(
         detected.push("Security Analyst".to_string());
     }
 
-    // 11. Systems Scripting
+    // 19. Simulation (FEA/CFD)
+    if text_lower.contains("simulation (fea/cfd)")
+        || text_lower.contains("fea/cfd")
+        || text_lower.contains("finite element analysis")
+        || text_lower.contains("computational fluid dynamics")
+        || (text_lower.contains("mesh generation")
+            && text_lower.contains("convergence verification"))
+    {
+        detected.push("Simulation (FEA/CFD)".to_string());
+    }
+
+    // 20. Systems Scripting
     if text_lower.contains("systems scripting")
         || (text_lower.contains("low-level os tasks")
             && text_lower.contains("powershell scripting"))
@@ -984,7 +1182,7 @@ fn detect_personas(
         detected.push("Systems Scripting".to_string());
     }
 
-    // 12. Web Dev
+    // 21. Web Dev
     if text_lower.contains("web dev")
         || text_lower.contains("web developer")
         || (text_lower.contains("full-stack web technologies")
@@ -1638,6 +1836,87 @@ impl Component for Workspace {
                             .find(|i| i.label == "trackio" && i.category == Category::AgentSkills)
                         {
                             companion.selected = true;
+                        }
+                    }
+                    if label == "Academic / Research" && new_state {
+                        for companion_name in &["quarto", "marp", "mermaid"] {
+                            if let Some(companion) = self.items.iter_mut().find(|i| {
+                                i.label == *companion_name && i.category == Category::AgentSkills
+                            }) {
+                                companion.selected = true;
+                            }
+                        }
+                    }
+                    if label == "AEC / BIM & Parametric" && new_state {
+                        if let Some(companion) = self
+                            .items
+                            .iter_mut()
+                            .find(|i| i.label == "cad-tools" && i.category == Category::AgentSkills)
+                        {
+                            companion.selected = true;
+                        }
+                    }
+                    if label == "CAD & Mech Engineering" && new_state {
+                        for companion_name in &["cad-tools", "mechanica"] {
+                            if let Some(companion) = self.items.iter_mut().find(|i| {
+                                i.label == *companion_name && i.category == Category::AgentSkills
+                            }) {
+                                companion.selected = true;
+                            }
+                        }
+                    }
+                    if label == "Computational Science" && new_state {
+                        for companion_name in &["quarto", "manim"] {
+                            if let Some(companion) = self.items.iter_mut().find(|i| {
+                                i.label == *companion_name && i.category == Category::AgentSkills
+                            }) {
+                                companion.selected = true;
+                            }
+                        }
+                    }
+                    if label == "EDA & Hardware (HDL)" && new_state {
+                        if let Some(companion) = self
+                            .items
+                            .iter_mut()
+                            .find(|i| i.label == "mechanica" && i.category == Category::AgentSkills)
+                        {
+                            companion.selected = true;
+                        }
+                    }
+                    if label == "GIS & Spatial Systems" && new_state {
+                        if let Some(companion) = self
+                            .items
+                            .iter_mut()
+                            .find(|i| i.label == "tldraw" && i.category == Category::AgentSkills)
+                        {
+                            companion.selected = true;
+                        }
+                    }
+                    if label == "Quant & Econometrics" && new_state {
+                        for companion_name in &["trackio", "quarto"] {
+                            if let Some(companion) = self.items.iter_mut().find(|i| {
+                                i.label == *companion_name && i.category == Category::AgentSkills
+                            }) {
+                                companion.selected = true;
+                            }
+                        }
+                    }
+                    if label == "Robotics & Controls" && new_state {
+                        for companion_name in &["cad-tools", "mechanica"] {
+                            if let Some(companion) = self.items.iter_mut().find(|i| {
+                                i.label == *companion_name && i.category == Category::AgentSkills
+                            }) {
+                                companion.selected = true;
+                            }
+                        }
+                    }
+                    if label == "Simulation (FEA/CFD)" && new_state {
+                        for companion_name in &["cad-tools", "manim"] {
+                            if let Some(companion) = self.items.iter_mut().find(|i| {
+                                i.label == *companion_name && i.category == Category::AgentSkills
+                            }) {
+                                companion.selected = true;
+                            }
                         }
                     }
                 }
@@ -2386,6 +2665,32 @@ mod tests {
         assert!(detected_with_personas.contains(&"Web Dev".to_string()));
 
         let _ = fs::remove_dir_all(&target_legacy);
+    }
+
+    #[test]
+    fn test_detect_engineering_and_science_personas() {
+        let target_dir = create_test_dir("eng_sci_personas_test");
+        let agents_dir = target_dir.join(".agents");
+        fs::create_dir_all(&agents_dir).unwrap();
+        fs::write(
+            agents_dir.join("AGENTS.md"),
+            "# Custom Agent Rules\n\n## Roles\n* **Academic / Research**: Enforce strict citation integrity (BibTeX/LaTeX) and reproducible methodology.\n* **CAD & Mech Engineering**: Emphasize parametric 3D CAD modeling (OpenSCAD, CadQuery).\n* **Simulation (FEA/CFD)**: Manage finite element analysis and CFD workflows.\n* **Robotics & Controls**: Enforce real-time loop constraints and ROS2 kinematics.\n* **EDA & Hardware (HDL)**: Focus on digital/analog circuit design and Verilog synthesis.\n* **Quant & Econometrics**: Financial risk modeling and algorithmic backtesting.\n* **AEC / BIM & Parametric**: Building information modeling and IfcOpenShell.\n* **Computational Science**: Numerical stability and floating-point precision with SciPy.\n* **GIS & Spatial Systems**: Coordinate reference systems and PostGIS spatial indexing.\n",
+        )
+        .unwrap();
+
+        let detected = detect_personas(&target_dir, None);
+        assert_eq!(detected.len(), 9);
+        assert!(detected.contains(&"Academic / Research".to_string()));
+        assert!(detected.contains(&"CAD & Mech Engineering".to_string()));
+        assert!(detected.contains(&"Simulation (FEA/CFD)".to_string()));
+        assert!(detected.contains(&"Robotics & Controls".to_string()));
+        assert!(detected.contains(&"EDA & Hardware (HDL)".to_string()));
+        assert!(detected.contains(&"Quant & Econometrics".to_string()));
+        assert!(detected.contains(&"AEC / BIM & Parametric".to_string()));
+        assert!(detected.contains(&"Computational Science".to_string()));
+        assert!(detected.contains(&"GIS & Spatial Systems".to_string()));
+
+        let _ = fs::remove_dir_all(&target_dir);
     }
 
     #[test]
