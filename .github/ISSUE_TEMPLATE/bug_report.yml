@@ -1,0 +1,67 @@
+name: Bug Report
+description: File a reproducible bug or unexpected behavior
+title: "[Bug]: "
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please verify the issue has not already been reported before submitting.
+  - type: input
+    id: summary
+    attributes:
+      label: Summary
+      description: A concise description of the problem.
+      placeholder: e.g., Crash on startup when config file is missing
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: Exact sequential steps needed to trigger the bug.
+      placeholder: |
+        1. Run command '...'
+        2. Set flag '...'
+        3. Observe error
+    validations:
+      required: true
+  - type: textarea
+    id: expected_vs_actual
+    attributes:
+      label: Expected vs. Actual Behavior
+      description: What should happen versus what actually happened.
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs and Diagnostics
+      description: Paste relevant terminal output, stack traces, or error logs.
+      render: shell
+    validations:
+      required: false
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Environment / Target Platform
+      options:
+        - Windows (x86_64)
+        - Windows (aarch64)
+        - Linux (x86_64)
+        - Linux (aarch64)
+        - macOS (Apple Silicon / aarch64)
+        - iOS (Simulator / Physical Device)
+        - Android (Emulator / Physical Device)
+        - Local Development / CI
+    validations:
+      required: true
+  - type: checkboxes
+    id: definition_of_ready
+    attributes:
+      label: Intake Requirements
+      options:
+        - label: I verified this issue is not a duplicate.
+          required: true
+        - label: I included minimal reproducible steps and diagnostic logs.
+          required: true
