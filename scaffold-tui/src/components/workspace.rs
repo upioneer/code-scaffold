@@ -19,6 +19,22 @@ pub struct WorkspaceItem {
     pub logo: Option<Vec<String>>,
 }
 
+impl WorkspaceItem {
+    pub fn is_recommended(&self) -> bool {
+        match self.category {
+            Category::Artifacts => {
+                let l = self.label.to_ascii_lowercase();
+                l == ".gitignore" || l == "readme.md" || l == "agent.md"
+            }
+            Category::AgentSkills => {
+                let l = self.label.to_ascii_lowercase();
+                l == "github" || l == "changelog-plus"
+            }
+            _ => false,
+        }
+    }
+}
+
 pub struct Workspace {
     pub items: Vec<WorkspaceItem>,
     pub selected_idx: usize,
@@ -305,10 +321,13 @@ impl Workspace {
                         _ => None,
                     };
 
+                    let is_default_selected = name.eq_ignore_ascii_case("agent.md")
+                        || name.eq_ignore_ascii_case("readme.md")
+                        || name.eq_ignore_ascii_case(".gitignore");
+
                     items.push(WorkspaceItem {
                         label: name.clone(),
-                        selected: name.to_lowercase() == "agent.md"
-                            || name.to_lowercase() == "readme.md",
+                        selected: is_default_selected,
                         category: Category::Artifacts,
                         description,
                         version: None,
@@ -1958,23 +1977,57 @@ impl Component for Workspace {
         for (i, actual_idx) in visible.iter().enumerate() {
             let item = &self.items[*actual_idx];
             let checkbox = if item.selected { "[X]" } else { "[ ]" };
-            let display = if item.exists_in_target {
+            let is_row_highlighted = active && i == self.selected_idx;
+
+            let exists_suffix = if item.exists_in_target {
                 if let (Some(tv), Some(v)) = (&item.target_version, &item.version) {
                     if tv != v {
-                        format!("{} {} [upgrade to v{}]", checkbox, item.label, v)
+                        Some(format!(" [upgrade to v{}]", v))
                     } else {
-                        format!("{} {} [Current version installed]", checkbox, item.label)
+                        Some(" [Current version installed]".to_string())
                     }
                 } else {
-                    format!("{} {} [Exists]", checkbox, item.label)
+                    Some(" [Exists]".to_string())
                 }
             } else {
-                format!("{} {}", checkbox, item.label)
+                None
             };
 
-            let style = Style::default().fg(theme.text).bg(theme.bg);
+            let line = if is_row_highlighted {
+                let rec_str = if item.is_recommended() {
+                    " ★ Rec"
+                } else {
+                    ""
+                };
+                let suffix_str = exists_suffix.unwrap_or_default();
+                Line::from(vec![Span::raw(format!(
+                    "{} {}{}{}",
+                    checkbox, item.label, rec_str, suffix_str
+                ))])
+            } else {
+                let mut spans = vec![Span::styled(
+                    format!("{} {}", checkbox, item.label),
+                    Style::default().fg(theme.text).bg(theme.bg),
+                )];
+                if item.is_recommended() {
+                    spans.push(Span::styled(
+                        " ★ Rec",
+                        Style::default()
+                            .fg(theme.accent)
+                            .bg(theme.bg)
+                            .add_modifier(Modifier::BOLD),
+                    ));
+                }
+                if let Some(suffix) = exists_suffix {
+                    spans.push(Span::styled(
+                        suffix,
+                        Style::default().fg(theme.secondary).bg(theme.bg),
+                    ));
+                }
+                Line::from(spans)
+            };
 
-            list_items.push(ListItem::new(display).style(style));
+            list_items.push(ListItem::new(line));
         }
 
         let list = List::new(list_items).block(
@@ -2041,11 +2094,64 @@ mod tests {
         // Either default artifacts or empty if dummy payload loaded no templates
         for label in &selected_labels {
             assert!(
-                label.eq_ignore_ascii_case("readme.md") || label.eq_ignore_ascii_case("agent.md")
+                label.eq_ignore_ascii_case("readme.md")
+                    || label.eq_ignore_ascii_case("agent.md")
+                    || label.eq_ignore_ascii_case(".gitignore")
             );
         }
 
         let _ = fs::remove_dir_all(&target_dir);
+    }
+
+    #[test]
+    fn test_workspace_item_is_recommended() {
+        let rec_artifact = WorkspaceItem {
+            label: ".gitignore".into(),
+            selected: true,
+            category: Category::Artifacts,
+            description: None,
+            version: None,
+            exists_in_target: false,
+            target_version: None,
+            logo: None,
+        };
+        assert!(rec_artifact.is_recommended());
+
+        let non_rec_artifact = WorkspaceItem {
+            label: "todo.md".into(),
+            selected: false,
+            category: Category::Artifacts,
+            description: None,
+            version: None,
+            exists_in_target: false,
+            target_version: None,
+            logo: None,
+        };
+        assert!(!non_rec_artifact.is_recommended());
+
+        let rec_skill = WorkspaceItem {
+            label: "github".into(),
+            selected: false,
+            category: Category::AgentSkills,
+            description: None,
+            version: Some("8".into()),
+            exists_in_target: false,
+            target_version: None,
+            logo: None,
+        };
+        assert!(rec_skill.is_recommended());
+
+        let non_rec_skill = WorkspaceItem {
+            label: "docker".into(),
+            selected: false,
+            category: Category::AgentSkills,
+            description: None,
+            version: Some("3".into()),
+            exists_in_target: false,
+            target_version: None,
+            logo: None,
+        };
+        assert!(!non_rec_skill.is_recommended());
     }
 
     #[test]

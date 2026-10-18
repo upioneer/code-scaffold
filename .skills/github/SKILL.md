@@ -1,7 +1,7 @@
 ---
 ​‌‍name: GitHub
-description: GitHub push workflow with .env-based identity configuration, pre-commit hygiene, shields.io badge verification, and two-gate release authorization
-version: 7
+description: GitHub repository management, structured issue intake forms, .env-based identity, pre-commit hygiene, and CI/CD automation
+version: 8
 ---
 
 # GitHub Push Skill & Workflow
@@ -125,6 +125,181 @@ This step MUST run before staging and committing, never after pushing. Bundle th
 
 * **Architectural Compliance**: When synthesizing or scaffolding project code, align generated components with Code Scaffold architectural specification standards.
 
+## Step 10: Structured Issue Intake & Governance Protocol
+
+To prevent ad-hoc, unstructured issues and ensure high factual density for bug reports and feature tasks, repositories managing GitHub activities must implement **GitHub Issue Forms** (YAML-based forms) located within `.github/ISSUE_TEMPLATE/` rather than standard Markdown templates.
+
+### 1. Issue Forms Architecture (`.github/ISSUE_TEMPLATE/`)
+
+Issue forms support schema validation, required fields, dropdown selections, and interactive checkboxes rendered natively in the GitHub UI.
+
+#### A. Bug Report Form (`.github/ISSUE_TEMPLATE/bug_report.yml`)
+Enforces sequential reproduction steps, expected versus actual behavior, diagnostic terminal logs rendered as shell blocks, target runtime environments, and intake verification checkboxes.
+
+```yaml
+name: Bug Report
+description: File a reproducible bug or unexpected behavior
+title: "[Bug]: "
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please verify the issue has not already been reported before submitting.
+  - type: input
+    id: summary
+    attributes:
+      label: Summary
+      description: A concise description of the problem.
+      placeholder: e.g., Crash on startup when config file is missing
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: Exact sequential steps needed to trigger the bug.
+      placeholder: |
+        1. Run command '...'
+        2. Set flag '...'
+        3. Observe error
+    validations:
+      required: true
+  - type: textarea
+    id: expected_vs_actual
+    attributes:
+      label: Expected vs. Actual Behavior
+      description: What should happen versus what actually happened.
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs and Diagnostics
+      description: Paste relevant terminal output, stack traces, or error logs.
+      render: shell
+    validations:
+      required: false
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Environment / Target Platform
+      options:
+        - Windows (x86_64)
+        - Windows (aarch64)
+        - Linux (x86_64)
+        - Linux (aarch64)
+        - macOS (Apple Silicon / aarch64)
+        - iOS (Simulator / Physical Device)
+        - Android (Emulator / Physical Device)
+        - Local Development / CI
+    validations:
+      required: true
+  - type: checkboxes
+    id: definition_of_ready
+    attributes:
+      label: Intake Requirements
+      options:
+        - label: I verified this issue is not a duplicate.
+          required: true
+        - label: I included minimal reproducible steps and diagnostic logs.
+          required: true
+```
+
+#### B. Feature Request & Task Intake Form (`.github/ISSUE_TEMPLATE/feature_request.yml`)
+Enforces clear problem statements, proposed scope boundaries, testable acceptance criteria, and operational priority ranking.
+
+```yaml
+name: Feature Request / Task
+description: Propose a new feature, improvement, or scoped work item
+title: "[Feature]: "
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: textarea
+    id: problem_statement
+    attributes:
+      label: Problem Statement
+      description: What specific friction, gap, or user problem does this solve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposed_solution
+    attributes:
+      label: Proposed Solution / Scope
+      description: Concrete breakdown of the expected changes and boundaries.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: Acceptance Criteria
+      description: Specific, testable conditions required to consider this complete.
+      placeholder: |
+        - [ ] Unit tests added for edge case X
+        - [ ] API endpoint returns status code 200 with payload Y
+        - [ ] Documentation updated
+    validations:
+      required: true
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Business / Operational Priority
+      options:
+        - Critical (Blocking delivery)
+        - High (Required for current milestone)
+        - Medium (Standard backlog)
+        - Low (Nice to have)
+    validations:
+      required: true
+```
+
+#### C. Blank Issue Suppression (`.github/ISSUE_TEMPLATE/config.yml`)
+Setting `blank_issues_enabled: false` removes the option to open an unstructured, empty issue, routing general queries to GitHub Discussions or community channels:
+
+```yaml
+blank_issues_enabled: false
+contact_links:
+  - name: GitHub Discussions
+    url: https://github.com/OWNER/REPO/discussions
+    about: Ask support questions, share ideas, or discuss architecture.
+```
+
+### 2. Definition of Ready (DoR) Triage Gatekeeping
+
+To prevent ambiguous or under-specified tasks from entering active development iterations:
+* **Triage Label Gate:** Automatically apply `needs-triage` to every newly created issue. Engineering agents must not begin implementation until an issue is triaged and promoted to `ready-for-dev`.
+* **Scope Boundary Enforcement:** High-level feature proposals must explicitly specify In-Scope and Out-of-Scope boundaries to eliminate scope drift.
+* **Acceptance Criteria Verification:** Acceptance criteria must be formatted as testable markdown checklists (`- [ ]`) to enable transparent review during validation.
+
+### 3. Automated Issue Triage Workflow (`.github/workflows/issue-triage.yml`)
+
+Automates initial label application upon issue intake via GitHub Script:
+
+```yaml
+name: Issue Triage
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Add Triage Status
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              labels: ['needs-triage']
+            });
+```
+
 ## Appendix: CI Workflow Reference
 
 This skill owns the CI/CD workflow shape (retired as a standalone selectable artifact). Emit it at `.github/workflows/deploy.yml` when the deployment targets hosted CI, adjusting runtimes and deploy steps per project:
@@ -170,4 +345,93 @@ jobs:
 
       - name: Execute Live Deployment Routing
         run: npm run deploy:production
+```
+
+### 2. Android Mobile Pipeline Blueprint (`.github/workflows/android.yml`)
+
+For projects deploying Android artifacts (APKs or AAB bundles), emit this automated build and test pipeline:
+
+```yaml
+name: Android CI Pipeline
+
+on:
+  push:
+    branches: [main, staging]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Tree
+        uses: actions/checkout@v4
+
+      - name: Set Up Java Runtime (Temurin JDK 17)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Gradle Build Cache
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Grant Execute Permissions to Gradlew
+        run: chmod +x gradlew
+
+      - name: Run Android Lint Check
+        run: ./gradlew lint
+
+      - name: Run Unit Tests
+        run: ./gradlew testDebugUnitTest
+
+      - name: Assemble Debug APK
+        run: ./gradlew assembleDebug
+
+      - name: Upload APK Diagnostic Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+```
+
+### 3. iOS Mobile Pipeline Blueprint (`.github/workflows/ios.yml`)
+
+For projects deploying iOS applications or Swift packages, emit this automated build and test pipeline targeting macOS runners:
+
+```yaml
+name: iOS CI Pipeline
+
+on:
+  push:
+    branches: [main, staging]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test_and_build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout Source Tree
+        uses: actions/checkout@v4
+
+      - name: Select Xcode Version
+        run: sudo xcode-select -s /Applications/Xcode.app
+
+      - name: Resolve Swift Package Dependencies
+        run: xcodebuild -resolvePackageDependencies
+
+      - name: Execute Unit and UI Test Suites
+        run: |
+          xcodebuild test \
+            -scheme AppScheme \
+            -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' \
+            -enableCodeCoverage YES
+
+      - name: Build Archive
+        run: |
+          xcodebuild archive \
+            -scheme AppScheme \
+            -archivePath build/App.xcarchive \
+            -destination 'generic/platform=iOS'
 ```

@@ -254,6 +254,18 @@ impl Component for DescriptionPane {
         // the label and description without the skills-specific field prefixes.
         let is_skill_category = matches!(self.current_category, Some(Category::AgentSkills));
 
+        let is_recommended = match self.current_category {
+            Some(Category::Artifacts) => {
+                let l = self.current_label.to_ascii_lowercase();
+                l == ".gitignore" || l == "readme.md" || l == "agent.md"
+            }
+            Some(Category::AgentSkills) => {
+                let l = self.current_label.to_ascii_lowercase();
+                l == "github" || l == "changelog-plus"
+            }
+            _ => false,
+        };
+
         if !self.current_label.is_empty() {
             let avail_width = (sections[0].width as usize).saturating_sub(13);
             let eff_width = if avail_width < 15 { 15 } else { avail_width };
@@ -287,6 +299,23 @@ impl Component for DescriptionPane {
                             ),
                         ]));
                     }
+                }
+
+                if is_recommended {
+                    desc_lines.push(Line::from(vec![
+                        Span::styled(
+                            "  Status: ",
+                            Style::default()
+                                .fg(theme.secondary)
+                                .add_modifier(Modifier::BOLD),
+                        ),
+                        Span::styled(
+                            "★ Recommended Foundation",
+                            Style::default()
+                                .fg(theme.accent)
+                                .add_modifier(Modifier::BOLD),
+                        ),
+                    ]));
                 }
 
                 if !self.current_version.is_empty() {
@@ -333,6 +362,15 @@ impl Component for DescriptionPane {
                 for wrapped_line in label_wrapped {
                     desc_lines.push(Line::from(Span::styled(
                         wrapped_line,
+                        Style::default()
+                            .fg(theme.accent)
+                            .add_modifier(Modifier::BOLD),
+                    )));
+                }
+
+                if is_recommended {
+                    desc_lines.push(Line::from(Span::styled(
+                        "★ Recommended Baseline",
                         Style::default()
                             .fg(theme.accent)
                             .add_modifier(Modifier::BOLD),

@@ -1,0 +1,41 @@
+name: Feature Request / Task
+description: Propose a new feature, improvement, or scoped work item
+title: "[Feature]: "
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: textarea
+    id: problem_statement
+    attributes:
+      label: Problem Statement
+      description: What specific friction, gap, or user problem does this solve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposed_solution
+    attributes:
+      label: Proposed Solution / Scope
+      description: Concrete breakdown of the expected changes and boundaries.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: Acceptance Criteria
+      description: Specific, testable conditions required to consider this complete.
+      placeholder: |
+        - [ ] Unit tests added for edge case X
+        - [ ] Feature passes automated validation gate
+        - [ ] Documentation updated
+    validations:
+      required: true
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Business / Operational Priority
+      options:
+        - Critical (Blocking delivery)
+        - High (Required for current milestone)
+        - Medium (Standard backlog)
+        - Low (Nice to have)
+    validations:
+      required: true
