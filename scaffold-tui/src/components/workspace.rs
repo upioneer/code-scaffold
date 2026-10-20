@@ -1826,6 +1826,13 @@ impl Component for Workspace {
                         }) {
                             companion.selected = true;
                         }
+                        if let Some(companion) = self
+                            .items
+                            .iter_mut()
+                            .find(|i| i.label == "mxc" && i.category == Category::AgentSkills)
+                        {
+                            companion.selected = true;
+                        }
                     }
                     if label == "Cloud & DevOps Architect" && new_state {
                         if let Some(companion) = self
