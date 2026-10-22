@@ -1,0 +1,15 @@
+{
+  "label": "Open Weight Warden",
+  "description": "Static binary inspection, Jinja AST template sanitization, and dynamic behavioral fuzzing engine for GGUF and safetensors weights.",
+  "version": "1",
+  "target": ".skills/open-weight-warden",
+  "hasSandbox": true,
+  "logo": [
+    "  ██╗    ██╗ █████╗ ██████╗ ██████╗ ███████╗███╗   ██╗  ",
+    "  ██║    ██║██╔══██╗██╔══██╗██╔══██╗██╔════╝████╗  ██║  ",
+    "  ██║ █╗ ██║███████║██████╔╝██║  ██║█████╗  ██╔██╗ ██║  ",
+    "  ██║███╗██║██╔══██║██╔══██╗██║  ██║██╔══╝  ██║╚██╗██║  ",
+    "  ╚███╔███╔╝██║  ██║██║  ██║██████╔╝███████╗██║ ╚████║  ",
+    "   ╚══╝╚══╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝ ╚══════╝╚═╝  ╚═══╝  "
+  ]
+}

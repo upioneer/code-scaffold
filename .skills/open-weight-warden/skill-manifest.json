@@ -1,0 +1,43 @@
+{
+  "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
+  "specification": "https://code-scaffold.com/spec/v1",
+  "name": "code_scaffold_open_weight_warden_skill",
+  "version": "1",
+  "description": "Comprehensive security evaluation engine for open weight LLMs. Performs static binary validation (GGUF header/tensor boundary parsing, Bleeding Llama CVE-2026-7482 defense), Jinja2 AST chat template sanitization (CVE-2024-34359 SSTI defense), and dynamic behavioral fuzzing with honeytoken canary leak detection, sleeper agent trigger discovery, and tool exfiltration interception.",
+  "entryPoint": "./SKILL.md",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "requiredPermissions": [
+    "fs:read",
+    "exec:process"
+  ],
+  "peerSkills": [
+    {
+      "name": "mxc",
+      "package": "upioneer/mxc",
+      "installCommand": "npx @code-scaffold/skills-cli add upioneer/mxc",
+      "registry": "https://code-scaffold.com/skills/mxc",
+      "optional": true,
+      "purpose": "Hardware-enforced execution containment for dynamic canary and honeytoken execution"
+    }
+  ],
+  "category": "Security & Cryptography",
+  "keywords": [
+    "open-weight-warden",
+    "weight-security",
+    "gguf-auditor",
+    "bleeding-llama",
+    "cve-2026-7482",
+    "jinja-ast-sanitizer",
+    "ssti-defense",
+    "sleeper-agent-detector",
+    "honeytoken-fuzzing",
+    "safetensors",
+    "ai-backdoor-defense",
+    "model-integrity",
+    "mxc-sandboxing"
+  ],
+  "hasSandbox": true,
+  "integrity": "cs:sha256:24ec8f0375932d297a5f4a318a9913d12a010f659fca554af516c169e96fb450"
+}
