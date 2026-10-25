@@ -1768,6 +1768,12 @@ impl Component for Workspace {
                         }) {
                             companion.selected = true;
                         }
+                        if let Some(companion) = self.items.iter_mut().find(|i| {
+                            (i.label == "artemis" || i.label == "artemis-mobile")
+                                && i.category == Category::AgentSkills
+                        }) {
+                            companion.selected = true;
+                        }
                     }
                     if label == "Web Dev" && new_state {
                         if let Some(companion) = self.items.iter_mut().find(|i| {
