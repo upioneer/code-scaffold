@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Code Scaffold Specification Schema: https://code-scaffold.com/spec/v1 -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Artemis Mobile Automation - Device Testing & MCP Studio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;600;700&display=swap');
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #090d16;
+      color: #e2e8f0;
+    }
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .glow-cyan {
+      box-shadow: 0 0 25px rgba(6, 182, 212, 0.25);
+    }
+    .glow-emerald {
+      box-shadow: 0 0 25px rgba(16, 185, 129, 0.25);
+    }
+    .glow-purple {
+      box-shadow: 0 0 25px rgba(168, 85, 247, 0.25);
+    }
+    .grid-bg {
+      background-size: 28px 28px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.6);
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: rgba(51, 65, 85, 0.8);
+      border-radius: 3px;
+    }
+    .phone-frame {
+      border: 12px solid #1e293b;
+      border-radius: 36px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+    }
+    .ripple {
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      background: rgba(6, 182, 212, 0.6);
+      border-radius: 50%;
+      transform: translate(-50%, -50%) scale(1);
+      animation: rippleEffect 0.6s ease-out forwards;
+      pointer-events: none;
+    }
+    @keyframes rippleEffect {
+      to {
+        transform: translate(-50%, -50%) scale(3.5);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen grid-bg p-6 flex flex-col">
+  <!-- Top Navigation Header -->
+  <header class="flex flex-wrap items-center justify-between border-b border-cyan-900/40 pb-4 mb-6">
+    <div class="flex items-center space-x-3">
+      <div class="w-11 h-11 rounded-lg bg-cyan-950 border border-cyan-500/50 flex items-center justify-center font-mono font-bold text-cyan-400 text-lg glow-cyan">
+        ART
+      </div>
+      <div>
+        <h1 class="text-xl font-bold text-slate-100 tracking-wide flex items-center space-x-2">
+          <span>Artemis Mobile Automation</span>
+          <span class="text-xs px-2.5 py-0.5 rounded bg-cyan-950 border border-cyan-500/60 text-cyan-300 font-mono font-semibold">v1 ACTIVE</span>
+        </h1>
+        <p class="text-xs text-slate-400">Natural-Language Android Device Automation, Multimodal VLM Perception & Native MCP Server</p>
+      </div>
+    </div>
+    <div class="flex items-center space-x-3 mt-3 sm:mt-0 font-mono text-xs">
+      <div class="flex items-center space-x-2 bg-slate-900/90 border border-slate-800 px-3 py-1.5 rounded-md">
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span class="text-slate-300">MCP Protocol:</span>
+        <span class="text-emerald-400 font-bold">READY (stdio)</span>
+      </div>
+      <div class="px-3 py-1.5 rounded-md border border-cyan-800/60 bg-cyan-950/40 text-cyan-300 font-semibold flex items-center space-x-2">
+        <span>Target Device:</span>
+        <span id="activeDeviceSerial" class="text-white font-bold">Pixel 8a (USB 3.1)</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation Tabs -->
+  <div class="flex space-x-2 border-b border-slate-800 pb-3 mb-6 font-mono text-xs overflow-x-auto custom-scroll">
+    <button onclick="switchTab('device')" id="tab-btn-device" class="px-4 py-2 rounded-md bg-cyan-950/80 border border-cyan-500/50 text-cyan-300 font-bold flex items-center space-x-2 transition">
+      <span>1. Virtual Device & Actuation</span>
+    </button>
+    <button onclick="switchTab('mcp')" id="tab-btn-mcp" class="px-4 py-2 rounded-md bg-slate-900 border border-slate-800 text-slate-400 font-semibold hover:text-slate-200 transition">
+      <span>2. Native MCP Tool Dispatcher</span>
+    </button>
+    <button onclick="switchTab('hierarchy')" id="tab-btn-hierarchy" class="px-4 py-2 rounded-md bg-slate-900 border border-slate-800 text-slate-400 font-semibold hover:text-slate-200 transition">
+      <span>3. UI Hierarchy & OCR Grounding</span>
+    </button>
+    <button onclick="switchTab('logcat')" id="tab-btn-logcat" class="px-4 py-2 rounded-md bg-slate-900 border border-slate-800 text-slate-400 font-semibold hover:text-slate-200 transition">
+      <span>4. Logcat & Action Trace</span>
+    </button>
+    <button onclick="switchTab('diagnose')" id="tab-btn-diagnose" class="px-4 py-2 rounded-md bg-slate-900 border border-slate-800 text-slate-400 font-semibold hover:text-slate-200 transition">
+      <span>5. Bridge Health & Diagnostics</span>
+    </button>
+  </div>
+
+  <!-- TAB 1: Virtual Device & Live Actuation -->
+  <section id="tab-device" class="grid grid-cols-1 lg:grid-cols-12 gap-6 flex-1">
+    <!-- Left Column: Virtual Smartphone Canvas -->
+    <div class="lg:col-span-5 flex flex-col items-center justify-center p-4">
+      <div class="relative w-[300px] h-[600px] bg-slate-950 phone-frame flex flex-col overflow-hidden relative select-none">
+        <!-- Status Bar -->
+        <div class="h-6 bg-slate-900/90 text-[10px] font-mono px-3 flex items-center justify-between text-slate-400 z-10 border-b border-slate-800">
+          <span>09:41</span>
+          <div class="flex items-center space-x-2">
+            <span>5G</span>
+            <span>92%</span>
+          </div>
+        </div>
+
+        <!-- Phone Screen Interactive Canvas -->
+        <div id="phoneScreen" onclick="handleScreenTap(event)" class="relative flex-1 bg-slate-900 overflow-hidden cursor-crosshair flex flex-col p-3">
+          <!-- App Bar -->
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-3">
+            <div class="font-bold text-xs text-slate-100 flex items-center space-x-1.5">
+              <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+              <span id="screenAppTitle">Settings &gt; Display</span>
+            </div>
+            <span class="text-[10px] font-mono text-cyan-400 bg-cyan-950 px-1.5 py-0.5 rounded">ADB: 0.0</span>
+          </div>
+
+          <!-- Screen UI Content (Interactive elements) -->
+          <div id="screenItems" class="space-y-3 font-mono text-xs flex-1">
+            <div id="elem-brightness" class="p-2.5 rounded bg-slate-950 border border-slate-800 flex justify-between items-center hover:border-cyan-500/60 transition">
+              <div>
+                <div class="text-slate-200 font-semibold">Brightness Level</div>
+                <div class="text-[10px] text-slate-400">Adaptive brightness active</div>
+              </div>
+              <span class="text-cyan-400 font-bold">78%</span>
+            </div>
+
+            <div id="elem-darktheme" class="p-2.5 rounded bg-slate-950 border border-cyan-500/50 flex justify-between items-center hover:border-cyan-400 transition">
+              <div>
+                <div class="text-slate-200 font-semibold">Dark theme</div>
+                <div class="text-[10px] text-slate-400">Will turn on at sunset</div>
+              </div>
+              <div id="darkThemeSwitch" class="w-10 h-5 bg-cyan-600 rounded-full flex items-center p-0.5 justify-end">
+                <span class="w-4 h-4 bg-white rounded-full"></span>
+              </div>
+            </div>
+
+            <div id="elem-refresh" class="p-2.5 rounded bg-slate-950 border border-slate-800 flex justify-between items-center hover:border-cyan-500/60 transition">
+              <div>
+                <div class="text-slate-200 font-semibold">Smooth Display</div>
+                <div class="text-[10px] text-slate-400">Peak refresh rate 120Hz</div>
+              </div>
+              <div class="w-10 h-5 bg-slate-700 rounded-full flex items-center p-0.5 justify-end">
+                <span class="w-4 h-4 bg-slate-300 rounded-full"></span>
+              </div>
+            </div>
+
+            <div id="elem-fontsize" class="p-2.5 rounded bg-slate-950 border border-slate-800 flex justify-between items-center hover:border-cyan-500/60 transition">
+              <div>
+                <div class="text-slate-200 font-semibold">Display size & text</div>
+                <div class="text-[10px] text-slate-400">Standard scale</div>
+              </div>
+              <span class="text-slate-400">&gt;</span>
+            </div>
+          </div>
+
+          <!-- Toast Notification Area -->
+          <div id="screenToast" class="hidden absolute bottom-12 left-4 right-4 p-2 bg-slate-800 border border-slate-700 rounded text-center text-[10px] font-mono text-cyan-300 shadow-lg">
+            Dark theme enabled
+          </div>
+        </div>
+
+        <!-- Android Bottom Navigation Bar -->
+        <div class="h-10 bg-slate-950 border-t border-slate-800 flex items-center justify-around text-slate-400 text-xs z-10">
+          <button onclick="handleNavClick('back')" class="p-1 hover:text-cyan-400 transition">&lt;</button>
+          <button onclick="handleNavClick('home')" class="p-1 hover:text-cyan-400 transition">&#9675;</button>
+          <button onclick="handleNavClick('recents')" class="p-1 hover:text-cyan-400 transition">&#9633;</button>
+        </div>
+      </div>
+      <div class="mt-3 text-[11px] font-mono text-slate-400 flex items-center space-x-2">
+        <span>Click screen to simulate ADB touch actuation</span>
+        <span id="coordDisplay" class="text-cyan-400 font-bold">(x: --, y: --)</span>
+      </div>
+    </div>
+
+    <!-- Right Column: Task Dispatcher & Execution Stream -->
+    <div class="lg:col-span-7 flex flex-col space-y-6">
+      <div class="bg-slate-900/90 border border-slate-800 rounded-lg p-5">
+        <h2 class="text-sm font-bold text-slate-200 mb-3 flex items-center justify-between">
+          <span class="flex items-center space-x-2">
+            <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+            <span>Natural-Language Goal Dispatcher (`mobile_run_task`)</span>
+          </span>
+          <span class="text-xs font-mono text-slate-500">Multimodal Agent Loop</span>
+        </h2>
+
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs text-slate-400 mb-1 font-mono">Task Presets:</label>
+            <select id="taskPresetSelect" onchange="loadTaskPreset()" class="w-full bg-slate-950 border border-slate-800 rounded px-3 py-2 text-xs font-mono text-slate-200 focus:outline-none focus:border-cyan-500">
+              <option value="toggle_dark">Settings: Navigate to Display and toggle Dark Theme</option>
+              <option value="test_checkout">E-Commerce: Add item to cart and verify checkout toast</option>
+              <option value="verify_login">Auth: Enter username/password and assert token persistence</option>
+              <option value="crash_detect">Error Handling: Trigger edge-case and trap Logcat crash</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs text-slate-400 mb-1 font-mono">Natural-Language Instruction:</label>
+            <textarea id="taskGoalInput" rows="2" class="w-full bg-slate-950 border border-slate-800 rounded p-3 font-mono text-xs text-slate-200 focus:outline-none focus:border-cyan-500 leading-relaxed custom-scroll">Open Settings, navigate to Display, toggle Dark theme, and verify the confirmation toast appears.</textarea>
+          </div>
+
+          <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+            <div class="flex items-center space-x-2 font-mono text-xs">
+              <span class="text-slate-400">Profile:</span>
+              <button onclick="setProfile('flash')" id="profileBtnFlash" class="px-2.5 py-1 rounded bg-cyan-950 border border-cyan-500/60 text-cyan-300 font-bold">Flash (3-5s)</button>
+              <button onclick="setProfile('pro')" id="profileBtnPro" class="px-2.5 py-1 rounded bg-slate-950 border border-slate-800 text-slate-400">Pro (15-40s)</button>
+            </div>
+
+            <button onclick="dispatchTask()" class="py-2 px-5 rounded bg-cyan-600 hover:bg-cyan-500 text-white font-mono text-xs font-bold transition flex items-center space-x-2 glow-cyan">
+              <span>Dispatch to Artemis Engine</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Execution Progress Timeline -->
+      <div class="bg-slate-900/90 border border-slate-800 rounded-lg p-5 flex flex-col flex-1">
+        <h3 class="text-xs font-bold text-slate-300 font-mono mb-3 flex items-center justify-between">
+          <span>Active Cognitive Execution Stream</span>
+          <span id="taskStatusBadge" class="text-slate-500 font-normal">IDLE</span>
+        </h3>
+
+        <div id="executionTimeline" class="space-y-3 font-mono text-xs overflow-y-auto custom-scroll flex-1 p-2 bg-slate-950 rounded border border-slate-800">
+          <div class="text-slate-500">[STANDBY] Waiting for natural language task dispatch...</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 2: Native MCP Tool Dispatcher -->
+  <section id="tab-mcp" class="hidden grid-cols-1 lg:grid-cols-12 gap-6 flex-1">
+    <div class="lg:col-span-5 flex flex-col space-y-4">
+      <div class="bg-slate-900/90 border border-slate-800 rounded-lg p-5 flex flex-col flex-1">
+        <h2 class="text-sm font-bold text-slate-200 mb-3 flex items-center space-x-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          <span>Select MCP Tool</span>
+        </h2>
+
+        <div class="space-y-3">
+          <button onclick="selectMcpTool('mobile_run_task')" id="mcp-btn-run" class="w-full text-left p-3 rounded bg-cyan-950 border border-cyan-500/50 text-cyan-300 font-mono text-xs transition">
+            <div class="font-bold">mobile_run_task</div>
+            <div class="text-[11px] text-slate-400 mt-1">Dispatches asynchronous goal to execution engine</div>
+          </button>
+          <button onclick="selectMcpTool('mobile_manage_task')" id="mcp-btn-manage" class="w-full text-left p-3 rounded bg-slate-950 border border-slate-800 text-slate-300 font-mono text-xs hover:border-slate-700 transition">
+            <div class="font-bold">mobile_manage_task</div>
+            <div class="text-[11px] text-slate-400 mt-1">Lifecycle steering: status, pause, abort, or guidance</div>
+          </button>
+          <button onclick="selectMcpTool('mobile_get_device_state')" id="mcp-btn-state" class="w-full text-left p-3 rounded bg-slate-950 border border-slate-800 text-slate-300 font-mono text-xs hover:border-slate-700 transition">
+            <div class="font-bold">mobile_get_device_state</div>
+            <div class="text-[11px] text-slate-400 mt-1">Captures multimodal snapshot: base64, XML, OCR</div>
+          </button>
+          <button onclick="selectMcpTool('mobile_inspect_trace')" id="mcp-btn-trace" class="w-full text-left p-3 rounded bg-slate-950 border border-slate-800 text-slate-300 font-mono text-xs hover:border-slate-700 transition">
+            <div class="font-bold">mobile_inspect_trace</div>
+            <div class="text-[11px] text-slate-400 mt-1">Telemetry replay and Logcat crash harvesting</div>
+          </button>
+          <button onclick="selectMcpTool('mobile_diagnose')" id="mcp-btn-diag" class="w-full text-left p-3 rounded bg-slate-950 border border-slate-800 text-slate-300 font-mono text-xs hover:border-slate-700 transition">
+            <div class="font-bold">mobile_diagnose</div>
+            <div class="text-[11px] text-slate-400 mt-1">Environment health check and automated self-healing</div>
+          </button>
+        </div>
+
+        <div class="mt-4 pt-4 border-t border-slate-800">
+          <label class="block text-xs text-slate-400 mb-1 font-mono">Tool Invocation Parameters (JSON):</label>
+          <textarea id="mcpParamsInput" rows="5" class="w-full bg-slate-950 border border-slate-800 rounded p-3 font-mono text-xs text-slate-200 focus:outline-none focus:border-cyan-500 custom-scroll">{\n  "goal": "Verify display settings",\n  "execution_profile": "flash",\n  "timeout_seconds": 180\n}</textarea>
+          <button onclick="invokeMcpTool()" class="w-full mt-3 py-2 px-4 rounded bg-emerald-600 hover:bg-emerald-500 text-white font-mono text-xs font-bold transition flex items-center justify-center space-x-2">
+            <span>Execute MCP Tool</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: MCP Result Output -->
+    <div class="lg:col-span-7 flex flex-col space-y-4">
+      <div class="bg-slate-900/90 border border-slate-800 rounded-lg p-5 flex flex-col flex-1">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-sm font-bold text-slate-200 flex items-center space-x-2">
+            <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+            <span>MCP Response Payload</span>
+          </h2>
+          <span id="mcpLatencyBadge" class="text-xs font-mono text-emerald-400 font-bold">24ms (OK)</span>
+        </div>
+
+        <div class="flex-1 bg-slate-950 rounded border border-slate-800 p-4 font-mono text-xs text-slate-300 overflow-y-auto custom-scroll whitespace-pre" id="mcpResponseOutput">{
+  "status": "success",
+  "tool": "mobile_run_task",
+  "task_id": "artemis-task-88219-px8",
+  "device_id": "PIXEL_8A_FUSION_007",
+  "profile": "flash",
+  "execution_state": "RUNNING",
+  "stream_uri": "mcp://artemis/stream/artemis-task-88219-px8"
+}</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 3: UI Hierarchy & OCR Grounding -->
+  <section id="tab-hierarchy" class="hidden grid-cols-1 lg:grid-cols-12 gap-6 flex-1">
+    <div class="lg:col-span-6 flex flex-col space-y-4">
+      <div class="bg-slate-900/90 border border-slate-800 rounded-lg p-5 flex flex-col flex-1">
+        <h2 class="text-sm font-bold text-slate-200 mb-3 flex items-center justify-between">
+          <span class="flex items-center space-x-2">
+            <span class="w-2 h-2 rounded-full bg-purple-400"></span>
+            <span>UIAutomator Node Tree</span>
+          </span>
+          <span class="text-xs font-mono text-purple-400">XML View Hierarchy</span>
+        </h2>
+
+        <div class="flex-1 bg-slate-950 rounded border border-slate-800 p-3 font-mono text-xs overflow-y-auto custom-scroll space-y-1.5 text-slate-300" id="xmlTreeDisplay">
+          <div class="text-slate-500">&lt;hierarchy rotation="0"&gt;</div>
+          <div class="pl-3 text-cyan-300">&lt;node class="android.widget.FrameLayout" bounds="[0,0][1080,2400]"&gt;</div>
+          <div class="pl-6 text-emerald-300">&lt;node class="android.widget.LinearLayout" bounds="[0,0][1080,2400]"&gt;</div>
+          <div class="pl-9 text-slate-200 hover:bg-slate-900 cursor-pointer p-1 rounded" onclick="inspectNode('title')">&lt;node text="Display" class="android.widget.TextView" resource-id="com.android.settings:id/title" bounds="[48,120][320,180]" /&gt;</div>
+          <div class="pl-9 text-purple-300 hover:bg-slate-900 cursor-pointer p-1 rounded" onclick="inspectNode('brightness')">&lt;node text="Brightness Level" class="android.widget.TextView" bounds="[48,220][540,280]" /&gt;</div>
+          <div class="pl-9 text-amber-300 hover:bg-slate-900 cursor-pointer p-1 rounded" onclick="inspectNode('darktheme')">&lt;node text="Dark theme" class="android.widget.Switch" resource-id="com.android.settings:id/switch_widget" bounds="[48,320][1032,440]" checkable="true" checked="true" /&gt;</div>
+          <div class="pl-6 text-emerald-300">&lt;/node&gt;</div>
+          <div class="pl-3 text-cyan-300">&lt;/node&gt;</div>
+          <div class="text-slate-500">&lt;/hierarchy&gt;</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Element Grounding Details -->
+    <div class="lg:col-span-6 flex flex-col space-y-4">
+      <div class="bg-slate-900/90 border border-slate-800 rounded-lg p-5 flex flex-col flex-1">
+        <h2 class="text-sm font-bold text-slate-200 mb-3 flex items-center space-x-2">
+          <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+          <span>Spatial Element Inspector</span>
+        </h2>
+
+        <div class="p-4 bg-slate-950 rounded border border-slate-800 font-mono text-xs space-y-3 flex-1">
+          <div class="flex justify-between border-b border-slate-800/80 pb-2">
+            <span class="text-slate-400">Widget Class:</span>
+            <span id="inspClass" class="text-cyan-300 font-bold">android.widget.Switch</span>
+          </div>
+          <div class="flex justify-between border-b border-slate-800/80 pb-2">
+            <span class="text-slate-400">Resource ID:</span>
+            <span id="inspId" class="text-slate-200">com.android.settings:id/switch_widget</span>
+          </div>
+          <div class="flex justify-between border-b border-slate-800/80 pb-2">
+            <span class="text-slate-400">Text / Content Desc:</span>
+            <span id="inspText" class="text-amber-300 font-semibold">"Dark theme"</span>
+          </div>
+          <div class="flex justify-between border-b border-slate-800/80 pb-2">
+            <span class="text-slate-400">Physical Pixels:</span>
+            <span id="inspPixels" class="text-slate-200">[48, 320] [1032, 440]</span>
+          </div>
+          <div class="flex justify-between border-b border-slate-800/80 pb-2">
+            <span class="text-slate-400">Normalized Bounds:</span>
+            <span id="inspNorm" class="text-emerald-400 font-bold">[0.044, 0.133, 0.955, 0.183]</span>
+          </div>
+          <div class="flex justify-between border-b border-slate-800/80 pb-2">
+            <span class="text-slate-400">Computed Tap Center:</span>
+            <span id="inspCenter" class="text-cyan-400 font-bold">x: 540, y: 380</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-400">Checkable / Checked:</span>
+            <span id="inspChecked" class="text-emerald-400 font-bold">true / true</span>
+          </div>
+        </div>
+
+        <div class="mt-4 p-3 rounded bg-slate-950 border border-slate-800 font-mono text-[11px] text-slate-400">
+          <span class="text-cyan-400 font-bold">VLM Spatial Anchor:</span> Resolution-independent coordinate normalization guarantees resilient execution across phone, tablet, and foldable form factors.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 4: Logcat & Action Trace -->
+  <section id="tab-logcat" class="hidden grid-cols-1 lg:grid-cols-12 gap-6 flex-1">
+    <div class="lg:col-span-12 flex flex-col space-y-4">
+      <div class="bg-slate-900/90 border border-slate-800 rounded-lg p-5 flex flex-col flex-1">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+          <div class="flex items-center space-x-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span class="text-sm font-bold text-slate-200">Real-Time Android Logcat Stream</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <button onclick="simulateCrash()" class="px-3 py-1 rounded bg-rose-950 border border-rose-500 text-rose-300 font-mono text-xs hover:bg-rose-900 transition">
+              Simulate Fatal Crash
+            </button>
+            <button onclick="clearLogcat()" class="px-3 py-1 rounded bg-slate-800 text-slate-300 font-mono text-xs hover:bg-slate-700 transition">
+              Clear
+            </button>
+          </div>
+        </div>
+
+        <div id="logcatTerminal" class="h-96 bg-slate-950 rounded border border-slate-800 p-4 font-mono text-xs overflow-y-auto custom-scroll space-y-1.5">
+          <div class="text-slate-500">[LOGCAT_DAEMON] Initializing ring buffer stream: adb logcat -v threadtime...</div>
+          <div class="text-slate-400">10-24 23:05:12.102  1420  1450 I ActivityTaskManager: START u0 {act=android.settings.DISPLAY_SETTINGS} from uid 1000</div>
+          <div class="text-emerald-400">10-24 23:05:12.340  1420  1488 I WindowManager: Displayed com.android.settings/.DisplaySettings: +238ms</div>
+          <div class="text-slate-400">10-24 23:05:13.004   890   890 D InputReader: Touch event received: ACTION_DOWN (540, 380)</div>
+          <div class="text-cyan-400">10-24 23:05:13.022  1420  1420 D ViewRootImpl: ViewPostIme key 0 for com.android.settings.DisplaySettings</div>
+          <div class="text-emerald-400">10-24 23:05:13.080  2100  2100 I Toast: Show toast from package: com.android.settings: "Dark theme enabled"</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 5: Bridge Health & Diagnostics -->
+  <section id="tab-diagnose" class="hidden grid-cols-1 lg:grid-cols-12 gap-6 flex-1">
+    <div class="lg:col-span-6 flex flex-col space-y-4">
+      <div class="bg-slate-900/90 border border-slate-800 rounded-lg p-5">
+        <h2 class="text-sm font-bold text-slate-200 mb-3 flex items-center space-x-2">
+          <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+          <span>ADB Host Bridge & Hardware Health</span>
+        </h2>
+        <div class="space-y-3 font-mono text-xs">
+          <div class="p-3 rounded bg-slate-950 border border-slate-800 flex justify-between items-center">
+            <span class="text-slate-400">Device Hardware Serial:</span>
+            <span class="text-slate-200 font-bold">PIXEL_8A_FUSION_007</span>
+          </div>
+          <div class="p-3 rounded bg-slate-950 border border-slate-800 flex justify-between items-center">
+            <span class="text-slate-400">Operating System Build:</span>
+            <span class="text-cyan-300">Android 15 (VanillaIceCream / AP2A)</span>
+          </div>
+          <div class="p-3 rounded bg-slate-950 border border-slate-800 flex justify-between items-center">
+            <span class="text-slate-400">Display Geometry:</span>
+            <span class="text-slate-200">1080 x 2400 @ 420 dpi</span>
+          </div>
+          <div class="p-3 rounded bg-slate-950 border border-slate-800 flex justify-between items-center">
+            <span class="text-slate-400">Battery Level & Thermal:</span>
+            <span class="text-emerald-400 font-bold">92% (Normal, 31.4°C)</span>
+          </div>
+          <div class="p-3 rounded bg-slate-950 border border-slate-800 flex justify-between items-center">
+            <span class="text-slate-400">USB Debugging Link:</span>
+            <span class="text-emerald-400 font-bold">AUTHORIZED (High Speed)</span>
+          </div>
+        </div>
+
+        <button onclick="runDiagnostics()" class="w-full mt-4 py-2.5 px-4 rounded bg-cyan-600 hover:bg-cyan-500 text-white font-mono text-xs font-bold transition glow-cyan">
+          Run Environment Diagnostics & Self-Healing
+        </button>
+      </div>
+    </div>
+
+    <!-- Right: Dependencies Verification -->
+    <div class="lg:col-span-6 flex flex-col space-y-4">
+      <div class="bg-slate-900/90 border border-slate-800 rounded-lg p-5">
+        <h2 class="text-sm font-bold text-slate-200 mb-3 flex items-center space-x-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          <span>Required Binaries & Subsystems</span>
+        </h2>
+        <div class="space-y-3 font-mono text-xs">
+          <div class="p-3 rounded bg-slate-950 border border-slate-800 flex justify-between items-center">
+            <span class="text-slate-400">Android Debug Bridge (adb):</span>
+            <span class="text-emerald-400 font-bold">v1.0.41 (VERIFIED)</span>
+          </div>
+          <div class="p-3 rounded bg-slate-950 border border-slate-800 flex justify-between items-center">
+            <span class="text-slate-400">Screen Mirroring (scrcpy):</span>
+            <span class="text-emerald-400 font-bold">v2.4 (ACTIVE)</span>
+          </div>
+          <div class="p-3 rounded bg-slate-950 border border-slate-800 flex justify-between items-center">
+            <span class="text-slate-400">Video Transcoder (ffmpeg):</span>
+            <span class="text-emerald-400 font-bold">v6.1.1 (READY)</span>
+          </div>
+          <div class="p-3 rounded bg-slate-950 border border-slate-800 flex justify-between items-center">
+            <span class="text-slate-400">Python MCP SDK Runtime:</span>
+            <span class="text-emerald-400 font-bold">v1.2.0 (LOADED)</span>
+          </div>
+        </div>
+
+        <div class="mt-4 p-4 rounded bg-slate-950 border border-slate-800 font-mono text-xs space-y-2">
+          <div class="text-slate-300 font-bold">Ad-Hoc Distribution / CLI Install:</div>
+          <div class="text-cyan-300 select-all">npx @code-scaffold/skills-cli add upioneer/artemis</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive JavaScript Engine -->
+  <script>
+    // Tab Switching
+    function switchTab(tabId) {
+      ['device', 'mcp', 'hierarchy', 'logcat', 'diagnose'].forEach(t => {
+        document.getElementById('tab-' + t).classList.add('hidden');
+        document.getElementById('tab-' + t).classList.remove('grid');
+        const btn = document.getElementById('tab-btn-' + t);
+        btn.classList.remove('bg-cyan-950/80', 'border-cyan-500/50', 'text-cyan-300');
+        btn.classList.add('bg-slate-900', 'border-slate-800', 'text-slate-400');
+      });
+
+      const activeTab = document.getElementById('tab-' + tabId);
+      activeTab.classList.remove('hidden');
+      activeTab.classList.add('grid');
+
+      const activeBtn = document.getElementById('tab-btn-' + tabId);
+      activeBtn.classList.remove('bg-slate-900', 'border-slate-800', 'text-slate-400');
+      activeBtn.classList.add('bg-cyan-950/80', 'border-cyan-500/50', 'text-cyan-300');
+    }
+
+    // Touch Actuation Simulator
+    function handleScreenTap(e) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const x = Math.round(e.clientX - rect.left);
+      const y = Math.round(e.clientY - rect.top);
+
+      document.getElementById('coordDisplay').textContent = `(x: ${x}, y: ${y})`;
+
+      // Create ripple animation
+      const ripple = document.createElement('div');
+      ripple.className = 'ripple';
+      ripple.style.left = `${x}px`;
+      ripple.style.top = `${y}px`;
+      e.currentTarget.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 600);
+
+      // Check if tap hit dark theme switch
+      if (y >= 85 && y <= 150) {
+        toggleDarkTheme();
+      }
+    }
+
+    function toggleDarkTheme() {
+      const sw = document.getElementById('darkThemeSwitch');
+      const isDark = sw.classList.contains('justify-end');
+      if (isDark) {
+        sw.className = 'w-10 h-5 bg-slate-700 rounded-full flex items-center p-0.5 justify-start';
+        showToast('Dark theme disabled');
+      } else {
+        sw.className = 'w-10 h-5 bg-cyan-600 rounded-full flex items-center p-0.5 justify-end';
+        showToast('Dark theme enabled');
+      }
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('screenToast');
+      t.textContent = msg;
+      t.classList.remove('hidden');
+      setTimeout(() => t.classList.add('hidden'), 2500);
+    }
+
+    function handleNavClick(action) {
+      showToast(`Nav key: ${action.toUpperCase()}`);
+    }
+
+    // Task Profiles
+    let activeProfile = 'flash';
+    function setProfile(p) {
+      activeProfile = p;
+      if (p === 'flash') {
+        document.getElementById('profileBtnFlash').className = 'px-2.5 py-1 rounded bg-cyan-950 border border-cyan-500/60 text-cyan-300 font-bold';
+        document.getElementById('profileBtnPro').className = 'px-2.5 py-1 rounded bg-slate-950 border border-slate-800 text-slate-400';
+      } else {
+        document.getElementById('profileBtnPro').className = 'px-2.5 py-1 rounded bg-purple-950 border border-purple-500/60 text-purple-300 font-bold';
+        document.getElementById('profileBtnFlash').className = 'px-2.5 py-1 rounded bg-slate-950 border border-slate-800 text-slate-400';
+      }
+    }
+
+    const taskPresets = {
+      toggle_dark: "Open Settings, navigate to Display, toggle Dark theme, and verify the confirmation toast appears.",
+      test_checkout: "Open Store app, add 'Mechanical Keyboard' to cart, proceed to checkout, and assert order confirmation.",
+      verify_login: "Launch AuthDemo, enter username 'tester@domain.corp', password 'Pass123!', and verify authentication token in preferences.",
+      crash_detect: "Trigger boundary condition in ProfileActivity with invalid UTF-8 string and harvest Logcat stack trace."
+    };
+
+    function loadTaskPreset() {
+      const key = document.getElementById('taskPresetSelect').value;
+      document.getElementById('taskGoalInput').value = taskPresets[key];
+    }
+
+    function dispatchTask() {
+      const goal = document.getElementById('taskGoalInput').value;
+      const timeline = document.getElementById('executionTimeline');
+      const badge = document.getElementById('taskStatusBadge');
+
+      badge.textContent = `EXECUTING (${activeProfile.toUpperCase()})`;
+      badge.className = 'text-cyan-400 font-bold animate-pulse';
+
+      timeline.innerHTML = `
+        <div class="text-cyan-400 font-bold">[STEP 0: INITIALIZE] Dispatched task goal: "${goal}"</div>
+        <div class="text-slate-400">[OBSERVE] Capturing multimodal snapshot via screencap & UIAutomator...</div>
+      `;
+
+      setTimeout(() => {
+        timeline.innerHTML += `
+          <div class="text-emerald-400">[PLAN] Identified target element: "Dark theme" switch at normalized bounds [0.044, 0.133, 0.955, 0.183]</div>
+          <div class="text-slate-400">[ACT] Dispatching ADB input tap: <code>adb shell input tap 540 380</code></div>
+        `;
+        toggleDarkTheme();
+      }, 1000);
+
+      setTimeout(() => {
+        timeline.innerHTML += `
+          <div class="text-cyan-300">[VERIFY] Post-action screen diff confirmed state change: Switch toggled & toast detected.</div>
+          <div class="p-2 rounded bg-emerald-950/60 border border-emerald-500 text-emerald-300 font-bold">
+            [TASK COMPLETED] Goal satisfied with 100% assertion pass in 2.1s (Flash profile).
+          </div>
+        `;
+        badge.textContent = 'SUCCESS (100%)';
+        badge.className = 'text-emerald-400 font-bold';
+      }, 2200);
+    }
+
+    // MCP Tools
+    const mcpPresets = {
+      mobile_run_task: {
+        goal: "Verify display settings",
+        execution_profile: "flash",
+        timeout_seconds: 180
+      },
+      mobile_manage_task: {
+        task_id: "artemis-task-88219-px8",
+        action: "status"
+      },
+      mobile_get_device_state: {
+        device_id: "PIXEL_8A_FUSION_007",
+        include_xml: true,
+        include_ocr: true,
+        compress_image: true
+      },
+      mobile_inspect_trace: {
+        task_id: "artemis-task-88219-px8",
+        include_logcat: true,
+        error_only: false
+      },
+      mobile_diagnose: {
+        device_id: "PIXEL_8A_FUSION_007",
+        attempt_fix: true
+      }
+    };
+
+    let activeMcp = 'mobile_run_task';
+    function selectMcpTool(name) {
+      activeMcp = name;
+      ['run', 'manage', 'state', 'trace', 'diag'].forEach(id => {
+        const btn = document.getElementById('mcp-btn-' + id);
+        btn.className = 'w-full text-left p-3 rounded bg-slate-950 border border-slate-800 text-slate-300 font-mono text-xs hover:border-slate-700 transition';
+      });
+
+      const map = {
+        mobile_run_task: 'run',
+        mobile_manage_task: 'manage',
+        mobile_get_device_state: 'state',
+        mobile_inspect_trace: 'trace',
+        mobile_diagnose: 'diag'
+      };
+
+      document.getElementById('mcp-btn-' + map[name]).className = 'w-full text-left p-3 rounded bg-cyan-950 border border-cyan-500/50 text-cyan-300 font-mono text-xs transition';
+      document.getElementById('mcpParamsInput').value = JSON.stringify(mcpPresets[name], null, 2);
+    }
+
+    function invokeMcpTool() {
+      const output = document.getElementById('mcpResponseOutput');
+      output.textContent = "Invoking Artemis MCP tool via stdio transport...";
+
+      setTimeout(() => {
+        let resp = {};
+        if (activeMcp === 'mobile_run_task') {
+          resp = {
+            status: "success",
+            tool: "mobile_run_task",
+            task_id: "artemis-task-" + Math.floor(Math.random() * 90000 + 10000),
+            device_id: "PIXEL_8A_FUSION_007",
+            profile: activeProfile,
+            execution_state: "RUNNING",
+            stream_uri: "mcp://artemis/stream/task"
+          };
+        } else if (activeMcp === 'mobile_manage_task') {
+          resp = {
+            status: "success",
+            tool: "mobile_manage_task",
+            task_id: "artemis-task-88219-px8",
+            lifecycle_state: "COMPLETED",
+            steps_completed: 4,
+            duration_ms: 2140
+          };
+        } else if (activeMcp === 'mobile_get_device_state') {
+          resp = {
+            status: "success",
+            tool: "mobile_get_device_state",
+            device_id: "PIXEL_8A_FUSION_007",
+            foreground_package: "com.android.settings",
+            foreground_activity: ".DisplaySettings",
+            screenshot_base64: "iVBORw0KGgoAAAANSUhEUgAABAAAAAMACAYAAACW...[38KB]",
+            interactive_elements_count: 14
+          };
+        } else if (activeMcp === 'mobile_inspect_trace') {
+          resp = {
+            status: "success",
+            tool: "mobile_inspect_trace",
+            task_id: "artemis-task-88219-px8",
+            events_count: 12,
+            crashes_detected: 0,
+            trace_url: "https://code-scaffold.com/traces/artemis-task-88219-px8"
+          };
+        } else {
+          resp = {
+            status: "success",
+            tool: "mobile_diagnose",
+            device_id: "PIXEL_8A_FUSION_007",
+            bridge_status: "HEALTHY",
+            adb_version: "1.0.41",
+            battery_level: 92,
+            self_healing_applied: false
+          };
+        }
+        output.textContent = JSON.stringify(resp, null, 2);
+      }, 300);
+    }
+
+    // Node Inspector
+    function inspectNode(name) {
+      if (name === 'brightness') {
+        document.getElementById('inspClass').textContent = 'android.widget.TextView';
+        document.getElementById('inspId').textContent = 'com.android.settings:id/brightness_summary';
+        document.getElementById('inspText').textContent = '"Brightness Level"';
+        document.getElementById('inspPixels').textContent = '[48, 220] [540, 280]';
+        document.getElementById('inspNorm').textContent = '[0.044, 0.091, 0.500, 0.116]';
+        document.getElementById('inspCenter').textContent = 'x: 294, y: 250';
+        document.getElementById('inspChecked').textContent = 'false / false';
+      } else if (name === 'darktheme') {
+        document.getElementById('inspClass').textContent = 'android.widget.Switch';
+        document.getElementById('inspId').textContent = 'com.android.settings:id/switch_widget';
+        document.getElementById('inspText').textContent = '"Dark theme"';
+        document.getElementById('inspPixels').textContent = '[48, 320] [1032, 440]';
+        document.getElementById('inspNorm').textContent = '[0.044, 0.133, 0.955, 0.183]';
+        document.getElementById('inspCenter').textContent = 'x: 540, y: 380';
+        document.getElementById('inspChecked').textContent = 'true / true';
+      } else {
+        document.getElementById('inspClass').textContent = 'android.widget.TextView';
+        document.getElementById('inspId').textContent = 'com.android.settings:id/title';
+        document.getElementById('inspText').textContent = '"Display"';
+        document.getElementById('inspPixels').textContent = '[48, 120] [320, 180]';
+        document.getElementById('inspNorm').textContent = '[0.044, 0.050, 0.296, 0.075]';
+        document.getElementById('inspCenter').textContent = 'x: 184, y: 150';
+        document.getElementById('inspChecked').textContent = 'false / false';
+      }
+    }
+
+    // Logcat
+    function simulateCrash() {
+      const term = document.getElementById('logcatTerminal');
+      term.innerHTML += `
+        <div class="p-2 rounded bg-rose-950/80 border border-rose-500 text-rose-200 mt-2">
+          <div class="font-bold text-rose-400">[FATAL CRASH DETECTED] Process: com.example.target (PID: 3204)</div>
+          <div class="text-[11px] text-slate-300 mt-1">java.lang.NullPointerException: Attempt to invoke virtual method 'void android.view.View.setVisibility(int)' on a null object reference</div>
+          <div class="text-[10px] text-rose-300 mt-1">at com.example.target.ProfileActivity.onSyncFinished(ProfileActivity.kt:84)</div>
+          <div class="text-cyan-400 font-bold mt-1">[ARTEMIS_MCP_ACTION] mobile_inspect_trace captured crash packet and notified agent for self-healing.</div>
+        </div>
+      `;
+      term.scrollTop = term.scrollHeight;
+    }
+
+    function clearLogcat() {
+      document.getElementById('logcatTerminal').innerHTML = '<div class="text-slate-500">[LOGCAT_DAEMON] Log buffer cleared. Listening for incoming events...</div>';
+    }
+
+    // Diagnostics
+    function runDiagnostics() {
+      alert("Running Artemis Environment Diagnostics:\n- ADB Server: OK (Listening 5037)\n- Device: PIXEL_8A_FUSION_007 (Online)\n- scrcpy: v2.4 (OK)\n- Codec: H.264 / FFmpeg (Accelerated)\n\nAll bridge diagnostics passed 100%!");
+    }
+  </script>
+</body>
+</html>
