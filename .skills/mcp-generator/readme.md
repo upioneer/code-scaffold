@@ -1,12 +1,12 @@
 # MCP Generator
 
-**Version:** 4
+**Version:** 5
 
 **Target:** `.skills/mcp-generator`
 
 **Category:** AI, MCP & Developer Tools
 
-**Keywords:** `mcp-generator`, `model-context-protocol`, `fastmcp`, `custom-tools`, `json-rpc`, `agent-integrations`
+**Keywords:** `mcp-generator`, `model-context-protocol`, `fastmcp`, `custom-tools`, `json-rpc`, `agent-integrations`, `mcp-server`, `mcp-client`, `mcp-sdk`, `tool-schemas`, `stdio-transport`, `streamable-http`, `typescript-mcp`, `python-mcp`, `agent-tooling`
 
 ## Description
 Assists with creating new custom Model Context Protocol (MCP) servers, clients, and apps using official SDKs and best practices.
@@ -25,6 +25,7 @@ Assists with creating new custom Model Context Protocol (MCP) servers, clients, 
 This skill automates the scaffolding and development of Model Context Protocol (MCP) tools. When invoked, it will prompt the user to determine the scope of their project (Server vs Client, TypeScript vs Python) and then generate the appropriate boilerplate code. It implements MCP's standardized abstractions for Prompts, Resources, and Tools over stdio or SSE transports.
 
 ## Changelog
+* **v5** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v4** : Standardized ASCII art logo to uniform 6-line ANSI Shadow format.
 * **v3** : Expanded capability descriptions
 * **v2** : Expanded ecosystem support to include comprehensive documentation and generation logic for Java, Kotlin, C#, Go, PHP, Ruby, Rust, and Swift SDKs.

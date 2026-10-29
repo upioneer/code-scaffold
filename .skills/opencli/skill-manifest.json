@@ -2,7 +2,7 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_opencli_skill",
-  "version": "2",
+  "version": "3",
   "description": "Bridge websites and the CLI for structured data extraction and browser automation",
   "entryPoint": "./SKILL.md",
   "engines": {
@@ -20,8 +20,17 @@
     "site-adapters",
     "terminal-browser",
     "structured-extraction",
-    "cli-tools"
+    "cli-tools",
+    "browser-automation",
+    "site-to-cli",
+    "web-scraping",
+    "authenticated-sessions",
+    "cli-adapters",
+    "structured-output",
+    "website-commands",
+    "agent-web-access",
+    "json-output"
   ],
   "hasSandbox": false,
-  "integrity": "cs:sha256:231ddd34076d011f163d894b599dfc75128518d71aceef1c9ad42d774d5f2c34"
+  "integrity": "cs:sha256:96ca540a9e2fd644ab67de20aa1abfd29d38916e85e6df13e00b889888edc73e"
 }

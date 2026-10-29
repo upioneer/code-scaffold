@@ -61,6 +61,10 @@ When generating a *new* skill, agents MUST strictly follow this pipeline without
      * When building an interactive sandbox, comply strictly with `project_details/sandbox-architecure.md`.
      * Deploy the built sandbox to `.skills/<skill-name>/sandbox/index.html` via `project_details/playbooks/build_sandbox.ps1 <skill-name>`.
 7. **Payload Crafting:** Write a deep, technically advanced `SKILL.md` with keyword-rich YAML frontmatter that serves as the cognitive blueprint for future agents.
+8. **Keyword Contract & Registry Synchronization (Single Source of Truth):**
+   * The `skill-manifest.json` `keywords` array is the ONLY authoring surface: 15 to 30 unique lowercase kebab-case terms with the skill slug first.
+   * NEVER hand edit mirrors. After any keyword change, run `node project_details/playbooks/sync_skill_keywords.js` to regenerate the readme `**Keywords:**` badge, the SKILL.md frontmatter `keywords:` block list (last frontmatter field), the registry row preview plus version, and the root `manifest.json` entry.
+   * Run `node project_details/playbooks/sync_skill_keywords.js --check` plus `verify_skills.js` before completing any skill task. Both must report zero drift.
 
 ### Phase 4: Skill SEO, GEO & Discovery Standardization & Ecosystem Auditing
 Every skill must be systematically audited and optimized for search engine and AI agent discoverability:
@@ -73,7 +77,7 @@ Every skill must be systematically audited and optimized for search engine and A
 ### Phase 5: Zero Brand Leak & Automated Compliance Gatekeeper
 Before any skill creation or modification is considered complete:
 1. **Zero External Brand Leak Rule:** NEVER name, credit, or leak upstream open-source package names, third-party authors, or external corporate trademarks in user-facing skill titles, descriptions, manifests, documentation, CLI messages, logs, or diagrams. Aggressively rebrand every technology under Code Scaffold proprietary identity (e.g. *Ghost Graph*, *Stealth Browser Engine*, *Tasty Styling Engine*, *TUI Tools Tape Engine*).
-2. **Automated Verification:** Execute `node project_details/playbooks/verify_skills.js`. You MUST guarantee a 0 exit code and 100% compliance across all 56 skills (5-file anatomy, whole-number version synchronization, manifest schema including `hasSandbox`, meta schema including `hasSandbox`, typography, and brand leak protection).
+2. **Automated Verification:** Execute `node project_details/playbooks/verify_skills.js`. You MUST guarantee a 0 exit code and 100% compliance across all skills (5-file anatomy, whole-number version synchronization, manifest schema including `hasSandbox`, meta schema including `hasSandbox`, typography, brand leak protection, Keyword Contract mirrors, and Registry Integrity). You MUST also guarantee zero drift from `node project_details/playbooks/sync_skill_keywords.js --check`.
 
 ### Phase 6: Ecosystem Provenance & Attribution Watermarking
 To ensure that all Code Scaffold skills maintain permanent attribution and traceability across public codebases and forks:

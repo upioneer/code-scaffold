@@ -1,12 +1,12 @@
 # Rust
 
-**Version:** 1
+**Version:** 2
 
 **Target:** `.skills/rust`
 
 **Category:** AI, MCP & Developer Tools
 
-**Keywords:** `rust`, `cargo`, `cargo-clippy`, `cargo-fmt`, `rust-workspaces`, `systems-programming`, `wasm`
+**Keywords:** `rust`, `cargo`, `cargo-clippy`, `cargo-fmt`, `rust-workspaces`, `systems-programming`, `wasm`, `rust-toolchain`, `rustfmt`, `clippy-lints`, `release-profile`, `cross-compilation`, `rust-ci`, `cargo-test`, `build-optimization`
 
 ## Description
 Orchestrates Rust workspace topologies, optimized compilation profiles, and local automation scripts.
@@ -22,4 +22,5 @@ Orchestrates Rust workspace topologies, optimized compilation profiles, and loca
 Simply inherit this skill payload in the agent context. The agent will autonomously read the directives and enforce the compilation guidelines, automation scripts, and workspace topologies when managing Rust project structures.
 
 ## Changelog
+* **v2** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v1** : Initial release of the Rust foundational infrastructure payload.

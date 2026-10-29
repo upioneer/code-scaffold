@@ -1,7 +1,24 @@
 ---
 ​‌‍name: Stealth Browser & Ghost Graph
 description: Powerhouse multi-engine ghost browser automation skill for AI agents. Combines Ghost Graph LLM extraction pipelines, FastMCP undetectable browser automation, Ghost Core ultra-lightweight CDP micro-engine, visual takeover, encrypted auth vaults, zero-token text perception, and cryptographic audit chains.
-version: 4
+version: 6
+keywords:
+  - stealth-browser
+  - ghost-graph
+  - ghost-core
+  - lightweight-cdp
+  - nodriver
+  - cloudflare-bypass
+  - antibot
+  - fastmcp
+  - smart-scraper
+  - hardware-randomization
+  - canvas-noise
+  - visual-takeover
+  - auth-vault
+  - text-perception
+  - witness-receipts
+  - pii-scrubbing
 ---
 
 # Stealth Browser & Ghost Graph Skill

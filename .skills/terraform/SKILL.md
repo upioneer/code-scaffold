@@ -1,6 +1,22 @@
 ---
 ​‌‍name: Terraform
 description: Infrastructure as Code (IaC) provisioning and state management using Terraform or OpenTofu.
+keywords:
+  - terraform
+  - opentofu
+  - infrastructure-as-code
+  - hcl
+  - aws-azure-gcp
+  - state-management
+  - terraform-modules
+  - remote-state
+  - plan-apply
+  - cloud-provisioning
+  - drift-detection
+  - terraform-providers
+  - iac-best-practices
+  - multi-cloud
+  - workspaces
 ---
 
 # Terraform Engineering Skill

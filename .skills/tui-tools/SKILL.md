@@ -1,7 +1,23 @@
 ---
 ​‌‍name: TUI Tools
 description: Architectural playbook and tooling (including VHS integration) for building robust, instant-on, and visually stunning modern terminal splash screens and integrations.
-version: 5
+version: 8
+keywords:
+  - tui-tools
+  - vhs-tapes
+  - terminal-gif
+  - ratatui-helpers
+  - figlet-ascii
+  - cli-branding
+  - terminal-splash-screens
+  - vhs-recordings
+  - tape-files
+  - demo-gifs
+  - terminal-recording
+  - ascii-banners
+  - instant-on-startup
+  - tui-screenshots
+  - wsl-capture
 ---
 
 # TUI Tools Architectural Playbook

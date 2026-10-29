@@ -1,7 +1,7 @@
 {
   "label": "Stealth Browser",
   "description": "Multi-engine ghost browser automation skill for AI agents, unifying Ghost Graph LLM extraction pipelines, FastMCP anti-detection automation, Ghost Core native CDP micro-engine, visual takeover streaming, encrypted auth vaults, zero-token text perception, and cryptographic witness receipts.",
-  "version": "5",
+  "version": "6",
   "target": ".skills/stealth-browser",
   "hasSandbox": false,
   "logo": [

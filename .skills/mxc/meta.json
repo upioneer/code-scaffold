@@ -1,7 +1,7 @@
 {
   "label": "MXC Policy Containment",
   "description": "Policy-driven execution sandboxing and container isolation for AI agents, model-generated code, and untrusted tools.",
-  "version": "1",
+  "version": "2",
   "target": ".skills/mxc",
   "hasSandbox": true,
   "logo": [

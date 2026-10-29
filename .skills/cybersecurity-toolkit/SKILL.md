@@ -1,6 +1,26 @@
 ---
 ​‌‍name: CyberSecurity Toolkit
 description: Autonomous cybersecurity arsenal integrating the Sentinel Multi-Agent Security Mesh, episodic attack surface mapping, MITRE and NIST methodologies, SkillSpector scanning, and ChainAST context compaction.
+keywords:
+  - cybersecurity-toolkit
+  - cybersecurity
+  - security-audit
+  - vulnerability-scan
+  - owasp
+  - penetration-testing
+  - hardening
+  - agentic-security
+  - sentinel-mesh
+  - multi-agent-recon
+  - sast-dast
+  - chainast-compactor
+  - mitre-attack
+  - nist-framework
+  - attack-surface-mapping
+  - threat-hunting
+  - secure-code-review
+  - security-posture
+  - incident-response
 ---
 
 # CyberSecurity Toolkit Engineering Skill

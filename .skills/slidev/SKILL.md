@@ -1,6 +1,22 @@
 ---
 ​‌‍name: Slidev
 description: Comprehensive skill for building, configuring, and exporting Slidev markdown presentations.
+keywords:
+  - slidev
+  - developer-slides
+  - vue-slides
+  - markdown-presentations
+  - unocss
+  - live-code-demos
+  - slidev-themes
+  - vue-presentations
+  - code-presentations
+  - monaco-editor
+  - presenter-mode
+  - vite-powered
+  - slide-export
+  - magic-move
+  - developer-talks
 ---
 
 # Slidev Skill Instructions

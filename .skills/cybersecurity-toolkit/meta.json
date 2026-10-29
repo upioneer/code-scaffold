@@ -1,7 +1,7 @@
 {
   "label": "CyberSecurity Toolkit",
   "description": "Autonomous cybersecurity arsenal integrating the Sentinel Multi-Agent Security Mesh, episodic attack surface mapping, MITRE and NIST methodologies, SkillSpector scanning, and ChainAST context compaction.",
-  "version": "8",
+  "version": "9",
   "target": ".skills/cybersecurity-toolkit",
   "hasSandbox": false,
   "logo": [

@@ -1,12 +1,12 @@
 # Reveal.js
 
-**Version:** 2
+**Version:** 3
 
 **Target:** `.skills/revealjs`
 
 **Category:** Publishing & Documentation
 
-**Keywords:** `revealjs`, `html-presentations`, `3d-transitions`, `web-slides`, `markdown-slides`, `interactive-talks`
+**Keywords:** `revealjs`, `html-presentations`, `3d-transitions`, `web-slides`, `markdown-slides`, `interactive-talks`, `reveal-js`, `speaker-view`, `pdf-export`, `code-highlighting`, `fragment-animations`, `auto-animate`, `presentation-framework`, `slide-transitions`, `html-slide-decks`
 
 ## Description
 This skill provides the intelligence and instructions needed to build, configure, and customize Reveal.js presentations.
@@ -23,5 +23,6 @@ This skill provides the intelligence and instructions needed to build, configure
 Agents should invoke this skill when a user requests to create, modify, or export a Reveal.js presentation. The skill acts as a comprehensive knowledge base for proper DOM structure, API usage, and configuration best practices.
 
 ## Changelog
+* **v3** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v2** : Expanded capability descriptions
 * **v1** : Initial creation of the Reveal.js skill

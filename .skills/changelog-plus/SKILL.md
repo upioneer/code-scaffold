@@ -1,7 +1,24 @@
 ---
 ​‌‍name: Changelog Plus
 description: Automated immutable release history pipeline: versioned changelog authoring, headless TUI media capture, declarative web application capture, failure gates, and root README synchronization for every release.
-version: 4
+version: 5
+keywords:
+  - changelog-plus
+  - release-notes
+  - version-history
+  - immutable-history
+  - terminal-capture
+  - tape-recorder
+  - release-automation
+  - web-capture
+  - viewport-matrix
+  - route-manifest
+  - changelog-generator
+  - release-history
+  - vhs-capture
+  - screenshot-automation
+  - readme-sync
+  - git-tags
 ---
 
 # Changelog Plus Release History Pipeline

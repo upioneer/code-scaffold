@@ -2,7 +2,7 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_p5js_skill",
-  "version": "5",
+  "version": "6",
   "description": "Creative coding and visual animations using the p5.js library.",
   "entryPoint": "./SKILL.md",
   "engines": {
@@ -20,8 +20,17 @@
     "canvas2d",
     "generative-art",
     "interactive-sketches",
-    "webgl"
+    "webgl",
+    "p5-sketches",
+    "generative-design",
+    "noise-fields",
+    "interactive-art",
+    "data-art",
+    "animation-loop",
+    "sound-visualization",
+    "shader-sketches",
+    "creative-canvas"
   ],
   "hasSandbox": false,
-  "integrity": "cs:sha256:135a6a5942fb6a09a2ca49d92d04a4428f1920ab59135f0e22f31c7d9e1d0d5d"
+  "integrity": "cs:sha256:3b3b8c759573faea32159fd2aeded292e845cca6224fd8dc6843ffdd43b7b066"
 }

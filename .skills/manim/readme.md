@@ -1,12 +1,12 @@
 # Manim Math Animations
 
-**Version:** 5
+**Version:** 6
 
 **Target:** `.skills/manim`
 
 **Category:** Animation & Graphics
 
-**Keywords:** `manim`, `math-animation`, `python-video`, `3b1b`, `technical-animations`, `scientific-viz`
+**Keywords:** `manim`, `math-animation`, `python-video`, `3b1b`, `technical-animations`, `scientific-viz`, `manim-community`, `math-visualization`, `educational-video`, `latex-animation`, `scene-rendering`, `python-animation`, `explainer-video`, `equation-animation`, `mobject`
 
 ## Description
 Mathematical animations using the Manim library.
@@ -24,6 +24,7 @@ Mathematical animations using the Manim library.
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog
+* **v6** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v5** : Standardized ASCII art logo to uniform 6-line ANSI Shadow format.
 * **v4** : Standardized hasSandbox to false to mount the clean Architectural Contract card on code-scaffold.com.
 * **v3** : Integrated interactive Manim Mathematical Animation Studio sandbox and updated manifest flags

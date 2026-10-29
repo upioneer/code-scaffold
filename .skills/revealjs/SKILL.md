@@ -1,6 +1,22 @@
 ---
 ​‌‍name: revealjs
 description: Comprehensive toolkit and knowledge base for scaffolding, configuring, and exporting Reveal.js presentations.
+keywords:
+  - revealjs
+  - html-presentations
+  - 3d-transitions
+  - web-slides
+  - markdown-slides
+  - interactive-talks
+  - reveal-js
+  - speaker-view
+  - pdf-export
+  - code-highlighting
+  - fragment-animations
+  - auto-animate
+  - presentation-framework
+  - slide-transitions
+  - html-slide-decks
 ---
 
 # Reveal.js Skill

@@ -2,7 +2,7 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "rust",
-  "version": "1",
+  "version": "2",
   "description": "Orchestrates Rust workspace topologies, optimized compilation profiles, and local automation scripts.",
   "entryPoint": "./SKILL.md",
   "engines": {
@@ -22,8 +22,16 @@
     "cargo-fmt",
     "rust-workspaces",
     "systems-programming",
-    "wasm"
+    "wasm",
+    "rust-toolchain",
+    "rustfmt",
+    "clippy-lints",
+    "release-profile",
+    "cross-compilation",
+    "rust-ci",
+    "cargo-test",
+    "build-optimization"
   ],
   "hasSandbox": false,
-  "integrity": "cs:sha256:a8d6ef474957988a0f4e33c64c529241df54e3cb098e4a70348505f9215eaa1b"
+  "integrity": "cs:sha256:e522cfef21fafd1b6a448ed6ae3bf32b93235cec6edf5d8c91bb8da78939f4be"
 }

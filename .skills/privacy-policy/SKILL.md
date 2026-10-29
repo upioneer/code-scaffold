@@ -1,6 +1,22 @@
 ---
 ​‌‍name: Privacy Policy Generator
 description: Generates a customizable privacy policy tailored to the project (website/app) with optional Google Analytics integration.
+keywords:
+  - privacy-policy
+  - gdpr
+  - ccpa
+  - legal-compliance
+  - cookie-policy
+  - terms-of-service
+  - privacy-notice
+  - data-protection
+  - google-analytics-disclosure
+  - consent-management
+  - legal-pages
+  - data-subject-rights
+  - website-compliance
+  - app-store-privacy
+  - cookie-consent
 ---
 
 # Privacy Policy Generator Skill

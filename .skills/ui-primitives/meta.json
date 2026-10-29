@@ -1,7 +1,7 @@
 {
   "label": "UI Primitives & Micro-Interactions",
   "description": "High-fidelity web UI components, 86-component Tactile Kinetic Registry, GSAP choreography timelines, WebGL Three.js 3D scenes, WebGPU halftone cursor trails, premium gradient borders, perimeter border beams, liquid gooey physics, spring docks, spotlight bento grids, universal transitions, kinetic typography, and atomic tokens.",
-  "version": "7",
+  "version": "8",
   "target": ".skills/ui-primitives",
   "hasSandbox": true,
   "logo": [

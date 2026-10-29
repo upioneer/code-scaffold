@@ -1,7 +1,7 @@
 {
   "label": "Nexus Recursive Self-Improvement Engine",
   "description": "Domain-general Recursive Self-Improvement framework with predictive world models, joint embedding latent state simulation, counterfactual trajectory planning, and safe co-evolution loops.",
-  "version": "1",
+  "version": "2",
   "target": ".skills/nexus-rsi",
   "hasSandbox": true,
   "logo": [

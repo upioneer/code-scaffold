@@ -1,7 +1,23 @@
 ---
 ​‌‍name: OfficeCLI
 description: Office suite purpose-built for AI agents to read, edit, and automate Word, Excel, and PowerPoint files.
-version: 1
+version: 2
+keywords:
+  - officecli
+  - docx
+  - pptx
+  - xlsx
+  - office-documents
+  - document-automation
+  - pdf-generation
+  - word-automation
+  - excel-automation
+  - powerpoint-automation
+  - openxml
+  - spreadsheet-editing
+  - docx-editing
+  - slide-editing
+  - office-agent
 ---
 
 # OfficeCLI

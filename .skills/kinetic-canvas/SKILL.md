@@ -1,7 +1,23 @@
 ---
 ​‌‍name: Kinetic Canvas
 description: Advanced WebGL shaders and interactive HTML canvases wrapped as proprietary native React components for Code Scaffold.
-version: 5
+version: 8
+keywords:
+  - kinetic-canvas
+  - canvas-api
+  - physics-simulation
+  - interactive-visuals
+  - particles
+  - webgl
+  - webgl-shaders
+  - glsl
+  - react-component
+  - canvas-animation
+  - zero-dependency
+  - particle-systems
+  - fragment-shaders
+  - interactive-canvas
+  - gpu-effects
 ---
 
 # Kinetic Canvas

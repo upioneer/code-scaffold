@@ -1,6 +1,22 @@
 ---
 ​‌‍name: xcross
 description: Trigger when the user wants to build iOS apps without Xcode, compile SwiftPM packages for iOS on Linux, Windows WSL, or macOS, sign and deploy IPAs to physical iPhones or iPads, configure Apple Developer services, or establish cross-platform iOS development pipelines.
+keywords:
+  - xcross
+  - ios-development
+  - cross-platform-ios
+  - swift-package-manager
+  - xcode-alternative
+  - linux-ios-build
+  - windows-ios-build
+  - wsl-ios
+  - usbmuxd
+  - code-signing
+  - apple-developer
+  - ipa-builder
+  - device-deployment
+  - swiftui
+  - bsp-integration
 ---
 
 # XCross Cross-Platform iOS Engine & Autonomous Toolchain

@@ -1,7 +1,7 @@
 {
   "label": "Playwright Plus",
   "description": "Browser automation and end-to-end testing with Playwright",
-  "version": "5",
+  "version": "6",
   "target": ".skills/playwright",
   "hasSandbox": false,
   "logo": [

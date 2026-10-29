@@ -1,12 +1,12 @@
 # Tasty
 
-**Version:** 5
+**Version:** 6
 
 **Target:** `.skills/tasty`
 
 **Category:** Frontend & UI Design
 
-**Keywords:** `tasty`, `anti-slop`, `design-tokens`, `landing-page`, `typography`, `micro-animations`, `curated-ui`
+**Keywords:** `tasty`, `anti-slop`, `design-tokens`, `landing-page`, `typography`, `micro-animations`, `curated-ui`, `frontend-styling`, `premium-landing-pages`, `portfolio-design`, `visual-polish`, `anti-generic-ui`, `css-architecture`, `typography-system`, `brand-aesthetics`
 
 ## Description
 Tasty is Code Scaffold's bespoke, native anti-slop frontend orchestration engine. It acts as a strict cognitive enforcer that overrides default LLM aesthetic biases, ensuring AI agents ship premium, high-fidelity user interfaces instead of generic templates.
@@ -34,4 +34,5 @@ Agents should read and abide by `SKILL.md` when acting in a frontend or web-deve
 * **1** : Initial incubation of the Tasty skill using the SkillForge R&D protocol, heavily expanding on legacy open-source visual heuristics to better support Code Scaffold headless mechanics.
 
 ## Changelog
+* **v6** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v5** : Standardized hasSandbox to false to mount the clean Architectural Contract card on code-scaffold.com.

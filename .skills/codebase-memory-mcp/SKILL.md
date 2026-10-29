@@ -1,7 +1,24 @@
 ---
 ​‌‍name: Codebase Memory MCP
 description: High-performance code intelligence MCP server. Indexes codebases into a persistent knowledge graph :  average repo in milliseconds.
-version: 1
+version: 3
+keywords:
+  - codebase-memory-mcp
+  - codebase-memory
+  - mcp-server
+  - vector-embeddings
+  - ast-index
+  - semantic-search
+  - rag
+  - code-intelligence
+  - knowledge-graph
+  - persistent-memory
+  - symbol-search
+  - call-graph
+  - code-indexing
+  - context-retrieval
+  - repo-understanding
+  - token-efficiency
 ---
 
 # Codebase Memory MCP

@@ -2,7 +2,7 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "officecli",
-  "version": "1",
+  "version": "2",
   "description": "Office suite purpose-built for AI agents to read, edit, and automate Word, Excel, and PowerPoint files.",
   "entryPoint": "./SKILL.md",
   "engines": {},
@@ -20,8 +20,16 @@
     "xlsx",
     "office-documents",
     "document-automation",
-    "pdf-generation"
+    "pdf-generation",
+    "word-automation",
+    "excel-automation",
+    "powerpoint-automation",
+    "openxml",
+    "spreadsheet-editing",
+    "docx-editing",
+    "slide-editing",
+    "office-agent"
   ],
   "hasSandbox": false,
-  "integrity": "cs:sha256:cd3db8b528e1f5393c40612802d4c0c73fca94cb364673dc7b667d2b19613fc5"
+  "integrity": "cs:sha256:73c44084a6c75af793fabbc1f2cbc71592396968365459d59e50b687af3f7d41"
 }

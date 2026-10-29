@@ -1,12 +1,12 @@
 # Mechanica Physical Metaphors
 
-**Version:** 1
+**Version:** 2
 
 **Target:** `.skills/mechanica`
 
 **Category:** Animation & Graphics
 
-**Keywords:** `mechanica`, `isometric-illustration`, `physical-metaphor`, `technical-diagram`, `hardware-explainer`, `cutaway-diagram`, `exploded-assembly`, `kinematics`, `four-tone-shading`, `webgl-shaders`, `clearance-audit`
+**Keywords:** `mechanica`, `isometric-illustration`, `physical-metaphor`, `technical-diagram`, `hardware-explainer`, `cutaway-diagram`, `exploded-assembly`, `kinematics`, `vector-graphics`, `svg-rendering`, `four-tone-shading`, `painters-algorithm`, `webgl-shaders`, `test-rig`, `dial-gauge`, `interactive-graphics`, `linear-style`, `depth-sorting`, `clearance-audit`
 
 ## Description
 Mechanica is a physical machine metaphor engine, kinematic cutaway illustrator, and interactive hardware explainer. It translates abstract technical architectures, algorithms, and distributed systems into tangible, precision-crafted mechanical instruments rendered in four-tone isometric vector graphics, embedded WebGL shaders, and real-time 3D kinematics.
@@ -36,4 +36,5 @@ const floatValve = M.rodOut(frame, 12, 60, 4, camera, { stroke: 20 });
 ```
 
 ## Changelog
+* **v2** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v1** : Initial release of Mechanica physical metaphor engine, four-tone isometric vector renderer, WebGL shader integration, dynamic kinematic cutaway simulator, and interactive testing sandbox.

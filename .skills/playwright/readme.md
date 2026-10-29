@@ -1,12 +1,12 @@
 # Playwright Plus
 
-**Version:** 5
+**Version:** 6
 
 **Target:** `.skills/playwright`
 
 **Category:** Web Automation & Scraping
 
-**Keywords:** `playwright`, `browser-automation`, `e2e-testing`, `mobile-viewports`, `layout-overflow`, `visual-qa`, `yaml-workflows`, `run-recording`
+**Keywords:** `playwright`, `browser-automation`, `e2e-testing`, `mobile-viewports`, `layout-overflow`, `visual-qa`, `yaml-workflows`, `run-recording`, `browser-testing`, `cross-browser`, `screenshot-testing`, `trace-viewer`, `headless-chromium`, `test-automation`, `responsive-testing`
 
 ## Description
 Browser automation and end to end testing with Playwright
@@ -26,6 +26,7 @@ Browser automation and end to end testing with Playwright
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog
+* **v6** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v5** : Renamed to Playwright Plus. Added the real declarative workflow dispatcher (`workflows/run.cjs`) with strict method allowlist, job level run recording with gif conversion, and a maintained selftest.
 * **v4** : Added automated mobile responsive viewport validation and overflow checker (`scripts/test-responsive.js`).
 * **v3** : Massive rewrite adhering to the SkillForge Declarative Workflow mandate. The agent now orchestrates browser automation by authoring rigid YAML workflows (with CEL expression injection for zero-trust secrets) instead of raw Javascript scripts.

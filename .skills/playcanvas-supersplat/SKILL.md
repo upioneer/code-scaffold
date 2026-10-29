@@ -1,6 +1,23 @@
 ---
 ​‌‍name: PlayCanvas SuperSplat
 description: High-performance tool for editing and optimizing 3D Gaussian Splats.
+keywords:
+  - playcanvas-supersplat
+  - gaussian-splats
+  - 3d-splatting
+  - point-cloud
+  - photogrammetry
+  - radiance-fields
+  - ply-optimizer
+  - supersplat
+  - gaussian-splatting
+  - splat-editing
+  - 3dgs
+  - splat-cleanup
+  - ply-compression
+  - 3d-scanning
+  - point-cloud-editing
+  - web-viewer
 ---
 
 # PlayCanvas SuperSplat Skill

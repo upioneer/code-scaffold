@@ -2,7 +2,7 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_playcanvas_engine_skill",
-  "version": "3",
+  "version": "4",
   "description": "Modular 3D/2D game engine for the web supporting WebGL and WebGPU.",
   "entryPoint": "./SKILL.md",
   "engines": {
@@ -20,8 +20,17 @@
     "shader-graph",
     "physics-ammo",
     "webgl2",
-    "webgpu-games"
+    "webgpu-games",
+    "webgl-engine",
+    "game-engine",
+    "3d-web-games",
+    "entity-component-system",
+    "glb-loading",
+    "pbr-materials",
+    "scene-graph",
+    "web-3d",
+    "gpu-instancing"
   ],
   "hasSandbox": false,
-  "integrity": "cs:sha256:3d8e2ceacbab59d666d937ff013033d3dccba60a2747e69084c213725b3357dd"
+  "integrity": "cs:sha256:8f37ccdeba4c0af0b0474ab57eded39d35df22910708229dd4eea5f567bb4454"
 }

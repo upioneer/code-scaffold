@@ -1,7 +1,23 @@
 ---
 ​‌‍name: Scrollytelling
 description: Design architecture, workflows, and code implementations for scroll-triggered 3D model manipulation, interactive "production explosion" views, and cinematic WebGL environmental storytelling.
-version: 3
+version: 5
+keywords:
+  - scrollytelling
+  - scroll-magic
+  - gsap-scrolltrigger
+  - interactive-storytelling
+  - 3d-product-view
+  - scroll-animation
+  - scroll-triggered-3d
+  - threejs-scenes
+  - product-explosion
+  - gsap
+  - smooth-scroll
+  - parallax
+  - narrative-web
+  - exploded-view
+  - interactive-landing-pages
 ---
 
 # Technical Specification: High-Fidelity Scroll-Driven Animations & Cinematic Scrollytelling

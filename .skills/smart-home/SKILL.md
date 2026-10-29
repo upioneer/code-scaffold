@@ -1,7 +1,26 @@
 ---
 ​‌‍name: Smart Home
 description: Unified smart home and IoT automation orchestrator bridging Home Assistant, Apple HomeKit, Amazon Alexa, Google Home, and Matter ecosystems into a cohesive agentic control plane.
-version: 1
+version: 4
+keywords:
+  - smart-home
+  - home-assistant
+  - homekit
+  - matter
+  - thread
+  - alexa-smart-home
+  - google-home
+  - iot-automation
+  - zigbee
+  - zwave
+  - hass-rest-api
+  - hass-websocket
+  - home-automation
+  - mqtt
+  - esphome
+  - automation-blueprints
+  - voice-assistants
+  - local-control
 ---
 
 # Smart Home Automation & IoT Ecosystem Skill

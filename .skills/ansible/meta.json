@@ -1,7 +1,7 @@
 {
   "label": "Ansible",
   "description": "Infrastructure automation, configuration management, and application deployment orchestration using Ansible.",
-  "version": "2",
+  "version": "3",
   "target": ".skills/ansible",
   "hasSandbox": false,
   "logo": [

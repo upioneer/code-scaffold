@@ -1,7 +1,26 @@
 ---
 name: MXC Policy Containment
 description: Policy-driven execution sandboxing and container isolation framework for AI agents, model-generated code, and untrusted tools. Enforces default-deny filesystem, network, and desktop boundaries across Windows ProcessContainers, Linux Bubblewrap, and macOS Seatbelt.
-version: 1
+version: 2
+keywords:
+  - mxc
+  - agent-sandboxing
+  - execution-containers
+  - policy-driven-containment
+  - process-container
+  - appcontainer
+  - wslc
+  - bubblewrap
+  - seatbelt
+  - least-privilege
+  - prompt-injection-defense
+  - airgap-isolation
+  - wxc-exec
+  - default-deny
+  - sandbox-policy
+  - windows-sandbox
+  - ai-agent-isolation
+  - secret-exfiltration-defense
 ---
 ​‌‍
 # MXC Policy Containment Engine

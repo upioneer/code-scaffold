@@ -1,7 +1,38 @@
 ---
 ​‌‍name: UI Primitives & Micro-Interactions
 description: High-fidelity interactive web UI components, 86-component Tactile Kinetic Component Matrix, perimeter border beams, liquid gooey physics, spring magnification docks, spotlight bento grids, universal motion transitions, kinetic typography, staggered blur reveals, typewriter, circular text, atomic tokens, GSAP choreography timelines, ScrollTrigger scroll-driven animation, WebGL Three.js 3D scenes, WebGPU halftone cursor shader trails, premium surface gradient borders, design-first constraint prompting, and high-conversion landing page architecture.
-version: 7
+version: 8
+keywords:
+  - ui-primitives
+  - micro-interactions
+  - tactile-components
+  - 86-primitives
+  - agent-ui
+  - gsap
+  - scroll-trigger
+  - scroll-driven-animation
+  - threejs
+  - webgl-3d-scene
+  - webgpu-shader
+  - cursor-trail
+  - halftone-cursor
+  - gradient-borders
+  - design-first-prompting
+  - landing-page-architecture
+  - conversion-optimization
+  - color-fill-button
+  - progressive-blur
+  - number-flow
+  - thinking-orb
+  - spring-physics
+  - motion-looks
+  - border-beam
+  - gooey-fluid
+  - spring-dock
+  - bento-grid
+  - kinetic-typography
+  - text-animation
+  - stagger-reveal
 ---
 
 # UI Primitives & Micro-Interactions Skill

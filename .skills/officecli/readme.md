@@ -1,12 +1,12 @@
 # OfficeCLI
 
-**Version:** 1
+**Version:** 2
 
 **Target:** `.skills/officecli`
 
 **Category:** Publishing & Documentation
 
-**Keywords:** `officecli`, `docx`, `pptx`, `xlsx`, `office-documents`, `document-automation`, `pdf-generation`
+**Keywords:** `officecli`, `docx`, `pptx`, `xlsx`, `office-documents`, `document-automation`, `pdf-generation`, `word-automation`, `excel-automation`, `powerpoint-automation`, `openxml`, `spreadsheet-editing`, `docx-editing`, `slide-editing`, `office-agent`
 
 ## Description
 OfficeCLI is the first and best Office suite purpose-built for AI agents to read, edit, and automate Word, Excel, and PowerPoint files. Free, open-source, single binary, no Office installation required.
@@ -21,4 +21,5 @@ OfficeCLI is the first and best Office suite purpose-built for AI agents to read
 Agents can install the OfficeCLI binary, build presentations programmatically via sequential shell commands, and read Excel/Word configurations directly into standard JSON objects for contextual processing.
 
 ## Changelog
+* **v2** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v1** : Initial creation via the SkillForge Protocol.

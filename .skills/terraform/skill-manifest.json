@@ -2,7 +2,7 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_terraform_skill",
-  "version": "2",
+  "version": "3",
   "description": "Infrastructure as Code (IaC) provisioning and state management using Terraform or OpenTofu.",
   "entryPoint": "./SKILL.md",
   "engines": {
@@ -20,8 +20,17 @@
     "infrastructure-as-code",
     "hcl",
     "aws-azure-gcp",
-    "state-management"
+    "state-management",
+    "terraform-modules",
+    "remote-state",
+    "plan-apply",
+    "cloud-provisioning",
+    "drift-detection",
+    "terraform-providers",
+    "iac-best-practices",
+    "multi-cloud",
+    "workspaces"
   ],
   "hasSandbox": false,
-  "integrity": "cs:sha256:cbf0c487463e68d1a463fc512e7192d2170de0fb6b61956afe4cd56ca588449f"
+  "integrity": "cs:sha256:7397a4d65d14255e0ca0e4e4dbf12bd752ff43f746fb6ef31926bcee7b49e697"
 }

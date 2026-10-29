@@ -1,6 +1,22 @@
 ---
 ​‌‍name: Clerk Authentication Perimeter
 description: Authentication perimeter and identity management using Clerk.
+keywords:
+  - clerk
+  - authentication
+  - user-management
+  - jwt
+  - oauth
+  - nextjs-auth
+  - security
+  - clerk-auth
+  - session-management
+  - sso
+  - mfa
+  - clerk-webhooks
+  - route-protection
+  - organizations
+  - identity-provider
 ---
 
 name: clerk_authentication

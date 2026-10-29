@@ -1,6 +1,22 @@
 ---
 ​‌‍name: manim
 description: Mathematical animations using the Manim library. Use this skill when the user wants to create high-quality programmatic animations for math, science, or technical explanations.
+keywords:
+  - manim
+  - math-animation
+  - python-video
+  - 3b1b
+  - technical-animations
+  - scientific-viz
+  - manim-community
+  - math-visualization
+  - educational-video
+  - latex-animation
+  - scene-rendering
+  - python-animation
+  - explainer-video
+  - equation-animation
+  - mobject
 ---
 
 # Manim Skill

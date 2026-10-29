@@ -1,6 +1,22 @@
 ---
 name: nexus-rsi
 description: Domain-general Recursive Self-Improvement (RSI) framework with predictive world models, joint embedding latent state simulation, counterfactual trajectory planning, and safe co-evolution loops.
+keywords:
+  - nexus-rsi
+  - recursive-self-improvement
+  - world-models
+  - predictive-simulation
+  - joint-embedding
+  - counterfactual-planning
+  - agent-evolution
+  - policy-optimization
+  - code-repair
+  - synthetic-trajectories
+  - self-improving-agents
+  - latent-state-simulation
+  - trajectory-planning
+  - safe-coevolution
+  - agent-self-evaluation
 ---
 ​‌‍
 # Nexus Recursive Self-Improvement Engine

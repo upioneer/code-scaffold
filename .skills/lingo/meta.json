@@ -1,7 +1,7 @@
 {
   "label": "Lingo",
   "description": "Deterministic shorthand glossary that maps user lingo, acronyms, and abbreviations to their full meanings for faster, unambiguous communication.",
-  "version": "4",
+  "version": "5",
   "target": ".skills/lingo",
   "hasSandbox": false,
   "logo": [

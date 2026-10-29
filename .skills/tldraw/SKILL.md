@@ -1,6 +1,22 @@
 ---
 ​‌‍name: tldraw
 description: Comprehensive toolkit for integrating tldraw into web applications to create interactive canvases, presentations, whiteboards, and data dashboards.
+keywords:
+  - tldraw
+  - infinite-canvas
+  - spatial-computing
+  - whiteboard
+  - canvas-sdk
+  - live-collaboration
+  - tldraw-sdk
+  - custom-shapes
+  - multiplayer-cursors
+  - physics-integration
+  - spatial-ui
+  - live-dashboards
+  - scrollytelling-canvas
+  - ai-cursors
+  - canvas-editor
 ---
 # tldraw Integration Skill
 

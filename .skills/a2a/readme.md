@@ -1,12 +1,12 @@
 # A2A Agent Bridge
 
-**Version:** 1
+**Version:** 2
 
 **Target:** `.skills/a2a`
 
 **Category:** AI, MCP & Developer Tools
 
-**Keywords:** `a2a`, `agent2agent`, `agent-to-agent`, `agent-card`, `agent-discovery`, `multi-agent`, `agent-interop`, `agent-collaboration`, `task-lifecycle`, `opaque-agents`, `agent-handoff`, `task-delegation`, `long-running-tasks`, `json-rpc`, `http-json-rest`, `grpc-protobuf`, `server-sent-events`, `push-notifications`, `python-sdk`, `typescript-sdk`, `go-sdk`, `java-sdk`, `dotnet-sdk`, `rust-sdk`, `a2a-cli`, `conformance-tck`, `scaffold-a2a-server`, `scaffold-a2a-client`, `resolve-agent-card`, `stream-task`, `mcp-synergy`
+**Keywords:** `a2a`, `agent2agent`, `agent-to-agent`, `agent-card`, `agent-discovery`, `multi-agent`, `agent-interop`, `agent-collaboration`, `task-lifecycle`, `opaque-agents`, `agent-handoff`, `task-delegation`, `long-running-tasks`, `json-rpc`, `http-json-rest`, `grpc-protobuf`, `server-sent-events`, `push-notifications`, `python-sdk`, `typescript-sdk`, `go-sdk`, `java-sdk`, `dotnet-sdk`, `rust-sdk`, `a2a-cli`, `conformance-tck`, `scaffold-a2a-server`, `scaffold-a2a-client`, `stream-task`, `mcp-synergy`
 
 ## Description
 Scaffolds Agent2Agent protocol servers, clients, and multi agent meshes so opaque agents built on diverse frameworks can discover each other and collaborate. Covers agent cards, task lifecycle, streaming, and push notifications across Python, TypeScript, Go, Java, dotNET, and Rust SDKs.
@@ -28,4 +28,5 @@ Scaffolds Agent2Agent protocol servers, clients, and multi agent meshes so opaqu
 Invoke this skill when building or integrating Agent2Agent protocol systems. The agent gathers requirements through interactive questions covering component type, SDK language, wire transport, and interaction pattern, then scaffolds the server or client, authors the Agent Card, implements task logic, and runs the headless CLI plus inspector plus conformance validation loop until green.
 
 ## Changelog
+* **v2** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v1** : Initial creation of the A2A Agent Bridge skill with six language SDK coverage, tri transport binding, and headless conformance validation.

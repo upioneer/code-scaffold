@@ -1,6 +1,22 @@
 ---
 ​‌‍name: telegram_notify
 description: Specialized skill for dispatching alerts, deployment statuses, or critical errors to a designated Telegram chat via the Bot API.
+keywords:
+  - telegram
+  - telegram-bot-api
+  - messaging-bot
+  - webhooks
+  - bot-automation
+  - telegram-bot
+  - bot-api
+  - inline-keyboards
+  - bot-commands
+  - long-polling
+  - telegram-notifications
+  - chat-automation
+  - message-handling
+  - bot-token
+  - mini-apps
 ---
 
 # Telegram Notifications Skill

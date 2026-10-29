@@ -1,12 +1,12 @@
 # tldraw
 
-**Version:** 3
+**Version:** 4
 
 **Target:** `.skills/tldraw`
 
 **Category:** Publishing & Documentation
 
-**Keywords:** `tldraw`, `infinite-canvas`, `spatial-computing`, `whiteboard`, `canvas-sdk`, `live-collaboration`
+**Keywords:** `tldraw`, `infinite-canvas`, `spatial-computing`, `whiteboard`, `canvas-sdk`, `live-collaboration`, `tldraw-sdk`, `custom-shapes`, `multiplayer-cursors`, `physics-integration`, `spatial-ui`, `live-dashboards`, `scrollytelling-canvas`, `ai-cursors`, `canvas-editor`
 
 ## Description
 Comprehensive toolkit for integrating tldraw into web applications to create interactive canvases, presentations, whiteboards, and data dashboards.
@@ -27,6 +27,7 @@ This skill leverages the powerful tldraw SDK to transform standard web applicati
 Agents should invoke this skill when a user requests an interactive visual interface, a spatial data dashboard, an embedded presentation tool, or advanced canvas manipulations. The skill provides the architectural patterns for registering custom shapes, controlling the camera API, and building complex interactive workflows within a React application.
 
 ## Changelog
+* **v4** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v3** : Standardized hasSandbox to false to mount the clean Architectural Contract card on code-scaffold.com.
 * **v2** : Integrated interactive tldraw Spatial Computing Studio sandbox and updated manifest flags
 * **v1** : Initial creation of the tldraw skill featuring advanced camera controls, custom shape integrations for data dashboards, and interactive presentation capabilities.

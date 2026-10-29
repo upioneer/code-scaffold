@@ -1,12 +1,12 @@
 # Mobile PWA
 
-**Version:** 1
+**Version:** 2
 
 **Target:** `.skills/mobile-pwa`
 
 **Category:** Frontend & UI Design
 
-**Keywords:** `pwa`, `progressive-web-app`, `installable`, `add-to-home-screen`, `service-worker`, `web-manifest`, `offline-shell`, `mobile`, `ios`, `android`
+**Keywords:** `mobile-pwa`, `pwa`, `progressive-web-app`, `installable`, `add-to-home-screen`, `service-worker`, `web-manifest`, `offline-shell`, `mobile`, `ios`, `android`, `pwa-manifest`, `install-prompt`, `maskable-icons`, `workbox`, `offline-first`, `standalone-display`, `apple-touch-icon`, `web-push`, `lighthouse-audit`
 
 ## Description
 Turns a browser web app into an installable mobile PWA with standalone display, home screen icon, themed splash, offline app shell, and a guided install flow across Vite React Vue Svelte, Next.js, Nuxt, SvelteKit, and Angular projects.
@@ -35,4 +35,5 @@ An agent activates this skill when the user asks for installable, add to home sc
 * Service worker updates strand open tabs until takeover logic runs: always ship versioned caches with take over semantics and never register workers in dev builds.
 
 ## Changelog
+* **v2** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v1** : Initial release with manifest, icon, service worker, platform detection, install prompt, verification, and limitation coverage across Vite, Next.js, Nuxt, SvelteKit, and Angular targets

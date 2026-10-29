@@ -2,7 +2,7 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "code-scaffold-harness",
-  "version": "7",
+  "version": "8",
   "description": "Agent harness for headlessly deploying Code Scaffold assets.",
   "entryPoint": "./SKILL.md",
   "engines": {
@@ -20,8 +20,17 @@
     "project-generator",
     "templates",
     "agentic-workflow",
-    "tui"
+    "tui",
+    "project-bootstrap",
+    "tui-wizard",
+    "skill-installer",
+    "agent-context",
+    "repo-scaffolding",
+    "boilerplate",
+    "headless-deploy",
+    "persona-presets",
+    "dotenv-seeding"
   ],
   "hasSandbox": false,
-  "integrity": "cs:sha256:0fb96945f159d22e805ecf51d9227a1b095e96315f7ad2ba173389252b27e701"
+  "integrity": "cs:sha256:83a2e0156128c6b7df7e2eee9406fd7503318af69cde1513b0ded84d618e3aa8"
 }

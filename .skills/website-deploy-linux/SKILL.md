@@ -1,6 +1,22 @@
 ---
 ​‌‍name: Website Deploy Linux
 description: Enterprise Linux Deployment Agent for deploying static sites and SPAs to Nginx locally or remotely via PuTTY CLI (plink/pscp) or SSH, featuring upfront architectural prompting, automatic .env setups, reference scripts, and non-destructive folder structures
+keywords:
+  - website-deploy-linux
+  - nginx-deploy
+  - putty-plink-pscp
+  - ssh-deployment
+  - static-hosting
+  - spa-deploy
+  - nginx-config
+  - ssh-key-deploy
+  - static-site-deploy
+  - spa-hosting
+  - server-deployment
+  - lets-encrypt
+  - remote-deployment
+  - linux-hosting
+  - rollback-safe-deploy
 ---
 
 ---

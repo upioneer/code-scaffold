@@ -1,12 +1,12 @@
 # Trackio ML Tracking
 
-**Version:** 3
+**Version:** 4
 
 **Target:** `.skills/trackio`
 
 **Category:** Data, Databases & Storage
 
-**Keywords:** `trackio`, `ml-experiment-tracking`, `hyperparameters`, `metrics-logging`, `huggingface-spaces`
+**Keywords:** `trackio`, `ml-experiment-tracking`, `hyperparameters`, `metrics-logging`, `huggingface-spaces`, `experiment-tracking`, `ml-dashboards`, `run-logging`, `model-metrics`, `spaces-deployment`, `python-tracking`, `local-first`, `experiment-comparison`, `mlops`, `hugging-face`
 
 ## Description
 Integration with Trackio for ML experiment tracking, dashboard deployments, and Hugging Face Spaces sync.
@@ -22,6 +22,7 @@ Integration with Trackio for ML experiment tracking, dashboard deployments, and 
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog
+* **v4** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v3** : Standardized ASCII art logo to uniform 6-line ANSI Shadow format.
 * **v2** : Expanded capability descriptions
 * **v1** : Introduce Trackio ML Tracking Skill

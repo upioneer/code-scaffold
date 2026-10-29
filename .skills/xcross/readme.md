@@ -1,6 +1,6 @@
 # XCross Cross-Platform iOS Engine
 
-**Version:** 1
+**Version:** 2
 
 **Target:** `.skills/xcross`
 
@@ -43,4 +43,5 @@ node .skills/xcross/scripts/xcross_bridge.mjs dev
 ```
 
 ## Changelog
+* **v2** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v1** : Initial release of XCross cross-platform iOS engine, user onboarding and familiarity gate, SwiftPM cross-compilation pipeline, automated code signing, and interactive device workbench.

@@ -2,7 +2,7 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "a2ui",
-  "version": "1",
+  "version": "2",
   "description": "Agent-to-User Interface (A2UI) protocol implementation and client renderer scaffolding.",
   "entryPoint": "./SKILL.md",
   "engines": {
@@ -20,8 +20,18 @@
     "agent-ui",
     "adaptive-cards",
     "dynamic-forms",
-    "design-system"
+    "design-system",
+    "agent-to-user-interface",
+    "generative-ui",
+    "ui-protocol",
+    "json-ui-schema",
+    "component-catalog",
+    "streaming-ui",
+    "server-driven-ui",
+    "client-renderer",
+    "react-renderer",
+    "adaptive-interface"
   ],
   "hasSandbox": false,
-  "integrity": "cs:sha256:33e5700ba89dfcba3df7b0ed4a28ec562e8c37d06cc61277c4cfa0d9b35ef9b3"
+  "integrity": "cs:sha256:90b4f49e1e84dec5094e30bab46ece8b5a15042d97afcee471273105c13922f4"
 }

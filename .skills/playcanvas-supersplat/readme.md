@@ -1,12 +1,12 @@
 # PlayCanvas SuperSplat
 
-**Version:** 3
+**Version:** 4
 
 **Target:** `.skills/playcanvas-supersplat`
 
 **Category:** Animation & Graphics
 
-**Keywords:** `gaussian-splats`, `3d-splatting`, `point-cloud`, `photogrammetry`, `radiance-fields`, `ply-optimizer`
+**Keywords:** `playcanvas-supersplat`, `gaussian-splats`, `3d-splatting`, `point-cloud`, `photogrammetry`, `radiance-fields`, `ply-optimizer`, `supersplat`, `gaussian-splatting`, `splat-editing`, `3dgs`, `splat-cleanup`, `ply-compression`, `3d-scanning`, `point-cloud-editing`, `web-viewer`
 
 ## Description
 High performance tool for editing and optimizing 3D Gaussian Splats.
@@ -23,6 +23,7 @@ High performance tool for editing and optimizing 3D Gaussian Splats.
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog
+* **v4** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v3** : Standardized ASCII art logo to uniform 6-line ANSI Shadow format.
 * **v2** : Expanded capability descriptions
 * **v1** : Core skill implementation

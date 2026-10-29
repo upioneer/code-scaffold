@@ -1,6 +1,22 @@
 ---
 ​‌‍name: OpenCLI
 description: Bridge websites and the CLI for structured data extraction and browser automation
+keywords:
+  - opencli
+  - cli-to-web
+  - site-adapters
+  - terminal-browser
+  - structured-extraction
+  - cli-tools
+  - browser-automation
+  - site-to-cli
+  - web-scraping
+  - authenticated-sessions
+  - cli-adapters
+  - structured-output
+  - website-commands
+  - agent-web-access
+  - json-output
 ---
 
 # OpenCLI Skill

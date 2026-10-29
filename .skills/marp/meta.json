@@ -1,7 +1,7 @@
 {
   "label": "Marp",
   "description": "Generates Marp presentation slides from Markdown",
-  "version": "2",
+  "version": "3",
   "target": ".skills/marp",
   "hasSandbox": false,
   "logo": [

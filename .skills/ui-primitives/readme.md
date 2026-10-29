@@ -1,12 +1,12 @@
 # UI Primitives & Micro-Interactions
 
-**Version:** 7
+**Version:** 8
 
 **Target:** `.skills/ui-primitives`
 
 **Category:** Frontend & UI Design
 
-**Keywords:** `ui-primitives`, `micro-interactions`, `tactile-components`, `86-primitives`, `agent-ui`, `gsap`, `scroll-trigger`, `threejs`, `webgpu-shader`, `cursor-trail`, `gradient-borders`, `css-alpha-masking`, `design-first-prompting`, `landing-page-architecture`, `border-beam`, `gooey-fluid`, `spring-dock`, `bento-grid`, `kinetic-typography`, `atomic-tokens`
+**Keywords:** `ui-primitives`, `micro-interactions`, `tactile-components`, `86-primitives`, `agent-ui`, `gsap`, `scroll-trigger`, `scroll-driven-animation`, `threejs`, `webgl-3d-scene`, `webgpu-shader`, `cursor-trail`, `halftone-cursor`, `gradient-borders`, `design-first-prompting`, `landing-page-architecture`, `conversion-optimization`, `color-fill-button`, `progressive-blur`, `number-flow`, `thinking-orb`, `spring-physics`, `motion-looks`, `border-beam`, `gooey-fluid`, `spring-dock`, `bento-grid`, `kinetic-typography`, `text-animation`, `stagger-reveal`
 
 ## Description
 
@@ -56,6 +56,7 @@ Invoke this skill when an agent is asked to:
 * Build a motion presentation stage for product demos or marketing collateral
 
 ## Changelog
+* **v8** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v7** : Integrated the 86-component Tactile Kinetic Component Matrix with CLI export bridge, covering interactive controls, navigation, conversion surfaces, realtime telemetry, AI agent conversational surfaces, and kinetic data charts.
 * **v6** : Kinetic Typography Reveal System (staggered blur reveals, split-letter rise, shine sweep, gradient display line, layout-reserve typewriter, circular rotating text). Component Motion Expansion (pixel dissolve, card stack, masonry). Micro Spring Kit (press, toggle, tooltip, toast queue, bursts). Ambient Backgrounds (aurora bands, drift field). Normalized version sync to 6.
 * **v5** : Standardized ASCII art logo to uniform 6-line ANSI Shadow format.

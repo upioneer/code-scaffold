@@ -2,7 +2,7 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_supabase_skill",
-  "version": "2",
+  "version": "3",
   "description": "Supabase database and authentication integration",
   "entryPoint": "./SKILL.md",
   "engines": {
@@ -20,8 +20,17 @@
     "row-level-security",
     "database-auth",
     "edge-functions",
-    "realtime-db"
+    "realtime-db",
+    "supabase-auth",
+    "supabase-storage",
+    "rls-policies",
+    "realtime-subscriptions",
+    "supabase-cli",
+    "database-migrations",
+    "typescript-types",
+    "pgvector",
+    "postgres-backend"
   ],
   "hasSandbox": false,
-  "integrity": "cs:sha256:08343d5bcf7f1d4ef67689916c9966acb87d0c7f8ff6f9376d78b4bfaeaf467a"
+  "integrity": "cs:sha256:84858eac7c98d63f6362b9037c41f04f5c5b715428eca8c9cd39ca9fe3ad8127"
 }

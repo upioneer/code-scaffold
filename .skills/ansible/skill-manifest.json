@@ -2,7 +2,7 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_ansible_skill",
-  "version": "2",
+  "version": "3",
   "description": "Infrastructure automation, configuration management, and application deployment orchestration using Ansible.",
   "entryPoint": "./SKILL.md",
   "engines": {
@@ -21,8 +21,18 @@
     "server-provisioning",
     "devops",
     "automation",
-    "yaml"
+    "yaml",
+    "ansible-playbook",
+    "ansible-roles",
+    "inventory-management",
+    "idempotent-deployment",
+    "infrastructure-as-code",
+    "ansible-galaxy",
+    "ansible-vault",
+    "jinja2-templates",
+    "ssh-orchestration",
+    "zero-touch-provisioning"
   ],
   "hasSandbox": false,
-  "integrity": "cs:sha256:11d009ad50cb549626cc7665e3fb7ffe7f0e74101ff02c8f4316f5ab8e0cb6a0"
+  "integrity": "cs:sha256:c9125ba2bb2b170277a78aff2d3541a92f672796dd4dde20129e07d3ff816caa"
 }

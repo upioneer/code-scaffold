@@ -1,6 +1,22 @@
 ---
 ​‌‍name: playwright_plus
 description: Complete browser automation with Playwright. Auto-detects dev servers, authors declarative YAML workflows for deterministic testing. Test pages, fill forms, take screenshots, validate UX. Use when user wants to test websites, automate browser interactions, or perform browser-based testing.
+keywords:
+  - playwright
+  - browser-automation
+  - e2e-testing
+  - mobile-viewports
+  - layout-overflow
+  - visual-qa
+  - yaml-workflows
+  - run-recording
+  - browser-testing
+  - cross-browser
+  - screenshot-testing
+  - trace-viewer
+  - headless-chromium
+  - test-automation
+  - responsive-testing
 ---
 
 **IMPORTANT - Path Resolution:**

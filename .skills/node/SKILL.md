@@ -1,6 +1,22 @@
 ---
 ​‌‍name: node_dev
 description: Specialized skill for managing Node.js development environments, including starting/stopping dev servers, building, testing, and linting.
+keywords:
+  - node
+  - nodejs
+  - npm
+  - pnpm
+  - backend-javascript
+  - runtime
+  - package-management
+  - node-version-manager
+  - npm-scripts
+  - package-json
+  - esm-modules
+  - corepack
+  - node-lts
+  - javascript-runtime
+  - dependency-management
 ---
 
 # Node Development Skill

@@ -2,7 +2,7 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "xcross",
-  "version": "1",
+  "version": "2",
   "description": "Cross-platform iOS build, signing, and device deployment engine for SwiftPM packages on Linux, Windows WSL, and macOS without Xcode dependencies.",
   "entryPoint": "./SKILL.md",
   "engines": {
@@ -34,5 +34,5 @@
     "bsp-integration"
   ],
   "hasSandbox": true,
-  "integrity": "cs:sha256:dfd30e742a563f09fba909f71a9f5e4afc2d8cf0d34a4211ed0f325e6dcb9687"
+  "integrity": "cs:sha256:3b1f5f26ac34f876f9ad0c8bbdd22901cff4226450cb3716bb1e03858b533270"
 }

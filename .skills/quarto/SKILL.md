@@ -1,6 +1,22 @@
 ---
 ​‌‍name: quarto_publishing
 description: Complete skill for architecting, writing, and compiling scientific documents, websites, dashboards, and books using Quarto. Includes guidelines for generating interactive Observable JS blocks and automated CI/CD deployment pipelines.
+keywords:
+  - quarto
+  - scientific-publishing
+  - computational-notebooks
+  - r-python-julia
+  - dashboards
+  - academic-docs
+  - quarto-books
+  - quarto-websites
+  - jupyter-notebooks
+  - reproducible-research
+  - executable-documents
+  - scientific-writing
+  - observable-js
+  - pdf-latex
+  - technical-reports
 ---
 
 # Quarto Scientific Publishing Skill

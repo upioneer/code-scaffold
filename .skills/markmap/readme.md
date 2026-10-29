@@ -1,12 +1,12 @@
 # Markmap
 
-**Version:** 3
+**Version:** 4
 
 **Target:** `.skills/markmap`
 
 **Category:** Publishing & Documentation
 
-**Keywords:** `markmap`, `mindmaps`, `markdown-to-mindmap`, `interactive-tree`, `d3-visualization`, `hierarchy`
+**Keywords:** `markmap`, `mindmaps`, `markdown-to-mindmap`, `interactive-tree`, `d3-visualization`, `hierarchy`, `markdown-mindmap`, `mindmap-generator`, `svg-mindmap`, `tree-visualization`, `outline-visualization`, `knowledge-map`, `interactive-diagram`, `markdown-outline`, `brainstorming-map`
 
 ## Description
 A highly robust standalone skill for Markmap, enabling the transformation of standard markdown into interactive, hierarchical mindmaps.
@@ -25,6 +25,7 @@ A highly robust standalone skill for Markmap, enabling the transformation of sta
 AI agents and developers can utilize this skill to rapidly scaffold Markmap files, configure jsonOptions frontmatter, or orchestrate CLI commands to export interactive HTML mindmaps.
 
 ## Changelog
+* **v4** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v3** : Standardized hasSandbox to false to mount the clean Architectural Contract card on code-scaffold.com.
 * **v2** : Provisioned interactive Markmap Studio visual sandbox with live markdown editor, zoomable SVG tree, and preset architectures.
 * **v1** : Initial implementation of the Markmap skill payload

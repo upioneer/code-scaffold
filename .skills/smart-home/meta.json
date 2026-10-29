@@ -1,7 +1,7 @@
 {
   "label": "Smart Home",
   "description": "Unified smart home and IoT automation orchestrator bridging Home Assistant, Apple HomeKit, Amazon Alexa, Google Home, and Matter ecosystems.",
-  "version": "3",
+  "version": "4",
   "target": ".skills/smart-home",
   "hasSandbox": false,
   "logo": [

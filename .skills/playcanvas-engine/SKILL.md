@@ -1,6 +1,22 @@
 ---
 ​‌‍name: PlayCanvas Engine
 description: Modular 3D/2D game engine for the web supporting WebGL and WebGPU.
+keywords:
+  - playcanvas-engine
+  - 3d-rendering
+  - shader-graph
+  - physics-ammo
+  - webgl2
+  - webgpu-games
+  - webgl-engine
+  - game-engine
+  - 3d-web-games
+  - entity-component-system
+  - glb-loading
+  - pbr-materials
+  - scene-graph
+  - web-3d
+  - gpu-instancing
 ---
 
 # PlayCanvas Engine Skill

@@ -1,7 +1,7 @@
 {
   "label": "Manim Math Animations",
   "description": "Mathematical animations using the Manim library.",
-  "version": "5",
+  "version": "6",
   "target": ".skills/manim",
   "hasSandbox": false,
   "logo": [

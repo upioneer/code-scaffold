@@ -1,7 +1,38 @@
 ---
 ​‌‍name: Proxmox VE Container Engineering
 description: Design, build, debug, and maintain turnkey Proxmox VE LXC helper scripts following the two-tier host orchestrator and in-container provisioner architecture, including whiptail interactive dialogs, pct create disk sizing rules, Debian 12 bootstrap isolation, Node.js V8 heap controls, active health polling, idempotent update routines, ZFS and Ceph storage integration, VM templating with cloud-init, network bridge and VLAN configuration, cluster resource discovery, Prometheus metrics export, and Proxmox Backup Server automation.
-version: 2
+version: 4
+keywords:
+  - proxmox
+  - proxmox-ve
+  - lxc
+  - lxc-container
+  - pct-create
+  - pveam
+  - pvesm
+  - whiptail
+  - container-provisioning
+  - host-orchestrator
+  - debian-12-bookworm
+  - systemd-service
+  - zfs
+  - ceph
+  - lvm-thin
+  - cloud-init
+  - vm-template
+  - qm
+  - pve-backup
+  - proxmox-backup-server
+  - pct-snapshot
+  - prometheus-pve-exporter
+  - hypervisor
+  - self-hosted
+  - homelab
+  - cluster-automation
+  - vzdump
+  - unprivileged-container
+  - vlan-tagging
+  - network-bridge
 ---
 
 # Proxmox VE Container Engineering Skill

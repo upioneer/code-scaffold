@@ -1,6 +1,22 @@
 ---
 ​‌‍name: Upstash Redis Management
 description: Serverless Redis management and rate limiting using Upstash.
+keywords:
+  - upstash
+  - serverless-redis
+  - rate-limiting
+  - edge-caching
+  - qstash
+  - vector-db
+  - redis
+  - upstash-redis
+  - rate-limiter
+  - serverless-cache
+  - upstash-vector
+  - message-queue
+  - edge-runtime
+  - session-storage
+  - ratelimit-sdk
 ---
 
 name: upstash_redis

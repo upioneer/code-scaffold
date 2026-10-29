@@ -1,7 +1,7 @@
 {
   "label": "Telegram",
   "description": "Telegram Bot API interactions",
-  "version": "2",
+  "version": "3",
   "target": ".skills/telegram",
   "hasSandbox": false,
   "logo": [

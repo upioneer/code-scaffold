@@ -1,6 +1,24 @@
 ---
 ​‌‍name: A2UI
 description: Agent-to-User Interface (A2UI) protocol implementation and client renderer scaffolding.
+keywords:
+  - a2ui
+  - declarative-ui
+  - json-to-ui
+  - agent-ui
+  - adaptive-cards
+  - dynamic-forms
+  - design-system
+  - agent-to-user-interface
+  - generative-ui
+  - ui-protocol
+  - json-ui-schema
+  - component-catalog
+  - streaming-ui
+  - server-driven-ui
+  - client-renderer
+  - react-renderer
+  - adaptive-interface
 ---
 
 # A2UI Skill Instructions

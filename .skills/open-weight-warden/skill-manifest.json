@@ -2,7 +2,7 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_open_weight_warden_skill",
-  "version": "1",
+  "version": "2",
   "description": "Comprehensive security evaluation engine for open weight LLMs. Performs static binary validation (GGUF header/tensor boundary parsing, Bleeding Llama CVE-2026-7482 defense), Jinja2 AST chat template sanitization (CVE-2024-34359 SSTI defense), and dynamic behavioral fuzzing with honeytoken canary leak detection, sleeper agent trigger discovery, and tool exfiltration interception.",
   "entryPoint": "./SKILL.md",
   "engines": {
@@ -36,8 +36,13 @@
     "safetensors",
     "ai-backdoor-defense",
     "model-integrity",
-    "mxc-sandboxing"
+    "mxc-sandboxing",
+    "llm-security",
+    "model-supply-chain",
+    "gguf-format",
+    "malicious-model-detection",
+    "canary-tokens"
   ],
   "hasSandbox": true,
-  "integrity": "cs:sha256:24ec8f0375932d297a5f4a318a9913d12a010f659fca554af516c169e96fb450"
+  "integrity": "cs:sha256:baad1a46f24c46f730071df0a3da424234e1424c88e14abe61c3d96ea91319d7"
 }

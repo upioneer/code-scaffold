@@ -1,6 +1,22 @@
 ---
 ​‌‍name: Rust
 description: Orchestrates Rust workspace topologies, optimized compilation profiles, and local automation scripts.
+keywords:
+  - rust
+  - cargo
+  - cargo-clippy
+  - cargo-fmt
+  - rust-workspaces
+  - systems-programming
+  - wasm
+  - rust-toolchain
+  - rustfmt
+  - clippy-lints
+  - release-profile
+  - cross-compilation
+  - rust-ci
+  - cargo-test
+  - build-optimization
 ---
 # Rust Foundation Skill Payload
 

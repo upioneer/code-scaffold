@@ -1,12 +1,12 @@
 # Proxmox VE Container Engineering
 
-**Version:** 3
+**Version:** 4
 
 **Target:** `.skills/proxmox`
 
-**Category:** DevOps
+**Category:** DevOps & Infrastructure
 
-**Keywords:** `proxmox`, `proxmox-ve`, `lxc`, `pct-create`, `whiptail`, `container-provisioning`, `zfs`, `cloud-init`, `vm-template`, `proxmox-backup-server`, `prometheus-pve-exporter`, `homelab`, `cluster-automation`
+**Keywords:** `proxmox`, `proxmox-ve`, `lxc`, `lxc-container`, `pct-create`, `pveam`, `pvesm`, `whiptail`, `container-provisioning`, `host-orchestrator`, `debian-12-bookworm`, `systemd-service`, `zfs`, `ceph`, `lvm-thin`, `cloud-init`, `vm-template`, `qm`, `pve-backup`, `proxmox-backup-server`, `pct-snapshot`, `prometheus-pve-exporter`, `hypervisor`, `self-hosted`, `homelab`, `cluster-automation`, `vzdump`, `unprivileged-container`, `vlan-tagging`, `network-bridge`
 
 ## Description
 
@@ -46,6 +46,7 @@ Invoke this skill when an agent is asked to:
 * Automate Proxmox cluster operations via the REST API or Terraform
 
 ## Changelog
+* **v4** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v3** : Standardized hasSandbox to false to mount the clean Architectural Contract card on code-scaffold.com.
 * **v2**: Major expansion with two-tier architecture templates, 6 critical engineering rules (integer disk sizing, bootstrap isolation, V8 heap ceiling, pipe-safe dialogs, active health verification, idempotent updates), ZFS/Ceph/LVM-thin storage integration, cloud-init VM templating, snapshot and backup automation with rollback, cluster resource discovery, Proxmox REST API and Terraform automation, Prometheus PVE exporter monitoring stack, AppArmor and cgroup v2 container hardening, VLAN network configuration patterns, and comprehensive debug triage playbook.
 * **v1**: Initial release with basic LXC templates, SSH hardening, and baseline app deployment patterns.

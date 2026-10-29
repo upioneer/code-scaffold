@@ -1,6 +1,22 @@
 ---
 ​‌‍name: p5js
 description: Creative coding and visual animations using the p5.js library. Use this skill when the user wants to create interactive visuals, generative art, or custom animations in a web environment.
+keywords:
+  - p5js
+  - creative-coding
+  - canvas2d
+  - generative-art
+  - interactive-sketches
+  - webgl
+  - p5-sketches
+  - generative-design
+  - noise-fields
+  - interactive-art
+  - data-art
+  - animation-loop
+  - sound-visualization
+  - shader-sketches
+  - creative-canvas
 ---
 
 # p5.js Skill

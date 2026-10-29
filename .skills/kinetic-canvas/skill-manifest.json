@@ -2,7 +2,7 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "kinetic-canvas",
-  "version": "7",
+  "version": "8",
   "description": "Ultra-fast, zero-dependency WebGL shaders and interactive HTML canvases wrapped as native React components.",
   "entryPoint": "./SKILL.md",
   "engines": {
@@ -19,8 +19,17 @@
     "physics-simulation",
     "interactive-visuals",
     "particles",
-    "webgl"
+    "webgl",
+    "webgl-shaders",
+    "glsl",
+    "react-component",
+    "canvas-animation",
+    "zero-dependency",
+    "particle-systems",
+    "fragment-shaders",
+    "interactive-canvas",
+    "gpu-effects"
   ],
   "hasSandbox": true,
-  "integrity": "cs:sha256:8b7e8baf5f69e4a2876dbf77b02c2a60f68e53da1afa04d38e9b963c822c0b29"
+  "integrity": "cs:sha256:5c05a01e97aeac90684bc4bc384e2cf9084fa8637e2fca893e0bd89bb95fe851"
 }

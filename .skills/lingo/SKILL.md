@@ -1,7 +1,23 @@
 ---
 ​‌‍name: Lingo
 description: Deterministic shorthand glossary that maps user lingo, acronyms, and abbreviations to their full meanings for faster, unambiguous communication.
-version: 4
+version: 5
+keywords:
+  - lingo
+  - localization
+  - i18n
+  - translation
+  - multilingual
+  - po-editor
+  - l10n
+  - shorthand-glossary
+  - acronym-expansion
+  - abbreviation-mapping
+  - user-lingo
+  - ambiguity-reduction
+  - agent-communication
+  - domain-vocabulary
+  - prompt-shorthand
 ---
 
 # Lingo: Shorthand Decoder & Communication Accelerator

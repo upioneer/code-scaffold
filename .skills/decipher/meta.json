@@ -1,7 +1,7 @@
 {
   "label": "Decipher Reverse Engineer Arsenal",
   "description": "Reverse engineer any application, compiled binary, desktop bundle, mobile package, or managed runtime with verifiable evidence ledgers and clean-room reconstruction.",
-  "version": "1",
+  "version": "2",
   "target": ".skills/decipher",
   "hasSandbox": true,
   "logo": [

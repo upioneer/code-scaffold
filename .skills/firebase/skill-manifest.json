@@ -2,7 +2,7 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_firebase_skill",
-  "version": "6",
+  "version": "7",
   "description": "Autonomous Firebase project provisioning, clean project naming, CLI lifecycle management, Cloud Firestore multi-database operations, and client SDK integration.",
   "entryPoint": "./SKILL.md",
   "engines": {
@@ -27,8 +27,11 @@
     "firestore-databases",
     "mobile-sdk-config",
     "automated-provisioning",
-    "sdk-config"
+    "sdk-config",
+    "firebase-auth",
+    "cloud-storage",
+    "emulator-suite"
   ],
   "hasSandbox": false,
-  "integrity": "cs:sha256:c77a6dd304dd5f4b841d8724399fb2beb04046a52ce033494aae15b66c1271f7"
+  "integrity": "cs:sha256:5b74f6656d6290a50b44016eb96434fd47da318732b21c98dc7ebc19db448cb9"
 }

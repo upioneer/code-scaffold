@@ -1,12 +1,12 @@
 # CAD Tools
 
-**Version:** 11
+**Version:** 12
 
 **Target:** `.skills/cad-tools`
 
 **Category:** Animation & Graphics
 
-**Keywords:** `cad`, `generative-design`, `topology-optimization`, `alien-meter`, `fea-stress`, `additive-manufacturing`, `dmls`, `sls`, `3d-modeling`, `step-files`, `stl`, `parametric-design`, `openscad`, `cadquery`, `parametric-scripts`, `csg-modeling`, `freecad`, `partdesign`, `b-rep`, `opencascade`, `sketcher`, `boolean-operations`, `streamable-http`, `headless-cad`, `offscreen-rendering`, `undo-transactions`, `3mf`, `dfam`, `dfm`, `engineering-drawing`, `orthographic`, `fasteners`, `blueprint`, `manufacturing-audit`
+**Keywords:** `cad-tools`, `cad`, `generative-design`, `topology-optimization`, `alien-meter`, `fea-stress`, `additive-manufacturing`, `3d-modeling`, `step-files`, `stl`, `parametric-design`, `openscad`, `cadquery`, `parametric-scripts`, `csg-modeling`, `freecad`, `partdesign`, `b-rep`, `opencascade`, `sketcher`, `boolean-operations`, `streamable-http`, `headless-cad`, `offscreen-rendering`, `undo-transactions`, `3mf`, `dfam`, `engineering-drawing`, `fasteners`, `manufacturing-audit`
 
 ## Description
 
@@ -66,6 +66,7 @@ Activate this skill for any task involving:
 * Maintaining structured BOM documentation and inspection renders alongside CAD models
 
 ## Changelog
+* **v12** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v11** : Integrated OpenSCAD headless parametric compilation bridge, Customizer parameter parser, CadQuery execution runner, and automated CadQuery to build123d translation matrix.
 * **v10** : Integrated Production DfAM/DFM Manufacturing Auditor, Automated Orthographic 2D Blueprint Generator with ISO title blocks, Standard Fastener and Hardware Vault, and interactive DfAM/Blueprint shaders in the WebGL workbench.
 * **v9** : Integrated In-Page Conversational AI Co-Pilot Chat Drawer with real-time parametric intent parsing, drag-and-drop local STL/OBJ mesh loader, and local sync daemon bridge.

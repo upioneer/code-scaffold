@@ -1,12 +1,12 @@
 # Changelog Plus
 
-**Version:** 4
+**Version:** 5
 
 **Target:** `.skills/changelog-plus`
 
 **Category:** Publishing & Documentation
 
-**Keywords:** `changelog-plus`, `release-notes`, `version-history`, `immutable-history`, `terminal-capture`, `tape-recorder`, `release-automation`, `web-capture`, `viewport-matrix`, `route-manifest`
+**Keywords:** `changelog-plus`, `release-notes`, `version-history`, `immutable-history`, `terminal-capture`, `tape-recorder`, `release-automation`, `web-capture`, `viewport-matrix`, `route-manifest`, `changelog-generator`, `release-history`, `vhs-capture`, `screenshot-automation`, `readme-sync`, `git-tags`
 
 ## Description
 Automated immutable release history pipeline that authors versioned changelog folders, captures headless terminal and web application media with mandatory failure gates, and synchronizes the root README for every release.
@@ -29,6 +29,7 @@ Automated immutable release history pipeline that authors versioned changelog fo
 Agents can invoke this skill when cutting a release that needs immutable, media backed version history, when wiring automated terminal or web capture into a version bump routine, or when a user asks where release history should live and how it stays tamper evident.
 
 ## Changelog
+* **v5** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v4** : Added universal adaptable version bump script template with multi stack manifest synchronization and baked in user interview protocols.
 * **v3** : Added the declarative capture workflow template backed by the Playwright Plus dispatcher.
 * **v2** : Added first class web application capture with route manifests, run recording to gif conversion, viewport matrix proof, and a maintained selftest.

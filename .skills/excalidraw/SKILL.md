@@ -1,6 +1,22 @@
 ---
 ​‌‍name: Excalidraw
 description: Renders and embeds Excalidraw whiteboards
+keywords:
+  - excalidraw
+  - virtual-whiteboard
+  - hand-drawn-diagrams
+  - architecture-diagram
+  - canvas
+  - visuals
+  - whiteboard-embed
+  - sketch-diagrams
+  - excalidraw-json
+  - svg-export
+  - png-export
+  - system-design-diagrams
+  - react-embed
+  - flowchart-sketch
+  - diagram-automation
 ---
 
 # Excalidraw Diagram Skill

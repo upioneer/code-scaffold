@@ -1,6 +1,22 @@
 ---
 ​‌‍name: firecrawl
 description: Specialized skill for crawling and scraping websites to convert them to LLM-ready clean markdown or structured data using Firecrawl API and CLI.
+keywords:
+  - firecrawl
+  - web-crawler
+  - llm-scraping
+  - clean-markdown
+  - structured-json
+  - data-extraction
+  - website-crawling
+  - rag-ingestion
+  - site-map
+  - javascript-rendering
+  - batch-scraping
+  - llm-ready-data
+  - web-search-api
+  - crawl-api
+  - scrape-api
 ---
 
 # Firecrawl Web Scraping & Crawling Skill

@@ -1,6 +1,37 @@
 ---
 ​‌‍name: cadence
 description: Trigger when the user requests live coding music, algorithmic audio composition, tracker-style arrangement, pattern generation, mini-notation soundscapes, Web Audio synthesis, generative beat making, or performance audio engineering.
+keywords:
+  - cadence
+  - live-coding
+  - algorithmic-music
+  - music-composition
+  - pattern-synthesis
+  - mini-notation
+  - web-audio-api
+  - euclidean-rhythms
+  - polymeter
+  - breakbeat
+  - synthwave
+  - techno-synthesis
+  - audio-dsp
+  - sound-design
+  - creative-coding
+  - generative-music
+  - beat-making
+  - acid-bassline
+  - frequency-modulation
+  - audio-visualizer
+  - oscilloscope
+  - live-performance
+  - step-sequencer
+  - chords-scales
+  - midi-clock
+  - tracker-arranger
+  - stage-cueing
+  - trance-gate
+  - acid-envelope
+  - scale-quantizer
 ---
 
 # Cadence Algorithmic Audio Architecture & Pattern Engine

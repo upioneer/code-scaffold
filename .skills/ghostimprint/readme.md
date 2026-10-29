@@ -1,6 +1,6 @@
 # GhostImprint Engine
 
-**Version:** 5
+**Version:** 6
 
 **Target:** `.skills/ghostimprint`
 
@@ -76,6 +76,7 @@ AI agents and developers invoke the GhostImprint Engine via conversational natur
 * Sealed Legal Dossier Generation: `node .skills/ghostimprint/scripts/ghostimprint.js export --target /path/to/suspect-repo --format all`
 
 ## Changelog
+* **v6** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v5** : Renamed GhostPrint to GhostImprint. Audit and oracle report only measured evidence with explicit UNMEASURED labels. Audit fails closed without a vault. Added one way street warning to the key ceremony. Added application receipt workflow (record, record-plan, anchor, receipt commands), real Layer 4 stylometry matching against a bundled 24-condition lexicon, Layer 5 construct-choice agreement, Layer 8 git-tree anchor verification, receipt-driven oracle probe plans, tiered temporal anchors (local git plus notarized RFC 3161 and Rekor witnesses), and a durable zero-dependency selftest suite.
 * **v4** : Added automatic GhostImprint README badge generation on project protection with dedicated CLI inspection and manual opt-out support.
 * **v3** : Standardized hasSandbox to false to mount the clean Architectural Contract card on code-scaffold.com.

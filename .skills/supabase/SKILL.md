@@ -1,6 +1,22 @@
 ---
 ​‌‍name: Supabase
 description: Supabase database and authentication integration
+keywords:
+  - supabase
+  - postgresql
+  - row-level-security
+  - database-auth
+  - edge-functions
+  - realtime-db
+  - supabase-auth
+  - supabase-storage
+  - rls-policies
+  - realtime-subscriptions
+  - supabase-cli
+  - database-migrations
+  - typescript-types
+  - pgvector
+  - postgres-backend
 ---
 
 ---

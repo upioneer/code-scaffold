@@ -1,6 +1,26 @@
 ---
 ​‌‍name: mechanica
 description: Trigger when the user requests isometric illustrations, technical diagrams, physical machine metaphors, hardware explainers, cutaway drawings, exploded assemblies, 4-tone shaded vector diagrams, WebGL shader overlays, or interactive engineering graphics.
+keywords:
+  - mechanica
+  - isometric-illustration
+  - physical-metaphor
+  - technical-diagram
+  - hardware-explainer
+  - cutaway-diagram
+  - exploded-assembly
+  - kinematics
+  - vector-graphics
+  - svg-rendering
+  - four-tone-shading
+  - painters-algorithm
+  - webgl-shaders
+  - test-rig
+  - dial-gauge
+  - interactive-graphics
+  - linear-style
+  - depth-sorting
+  - clearance-audit
 ---
 
 # Mechanica Physical Metaphor Architecture & Kinematic Engine

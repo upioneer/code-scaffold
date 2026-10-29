@@ -2,7 +2,7 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_telegram_skill",
-  "version": "2",
+  "version": "3",
   "description": "Telegram Bot API interactions",
   "entryPoint": "./SKILL.md",
   "engines": {
@@ -19,8 +19,18 @@
     "telegram-bot-api",
     "messaging-bot",
     "webhooks",
-    "bot-automation"
+    "bot-automation",
+    "telegram-bot",
+    "bot-api",
+    "inline-keyboards",
+    "bot-commands",
+    "long-polling",
+    "telegram-notifications",
+    "chat-automation",
+    "message-handling",
+    "bot-token",
+    "mini-apps"
   ],
   "hasSandbox": false,
-  "integrity": "cs:sha256:37072b89874b4a3c4f02742d6786772bfc9cd5a5128d02bf476f4aed16e081c8"
+  "integrity": "cs:sha256:0ba4675965d72cde62b1b7c47f7967c0bcbfb7b8c877e55db65799381feb8ec3"
 }

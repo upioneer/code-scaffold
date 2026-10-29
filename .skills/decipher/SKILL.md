@@ -1,6 +1,26 @@
 ---
 ​‌‍name: decipher
 description: Trigger when the user wants to reverse engineer any application, binary, or system, reverse engineer native executables, reverse engineer Electron or JavaScript bundles, reverse engineer Android or iOS apps, or needs decompilation, disassembly, binary analysis, or clean-room reconstruction.
+keywords:
+  - decipher
+  - reverse-engineer
+  - reverse-engineering
+  - reverse-engineering-tools
+  - reverse-engineer-anything
+  - binary-analysis
+  - decompilation
+  - disassembly
+  - macho-elf-pe
+  - electron-asar
+  - sourcemap-recovery
+  - reconstruction-ledger
+  - evidence-provenance
+  - clean-room-implementation
+  - frida-instrumentation
+  - wasm-decompilation
+  - go-pclntab
+  - call-graph-analysis
+  - dynamic-observation
 ---
 
 # Decipher Reverse Engineer Arsenal & Binary Deconstruction Engine

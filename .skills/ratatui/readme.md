@@ -1,12 +1,12 @@
 # Ratatui TUI Framework
 
-**Version:** 8
+**Version:** 9
 
 **Target:** `.skills/ratatui`
 
 **Category:** Frontend & UI Design
 
-**Keywords:** `ratatui`, `rust-tui`, `terminal-ui`, `crossterm`, `cli-dashboard`, `console-app`, `tui-architecture`, `terminal-widgets`, `mvu-elm`, `tokio-event-loop`
+**Keywords:** `ratatui`, `rust-tui`, `terminal-ui`, `crossterm`, `cli-dashboard`, `console-app`, `tui-architecture`, `terminal-widgets`, `mvu-elm`, `tokio-event-loop`, `immediate-mode-rendering`, `crossterm-events`, `terminal-lifecycle`, `async-tui`, `layout-constraints`, `rust-cli`
 
 ## Description
 Build high-performance, robust Terminal User Interfaces (TUI) with modern Ratatui architecture, safe terminal lifecycle handling, async event loops, and rich component pipelines in Rust.
@@ -28,6 +28,7 @@ Build high-performance, robust Terminal User Interfaces (TUI) with modern Ratatu
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines, architectural blueprints, and production-grade Rust implementations.
 
 ## Changelog
+* **v9** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v8** : Standardized ASCII art logo to uniform 6-line ANSI Shadow format.
 * **v7** : Standardized hasSandbox to false to mount the clean Architectural Contract card on code-scaffold.com.
 * **v6** : Integrated interactive Ratatui TUI Terminal Simulator sandbox and updated manifest flags

@@ -1,7 +1,7 @@
 {
   "label": "Vercel Deployment Routine",
   "description": "Configuration and deployment routines for Vercel hosting.",
-  "version": "4",
+  "version": "5",
   "target": ".skills/vercel",
   "hasSandbox": false,
   "logo": [

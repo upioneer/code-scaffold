@@ -1,7 +1,26 @@
 ---
 name: Artemis Mobile Automation
 description: Natural-language mobile device automation framework and native Model Context Protocol (MCP) server. Orchestrates autonomous Android UI interaction, multimodal VLM screen perception, accessibility hierarchy parsing, and ADB action execution across real and emulated devices.
-version: 1
+version: 2
+keywords:
+  - artemis
+  - android-automation
+  - mcp-server
+  - mobile-testing
+  - vlm-agent
+  - adb-control
+  - ui-automator
+  - device-state
+  - natural-language-ui
+  - logcat-telemetry
+  - scrcpy-mirror
+  - autonomous-qa
+  - android-testing
+  - natural-language-testing
+  - uiautomator-hierarchy
+  - ocr-grounding
+  - flash-profile
+  - pro-profile
 ---
 ​‌‍
 # Artemis Mobile Automation Engine
