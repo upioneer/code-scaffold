@@ -1,12 +1,12 @@
 # Hyperframes
 
-**Version:** 3
+**Version:** 4
 
 **Target:** `.skills/hyperframes`
 
 **Category:** Frontend & UI Design
 
-**Keywords:** `hyperframes`, `micro-frontends`, `iframe-orchestration`, `cross-window-messaging`, `web-components`
+**Keywords:** `hyperframes`, `micro-frontends`, `iframe-orchestration`, `cross-window-messaging`, `web-components`, `html-to-video`, `programmatic-video`, `video-rendering`, `ai-video-generation`, `css-animation-video`, `motion-graphics`, `headless-rendering`, `ffmpeg-pipeline`, `composition-timeline`, `agent-video`
 
 ## Description
 Video rendering framework for AI agents to create videos using HTML, CSS, and JS.
@@ -26,6 +26,7 @@ Video rendering framework for AI agents to create videos using HTML, CSS, and JS
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog
+* **v4** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v3** : Standardized ASCII art logo to uniform 6-line ANSI Shadow format.
 * **v2** : Expanded capability descriptions
 * **v1** : Add Hyperframes skill and update project manifest to v3.2.0

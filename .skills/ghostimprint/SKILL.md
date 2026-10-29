@@ -2,6 +2,14 @@
 name: ghostimprint
 description: Cryptographic code provenance, 9-layer steganographic entanglement matrix, hierarchical deterministic key ceremony, and digital forensics suite. Trigger when embedding irrefutable proof of authorship, protecting intellectual property from unauthorized copying, LLM rewrites, and closed SaaS exfiltration, auditing suspect repositories, running remote black-box oracle probes, or generating court-admissible forensic dossiers.
 category: Security & Cryptography
+entryPoint: ./SKILL.md
+version: 6
+engines:
+  node: ">=18.0.0"
+requiredPermissions:
+  - "fs:read"
+  - "fs:write"
+  - "net:connect"
 keywords:
   - ghostimprint
   - ghost-imprint
@@ -21,17 +29,6 @@ keywords:
   - daubert-standard
   - courtroom-admissible
   - dmca-evidence
-  - readme-badge
-  - shields-io
-  - provenance-badge
-entryPoint: ./SKILL.md
-version: 5
-engines:
-  node: ">=18.0.0"
-requiredPermissions:
-  - "fs:read"
-  - "fs:write"
-  - "net:connect"
 ---
 ​‌‍# GhostImprint Engine: Cryptographic Code Provenance & Digital Forensics Suite
 

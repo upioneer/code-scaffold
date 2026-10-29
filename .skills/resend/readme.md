@@ -1,12 +1,12 @@
 # Resend
 
-**Version:** 2
+**Version:** 3
 
 **Target:** `.skills/resend`
 
 **Category:** Data, Databases & Storage
 
-**Keywords:** `resend`, `transactional-email`, `react-email`, `smtp`, `email-api`, `deliverability`
+**Keywords:** `resend`, `transactional-email`, `react-email`, `smtp`, `email-api`, `deliverability`, `email-sending`, `email-templates`, `domain-verification`, `email-webhooks`, `batch-email`, `resend-api`, `email-audiences`, `bounce-handling`, `nodejs-email`
 
 ## Description
 Sends emails using the Resend API
@@ -20,5 +20,6 @@ Sends emails using the Resend API
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog
+* **v3** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v2** : Expanded capability descriptions
 * **v1** : Core skill implementation

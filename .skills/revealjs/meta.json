@@ -1,7 +1,7 @@
 {
   "label": "Reveal.js",
   "description": "Comprehensive toolkit and knowledge base for scaffolding, configuring, and exporting Reveal.js presentations.",
-  "version": "2",
+  "version": "3",
   "target": ".skills/revealjs",
   "hasSandbox": false,
   "logo": [

@@ -1,6 +1,25 @@
 ---
 ​‌‍name: Docker Engine
 description: Comprehensive container engineering arsenal featuring the Ephemeral Swapper Protocol for in-place zero-downtime updates, BuildKit cache optimization, and sidecar diagnostic injection.
+keywords:
+  - docker
+  - container-engine
+  - ephemeral-swapper
+  - in-place-updates
+  - zero-downtime
+  - buildkit
+  - multi-stage-builds
+  - distroless
+  - sidecar-diagnostics
+  - image-optimization
+  - dockerfile
+  - docker-compose
+  - container-security
+  - build-cache
+  - healthchecks
+  - container-networking
+  - rolling-updates
+  - container-debugging
 ---
 
 # Docker Engine Engineering Skill

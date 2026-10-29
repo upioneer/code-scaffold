@@ -1,12 +1,12 @@
 # TUI Tools
 
-**Version:** 7
+**Version:** 8
 
 **Target:** `.skills/tui-tools`
 
 **Category:** Frontend & UI Design
 
-**Keywords:** `tui-tools`, `vhs-tapes`, `terminal-gif`, `ratatui-helpers`, `figlet-ascii`, `cli-branding`
+**Keywords:** `tui-tools`, `vhs-tapes`, `terminal-gif`, `ratatui-helpers`, `figlet-ascii`, `cli-branding`, `terminal-splash-screens`, `vhs-recordings`, `tape-files`, `demo-gifs`, `terminal-recording`, `ascii-banners`, `instant-on-startup`, `tui-screenshots`, `wsl-capture`
 
 ## Description
 Architectural playbook and tooling (including VHS integration) for building robust, instant-on, and visually stunning modern terminal splash screens and integrations.
@@ -24,6 +24,7 @@ Architectural playbook and tooling (including VHS integration) for building robu
 Agents can invoke this skill when a user requests a high-quality CLI application or modern terminal UI that requires a robust, flicker-free splash screen, or when the user requires automated screenshot documentation pipelines via VHS.
 
 ## Changelog
+* **v8** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v7** : Standardized ASCII art logo to uniform 6-line ANSI Shadow format.
 * **v6** : Enforced strict native FIGlet character geometry rules and uniform rectangular 2-character frame margins (`'  ' + line.padEnd(maxLen, ' ') + '  '`).
 * **v2** : Renamed from "TUI Splash" to "TUI Tools" and injected comprehensive architectural support for `vhs` headless automated documentation captures.

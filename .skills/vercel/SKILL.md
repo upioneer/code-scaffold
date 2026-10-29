@@ -1,6 +1,22 @@
 ---
 ​‌‍name: Vercel Deployment Routine
 description: Configuration and deployment routines for Vercel hosting.
+keywords:
+  - vercel
+  - edge-deployments
+  - nextjs-hosting
+  - serverless-functions
+  - domain-management
+  - vercel-cli
+  - preview-deployments
+  - environment-variables
+  - edge-functions
+  - nextjs-deployment
+  - serverless-hosting
+  - custom-domains
+  - vercel-json
+  - ci-deploy
+  - zero-config-deploy
 ---
 
 name: vercel_deployment

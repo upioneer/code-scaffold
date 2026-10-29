@@ -2,7 +2,7 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_privacy_policy_skill",
-  "version": "6",
+  "version": "7",
   "description": "Generates a customizable privacy policy tailored to the project (website/app) with optional Google Analytics integration.",
   "entryPoint": "./SKILL.md",
   "engines": {
@@ -19,8 +19,17 @@
     "ccpa",
     "legal-compliance",
     "cookie-policy",
-    "terms-of-service"
+    "terms-of-service",
+    "privacy-notice",
+    "data-protection",
+    "google-analytics-disclosure",
+    "consent-management",
+    "legal-pages",
+    "data-subject-rights",
+    "website-compliance",
+    "app-store-privacy",
+    "cookie-consent"
   ],
   "hasSandbox": false,
-  "integrity": "cs:sha256:8d7e1b32c9cb3cbee8f0b7915169416dc52bb0a9627075e71ffe399fe37501e6"
+  "integrity": "cs:sha256:467f963965910af576dda70f55cef31b3b45efbb47f342f6bdb77370d219f664"
 }

@@ -1,6 +1,27 @@
 ---
 ​‌‍name: Mobile PWA
 description: Turn a web app into an installable mobile PWA with manifest, icons, service worker offline shell, and install prompt flow. Triggers on add to home screen, standalone display, app icon, splash theme, install banner, offline shell, iOS Safari install, Android install prompt, and PWA packaging across Vite React Vue Svelte, Next.js, Nuxt, SvelteKit, and Angular.
+keywords:
+  - mobile-pwa
+  - pwa
+  - progressive-web-app
+  - installable
+  - add-to-home-screen
+  - service-worker
+  - web-manifest
+  - offline-shell
+  - mobile
+  - ios
+  - android
+  - pwa-manifest
+  - install-prompt
+  - maskable-icons
+  - workbox
+  - offline-first
+  - standalone-display
+  - apple-touch-icon
+  - web-push
+  - lighthouse-audit
 ---
 
 # Mobile PWA

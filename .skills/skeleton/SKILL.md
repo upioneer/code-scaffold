@@ -2,6 +2,13 @@
 name: skeleton
 description: Zero-CLS layout reservation engine, pure CSS shimmer mechanics, and multi-framework skeleton screens for instant perceived performance. Trigger when building loading states, eliminating Cumulative Layout Shift (CLS), optimizing Core Web Vitals, reserving content geometry during async page loads, implementing pure CSS shimmer effects, or wiring React 19 Suspense loading fallbacks.
 category: Frontend & UI Design
+entryPoint: ./SKILL.md
+version: 2
+engines:
+  node: ">=18.0.0"
+requiredPermissions:
+  - "fs:read"
+  - "fs:write"
 keywords:
   - skeleton
   - skeleton-screens
@@ -23,13 +30,6 @@ keywords:
   - hardware-accelerated-shimmer
   - dark-mode-shimmer
   - loading-ux
-entryPoint: ./SKILL.md
-version: 1
-engines:
-  node: ">=18.0.0"
-requiredPermissions:
-  - "fs:read"
-  - "fs:write"
 ---
 ​‌‍# Skeleton Performance Studio: Zero-CLS Layout Reservation & Shimmer Engine
 

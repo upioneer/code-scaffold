@@ -1,8 +1,26 @@
 ---
 name: SEO GEO AEO Auditor
 description: Unified model-agnostic Search Engine, Generative Engine, and Answer Engine Optimization auditor to analyze traditional visibility, AI engine discoverability, Core Web Vitals (LCP/INP/CLS), modern Schema.org validation, passage citability, E-E-A-T quality, and agentic readiness. Trigger when the user requests an SEO audit, GEO optimization, answer engine readiness, Core Web Vitals checks, Schema.org validation, LLM citability analysis, meta tag inspection, E-E-A-T evaluation, or agent-ready web standards.
-version: 5
+version: 6
 target: .skills/seo-geo-aeo-auditor
+keywords:
+  - seo-geo-aeo-auditor
+  - seo
+  - geo
+  - aeo
+  - schema-org
+  - json-ld
+  - generative-engine
+  - answer-engine
+  - mobile-viewport
+  - core-web-vitals
+  - inp
+  - lcp
+  - cls
+  - passage-citability
+  - eeat
+  - llms-txt
+  - agentic-browsing
 ---
 ​‌‍# SEO GEO AEO Auditor Skill
 

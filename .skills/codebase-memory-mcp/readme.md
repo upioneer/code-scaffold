@@ -1,12 +1,12 @@
 # Codebase Memory MCP
 
-**Version:** 2
+**Version:** 3
 
 **Target:** `.skills/codebase-memory-mcp`
 
 **Category:** AI, MCP & Developer Tools
 
-**Keywords:** `codebase-memory`, `mcp-server`, `vector-embeddings`, `ast-index`, `semantic-search`, `rag`
+**Keywords:** `codebase-memory-mcp`, `codebase-memory`, `mcp-server`, `vector-embeddings`, `ast-index`, `semantic-search`, `rag`, `code-intelligence`, `knowledge-graph`, `persistent-memory`, `symbol-search`, `call-graph`, `code-indexing`, `context-retrieval`, `repo-understanding`, `token-efficiency`
 
 ## Description
 High-performance code intelligence MCP server that indexes codebases into a persistent knowledge graph. It handles 158 languages and enables sub-ms structural queries.
@@ -21,5 +21,6 @@ High-performance code intelligence MCP server that indexes codebases into a pers
 Agents can install the binary dynamically, hook it into their local MCP configuration, and immediately dispatch queries against the local repository graph to dramatically reduce context window usage (99% fewer tokens compared to file-by-file grepping).
 
 ## Changelog
+* **v3** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v2** : Standardized ASCII art logo to uniform 6-line ANSI Shadow format.
 * **v1** : Initial creation via the SkillForge Protocol.

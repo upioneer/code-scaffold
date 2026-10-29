@@ -2,7 +2,7 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "quarto-skill",
-  "version": "2",
+  "version": "3",
   "description": "Scientific and technical publishing system for dynamically generating books, websites, dashboards, and presentations using Python, R, Julia, and Observable JS.",
   "entryPoint": "./SKILL.md",
   "engines": {
@@ -20,8 +20,17 @@
     "computational-notebooks",
     "r-python-julia",
     "dashboards",
-    "academic-docs"
+    "academic-docs",
+    "quarto-books",
+    "quarto-websites",
+    "jupyter-notebooks",
+    "reproducible-research",
+    "executable-documents",
+    "scientific-writing",
+    "observable-js",
+    "pdf-latex",
+    "technical-reports"
   ],
   "hasSandbox": false,
-  "integrity": "cs:sha256:723048ba6a782592d1424659a87292a1fce11a68609a9a258ea93282fc791242"
+  "integrity": "cs:sha256:85e02170e865baaa62c45bdeb253aa1dd4bd5d1c999c03083ba844a2ddaa6573"
 }

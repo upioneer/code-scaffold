@@ -53,6 +53,16 @@ Set-Location ..
 $TapePath = "project_details/assets/demo.tape"
 $ChangelogDir = "project_details\changelog\v$NewVersion"
 if (Test-Path $TapePath) {
+    # PII gate (sanitized capture invariant): the tape must never contain
+    # usernames, hostnames, or absolute local paths. Fail the release otherwise.
+    $tapeText = Get-Content -Raw -Path $TapePath
+    $piiPatterns = @($env:USERNAME, $env:COMPUTERNAME, '/mnt/', '/home/', 'C:\', '\Users\', 'wsl.localhost')
+    foreach ($pii in $piiPatterns) {
+        if (($pii) -and ($tapeText.Contains($pii))) {
+            Write-Error "PII gate: demo.tape contains forbidden pattern '$pii'. Captures must use neutral staging (/tmp/vhs-demo) with a relative launch command."
+            exit 1
+        }
+    }
     $vhsCommand = $null
     $isWin = $IsWindows -or ($PSVersionTable.Platform -match 'Win') -or ($env:OS -match 'Windows')
 

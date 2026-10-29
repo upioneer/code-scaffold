@@ -1,12 +1,12 @@
 # A2UI
 
-**Version:** 1
+**Version:** 2
 
 **Target:** `.skills/a2ui`
 
 **Category:** Frontend & UI Design
 
-**Keywords:** `a2ui`, `declarative-ui`, `json-to-ui`, `agent-ui`, `adaptive-cards`, `dynamic-forms`, `design-system`
+**Keywords:** `a2ui`, `declarative-ui`, `json-to-ui`, `agent-ui`, `adaptive-cards`, `dynamic-forms`, `design-system`, `agent-to-user-interface`, `generative-ui`, `ui-protocol`, `json-ui-schema`, `component-catalog`, `streaming-ui`, `server-driven-ui`, `client-renderer`, `react-renderer`, `adaptive-interface`
 
 ## Description
 Implements the Agent to User Interface (A2UI) protocol to generate declarative, secure, and incrementally updatable JSON UI payloads for client-side rendering.
@@ -21,4 +21,5 @@ Implements the Agent to User Interface (A2UI) protocol to generate declarative, 
 Activate this skill when an agent needs to communicate structured, interactive UI intent to a frontend application, or when scaffolding a new A2UI client renderer pipeline.
 
 ## Changelog
+* **v2** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v1** : Initial implementation of the A2UI protocol skill framework.

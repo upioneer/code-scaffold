@@ -1,6 +1,37 @@
 ---
 ​‌‍name: A2A Agent Bridge
 description: Trigger when the user requests agent to agent communication, A2A servers, A2A clients, agent cards, multi agent collaboration, task delegation between opaque agents, or interop across agent frameworks. Activate when scaffolding, debugging, migrating, or validating Agent2Agent protocol integrations in Python, TypeScript, Go, Java, dotNET, or Rust.
+keywords:
+  - a2a
+  - agent2agent
+  - agent-to-agent
+  - agent-card
+  - agent-discovery
+  - multi-agent
+  - agent-interop
+  - agent-collaboration
+  - task-lifecycle
+  - opaque-agents
+  - agent-handoff
+  - task-delegation
+  - long-running-tasks
+  - json-rpc
+  - http-json-rest
+  - grpc-protobuf
+  - server-sent-events
+  - push-notifications
+  - python-sdk
+  - typescript-sdk
+  - go-sdk
+  - java-sdk
+  - dotnet-sdk
+  - rust-sdk
+  - a2a-cli
+  - conformance-tck
+  - scaffold-a2a-server
+  - scaffold-a2a-client
+  - stream-task
+  - mcp-synergy
 ---
 
 # A2A Agent Bridge Skill

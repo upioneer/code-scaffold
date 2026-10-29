@@ -1,7 +1,25 @@
 ---
 ​‌‍name: Quiver AI Vector Studio
 description: Enterprise vector graphics generation, raster image vectorization, SVG editing, animation, and Model Context Protocol (MCP) agent integrations using Quiver AI Arrow foundation models and REST APIs.
-version: 1
+version: 3
+keywords:
+  - quiver
+  - quiver-ai
+  - vector-graphics
+  - svg-generation
+  - image-vectorization
+  - arrow-2
+  - arrow-2-telos
+  - raster-to-svg
+  - svg-animation
+  - svg-editing
+  - model-context-protocol
+  - mcp-server
+  - text-to-svg
+  - vector-design
+  - open-responses
+  - logo-generator
+  - icon-generator
 ---
 
 # Quiver AI Vector Studio

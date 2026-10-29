@@ -2,7 +2,7 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_github_skill",
-  "version": "8",
+  "version": "9",
   "description": "GitHub repository management, structured issue intake, .env-based identity, and CI/CD automation",
   "entryPoint": "./SKILL.md",
   "engines": {
@@ -25,8 +25,14 @@
     "cicd",
     "pull-requests",
     "releases",
-    "repo-management"
+    "repo-management",
+    "gh-cli",
+    "branch-protection",
+    "codeowners",
+    "dependabot",
+    "release-tagging",
+    "workflow-automation"
   ],
   "hasSandbox": false,
-  "integrity": "cs:sha256:c72fa23d321abfb81d591729c7731575109c2a6353c3b5df04edbbbab3c19e7e"
+  "integrity": "cs:sha256:5d60ea9d457f22dfa164f9d8c344755399b6b7d39eb896014d4a27023b6e06c0"
 }

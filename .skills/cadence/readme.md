@@ -1,12 +1,12 @@
 # Cadence Algorithmic Audio
 
-**Version:** 2
+**Version:** 3
 
 **Target:** `.skills/cadence`
 
 **Category:** Audio & Creative Media
 
-**Keywords:** `cadence`, `live-coding`, `algorithmic-music`, `pattern-synthesis`, `mini-notation`, `web-audio-api`, `euclidean-rhythms`, `tracker-arranger`, `stage-cueing`, `trance-gate`, `orbit-soloing`
+**Keywords:** `cadence`, `live-coding`, `algorithmic-music`, `music-composition`, `pattern-synthesis`, `mini-notation`, `web-audio-api`, `euclidean-rhythms`, `polymeter`, `breakbeat`, `synthwave`, `techno-synthesis`, `audio-dsp`, `sound-design`, `creative-coding`, `generative-music`, `beat-making`, `acid-bassline`, `frequency-modulation`, `audio-visualizer`, `oscilloscope`, `live-performance`, `step-sequencer`, `chords-scales`, `midi-clock`, `tracker-arranger`, `stage-cueing`, `trance-gate`, `acid-envelope`, `scale-quantizer`
 
 ## Description
 Cadence Algorithmic Audio is a browser-native live coding music studio, pattern compiler, and performance suite designed for artists, audio engineers, and creative coders. It compiles expressive pattern mini-notation into real-time Web Audio soundscapes, multi-layer poly-rhythmic drum grooves, tracker-style timeline arrangements, and evolving harmonic structures.
@@ -39,5 +39,6 @@ note("c2 c2 eb2 f2 g2 bb2 c3 bb2")
 ```
 
 ## Changelog
+* **v3** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v2** : Integrated performance macro toolkit including tracker style multi track arrangement, dynamic stage cueing protocols, live orbit soloing and muting, TB 303 acid filter envelope models, algorithmic trance gating, and pitch scale quantizers.
 * **v1** : Initial release of Cadence Algorithmic Audio live coding studio, Web Audio synthesis engine, pattern mini-notation compiler, and interactive performance sandbox.

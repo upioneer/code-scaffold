@@ -1,6 +1,6 @@
 {
     "metadata": {
-        "version": "7.42.0",
+        "version": "7.43.0",
         "lastUpdated": "2026-09-07T01:09:00Z"
     },
     "env": {
@@ -133,6 +133,13 @@
             "label": "Ansible",
             "source": ".skills/ansible",
             "target": ".skills/ansible",
+            "method": "copy"
+        },
+        {
+            "id": "artemis",
+            "label": "Artemis Mobile Automation",
+            "source": ".skills/artemis",
+            "target": ".skills/artemis",
             "method": "copy"
         },
         {
@@ -311,6 +318,13 @@
             "method": "copy"
         },
         {
+            "id": "mxc",
+            "label": "MXC Policy Containment",
+            "source": ".skills/mxc",
+            "target": ".skills/mxc",
+            "method": "copy"
+        },
+        {
             "id": "nexus-rsi",
             "label": "Nexus Recursive Self-Improvement Engine",
             "source": ".skills/nexus-rsi",
@@ -336,6 +350,13 @@
             "label": "Open Design Prototypes",
             "source": ".skills/open-design",
             "target": ".skills/open-design",
+            "method": "copy"
+        },
+        {
+            "id": "open-weight-warden",
+            "label": "Open Weight Warden",
+            "source": ".skills/open-weight-warden",
+            "target": ".skills/open-weight-warden",
             "method": "copy"
         },
         {

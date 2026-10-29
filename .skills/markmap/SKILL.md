@@ -1,7 +1,23 @@
 ---
 ​‌‍name: Markmap
 description: A comprehensive skill for Markmap: rendering Markdown as interactive mindmaps.
-version: 2
+version: 4
+keywords:
+  - markmap
+  - mindmaps
+  - markdown-to-mindmap
+  - interactive-tree
+  - d3-visualization
+  - hierarchy
+  - markdown-mindmap
+  - mindmap-generator
+  - svg-mindmap
+  - tree-visualization
+  - outline-visualization
+  - knowledge-map
+  - interactive-diagram
+  - markdown-outline
+  - brainstorming-map
 ---
 
 # Markmap Skill

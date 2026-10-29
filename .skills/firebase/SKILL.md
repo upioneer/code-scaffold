@@ -1,7 +1,24 @@
 ---
 ​‌‍name: Firebase
 description: Autonomous Firebase project provisioning, clean project naming, CLI lifecycle management, Cloud Firestore multi-database operations, and client SDK integration.
-version: 6
+version: 7
+keywords:
+  - firebase
+  - firestore
+  - baas
+  - authentication
+  - realtime-database
+  - cloud-functions
+  - hosting
+  - firebase-cli
+  - firestore-rules
+  - firestore-databases
+  - mobile-sdk-config
+  - automated-provisioning
+  - sdk-config
+  - firebase-auth
+  - cloud-storage
+  - emulator-suite
 ---
 
 # Firebase Platform & Cloud Firestore Skill

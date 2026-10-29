@@ -1,12 +1,12 @@
 # Smart Home
 
-**Version:** 3
+**Version:** 4
 
 **Target:** `.skills/smart-home`
 
 **Category:** Smart Home & IoT Automation
 
-**Keywords:** `smart-home`, `home-assistant`, `homekit`, `matter`, `thread`, `alexa-smart-home`, `google-home`, `iot-automation`, `zigbee`, `zwave`, `hass-rest-api`, `hass-websocket`
+**Keywords:** `smart-home`, `home-assistant`, `homekit`, `matter`, `thread`, `alexa-smart-home`, `google-home`, `iot-automation`, `zigbee`, `zwave`, `hass-rest-api`, `hass-websocket`, `home-automation`, `mqtt`, `esphome`, `automation-blueprints`, `voice-assistants`, `local-control`
 
 ## Description
 Unified smart home and IoT automation orchestrator bridging Home Assistant, Apple HomeKit, Amazon Alexa, Google Home, and Matter ecosystems into a cohesive agentic control plane.
@@ -28,6 +28,7 @@ Unified smart home and IoT automation orchestrator bridging Home Assistant, Appl
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for deep integration guidelines, environment variable setups, and agentic workflows.
 
 ## Changelog
+* **v4** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v3** : Standardized ASCII art logo to uniform 6-line ANSI Shadow format.
 * **v2** : Standardized hasSandbox to false to mount the clean Architectural Contract card on code-scaffold.com.
 * **v1** : Initial release of the unified Smart Home automation orchestrator bridging Home Assistant, HomeKit, Alexa, Google Home, and Matter

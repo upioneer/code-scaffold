@@ -2,7 +2,7 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_artemis_skill",
-  "version": "1",
+  "version": "2",
   "description": "Natural-language mobile device automation framework and native Model Context Protocol (MCP) server. Orchestrates autonomous Android UI interaction, multimodal VLM screen perception, accessibility hierarchy parsing, and ADB action execution across real and emulated devices.",
   "entryPoint": "./SKILL.md",
   "engines": {
@@ -27,8 +27,14 @@
     "natural-language-ui",
     "logcat-telemetry",
     "scrcpy-mirror",
-    "autonomous-qa"
+    "autonomous-qa",
+    "android-testing",
+    "natural-language-testing",
+    "uiautomator-hierarchy",
+    "ocr-grounding",
+    "flash-profile",
+    "pro-profile"
   ],
   "hasSandbox": true,
-  "integrity": "cs:sha256:ac4064c52f058b49062d9ef152194df95e573d5f73284a0ae900760f4cf61cc2"
+  "integrity": "cs:sha256:93ea2d68fb507777a2645115c88fc423c3ece55d441c503fb39e597e2525db80"
 }

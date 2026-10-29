@@ -1,6 +1,22 @@
 ---
 ​‌‍name: Website Deploy Linux
 description: Enterprise Linux Deployment Agent for deploying static sites and SPAs to Nginx locally or remotely via PuTTY CLI (plink/pscp) or SSH, featuring upfront architectural prompting, automatic .env setups, reference scripts, and non-destructive folder structures
+keywords:
+  - website-deploy-linux
+  - nginx-deploy
+  - putty-plink-pscp
+  - ssh-deployment
+  - static-hosting
+  - spa-deploy
+  - nginx-config
+  - ssh-key-deploy
+  - static-site-deploy
+  - spa-hosting
+  - server-deployment
+  - lets-encrypt
+  - remote-deployment
+  - linux-hosting
+  - rollback-safe-deploy
 ---
 
 ---
@@ -58,8 +74,8 @@ To automate remote execution securely, the agent must check and maintain credent
 
 The agent must follow the configuration and orchestration patterns demonstrated in the target reference scripts included with the skill:
 
-* [setup-lxc.sh](file:///C:/Users/user/OneDrive/Documents/code/Projects/Agent%20Skills/.skills/website-deploy-linux/assets/setup-lxc.sh): A Linux bash script that automates native Nginx installations, directory setups, asset copying (`www-data` user ownership and `755`/`644` permissions), and syntax tests on the remote target.
-* [deploy.ps1](file:///C:/Users/user/OneDrive/Documents/code/Projects/Agent%20Skills/.skills/website-deploy-linux/assets/deploy.ps1): A PowerShell orchestrator that loads variables from `.env`, validates host keys, installs authorized keys, securely moves folders, and triggers elevated setup scripts via PuTTY CLI.
+* [setup-lxc.sh](./assets/setup-lxc.sh): A Linux bash script that automates native Nginx installations, directory setups, asset copying (`www-data` user ownership and `755`/`644` permissions), and syntax tests on the remote target.
+* [deploy.ps1](./assets/deploy.ps1): A PowerShell orchestrator that loads variables from `.env`, validates host keys, installs authorized keys, securely moves folders, and triggers elevated setup scripts via PuTTY CLI.
 
 ## Non-Destructive Subdirectory Safeguards (Data Protection)
 

@@ -1,12 +1,12 @@
 # MXC Policy Containment
 
-**Version:** 1
+**Version:** 2
 
 **Target:** `.skills/mxc`
 
 **Category:** Security & Cryptography
 
-**Keywords:** `mxc`, `agent-sandboxing`, `execution-containers`, `policy-driven-containment`, `process-container`, `appcontainer`, `wslc`, `bubblewrap`, `seatbelt`, `least-privilege`, `prompt-injection-defense`, `airgap-isolation`, `wxc-exec`
+**Keywords:** `mxc`, `agent-sandboxing`, `execution-containers`, `policy-driven-containment`, `process-container`, `appcontainer`, `wslc`, `bubblewrap`, `seatbelt`, `least-privilege`, `prompt-injection-defense`, `airgap-isolation`, `wxc-exec`, `default-deny`, `sandbox-policy`, `windows-sandbox`, `ai-agent-isolation`, `secret-exfiltration-defense`
 
 ## Description
 Policy-driven execution sandboxing and container isolation framework for AI agents, model-generated code, and untrusted tools. Enforces default-deny filesystem, network, and desktop boundaries across Windows ProcessContainers, Linux Bubblewrap, and macOS Seatbelt.
@@ -26,4 +26,5 @@ Policy-driven execution sandboxing and container isolation framework for AI agen
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for deep integration guidelines, CLI commands, and standard policy recipes.
 
 ## Changelog
+* **v2** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v1** : Initial release of the MXC Policy Containment Engine skill, establishing default-deny policy specifications, cross-platform containment backends (Windows ProcessContainer, Linux Bubblewrap, macOS Seatbelt), lifecycle management CLI protocols, and interactive agent sandbox simulation

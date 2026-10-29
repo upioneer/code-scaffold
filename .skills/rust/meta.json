@@ -1,7 +1,7 @@
 {
   "label": "Rust",
   "description": "Orchestrates Rust workspace topologies, optimized compilation profiles, and local automation scripts.",
-  "version": "1",
+  "version": "2",
   "target": ".skills/rust",
   "hasSandbox": false,
   "logo": [

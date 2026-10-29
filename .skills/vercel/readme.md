@@ -1,12 +1,12 @@
 # Vercel Deployment Routine
 
-**Version:** 4
+**Version:** 5
 
 **Target:** `.skills/vercel`
 
 **Category:** DevOps & Infrastructure
 
-**Keywords:** `vercel`, `edge-deployments`, `nextjs-hosting`, `serverless-functions`, `domain-management`
+**Keywords:** `vercel`, `edge-deployments`, `nextjs-hosting`, `serverless-functions`, `domain-management`, `vercel-cli`, `preview-deployments`, `environment-variables`, `edge-functions`, `nextjs-deployment`, `serverless-hosting`, `custom-domains`, `vercel-json`, `ci-deploy`, `zero-config-deploy`
 
 ## Description
 Configuration and deployment routines for Vercel hosting.
@@ -22,6 +22,7 @@ Configuration and deployment routines for Vercel hosting.
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog
+* **v5** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v4** : Skill owns the vercel.json deployment configuration reference, .env first checks with scaffold time key seeding, replacing the retired standalone artifact
 * **v3** : Standardized ASCII art logo to uniform 6-line ANSI Shadow format.
 * **v2** : Expanded capability descriptions

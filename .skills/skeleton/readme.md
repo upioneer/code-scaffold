@@ -1,6 +1,6 @@
 # Skeleton Performance Studio
 
-**Version:** 1
+**Version:** 2
 
 **Target:** `.skills/skeleton`
 
@@ -32,4 +32,5 @@ AI agents and developers invoke the Skeleton Performance Studio to build, scaffo
 * Ad-hoc CLI installation: `code-scaffold skills install skeleton`
 
 ## Changelog
+* **v2** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v1** : Initial release of Skeleton Performance Studio featuring zero-CLS layout reservation, pure CSS hardware-accelerated shimmer engine, React 19 Suspense streaming patterns, Tailwind presets, accessibility compliance, and Web Dev persona integration.

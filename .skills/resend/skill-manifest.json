@@ -2,7 +2,7 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_resend_skill",
-  "version": "2",
+  "version": "3",
   "description": "Sends emails using the Resend API",
   "entryPoint": "./SKILL.md",
   "engines": {
@@ -20,8 +20,17 @@
     "react-email",
     "smtp",
     "email-api",
-    "deliverability"
+    "deliverability",
+    "email-sending",
+    "email-templates",
+    "domain-verification",
+    "email-webhooks",
+    "batch-email",
+    "resend-api",
+    "email-audiences",
+    "bounce-handling",
+    "nodejs-email"
   ],
   "hasSandbox": false,
-  "integrity": "cs:sha256:e70b7699d6f1526dffe3adb2637a1d9c59f286d1ce60baab231e07f5013074ad"
+  "integrity": "cs:sha256:aa99d2ebc545801d2cdc7123a5819b6a3ac08fd810563d1e03390c9f1afc8215"
 }

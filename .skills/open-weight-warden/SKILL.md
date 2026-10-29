@@ -1,7 +1,26 @@
 ---
 name: Open Weight Warden
 description: Comprehensive security evaluation engine for open weight LLMs. Performs static binary validation, Jinja2 AST chat template sanitization, dynamic behavioral fuzzing, honeytoken leak detection, sleeper agent trigger discovery, and tool exfiltration interception with MXC sandbox containment.
-version: 1
+version: 2
+keywords:
+  - open-weight-warden
+  - weight-security
+  - gguf-auditor
+  - bleeding-llama
+  - cve-2026-7482
+  - jinja-ast-sanitizer
+  - ssti-defense
+  - sleeper-agent-detector
+  - honeytoken-fuzzing
+  - safetensors
+  - ai-backdoor-defense
+  - model-integrity
+  - mxc-sandboxing
+  - llm-security
+  - model-supply-chain
+  - gguf-format
+  - malicious-model-detection
+  - canary-tokens
 ---
 ​‌‍
 # Open Weight Warden: Model Integrity & Behavioral Defense Engine

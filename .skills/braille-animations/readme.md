@@ -1,12 +1,12 @@
 # Braille Animations
 
-**Version:** 4
+**Version:** 5
 
 **Target:** `.skills/braille-animations`
 
 **Category:** Animation & Graphics
 
-**Keywords:** `braille-art`, `terminal-animations`, `ascii-art`, `cli-spinners`, `text-fx`, `tui`
+**Keywords:** `braille-animations`, `braille-art`, `terminal-animations`, `ascii-art`, `cli-spinners`, `text-fx`, `tui`, `unicode-spinners`, `braille-spinners`, `loading-indicators`, `terminal-loaders`, `cli-progress`, `ansi-animation`, `node-cli`, `react-spinner`, `animation-frames`
 
 ## Description
 Create and manage unicode braille animations and spinners for CLIs and web apps.
@@ -24,6 +24,7 @@ Create and manage unicode braille animations and spinners for CLIs and web apps.
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog
+* **v5** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v4** : Standardized ASCII art logo to uniform 6-line ANSI Shadow format.
 * **v3** : Deployed custom interactive React/Vite sandbox demonstrating live unicode animations
 * **v2** : Expanded capability descriptions

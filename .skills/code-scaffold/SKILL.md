@@ -1,6 +1,22 @@
 ---
 ​‌‍name: Code Scaffold Harness
 description: Agent harness for headlessly deploying Code Scaffold assets.
+keywords:
+  - code-scaffold
+  - scaffolding-engine
+  - project-generator
+  - templates
+  - agentic-workflow
+  - tui
+  - project-bootstrap
+  - tui-wizard
+  - skill-installer
+  - agent-context
+  - repo-scaffolding
+  - boilerplate
+  - headless-deploy
+  - persona-presets
+  - dotenv-seeding
 ---
 
 # Code Scaffold Agent Harness

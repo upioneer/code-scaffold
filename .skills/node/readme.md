@@ -1,12 +1,12 @@
 # Node
 
-**Version:** 4
+**Version:** 5
 
 **Target:** `.skills/node`
 
 **Category:** AI, MCP & Developer Tools
 
-**Keywords:** `node`, `nodejs`, `npm`, `pnpm`, `backend-javascript`, `runtime`, `package-management`
+**Keywords:** `node`, `nodejs`, `npm`, `pnpm`, `backend-javascript`, `runtime`, `package-management`, `node-version-manager`, `npm-scripts`, `package-json`, `esm-modules`, `corepack`, `node-lts`, `javascript-runtime`, `dependency-management`
 
 ## Description
 Bootstraps a Node.js runtime environment
@@ -25,6 +25,7 @@ Bootstraps a Node.js runtime environment
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog
+* **v5** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v4** : Integrated NPM Trusted Publishing OIDC invariants and safe CI testing strategies
 * **v3** : Integrated aggressive Windows dev server port clearance protocols
 * **v2** : Expanded capability descriptions

@@ -1,6 +1,22 @@
 ---
 ​‌‍name: MCP Generator
 description: Assists with creating new custom Model Context Protocol (MCP) servers, clients, and apps using official SDKs and best practices.
+keywords:
+  - mcp-generator
+  - model-context-protocol
+  - fastmcp
+  - custom-tools
+  - json-rpc
+  - agent-integrations
+  - mcp-server
+  - mcp-client
+  - mcp-sdk
+  - tool-schemas
+  - stdio-transport
+  - streamable-http
+  - typescript-mcp
+  - python-mcp
+  - agent-tooling
 ---
 
 # MCP Generator Skill

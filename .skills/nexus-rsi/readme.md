@@ -1,12 +1,12 @@
 # Nexus Recursive Self-Improvement Engine
 
-**Version:** 1
+**Version:** 2
 
 **Target:** `.skills/nexus-rsi`
 
 **Category:** AI, MCP & Developer Tools
 
-**Keywords:** `nexus-rsi`, `recursive-self-improvement`, `world-models`, `predictive-simulation`, `joint-embedding`, `counterfactual-planning`, `agent-evolution`, `policy-optimization`, `code-repair`, `synthetic-trajectories`
+**Keywords:** `nexus-rsi`, `recursive-self-improvement`, `world-models`, `predictive-simulation`, `joint-embedding`, `counterfactual-planning`, `agent-evolution`, `policy-optimization`, `code-repair`, `synthetic-trajectories`, `self-improving-agents`, `latent-state-simulation`, `trajectory-planning`, `safe-coevolution`, `agent-self-evaluation`
 
 ## Description
 
@@ -32,4 +32,5 @@ Invoke this skill when an agent is asked to:
 
 ## Changelog
 
+* **v2** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v1** : Initial release of Nexus Recursive Self-Improvement Engine with predictive world models, latent space simulation, dual-loop policy co-evolution, and safe rollback boundaries.

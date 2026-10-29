@@ -1,7 +1,25 @@
 ---
 ​‌‍name: GitHub
 description: GitHub repository management, structured issue intake forms, .env-based identity, pre-commit hygiene, and CI/CD automation
-version: 8
+version: 9
+keywords:
+  - github
+  - git
+  - issue-templates
+  - issue-forms
+  - triage
+  - definition-of-ready
+  - github-actions
+  - cicd
+  - pull-requests
+  - releases
+  - repo-management
+  - gh-cli
+  - branch-protection
+  - codeowners
+  - dependabot
+  - release-tagging
+  - workflow-automation
 ---
 
 # GitHub Push Skill & Workflow

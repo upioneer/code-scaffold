@@ -1,7 +1,7 @@
 {
   "label": "Excalidraw",
   "description": "Renders and embeds Excalidraw whiteboards",
-  "version": 4,
+  "version": "5",
   "target": ".skills/excalidraw",
   "hasSandbox": false,
   "logo": [

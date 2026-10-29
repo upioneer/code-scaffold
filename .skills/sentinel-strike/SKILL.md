@@ -1,6 +1,23 @@
 ---
 name: sentinel-strike
 description: Autonomous red-team security assessment and continuous penetration testing orchestrator. Coordinates multi-agent reconnaissance, exploit synthesis, sandboxed container verification, dual-memory attack surface mapping, and remediation validation.
+keywords:
+  - sentinel-strike
+  - penetration-testing
+  - red-team
+  - autonomous-security
+  - attack-surface-mapping
+  - vulnerability-assessment
+  - docker-sandbox
+  - security-audit
+  - knowledge-graph
+  - threat-modeling
+  - remediation-verification
+  - red-teaming
+  - pentest-automation
+  - exploit-synthesis
+  - reconnaissance
+  - container-verification
 ---
 ​‌‍
 # Sentinel Strike Autonomous Red-Team Matrix

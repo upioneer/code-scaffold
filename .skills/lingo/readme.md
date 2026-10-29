@@ -1,12 +1,12 @@
 # Lingo
 
-**Version:** 4
+**Version:** 5
 
 **Target:** `.skills/lingo`
 
 **Category:** Publishing & Documentation
 
-**Keywords:** `lingo`, `localization`, `i18n`, `translation`, `multilingual`, `po-editor`, `l10n`
+**Keywords:** `lingo`, `localization`, `i18n`, `translation`, `multilingual`, `po-editor`, `l10n`, `shorthand-glossary`, `acronym-expansion`, `abbreviation-mapping`, `user-lingo`, `ambiguity-reduction`, `agent-communication`, `domain-vocabulary`, `prompt-shorthand`
 
 ## Description
 Deterministic shorthand glossary that maps user lingo, acronyms, and abbreviations to their full meanings for faster, unambiguous communication.
@@ -32,6 +32,7 @@ Deterministic shorthand glossary that maps user lingo, acronyms, and abbreviatio
 This skill is passively loaded into the agent's context. Once active, the agent automatically decodes any recognized shorthand in user messages without requiring explicit invocation. Users simply type naturally using their preferred abbreviations.
 
 ## Changelog
+* **v5** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v4** : Introduced Bidirectional Mode. The agent now actively prompts the user to apply the glossary to its own outputs, aggressively reducing token generation and speeding up delivery.
 * **v3** : Gen-Z slang expansion (added no cap, rizz, yolo, full send, crash out, bussin, sus, mid, drip, tea, slaps, salty, ghost).
 * **v2** : Massive expansion from 120 to 250+ terms. Added user-requested terms (`gh`, `fb`, `enviro`, `dc`, `coe`) and five new glossary categories: Platforms & Services, Infrastructure & Enterprise, Architecture & Design Patterns, Security, and Data/AI/Analytics. Enhanced ambiguity resolution with platform context rules.

@@ -1,6 +1,23 @@
 ---
 ​‌‍name: braille-animations
 description: Create and manage unicode braille animations and spinners for CLIs and web apps. Use this skill when the user wants to add loading indicators, progress animations, or custom braille-based art to their terminal or browser-based application.
+keywords:
+  - braille-animations
+  - braille-art
+  - terminal-animations
+  - ascii-art
+  - cli-spinners
+  - text-fx
+  - tui
+  - unicode-spinners
+  - braille-spinners
+  - loading-indicators
+  - terminal-loaders
+  - cli-progress
+  - ansi-animation
+  - node-cli
+  - react-spinner
+  - animation-frames
 ---
 
 # Braille Animations

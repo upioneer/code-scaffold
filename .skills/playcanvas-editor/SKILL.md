@@ -1,6 +1,23 @@
 ---
 ​‌‍name: PlayCanvas Editor
 description: Visual development environment for real-time 3D collaboration.
+keywords:
+  - playcanvas-editor
+  - 3d-engine
+  - webgl
+  - webgpu
+  - scene-editor
+  - gltf
+  - spatial-dev
+  - scene-hierarchy
+  - entity-component-system
+  - collaborative-editing
+  - browser-3d-editor
+  - asset-pipeline
+  - script-components
+  - publish-builds
+  - realtime-collaboration
+  - web-3d
 ---
 
 # PlayCanvas Editor Skill

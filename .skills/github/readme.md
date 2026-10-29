@@ -1,12 +1,12 @@
 # GitHub
 
-**Version:** 8
+**Version:** 9
 
 **Target:** `.skills/github`
 
 **Category:** DevOps & Infrastructure
 
-**Keywords:** `github`, `git`, `issue-templates`, `issue-forms`, `triage`, `definition-of-ready`, `github-actions`, `cicd`, `pull-requests`, `releases`, `repo-management`
+**Keywords:** `github`, `git`, `issue-templates`, `issue-forms`, `triage`, `definition-of-ready`, `github-actions`, `cicd`, `pull-requests`, `releases`, `repo-management`, `gh-cli`, `branch-protection`, `codeowners`, `dependabot`, `release-tagging`, `workflow-automation`
 
 ## Description
 GitHub repository management, structured issue intake, .env based identity, and CI/CD automation.
@@ -31,6 +31,7 @@ GitHub repository management, structured issue intake, .env based identity, and 
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog
+* **v9** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v8** : Introduced structured YAML Issue Forms intake (.github/ISSUE_TEMPLATE/) with cross-platform targets including iOS and Android, blank issue suppression (config.yml), Definition of Ready (DoR) triage gatekeeping, automated issue triage workflow reference, and mobile CI/CD pipeline blueprints for Android and iOS
 * **v7** : Skill owns the CI workflow reference and GitHub configuration outright replacing retired deploy.yml and github.md artifacts, with scaffold time .env key seeding
 * **v6** : Two gate release authorization with pre-push verification summary, release tag handling, pre-commit release verification, walkthrough before commit ordering, and defect root cause plus resolution pattern

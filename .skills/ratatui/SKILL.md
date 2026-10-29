@@ -1,7 +1,24 @@
 ---
 ​‌‍name: Ratatui TUI Framework
 description: Build high-performance, robust Terminal User Interfaces (TUI) with modern Ratatui architecture, safe terminal lifecycle handling, async event loops, and rich component pipelines in Rust.
-version: 5
+version: 9
+keywords:
+  - ratatui
+  - rust-tui
+  - terminal-ui
+  - crossterm
+  - cli-dashboard
+  - console-app
+  - tui-architecture
+  - terminal-widgets
+  - mvu-elm
+  - tokio-event-loop
+  - immediate-mode-rendering
+  - crossterm-events
+  - terminal-lifecycle
+  - async-tui
+  - layout-constraints
+  - rust-cli
 ---
 
 # Ratatui TUI Framework Skill

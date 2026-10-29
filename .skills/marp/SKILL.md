@@ -1,6 +1,22 @@
 ---
 ​‌‍name: Marp
 description: Generates Marp presentation slides from Markdown
+keywords:
+  - marp
+  - markdown-presentations
+  - slide-deck
+  - pdf-export
+  - slide-generator
+  - presenter
+  - marp-cli
+  - marp-core
+  - markdown-slides
+  - slide-themes
+  - pptx-export
+  - html-slides
+  - presentation-automation
+  - marp-directives
+  - speaker-notes
 ---
 
 # Marp Slide Generation Skill

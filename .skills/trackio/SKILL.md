@@ -1,6 +1,22 @@
 ---
 ​‌‍name: trackio
 description: Integration with Trackio for ML experiment tracking, dashboard deployments, and Hugging Face Spaces sync.
+keywords:
+  - trackio
+  - ml-experiment-tracking
+  - hyperparameters
+  - metrics-logging
+  - huggingface-spaces
+  - experiment-tracking
+  - ml-dashboards
+  - run-logging
+  - model-metrics
+  - spaces-deployment
+  - python-tracking
+  - local-first
+  - experiment-comparison
+  - mlops
+  - hugging-face
 ---
 
 # Trackio Skill

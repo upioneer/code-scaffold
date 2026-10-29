@@ -1,12 +1,12 @@
 # CyberSecurity Toolkit
 
-**Version:** 8
+**Version:** 9
 
 **Target:** `.skills/cybersecurity-toolkit`
 
 **Category:** DevOps & Infrastructure
 
-**Keywords:** `cybersecurity`, `security-audit`, `vulnerability-scan`, `owasp`, `penetration-testing`, `hardening`, `agentic-security`, `sentinel-mesh`
+**Keywords:** `cybersecurity-toolkit`, `cybersecurity`, `security-audit`, `vulnerability-scan`, `owasp`, `penetration-testing`, `hardening`, `agentic-security`, `sentinel-mesh`, `multi-agent-recon`, `sast-dast`, `chainast-compactor`, `mitre-attack`, `nist-framework`, `attack-surface-mapping`, `threat-hunting`, `secure-code-review`, `security-posture`, `incident-response`
 
 ## Description
 Autonomous cybersecurity arsenal integrating the Sentinel Multi-Agent Security Mesh, episodic attack surface mapping, MITRE and NIST methodologies, SkillSpector scanning, and ChainAST context compaction.
@@ -27,6 +27,7 @@ Autonomous cybersecurity arsenal integrating the Sentinel Multi-Agent Security M
 Execute the autonomous orchestrator script (`invoke-sentinel-orchestrator`) or invoke component scripts (`skillspector`, `invoke-volumetric-audit`, `invoke-pii-hunter`, `get-secret-context`, `init-audit-workspace`, `compile-html-report`) in alignment with the operational workflows defined in `SKILL.md` to conduct robust security audits and generate sanitized HTML artifacts.
 
 ## Changelog
+* **v9** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v8** : Standardized ASCII art logo to uniform 6-line ANSI Shadow format.
 * **v7** : Integrated the Sentinel Autonomous Security Engine (SASE) multi-agent orchestration mesh, tripartite memory architecture (long-term, working, episodic), and Sentinel ChainAST context compaction for autonomous security auditing
 * **v6** : Integrated strict execution guardrails, script delegation (`invoke-pii-hunter`, `invoke-volumetric-audit`), and data sanitization workflows

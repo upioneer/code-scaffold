@@ -1,7 +1,24 @@
 ---
 ​‌‍name: React Modernization
 description: Comprehensive guide and references for modern React 19 development, best practices, validatons, and UI styling using HeroUI, Radix, shadcn/ui, and Framer Motion.
-version: 1
+version: 2
+keywords:
+  - react-modernization
+  - react-19
+  - react-server-components
+  - server-actions
+  - modernization
+  - nextjs
+  - state-management
+  - react-compiler
+  - react-suspense
+  - shadcn-ui
+  - radix-ui
+  - heroui
+  - framer-motion
+  - react-migration
+  - concurrent-rendering
+  - typescript-react
 ---
 
 # React Modernization

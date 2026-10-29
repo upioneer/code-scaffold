@@ -1,12 +1,12 @@
 # Sentinel Strike Autonomous Red-Team Matrix
 
-**Version:** 1
+**Version:** 2
 
 **Target:** `.skills/sentinel-strike`
 
 **Category:** Security & Cryptography
 
-**Keywords:** `sentinel-strike`, `penetration-testing`, `red-team`, `autonomous-security`, `attack-surface-mapping`, `vulnerability-assessment`, `docker-sandbox`, `security-audit`, `knowledge-graph`, `threat-modeling`, `remediation-verification`
+**Keywords:** `sentinel-strike`, `penetration-testing`, `red-team`, `autonomous-security`, `attack-surface-mapping`, `vulnerability-assessment`, `docker-sandbox`, `security-audit`, `knowledge-graph`, `threat-modeling`, `remediation-verification`, `red-teaming`, `pentest-automation`, `exploit-synthesis`, `reconnaissance`, `container-verification`
 
 ## Description
 
@@ -32,4 +32,5 @@ Invoke this skill when an agent is asked to:
 
 ## Changelog
 
+* **v2** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v1** : Initial release of Sentinel Strike Autonomous Red-Team Matrix with multi-agent orchestration, dual-memory attack surface mapping, sandboxed container execution, and remediation verification.

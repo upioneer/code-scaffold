@@ -1,12 +1,12 @@
 # Privacy Policy Generator
 
-**Version:** 6
+**Version:** 7
 
 **Target:** `.skills/privacy-policy`
 
 **Category:** Publishing & Documentation
 
-**Keywords:** `privacy-policy`, `gdpr`, `ccpa`, `legal-compliance`, `cookie-policy`, `terms-of-service`
+**Keywords:** `privacy-policy`, `gdpr`, `ccpa`, `legal-compliance`, `cookie-policy`, `terms-of-service`, `privacy-notice`, `data-protection`, `google-analytics-disclosure`, `consent-management`, `legal-pages`, `data-subject-rights`, `website-compliance`, `app-store-privacy`, `cookie-consent`
 
 ## Description
 Generates a customizable privacy policy tailored to the project (website/app) with optional Google Analytics integration.
@@ -22,6 +22,7 @@ Generates a customizable privacy policy tailored to the project (website/app) wi
 This skill automates the creation of a privacy policy for a website or application. When invoked, it will prompt the user with multiple choice questions to gather necessary context (e.g., platform, business/individual, country, effective date, and Google Analytics inclusion).
 
 ## Changelog
+* **v7** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v6** : Standardized ASCII art logo to uniform 6-line ANSI Shadow format.
 * **v5** : Expanded capability descriptions
 * **v4** : Added Google Analytics opt out extension blurb and embedded link to the GA clause template.

@@ -1,12 +1,12 @@
 # Docker Engine
 
-**Version:** 2
+**Version:** 3
 
 **Target:** `.skills/docker`
 
 **Category:** DevOps & Infrastructure
 
-**Keywords:** `docker`, `container-engine`, `ephemeral-swapper`, `in-place-updates`, `zero-downtime`, `buildkit`, `multi-stage-builds`, `distroless`, `sidecar-diagnostics`, `image-optimization`
+**Keywords:** `docker`, `container-engine`, `ephemeral-swapper`, `in-place-updates`, `zero-downtime`, `buildkit`, `multi-stage-builds`, `distroless`, `sidecar-diagnostics`, `image-optimization`, `dockerfile`, `docker-compose`, `container-security`, `build-cache`, `healthchecks`, `container-networking`, `rolling-updates`, `container-debugging`
 
 ## Description
 Comprehensive container engineering arsenal featuring the Ephemeral Swapper Protocol for in-place zero-downtime updates, BuildKit cache optimization, and sidecar diagnostic injection.
@@ -25,5 +25,6 @@ Comprehensive container engineering arsenal featuring the Ephemeral Swapper Prot
 Activate this skill whenever designing, building, optimizing, or automating containerized applications, implementing in-place self-updating container architectures, or configuring high-performance Docker build workflows.
 
 ## Changelog
+* **v3** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v2** : Standardized ASCII art logo to uniform 6-line ANSI Shadow format.
 * **v1** : Initial release featuring the Ephemeral Swapper Protocol, multi-tier capability detection, BuildKit cache mounts, distroless patterns, and sidecar diagnostic injection

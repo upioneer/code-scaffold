@@ -2,7 +2,7 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "changelog-plus",
-  "version": "4",
+  "version": "5",
   "description": "Automated immutable release history pipeline: versioned changelog authoring, headless TUI media capture, declarative web application capture, failure gates, and root README synchronization for every release.",
   "entryPoint": "./SKILL.md",
   "engines": {},
@@ -18,8 +18,14 @@
     "release-automation",
     "web-capture",
     "viewport-matrix",
-    "route-manifest"
+    "route-manifest",
+    "changelog-generator",
+    "release-history",
+    "vhs-capture",
+    "screenshot-automation",
+    "readme-sync",
+    "git-tags"
   ],
   "hasSandbox": false,
-  "integrity": "cs:sha256:6c8dcd91c9026ff582ee8167bc4fb0d97b2bf9dae4c75df90a93bb7f5b66cc20"
+  "integrity": "cs:sha256:8697bd0731e50da3a14e4e3a7ada1e94f755d23ab0227a8d26cab2dee8023ed1"
 }

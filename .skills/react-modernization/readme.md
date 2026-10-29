@@ -1,12 +1,12 @@
 # React Modernization
 
-**Version:** 1
+**Version:** 2
 
 **Target:** `.skills/react-modernization`
 
 **Category:** Frontend & UI Design
 
-**Keywords:** `react-19`, `react-server-components`, `server-actions`, `modernization`, `nextjs`, `state-management`
+**Keywords:** `react-modernization`, `react-19`, `react-server-components`, `server-actions`, `modernization`, `nextjs`, `state-management`, `react-compiler`, `react-suspense`, `shadcn-ui`, `radix-ui`, `heroui`, `framer-motion`, `react-migration`, `concurrent-rendering`, `typescript-react`
 
 ## Description
 A definitive, highly creative React 19 Modernization and Standardization playbook. This skill instructs AI agents and developers on architecting, styling, and validating modern React applications across web and mobile using 2026 standards, with built-in sandbox demos for design engineering.
@@ -26,4 +26,5 @@ A definitive, highly creative React 19 Modernization and Standardization playboo
 Activate this skill whenever scaffolding a new React frontend feature, modernizing an older React codebase, building complex forms, integrating modern UI libraries (Radix, shadcn, HeroUI), or requiring fluid, physics-based micro-interactions. Agents should pull the bundled `sandbox/` components for reference implementations.
 
 ## Changelog
+* **v2** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v1** : Initial release of the React Modernization playbook including React 19 standardizations, Zod validation pipelines, UI architecture rules, and the bundled visual demo sandbox.

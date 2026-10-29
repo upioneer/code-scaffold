@@ -1,12 +1,12 @@
 # Decipher Reverse Engineer Arsenal
 
-**Version:** 1
+**Version:** 2
 
 **Target:** `.skills/decipher`
 
 **Category:** Security & Cryptography
 
-**Keywords:** `reverse-engineer`, `reverse-engineering`, `reverse-engineering-tools`, `reverse-engineer-anything`, `decipher`, `binary-analysis`, `decompilation`, `disassembly`, `macho-elf-pe`, `electron-asar`, `sourcemap-recovery`, `reconstruction-ledger`, `evidence-provenance`, `clean-room-implementation`
+**Keywords:** `decipher`, `reverse-engineer`, `reverse-engineering`, `reverse-engineering-tools`, `reverse-engineer-anything`, `binary-analysis`, `decompilation`, `disassembly`, `macho-elf-pe`, `electron-asar`, `sourcemap-recovery`, `reconstruction-ledger`, `evidence-provenance`, `clean-room-implementation`, `frida-instrumentation`, `wasm-decompilation`, `go-pclntab`, `call-graph-analysis`, `dynamic-observation`
 
 ## Description
 Decipher is a unified reverse engineering engine, binary deconstruction workbench, and clean-room reconstruction framework. It empowers AI agents and security researchers to reverse engineer any application: inspecting native executables, desktop bundles, mobile archives, and managed runtimes without source code, extracting verifiable evidence graphs, and authoring clean-room implementations.
@@ -36,4 +36,5 @@ node .skills/decipher/scripts/generate_report.mjs --target=./target_bin
 ```
 
 ## Changelog
+* **v2** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v1** : Initial release of Decipher reverse engineer arsenal, binary deconstruction engine, multi-target decompilation pipeline, evidence obligation ledger, and interactive inspection workbench.

@@ -1,7 +1,7 @@
 {
   "label": "GhostImprint Engine",
   "description": "Cryptographic code provenance, 9-layer steganographic entanglement matrix, hierarchical deterministic key ceremony, and digital forensics suite.",
-  "version": 5,
+  "version": "6",
   "target": ".skills/ghostimprint",
   "hasSandbox": false,
   "logo": [

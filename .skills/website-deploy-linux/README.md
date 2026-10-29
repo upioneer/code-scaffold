@@ -1,12 +1,12 @@
 # Website Deploy Linux
 
-**Version:** 7
+**Version:** 8
 
 **Target:** `.skills/website-deploy-linux`
 
 **Category:** DevOps & Infrastructure
 
-**Keywords:** `website-deploy-linux`, `nginx-deploy`, `putty-plink-pscp`, `ssh-deployment`, `static-hosting`, `spa-deploy`
+**Keywords:** `website-deploy-linux`, `nginx-deploy`, `putty-plink-pscp`, `ssh-deployment`, `static-hosting`, `spa-deploy`, `nginx-config`, `ssh-key-deploy`, `static-site-deploy`, `spa-hosting`, `server-deployment`, `lets-encrypt`, `remote-deployment`, `linux-hosting`, `rollback-safe-deploy`
 
 ## Description
 Enterprise Linux Deployment Agent for deploying static sites and SPAs to Nginx locally or remotely via PuTTY CLI (plink/pscp) or SSH, featuring upfront architectural prompting, automatic .env setups, reference scripts, and non destructive folder structures
@@ -24,6 +24,7 @@ Enterprise Linux Deployment Agent for deploying static sites and SPAs to Nginx l
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog
+* **v8** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v7** : Standardized ASCII art logo to uniform 6-line ANSI Shadow format.
 * **v6** : Expanded capability descriptions
 * **v5** : Restore remote changes lost in bad merge (env parsing + success message)

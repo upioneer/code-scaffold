@@ -1,7 +1,7 @@
 {
   "label": "Artemis Mobile Automation",
   "description": "Natural-language mobile device automation, multimodal VLM perception, and native Model Context Protocol (MCP) server for autonomous Android testing.",
-  "version": "1",
+  "version": "2",
   "target": ".skills/artemis",
   "hasSandbox": true,
   "logo": [

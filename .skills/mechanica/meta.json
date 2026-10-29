@@ -1,7 +1,7 @@
 {
   "label": "Mechanica Physical Metaphors",
   "description": "Physical machine metaphor engine, kinematic cutaway illustrator, and interactive hardware explainer.",
-  "version": "1",
+  "version": "2",
   "target": ".skills/mechanica",
   "hasSandbox": true,
   "logo": [

@@ -1,6 +1,22 @@
 ---
 ​‌‍name: Mermaid
 description: Mermaid diagram creation and rendering
+keywords:
+  - mermaid
+  - mermaid-cli
+  - diagrams-as-code
+  - flowcharts
+  - sequence-diagrams
+  - er-diagrams
+  - class-diagrams
+  - gantt-charts
+  - state-diagrams
+  - architecture-diagrams
+  - svg-export
+  - png-export
+  - markdown-diagrams
+  - c4-diagrams
+  - git-graphs
 ---
 
 # Mermaid Diagram Skill

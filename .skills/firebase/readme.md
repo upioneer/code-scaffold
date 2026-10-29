@@ -1,12 +1,12 @@
 # Firebase
 
-**Version:** 6
+**Version:** 7
 
 **Target:** `.skills/firebase`
 
 **Category:** Data, Databases & Storage
 
-**Keywords:** `firebase`, `firestore`, `baas`, `authentication`, `realtime-database`, `cloud-functions`, `hosting`, `firebase-cli`, `firestore-rules`, `firestore-databases`, `mobile-sdk-config`, `automated-provisioning`, `sdk-config`
+**Keywords:** `firebase`, `firestore`, `baas`, `authentication`, `realtime-database`, `cloud-functions`, `hosting`, `firebase-cli`, `firestore-rules`, `firestore-databases`, `mobile-sdk-config`, `automated-provisioning`, `sdk-config`, `firebase-auth`, `cloud-storage`, `emulator-suite`
 
 ## Description
 Autonomous Firebase project provisioning, clean project naming, CLI lifecycle management, Cloud Firestore multi-database operations, and client SDK integration.
@@ -34,6 +34,7 @@ Autonomous Firebase project provisioning, clean project naming, CLI lifecycle ma
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog
+* **v7** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v6** : Skill owns Firebase configuration outright with required environment variable table, .env first checks replacing the retired firebase.md artifact, and scaffold time key seeding
 * **v5** : Added autonomous project provisioning pipeline, clean URL naming protocol, and conflict resolution
 * **v4** : Added foundational Firebase CLI lifecycle workflows, multi-database Firestore edition management, and mobile SDK config provisioning

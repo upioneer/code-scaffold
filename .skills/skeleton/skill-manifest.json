@@ -2,7 +2,7 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_skeleton_skill",
-  "version": "1",
+  "version": "2",
   "description": "Zero-CLS layout reservation engine, pure CSS shimmer mechanics, and multi-framework skeleton screens for instant perceived performance.",
   "entryPoint": "./SKILL.md",
   "engines": {
@@ -36,5 +36,5 @@
     "loading-ux"
   ],
   "hasSandbox": false,
-  "integrity": "cs:sha256:bea26fe660abf35c116ad830e25c9f672a633931c67bd7143604e62ead77f0ee"
+  "integrity": "cs:sha256:d502c487e58cc6d8a2e76d72e6fbe414150c976df634eab66d82d93145c299e1"
 }

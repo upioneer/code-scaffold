@@ -1,12 +1,12 @@
 # OpenCLI
 
-**Version:** 2
+**Version:** 3
 
 **Target:** `.skills/opencli`
 
 **Category:** Web Automation & Scraping
 
-**Keywords:** `opencli`, `cli-to-web`, `site-adapters`, `terminal-browser`, `structured-extraction`, `cli-tools`
+**Keywords:** `opencli`, `cli-to-web`, `site-adapters`, `terminal-browser`, `structured-extraction`, `cli-tools`, `browser-automation`, `site-to-cli`, `web-scraping`, `authenticated-sessions`, `cli-adapters`, `structured-output`, `website-commands`, `agent-web-access`, `json-output`
 
 ## Description
 Bridge websites and the CLI for structured data extraction and browser automation
@@ -23,5 +23,6 @@ Bridge websites and the CLI for structured data extraction and browser automatio
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog
+* **v3** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v2** : Expanded capability descriptions
 * **v1** : Add OpenCLI skill and update documentation to v2.8.0

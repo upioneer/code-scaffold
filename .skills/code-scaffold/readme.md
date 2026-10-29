@@ -1,12 +1,12 @@
 # Code Scaffold Harness
 
-**Version:** 7
+**Version:** 8
 
 **Target:** `.skills/code-scaffold`
 
 **Category:** AI, MCP & Developer Tools
 
-**Keywords:** `code-scaffold`, `scaffolding-engine`, `project-generator`, `templates`, `agentic-workflow`, `tui`
+**Keywords:** `code-scaffold`, `scaffolding-engine`, `project-generator`, `templates`, `agentic-workflow`, `tui`, `project-bootstrap`, `tui-wizard`, `skill-installer`, `agent-context`, `repo-scaffolding`, `boilerplate`, `headless-deploy`, `persona-presets`, `dotenv-seeding`
 
 ## Description
 Agent harness instructions for interacting with the Code Scaffold CLI headlessly.
@@ -25,6 +25,7 @@ Agent harness instructions for interacting with the Code Scaffold CLI headlessly
 Agents can interrogate the application natively by running `code-scaffold.exe /help` to retrieve a comprehensive JSON object outlining all available scaffolding assets. Deployments can be triggered programmatically via `code-scaffold.exe --headless --target <DIR> --json-output`.
 
 ## Changelog
+* **v8** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v7** : Standardized ASCII art logo to uniform 6-line ANSI Shadow format.
 * **v6** : Extracted the Python websocket client out of the markdown instructions and natively embedded it into the skill's scripts directory for frictionless agent execution.
 * **v5** : Added explicit warnings against executing non-existent scaffold-connect binaries to resolve agent failure states.

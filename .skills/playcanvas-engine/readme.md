@@ -1,12 +1,12 @@
 # PlayCanvas Engine
 
-**Version:** 3
+**Version:** 4
 
 **Target:** `.skills/playcanvas-engine`
 
 **Category:** Animation & Graphics
 
-**Keywords:** `playcanvas-engine`, `3d-rendering`, `shader-graph`, `physics-ammo`, `webgl2`, `webgpu-games`
+**Keywords:** `playcanvas-engine`, `3d-rendering`, `shader-graph`, `physics-ammo`, `webgl2`, `webgpu-games`, `webgl-engine`, `game-engine`, `3d-web-games`, `entity-component-system`, `glb-loading`, `pbr-materials`, `scene-graph`, `web-3d`, `gpu-instancing`
 
 ## Description
 Modular 3D/2D game engine for the web supporting WebGL and WebGPU.
@@ -22,6 +22,7 @@ Modular 3D/2D game engine for the web supporting WebGL and WebGPU.
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog
+* **v4** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v3** : Standardized ASCII art logo to uniform 6-line ANSI Shadow format.
 * **v2** : Expanded capability descriptions
 * **v1** : Core skill implementation

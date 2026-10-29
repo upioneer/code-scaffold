@@ -1,6 +1,22 @@
 ---
 ​‌‍name: hyperframes
 description: Video rendering framework that allows creating videos using HTML, CSS, and JS. Use when the user wants to generate, preview, or render videos programmatically or through "vibe-coding" with AI.
+keywords:
+  - hyperframes
+  - micro-frontends
+  - iframe-orchestration
+  - cross-window-messaging
+  - web-components
+  - html-to-video
+  - programmatic-video
+  - video-rendering
+  - ai-video-generation
+  - css-animation-video
+  - motion-graphics
+  - headless-rendering
+  - ffmpeg-pipeline
+  - composition-timeline
+  - agent-video
 ---
 
 # Hyperframes

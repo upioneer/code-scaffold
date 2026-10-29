@@ -1,7 +1,7 @@
 {
   "label": "A2UI",
   "description": "Agent-to-User Interface (A2UI) protocol implementation and client renderer scaffolding.",
-  "version": "1",
+  "version": "2",
   "target": ".skills/a2ui",
   "hasSandbox": false,
   "logo": [

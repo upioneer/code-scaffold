@@ -1,12 +1,12 @@
 # Artemis Mobile Automation
 
-**Version:** 1
+**Version:** 2
 
 **Target:** `.skills/artemis`
 
 **Category:** AI, MCP & Developer Tools
 
-**Keywords:** `artemis`, `android-automation`, `mcp-server`, `mobile-testing`, `vlm-agent`, `adb-control`, `ui-automator`, `device-state`, `natural-language-ui`, `logcat-telemetry`, `scrcpy-mirror`, `autonomous-qa`
+**Keywords:** `artemis`, `android-automation`, `mcp-server`, `mobile-testing`, `vlm-agent`, `adb-control`, `ui-automator`, `device-state`, `natural-language-ui`, `logcat-telemetry`, `scrcpy-mirror`, `autonomous-qa`, `android-testing`, `natural-language-testing`, `uiautomator-hierarchy`, `ocr-grounding`, `flash-profile`, `pro-profile`
 
 ## Description
 Natural-language mobile device automation framework and native Model Context Protocol (MCP) server. Orchestrates autonomous Android UI interaction, multimodal VLM screen perception, accessibility hierarchy parsing, and ADB action execution across real and emulated devices.
@@ -27,4 +27,5 @@ Natural-language mobile device automation framework and native Model Context Pro
 This skill is built for the Code Scaffold engine and standalone MCP distribution. Refer to the `SKILL.md` file inside this directory for deep architectural specifications, MCP tool definitions, and command-line execution recipes.
 
 ## Changelog
+* **v2** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v1** : Initial release of the Artemis Mobile Automation skill, introducing multimodal VLM screen perception, native Model Context Protocol (MCP) server integration, Flash and Pro execution profiles, ADB device actuation primitives, automated Logcat diagnostics, and interactive device sandbox studio

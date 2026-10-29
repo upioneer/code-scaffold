@@ -1,7 +1,7 @@
 {
   "label": "SEO GEO AEO Auditor",
   "description": "Unified model-agnostic Search Engine, Generative Engine, and Answer Engine Optimization auditor to analyze traditional visibility, Core Web Vitals (LCP/INP/CLS), modern Schema.org validation, passage citability, E-E-A-T signals, and snippet answers.",
-  "version": "5",
+  "version": "6",
   "target": ".skills/seo-geo-aeo-auditor",
   "hasSandbox": false,
   "logo": [

@@ -1,12 +1,12 @@
 # Quarto Scientific Publishing
 
-**Version:** 2
+**Version:** 3
 
 **Target:** `.skills/quarto`
 
 **Category:** Publishing & Documentation
 
-**Keywords:** `quarto`, `scientific-publishing`, `computational-notebooks`, `r-python-julia`, `dashboards`, `academic-docs`
+**Keywords:** `quarto`, `scientific-publishing`, `computational-notebooks`, `r-python-julia`, `dashboards`, `academic-docs`, `quarto-books`, `quarto-websites`, `jupyter-notebooks`, `reproducible-research`, `executable-documents`, `scientific-writing`, `observable-js`, `pdf-latex`, `technical-reports`
 
 ## Description
 A comprehensive automation skill for Quarto, the open source scientific and technical publishing system built on Pandoc. It empowers agents to dynamically weave together narrative text and code to produce elegantly formatted HTML, PDF, Word, ePub, Reveal.js slides, and interactive dashboards.
@@ -23,5 +23,6 @@ A comprehensive automation skill for Quarto, the open source scientific and tech
 Activate this skill when an agent needs to generate high fidelity data reports, build scientific documentation websites, scaffold interactive data dashboards, or publish computational notebooks using the Quarto CLI.
 
 ## Changelog
+* **v3** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v2** : Standardized ASCII art logo to uniform 6-line ANSI Shadow format.
 * **v1** : Initial implementation of the curated Quarto skill, including CI/CD templates and AI optimized workflow instructions.

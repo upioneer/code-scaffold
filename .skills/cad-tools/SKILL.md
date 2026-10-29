@@ -1,8 +1,39 @@
 ---
 name: CAD Tools
 description: Comprehensive CAD/CAM engineering skill for AI agents: orchestrating generative design, topology optimization with the Alien Meter slider, FreeCAD socket and headless automation, parametric 3D modeling, OpenSCAD CSG compilation, CadQuery and build123d Python script modeling, additive manufacturing (DMLS/SLS), and multi-format conversion. Trigger when the user requests parametric 3D CAD modeling, OpenSCAD scripts, CadQuery code, generative design, topology optimization, organic skeletal geometry, FreeCAD automation, PartDesign sketches, extrusion or pocketing, B-Rep solid generation, STEP/STL export, or CAD format conversion. Activate when interacting with FreeCAD via Streamable HTTP/SSE MCP socket or headless CLI, compiling OpenSCAD designs with parameter overrides (-D), evaluating the Alien Meter tradeoff between rigidity and bio-morphology, script-based geometry with build123d/CadQuery/OpenCASCADE, desktop CAD via COM, or 3D print/CNC manufacturing validation.
-version: 11
+version: 12
 target: .skills/cad-tools
+keywords:
+  - cad-tools
+  - cad
+  - generative-design
+  - topology-optimization
+  - alien-meter
+  - fea-stress
+  - additive-manufacturing
+  - 3d-modeling
+  - step-files
+  - stl
+  - parametric-design
+  - openscad
+  - cadquery
+  - parametric-scripts
+  - csg-modeling
+  - freecad
+  - partdesign
+  - b-rep
+  - opencascade
+  - sketcher
+  - boolean-operations
+  - streamable-http
+  - headless-cad
+  - offscreen-rendering
+  - undo-transactions
+  - 3mf
+  - dfam
+  - engineering-drawing
+  - fasteners
+  - manufacturing-audit
 ---
 ​‌‍# CAD Tools Skill
 

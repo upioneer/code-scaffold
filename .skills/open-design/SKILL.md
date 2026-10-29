@@ -1,6 +1,22 @@
 ---
 ​‌‍name: open_design
 description: Specialized skill for initializing and configuring Open Design, an open-source alternative to Claude Design, to generate interactive brand-grade UI design artifacts.
+keywords:
+  - open-design
+  - design-system
+  - figma-tokens
+  - tailwind-tokens
+  - component-library
+  - ui-ux
+  - ui-prototyping
+  - design-tokens
+  - design-handoff
+  - prototype-generation
+  - brand-systems
+  - component-prototypes
+  - design-to-code
+  - ui-mockups
+  - wireframes
 ---
 
 # Open Design Skill

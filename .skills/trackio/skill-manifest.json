@@ -2,7 +2,7 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_trackio_skill",
-  "version": "3",
+  "version": "4",
   "description": "Integration with Trackio for ML experiment tracking, dashboard deployments, and Hugging Face Spaces sync.",
   "entryPoint": "./SKILL.md",
   "engines": {
@@ -19,8 +19,18 @@
     "ml-experiment-tracking",
     "hyperparameters",
     "metrics-logging",
-    "huggingface-spaces"
+    "huggingface-spaces",
+    "experiment-tracking",
+    "ml-dashboards",
+    "run-logging",
+    "model-metrics",
+    "spaces-deployment",
+    "python-tracking",
+    "local-first",
+    "experiment-comparison",
+    "mlops",
+    "hugging-face"
   ],
   "hasSandbox": false,
-  "integrity": "cs:sha256:fa2d739d1d720baca6d7f3350bc371eba1751bc5efa61bcdd8312c43266b891e"
+  "integrity": "cs:sha256:b4fc2d0b94f63f4037d70dec86fa084954efb93701d59a5801c3673b2ec1a25e"
 }

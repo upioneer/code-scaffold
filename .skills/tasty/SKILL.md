@@ -1,7 +1,23 @@
 ---
 ​‌‍name: Tasty
 description: Code Scaffold's bespoke anti-slop frontend styling engine and command vocabulary for premium design iteration.
-version: 3
+version: 6
+keywords:
+  - tasty
+  - anti-slop
+  - design-tokens
+  - landing-page
+  - typography
+  - micro-animations
+  - curated-ui
+  - frontend-styling
+  - premium-landing-pages
+  - portfolio-design
+  - visual-polish
+  - anti-generic-ui
+  - css-architecture
+  - typography-system
+  - brand-aesthetics
 ---
 
 # Tasty: Code Scaffold's Native Anti-Slop Engine

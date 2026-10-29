@@ -1,7 +1,7 @@
 {
   "label": "Privacy Policy Generator",
   "description": "Generates a customizable privacy policy tailored to the project (website/app) with optional Google Analytics integration.",
-  "version": "6",
+  "version": "7",
   "target": ".skills/privacy-policy",
   "hasSandbox": false,
   "logo": [

@@ -2,7 +2,7 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "mechanica",
-  "version": "1",
+  "version": "2",
   "description": "Physical machine metaphor engine, kinematic cutaway illustrator, and interactive hardware explainer. Invent tangible machines for abstract technical concepts with 4-tone isometric vector rendering, WebGL shaders, and 3D kinematics.",
   "entryPoint": "./SKILL.md",
   "engines": {
@@ -36,5 +36,5 @@
     "clearance-audit"
   ],
   "hasSandbox": true,
-  "integrity": "cs:sha256:18be8a0af7f07b29523f3f0834ade697e4a5393d352f35969ce1c24722e3b946"
+  "integrity": "cs:sha256:d4916c29762189e5e7274722cf51d0a4722f9088183e823db9b0d8bd4c654888"
 }

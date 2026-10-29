@@ -1,12 +1,12 @@
 # SEO GEO AEO Auditor
 
-**Version:** 5
+**Version:** 6
 
 **Target:** `.skills/seo-geo-aeo-auditor`
 
 **Category:** Web Automation & Scraping
 
-**Keywords:** `seo`, `geo`, `aeo`, `schema-org`, `json-ld`, `generative-engine`, `answer-engine`, `mobile-viewport`, `core-web-vitals`, `inp`, `lcp`, `cls`, `passage-citability`, `eeat`, `llms-txt`, `agentic-browsing`
+**Keywords:** `seo-geo-aeo-auditor`, `seo`, `geo`, `aeo`, `schema-org`, `json-ld`, `generative-engine`, `answer-engine`, `mobile-viewport`, `core-web-vitals`, `inp`, `lcp`, `cls`, `passage-citability`, `eeat`, `llms-txt`, `agentic-browsing`
 
 ## Description
 Unified model agnostic Search Engine, Generative Engine, and Answer Engine Optimization auditor to analyze traditional visibility, modern Core Web Vitals (LCP/INP/CLS), active Schema.org validation, passage citability, E-E-A-T search authority, and agentic web readiness.
@@ -26,6 +26,7 @@ Unified model agnostic Search Engine, Generative Engine, and Answer Engine Optim
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog
+* **v6** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v5** : Upgraded to SkillForge v5 with modern Core Web Vitals (INP/LCP/CLS), active Schema.org deprecation guard, passage citability scoring (130 to 170 words), E-E-A-T quality framework, and agentic web readiness.
 * **v4** : Standardized ASCII art logo to uniform 6-line ANSI Shadow format.
 * **v3** : Added automated zero-dependency Node.js CLI auditor (`scripts/audit.js`) with mobile viewport compliance and touch-target validation.

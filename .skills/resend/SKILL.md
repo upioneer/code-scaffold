@@ -1,6 +1,22 @@
 ---
 ​‌‍name: Resend
 description: Sends emails using the Resend API
+keywords:
+  - resend
+  - transactional-email
+  - react-email
+  - smtp
+  - email-api
+  - deliverability
+  - email-sending
+  - email-templates
+  - domain-verification
+  - email-webhooks
+  - batch-email
+  - resend-api
+  - email-audiences
+  - bounce-handling
+  - nodejs-email
 ---
 
 ---

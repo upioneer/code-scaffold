@@ -11,6 +11,10 @@
  *   5. Typography Compliance (NO em-dashes —, NO en-dashes –, asterisks for bullet lists)
  *   6. Zero External Brand Leakage (no forbidden third-party trademarks in user-facing metadata/docs)
  *   7. Readme Shape Invariant (single header badge block, Changelog footer last, no stranded version history)
+ *   8. Keyword Contract (manifest is the source of truth: 15 to 30 unique kebab-case terms, slug first,
+ *      mirrored exactly in the readme badge + SKILL.md frontmatter, first 5 in the registry index)
+ *   9. Registry Integrity (every skill has a registry row under its category heading, version column in
+ *      sync, category is a registry heading, and the root manifest.json lists every skill)
  * 
  * Usage:
  *   node project_details/playbooks/verify_skills.js
@@ -18,9 +22,20 @@
 
 const fs = require('fs');
 const path = require('path');
+const kw = require('./skill_keywords_lib');
 
 const SKILLS_DIR = path.resolve(__dirname, '../../.skills');
 const ROOT_README = path.join(SKILLS_DIR, 'README.md');
+const ROOT_MANIFEST = path.resolve(__dirname, '../../manifest.json');
+
+// Keyword Contract context (registry index + root distribution manifest), loaded once.
+const HAVE_REGISTRY = fs.existsSync(ROOT_README);
+const HAVE_ROOT_MANIFEST = fs.existsSync(ROOT_MANIFEST);
+const REGISTRY = HAVE_REGISTRY ? kw.parseRegistry(fs.readFileSync(ROOT_README, 'utf8')) : { rows: {} };
+const ALLOWED_CATEGORIES = new Set(Object.values(REGISTRY.rows).map((r) => r.heading));
+const ROOT_SKILL_IDS = HAVE_ROOT_MANIFEST
+  ? new Set((JSON.parse(fs.readFileSync(ROOT_MANIFEST, 'utf8')).skills || []).map((s) => s.id))
+  : new Set();
 
 // Forbidden external trademark/library names in titles, descriptions, and docs
 const FORBIDDEN_LEAK_PATTERNS = [
@@ -233,6 +248,57 @@ function checkSkill(skillName) {
     }
   }
 
+  // 8. Keyword Contract (manifest keywords are the single source of truth)
+  for (const problem of kw.validateKeywords(skillName, manifest.keywords)) {
+    skillErrors.push(`Keyword Contract: ${problem}`);
+  }
+  if (Array.isArray(manifest.keywords) && manifest.keywords.length > 0) {
+    const manifestKwJson = JSON.stringify(manifest.keywords);
+    const readmeKw = kw.parseReadmeKeywords(readmeContent);
+    if (readmeKw === null) {
+      skillErrors.push('Keyword Contract: readme.md missing "**Keywords:**" badge line');
+    } else if (JSON.stringify(readmeKw) !== manifestKwJson) {
+      skillErrors.push('Keyword Contract: readme.md **Keywords:** badge must mirror skill-manifest.json keywords exactly (same order)');
+    }
+    const fmKw = kw.parseFrontmatterKeywords(skillMdContent);
+    if (fmKw === null) {
+      skillErrors.push('Keyword Contract: SKILL.md frontmatter missing "keywords:" block list');
+    } else if (JSON.stringify(fmKw) !== manifestKwJson) {
+      skillErrors.push('Keyword Contract: SKILL.md frontmatter keywords must mirror skill-manifest.json keywords exactly (same order)');
+    }
+  }
+  const readmeCatMatch = readmeContent.match(/^\*\*Category:\*\*[ \t]*(.*)$/m);
+  if (readmeCatMatch && readmeCatMatch[1].trim() !== String(manifest.category || '')) {
+    skillErrors.push(`Keyword Contract: readme.md **Category:** badge ("${readmeCatMatch[1].trim()}") must mirror manifest category ("${manifest.category}")`);
+  }
+
+  // 9. Registry Integrity (category headings, row sync, root manifest listing)
+  if (HAVE_REGISTRY) {
+    if (!ALLOWED_CATEGORIES.has(manifest.category)) {
+      skillErrors.push(`Registry Integrity: manifest category "${manifest.category}" is not a ".skills/README.md" category heading`);
+    }
+    const row = REGISTRY.rows[skillName];
+    if (!row) {
+      skillErrors.push(`Registry Integrity: no ".skills/README.md" registry row for ".skills/${skillName}"`);
+    } else if (!Array.isArray(row.cells) || row.cells.length < 7) {
+      skillErrors.push(`Registry Integrity: registry row for ".skills/${skillName}" is malformed (expected 5 columns)`);
+    } else {
+      if (row.heading !== manifest.category) {
+        skillErrors.push(`Registry Integrity: registry row sits under "${row.heading}" but manifest category is "${manifest.category}"`);
+      }
+      if (row.cells[4] !== `v${manifestVer}`) {
+        skillErrors.push(`Registry Integrity: registry version "${row.cells[4]}" does not match manifest (v${manifestVer})`);
+      }
+      const expectedPreview = (manifest.keywords || []).slice(0, kw.REGISTRY_PREVIEW);
+      if (JSON.stringify(kw.parseRegistryKeywordCell(row.cells[3] || '')) !== JSON.stringify(expectedPreview)) {
+        skillErrors.push(`Registry Integrity: registry Search Keywords must be the first ${kw.REGISTRY_PREVIEW} manifest keywords`);
+      }
+    }
+  }
+  if (HAVE_ROOT_MANIFEST && !ROOT_SKILL_IDS.has(skillName)) {
+    skillErrors.push(`Registry Integrity: root manifest.json has no entry for skill "${skillName}"`);
+  }
+
   if (skillErrors.length === 0) {
     passedSkills++;
   } else {
@@ -253,6 +319,14 @@ function verifyAll() {
 
   for (const s of skillDirs) {
     checkSkill(s);
+  }
+
+  // Registry Integrity: rows pointing at skills with no directory on disk
+  for (const slug of Object.keys(REGISTRY.rows)) {
+    if (!fs.existsSync(path.join(SKILLS_DIR, slug))) {
+      console.error(`❌ Registry row for ".skills/${slug}" has no matching skill directory on disk!`);
+      process.exit(1);
+    }
   }
 
   // Verify Global Readme

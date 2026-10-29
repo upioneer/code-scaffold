@@ -7,7 +7,7 @@ const path = require('path');
     const page = await browser.newPage();
     await page.setViewportSize({ width: 800, height: 600 });
     
-    const dir = 'C:/Users/user/OneDrive/Documents/code/Projects/Code Scaffold/.skills/kinetic-canvas/sandbox';
+    const dir = __dirname;
     const assetsDir = path.join(dir, 'assets');
     if (!fs.existsSync(assetsDir)) fs.mkdirSync(assetsDir);
     

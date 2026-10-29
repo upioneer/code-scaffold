@@ -2,7 +2,7 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "cad-tools",
-  "version": "11",
+  "version": "12",
   "description": "Comprehensive CAD/CAM engineering skill for AI agents: orchestrating generative design, topology optimization with the Alien Meter slider, OpenSCAD CSG compilation, CadQuery and build123d parametric scripting, FreeCAD automation, and multi-format conversion.",
   "entryPoint": "./SKILL.md",
   "engines": {
@@ -17,14 +17,13 @@
   ],
   "category": "Animation & Graphics",
   "keywords": [
+    "cad-tools",
     "cad",
     "generative-design",
     "topology-optimization",
     "alien-meter",
     "fea-stress",
     "additive-manufacturing",
-    "dmls",
-    "sls",
     "3d-modeling",
     "step-files",
     "stl",
@@ -45,13 +44,10 @@
     "undo-transactions",
     "3mf",
     "dfam",
-    "dfm",
     "engineering-drawing",
-    "orthographic",
     "fasteners",
-    "blueprint",
     "manufacturing-audit"
   ],
   "hasSandbox": true,
-  "integrity": "cs:sha256:b2230dcfcc10211decca9bfaa3bd50600f5ea4ae9c5edc5a9e571b6772063302"
+  "integrity": "cs:sha256:c708e93ea3dbc6a5877084da33e52e035ed8b6999ac23f8a5a6943356490c370"
 }

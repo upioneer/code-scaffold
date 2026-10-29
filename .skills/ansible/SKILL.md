@@ -1,6 +1,24 @@
 ---
 ​‌‍name: Ansible
 description: Infrastructure automation, configuration management, and application deployment orchestration using Ansible.
+keywords:
+  - ansible
+  - configuration-management
+  - playbooks
+  - server-provisioning
+  - devops
+  - automation
+  - yaml
+  - ansible-playbook
+  - ansible-roles
+  - inventory-management
+  - idempotent-deployment
+  - infrastructure-as-code
+  - ansible-galaxy
+  - ansible-vault
+  - jinja2-templates
+  - ssh-orchestration
+  - zero-touch-provisioning
 ---
 
 # Ansible Engineering Skill

@@ -1,12 +1,12 @@
 # Mermaid
 
-**Version:** 4
+**Version:** 5
 
 **Target:** `.skills/mermaid`
 
 **Category:** Publishing & Documentation
 
-**Keywords:** `mermaid`, `mermaid-cli`, `diagrams-as-code`, `flowcharts`, `sequence-diagrams`, `er-diagrams`
+**Keywords:** `mermaid`, `mermaid-cli`, `diagrams-as-code`, `flowcharts`, `sequence-diagrams`, `er-diagrams`, `class-diagrams`, `gantt-charts`, `state-diagrams`, `architecture-diagrams`, `svg-export`, `png-export`, `markdown-diagrams`, `c4-diagrams`, `git-graphs`
 
 ## Description
 Mermaid diagram creation and rendering
@@ -24,6 +24,7 @@ Mermaid diagram creation and rendering
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog
+* **v5** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v4** : Standardized hasSandbox to false to mount the clean Architectural Contract card on code-scaffold.com.
 * **v3** : Deployed custom interactive visual sandbox
 * **v2** : Expanded capability descriptions
