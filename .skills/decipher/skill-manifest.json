@@ -2,8 +2,8 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "decipher",
-  "version": "2",
-  "description": "Reverse engineer any application, compiled binary, desktop bundle, mobile package, or managed runtime with verifiable evidence ledgers and clean-room reconstruction.",
+  "version": "3",
+  "description": "Reverse engineer any application, compiled binary, desktop bundle, mobile package, or managed runtime with verifiable evidence ledgers, parity loop similarity verdicts, and clean-room reconstruction.",
   "entryPoint": "./SKILL.md",
   "engines": {
     "node": ">=18"
@@ -34,7 +34,15 @@
     "wasm-decompilation",
     "go-pclntab",
     "call-graph-analysis",
-    "dynamic-observation"
+    "dynamic-observation",
+    "binary-diffing",
+    "packed-executable-unpacking",
+    "cross-build-pairing",
+    "website-behavior-capture",
+    "replay-standin-harness",
+    "consent-gated-execution",
+    "similarity-verdicts",
+    "versioned-case-files"
   ],
   "hasSandbox": true,
   "integrity": "cs:sha256:2565bb8218d0c0fb9ea0560c3eff6a4a2d3761ce6fdcd5b1fcab1ad7b6ec92e2"

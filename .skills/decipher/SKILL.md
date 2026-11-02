@@ -1,6 +1,6 @@
 ---
 ​‌‍name: decipher
-description: Trigger when the user wants to reverse engineer any application, binary, or system, reverse engineer native executables, reverse engineer Electron or JavaScript bundles, reverse engineer Android or iOS apps, or needs decompilation, disassembly, binary analysis, or clean-room reconstruction.
+description: Trigger when the user wants to reverse engineer any application, binary, or system, reverse engineer native executables, reverse engineer Electron or JavaScript bundles, reverse engineer Android or iOS apps, diff two builds to pair changed functions, unpack single file executables or game archives, capture website behavior across viewports, build deterministic replay harnesses, or needs decompilation, disassembly, binary analysis, similarity verdicts, consent gated observation, or clean-room reconstruction.
 keywords:
   - decipher
   - reverse-engineer
@@ -21,6 +21,14 @@ keywords:
   - go-pclntab
   - call-graph-analysis
   - dynamic-observation
+  - binary-diffing
+  - packed-executable-unpacking
+  - cross-build-pairing
+  - website-behavior-capture
+  - replay-standin-harness
+  - consent-gated-execution
+  - similarity-verdicts
+  - versioned-case-files
 ---
 
 # Decipher Reverse Engineer Arsenal & Binary Deconstruction Engine
@@ -230,6 +238,25 @@ decipher ledger verify --obligations=./obligations.json --impl=./src/clean_impl.
 
 # 6. Generate an executive deconstruction report with embedded provenance
 node .skills/decipher/scripts/generate_report.mjs --target=./target_bin
+
+# 7. Diff two builds and pair functions across versions
+decipher diff ./build_old/engine.dll ./build_new/engine.dll --pair-functions --format=json
+
+# 8. Unpack a single file executable through the unified seam
+decipher unpack ./dist_bundle --list-members --extract=./case/unpacked
+
+# 9. Capture website behavior across viewports (visitor mode default)
+decipher capture site https://example.com --viewports=desktop,tablet,phone --tokens --health
+
+# 10. Record a replay stand-in, then serve it on loopback
+decipher standin record --har=./traffic.har --output=./case/standin.json
+decipher standin replay --bundle=./case/standin.json --port=8471
+
+# 11. Verify publisher signature independent of OS trust
+decipher verify publisher ./installer.exe --check-hash --check-signature
+
+# 12. Run parity loop checks against a clean-room build
+decipher parity check --obligations=./obligations.json --impl=./src/clean_impl --round=3
 ```
 
 ---
@@ -250,4 +277,116 @@ Decipher embeds subtle yet immutable provenance markers across both surface inte
 * **HTML & Artifact Document Metadata** : Emits standard `<meta name="author">`, `<meta name="creator">`, Dublin Core tags (`DC.creator`, `DC.source`, `DC.identifier`), OpenGraph tags, and JSON-LD structured semantic schemas referencing the repository.
 * **Hidden Cryptographic Breadcrumbs** : Embeds base64-encoded session breadcrumbs and SHA-256 provenance tokens (`cs:sha256:...`) directly within HTML comment headers and low-opacity micro-watermarks.
 * **Steganographic Watermarking** : Emits the proprietary zero-width provenance sequence (`\u200B\u200C\u200D\u200B\u200D\u200C`) preceding all exported report comment anchors.
+
+---
+
+## 11. Study Build Check Parity Loop & Similarity Verdicts
+
+Decipher closes every reconstruction engagement as a deterministic loop, not a single pass. The agent studies the target, briefs the behavior, synthesizes a clean implementation, measures it against the original, and refines until every check passes or the residual diff is escalated with evidence.
+
+```
+[Study Target (Evidence Only)]
+        |
+        v
+[Black Box Functional Brief]
+        |
+        v
+[Synthesize Clean Build (Requested Stack)]
+        |
+        v
+[Run Deterministic Checks] ---> [Refine Brief (Bounded Mismatch Scope)] ---+
+        |                                                                   |
+        v                                                                   |
+[All Verdicts Pass] <-------------------------------------------------------+
+```
+
+### 11.1 Verdict Discipline
+* Every check returns a machine verdict: `passed` (boolean), `similarity` (0 to 1), and `evidence_refs` (record ids). Verdicts decide on numbers, never on prose summaries.
+* Each round persists versioned results (`round-N`) so regressions across refine iterations are detectable and auditable.
+* A check that cannot run in the current observation mode reports `blocked` with the missing authority, never a guessed pass.
+
+### 11.2 Kind Aware Check Suites
+* **Websites & Web Apps**: Page similarity at desktop, tablet, and phone widths; token parity (colors, spacing, content widths, breakpoints); layout outline parity per width; page health (script errors, failed requests).
+* **Desktop & Mobile Apps**: Launch success, navigation graph parity, self test harness exit status, API call sequence parity against the replay stand-in.
+* **Games & Interactive Media**: Built in self test results, mechanics fact parity (entities, rules, scoring), asset manifest comparison.
+* **Libraries & Protocols**: API surface parity matrix (offered vs consumed symbols), positive/negative/malformed case matrices per obligation.
+
+### 11.3 Bounded Refinement Rounds
+* A failed check emits a bounded refine brief: which obligation mismatched, where the behavior diverges, and the measured distance. The synthesizer addresses only the brief.
+* The loop caps at an agreed round budget (default 5). On exhaustion, the agent escalates with a residual diff report instead of guessing further.
+
+---
+
+## 12. Observation Modes & Consent Gated Execution
+
+All inspection runs inside an explicit observation mode. The default mode is non invasive; anything stronger requires recorded operator consent.
+
+### 12.1 Visitor Mode (Default)
+* Outside observation only: static artifacts, visitor visible content, recorded captures. No target execution, no instrumentation, no live network contact beyond fetching visitor visible pages.
+* Captures in Visitor Mode keep only what a visitor sees: no markup internals, style rules, scripts, request logs, or error telemetry.
+
+### 12.2 Deep Mode (Consent Required)
+* Instrumented inspection: process memory sampling, system call tracing, API entry/exit hooks, replay harness execution, multi pass behavioral capture.
+* Entry requires explicit operator consent plus a recorded justification. Consent is logged to the case file with scope, target digest, and expiry, and lapses automatically at case close.
+
+### 12.3 Execution Consent Protocol
+The agent must request approval before each of the following, stating the action, the reason, the blast radius, and the rollback:
+* Executing the target binary or bundle in any form.
+* Contacting live network endpoints or third party services.
+* Installing hooks, drivers, certificates, or persistence of any kind.
+* Writing outside the case folder or modifying the host environment.
+* If consent is denied, the agent falls back to a static only plan and records the coverage gap as an Unknown tier boundary (Section 1).
+
+### 12.4 Honest Effect Declarations
+* Every Decipher capability declares its effects up front: `reads-target`, `executes-target`, `contacts-network`, `writes-files`. The agent proves each planned action stays inside the granted mode before running it.
+
+---
+
+## 13. Unified Packed Executable & Archive Unpacking Seam
+
+Modern targets ship as single file executables and content packs. Decipher routes all of them through one unpacking seam instead of per format one-off scripts.
+
+* **Single File JS Runtimes**: Lists and extracts embedded application members from runtime packed single file programs with offsets and per member hashes.
+* **Python Freezer Bundles**: Unpacks frozen application archives, recovers module tables, and disassembles embedded Python bytecode to readable instruction listings.
+* **Managed Single File Publishers**: Extracts assemblies and runtime configuration from self contained single file deployments before managed analysis (Section 6.1).
+* **Game Engine Content Packs**: Reads engine pack manifests, extracts scenes, scripts metadata, and asset blobs with integrity verification per member.
+* **Pre Extraction Inventory**: Every unpack first emits a member manifest (path, offset, size, hash). Extraction writes to a hash addressed case folder and re-verifies each member after writing.
+* **Bytecode & Metadata Readers**: Python bytecode disassembly, managed metadata method recovery (names and signatures from compiled metadata tables), and model weight header inspection (tensor manifests, quantization facts, architecture tags).
+* **Install Folder Explainer**: Given an install directory, reports the producing toolchain, the entry points, the runtime dependencies, and the recommended next inspection steps.
+
+---
+
+## 14. Cross Build Differential Pairing & Publisher Verification
+
+When two builds of the same program exist (old vs new, vendor vs patched, suspect vs known good), Decipher pairs them function by function instead of diffing bytes.
+
+### 14.1 Function Pairing Basis
+* Each function in build A is paired to build B with a stated basis: `identical-hash`, `renamed-symbol`, `moved-address`, `inlined`, `split`, or `unpaired`.
+* The diff report lists added, removed, and changed functions with per function similarity and the changed basic block ranges.
+
+### 14.2 Publisher & Integrity Verification
+* Verifies file hash plus embedded signature independently of operating system trust decisions: signer identity, chain validity, timestamp authority, and mismatch against the claimed publisher.
+* Reports delay loaded imports alongside static imports so late bound API consumption is never missed.
+
+### 14.3 Symbol Surface Inventory
+* Emits the offered symbol surface (exports), the consumed surface (imports and delay imports), and the delta between builds for patch impact review.
+
+---
+
+## 15. Behavioral Capture, Replay Stand-Ins & Versioned Case Files
+
+### 15.1 Scripted Behavioral Capture
+* Captures scripted sessions across desktop, tablet, and phone viewports: screenshots, rendered structure, design tokens (colors in hex, spacing, content widths), CSS breakpoints, per width layout outline (page width, heading sizes, section padding, gap, content column, items per row).
+* Records page health (script and console errors, failed requests) and an accessibility outline (landmarks, headings, form controls) for parity checks.
+* Visitor Mode captures exclude internals automatically (Section 12.1).
+
+### 15.2 Deterministic Replay Stand-In Harness
+* Records network traffic into a versioned stand-in bundle: secrets are dropped at record time, varying path segments are templated, and GraphQL style operations are inventoried by name.
+* The stand-in serves answers on loopback for dynamic analysis without touching the live target again. Writes during replay are accepted but never mutate later reads, keeping every run deterministic.
+* Each session reports unanswered requests (recorded traffic with no matching rule) so coverage gaps stay explicit.
+
+### 15.3 Versioned Case Files & Migration Discipline
+* Every persisted case artifact (evidence bundles, ledgers, stand-ins, check rounds, transcripts) carries a `version` field. Readers migrate forward step by step; each migration is a small documented function from version N to N plus 1.
+* A file from a newer Decipher is never downgraded or overwritten: it opens read only for inspection, and every save is refused with an update message.
+* An unparseable file is quarantined beside the original (`.broken` suffix) and defaults are used; the original bytes are never deleted by the reader.
 

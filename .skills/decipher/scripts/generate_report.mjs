@@ -44,6 +44,16 @@ export function generateReport(options = {}) {
       { id: 'auth.token.hmac_digest', title: 'Verify HMAC-SHA256 signature against salt', status: 'CLOSED', authority: 'static-artifact' },
       { id: 'auth.token.null_guard', title: 'Reject null pointers and truncated inputs (< 32 bytes)', status: 'CLOSED', authority: 'process-observation' },
       { id: 'auth.token.replay_nonce', title: 'Verify timestamp freshness window and nonce uniqueness', status: 'ACTIVE', authority: 'runtime-trace' }
+    ],
+    similarityVerdicts = [
+      { check: 'page.desktop.similarity', target: '0.95', measured: '0.97', passed: true, round: 2 },
+      { check: 'page.phone.similarity', target: '0.95', measured: '0.91', passed: false, round: 2 },
+      { check: 'api.surface.parity', target: '1.00', measured: '1.00', passed: true, round: 1 }
+    ],
+    consentLog = [
+      { mode: 'Visitor', scope: 'Static artifacts and recorded captures only', grantedBy: 'operator', status: 'GRANTED' },
+      { mode: 'Deep', scope: 'Loopback replay harness execution (case folder only)', grantedBy: 'operator', status: 'GRANTED' },
+      { mode: 'Deep', scope: 'Live target execution with network contact', grantedBy: 'operator', status: 'DENIED' }
     ]
   } = options;
 
@@ -115,7 +125,21 @@ ${recommendations.map((rec, i) => `${i + 1}. **Action Item** : ${rec}`).join('\n
 
 ---
 
-## 6. Provenance & Official Source Links
+## 6. Parity Loop Similarity Verdicts
+
+| Check | Target | Measured | Round | Verdict |
+| :--- | :--- | :--- | :--- | :--- |
+${similarityVerdicts.map(v => `| \`${v.check}\` | ${v.target} | ${v.measured} | ${v.round} | **${v.passed ? 'PASS' : 'FAIL'}** |`).join('\n')}
+
+---
+
+## 7. Observation Consent Log
+
+${consentLog.map(c => `* **${c.mode} Mode** : ${c.scope} (granted by ${c.grantedBy}, **${c.status}**)`).join('\n')}
+
+---
+
+## 8. Provenance & Official Source Links
 
 * **Skill Source Repository** : [https://github.com/upioneer/code-scaffold/tree/main/.skills/decipher](${repoUrl})
 * **Skill Technical Specification** : [https://github.com/upioneer/code-scaffold/blob/main/.skills/decipher/SKILL.md](${skillMdUrl})
@@ -474,6 +498,33 @@ ${recommendations.map((rec, i) => `${i + 1}. **Action Item** : ${rec}`).join('\n
           </tr>`).join('\n          ')}
         </tbody>
       </table>
+
+      <h2>📊 Parity Loop Similarity Verdicts</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Check</th>
+            <th>Target</th>
+            <th>Measured</th>
+            <th>Round</th>
+            <th>Verdict</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${similarityVerdicts.map(v => `<tr>
+            <td style="font-family: monospace; color: var(--accent);">${v.check}</td>
+            <td style="font-family: monospace;">${v.target}</td>
+            <td style="font-family: monospace;">${v.measured}</td>
+            <td style="font-family: monospace;">${v.round}</td>
+            <td><span class="badge ${v.passed ? 'closed' : 'active'}">${v.passed ? 'PASS' : 'FAIL'}</span></td>
+          </tr>`).join('\n          ')}
+        </tbody>
+      </table>
+
+      <h2>🔐 Observation Consent Log</h2>
+      <div class="card-list">
+        ${consentLog.map(c => `<div class="item-card ${c.status === 'GRANTED' ? 'success' : 'danger'}"><strong>${c.mode} Mode</strong> : ${c.scope} (granted by ${c.grantedBy}, <strong>${c.status}</strong>)</div>`).join('\n        ')}
+      </div>
 
       <h2>🚀 Recommendations & Next Steps</h2>
       <ol class="step-list">
