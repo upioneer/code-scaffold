@@ -1,0 +1,47 @@
+{
+  "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
+  "specification": "https://code-scaffold.com/spec/v1",
+  "name": "floorplan-architect",
+  "version": "1",
+  "description": "Turn any 2D floorplan into furnished 3D stills and walkthrough video: BYOF import from MagicPlan, RoomSketcher, Live Home 3D, Floorplanner, Planner 5D, Home Design 3D, and Sweet Home 3D, interior style templates, validated room briefs, and headless Blender rendering with camera paths.",
+  "entryPoint": "./SKILL.md",
+  "engines": {
+    "python": ">=3.10"
+  },
+  "requiredPermissions": [
+    "fs:read",
+    "fs:write",
+    "process:spawn"
+  ],
+  "category": "Animation & Graphics",
+  "keywords": [
+    "floorplan-architect",
+    "3d-walkthrough",
+    "byof-import",
+    "magicplan",
+    "roomsketcher",
+    "live-home-3d",
+    "floorplanner",
+    "planner-5d",
+    "home-design-3d",
+    "sweet-home-3d",
+    "walkthrough-video",
+    "furnished-render",
+    "interior-styling",
+    "style-templates",
+    "blender-rendering",
+    "camera-path",
+    "daylight-lighting",
+    "dxf-floorplan",
+    "svg-floorplan",
+    "room-brief",
+    "orbit-turntable",
+    "mesh-massing",
+    "dimension-confirmation",
+    "golden-hour",
+    "night-render",
+    "brief-builder"
+  ],
+  "hasSandbox": true,
+  "integrity": "cs:sha256:0000000000000000000000000000000000000000000000000000000000000000"
+}

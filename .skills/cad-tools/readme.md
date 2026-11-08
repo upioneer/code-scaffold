@@ -1,16 +1,16 @@
 # CAD Tools
 
-**Version:** 12
+**Version:** 13
 
 **Target:** `.skills/cad-tools`
 
 **Category:** Animation & Graphics
 
-**Keywords:** `cad-tools`, `cad`, `generative-design`, `topology-optimization`, `alien-meter`, `fea-stress`, `additive-manufacturing`, `3d-modeling`, `step-files`, `stl`, `parametric-design`, `openscad`, `cadquery`, `parametric-scripts`, `csg-modeling`, `freecad`, `partdesign`, `b-rep`, `opencascade`, `sketcher`, `boolean-operations`, `streamable-http`, `headless-cad`, `offscreen-rendering`, `undo-transactions`, `3mf`, `dfam`, `engineering-drawing`, `fasteners`, `manufacturing-audit`
+**Keywords:** `cad-tools`, `cad`, `generative-design`, `topology-optimization`, `alien-meter`, `fea-stress`, `additive-manufacturing`, `3d-modeling`, `step-files`, `stl`, `parametric-design`, `openscad`, `cadquery`, `csg-modeling`, `freecad`, `partdesign`, `b-rep`, `opencascade`, `sketcher`, `headless-cad`, `3mf`, `dfam`, `engineering-drawing`, `fasteners`, `manufacturing-audit`, `cadcraft`, `precision-drafting`, `dxf-interchange`, `drawing-audit`, `sheet-plotting`
 
 ## Description
 
-A comprehensive CAD/CAM engineering skill that equips AI agents with the full design-to-manufacture pipeline: generative design and topology optimization with the Alien Meter slider, native FreeCAD socket and headless automation, parametric 3D modeling, additive manufacturing validation, and an interactive 3D WebGL Three.js visual workbench.
+A comprehensive CAD/CAM engineering skill that equips AI agents with the full design-to-manufacture pipeline: generative design and topology optimization with the Alien Meter slider, native FreeCAD socket and headless automation, parametric 3D modeling, cadcraft precision 2D drafting with DXF interchange and sheet plotting, additive manufacturing validation, and an interactive 3D WebGL Three.js visual workbench. Supported CAD programs: FreeCAD, cadcraft, AutoCAD, ZWCAD, GstarCAD (plus OpenSCAD, CadQuery, and build123d code-as-CAD runtimes).
 
 ## Capabilities & Use Cases
 
@@ -47,6 +47,14 @@ A comprehensive CAD/CAM engineering skill that equips AI agents with the full de
 * **CNC Machinability Validation:** Validates internal pocket radii against standard end-mill tooling diameters and flags potential undercuts along spindle axes
 * **Bill of Materials (BOM) Management:** Generates structured CSV BOM manifests tracking part numbers, quantities, material densities, estimated costs, and fabrication specifications
 * **Project Structure Convention:** Enforces canonical `cad/models/`, `cad/output/`, `cad/bom/`, and `cad/docs/` directory layouts with gitignore protections for binary build artifacts
+* **cadcraft Precision 2D Drafting Engine:** Headless drafting backend driven via `cadcraft-cli` (`info`, `convert`, `run`, `commands`, `sample`, `mcp`) with strict exit code, stdout/stderr, and overwrite-guard contracts for agents
+* **Precision Drafting Bridge Script:** Zero-dependency CLI wrapper (`scripts/drafting_bridge.py`) for drawing summaries, JSON command batch runs, format conversion, viewport PNG renders, and drawing audits with an offline self-test suite
+* **Desktop Control Channel & MCP Server:** Token authenticated loopback JSON-lines control (`--control PORT`) with typed command-line, JSON command execution, drawing inspection, and MCP servers over stdio for headless or app-bridged agent sessions
+* **Precision Drafting Protocol & Parametric 2D:** Running snaps with polar/ortho discipline, prompt-state inspection before typed input, deterministic JSON execution preference, and built-in geometric plus dimensional constraint solving with AutoConstrain inference
+* **Drawing Audit & Loss Triage:** Per drawing release checklist over counts, extents, layers, blocks, and layouts with honest skipped-record and read-note triage plus usage based PURGE previews
+* **Sheet Production Pipeline:** Paper-space layouts with scaled viewports, CTB/STB plot styles, and plotted PDFs into `cad/output/`, paired with title block, revision, and scale bar discipline
+* **Batch Drafting Scripts & LISP:** `.scr` transcript automation, AutoLISP routines with documented gaps (no ActiveX, DCL, or reactors), startup files, and `.pgp` alias management
+* **DXF-First Interop With Maturity Guardrails:** DXF as the required interchange format with DWG loss caveats, explicit-save discipline with versioned copies, and mandatory verification of business critical sheets in AutoCAD or ZWCAD before release
 
 ## Usage
 
@@ -64,8 +72,11 @@ Activate this skill for any task involving:
 * Validating 3D print readiness, overhangs, watertightness, or CNC machinability
 * Generating AI-driven 3D geometry from natural language specifications
 * Maintaining structured BOM documentation and inspection renders alongside CAD models
+* Drafting, inspecting, converting, auditing, or plotting 2D CAD drawings and DXF interchanges via cadcraft
+* Driving a running CAD session from an agent over MCP or a token authenticated control channel
 
 ## Changelog
+* **v13** : Added cadcraft precision 2D drafting support: headless CLI engine chapter, drafting bridge script, agent control channel plus MCP server docs, precision drafting protocol with parametric 2D, drawing audit and sheet production pipeline, batch scripting guide, and DXF-first maturity guardrails with AutoCAD/ZWCAD verification rules
 * **v12** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v11** : Integrated OpenSCAD headless parametric compilation bridge, Customizer parameter parser, CadQuery execution runner, and automated CadQuery to build123d translation matrix.
 * **v10** : Integrated Production DfAM/DFM Manufacturing Auditor, Automated Orthographic 2D Blueprint Generator with ISO title blocks, Standard Fastener and Hardware Vault, and interactive DfAM/Blueprint shaders in the WebGL workbench.

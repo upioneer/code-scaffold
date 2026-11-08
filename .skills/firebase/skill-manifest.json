@@ -2,8 +2,8 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "code_scaffold_firebase_skill",
-  "version": "7",
-  "description": "Autonomous Firebase project provisioning, clean project naming, CLI lifecycle management, Cloud Firestore multi-database operations, and client SDK integration.",
+  "version": "8",
+  "description": "Autonomous Firebase project provisioning, clean project naming, CLI lifecycle management, Cloud Firestore multi-database operations, Cloud Functions triggers, Storage security rules, Realtime Database patterns, preview channels, rules testing, backups, Blaze cost guardrails, and client SDK integration.",
   "entryPoint": "./SKILL.md",
   "engines": {
     "node": ">=18.0.0"
@@ -30,7 +30,15 @@
     "sdk-config",
     "firebase-auth",
     "cloud-storage",
-    "emulator-suite"
+    "emulator-suite",
+    "app-check",
+    "fcm-messaging",
+    "functions-triggers",
+    "storage-rules",
+    "preview-channels",
+    "rules-testing",
+    "firestore-backups",
+    "blaze-budgets"
   ],
   "hasSandbox": false,
   "integrity": "cs:sha256:5b74f6656d6290a50b44016eb96434fd47da318732b21c98dc7ebc19db448cb9"

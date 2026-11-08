@@ -1,0 +1,15 @@
+{
+  "label": "Floorplan Architect",
+  "description": "Turn any 2D floorplan into furnished 3D stills and walkthrough video: BYOF import from popular floorplan apps, interior style templates, validated room briefs, and headless Blender rendering with camera paths.",
+  "version": "1",
+  "target": ".skills/floorplan-architect",
+  "hasSandbox": true,
+  "logo": [
+    "  ███████╗██╗      ██████╗  ██████╗ ██████╗ ██████╗ ██╗      █████╗ ███╗   ██╗  ",
+    "  ██╔════╝██║     ██╔═══██╗██╔═══██╗██╔══██╗██╔══██╗██║     ██╔══██╗████╗  ██║  ",
+    "  █████╗  ██║     ██║   ██║██║   ██║██████╔╝██████╔╝██║     ███████║██╔██╗ ██║  ",
+    "  ██╔══╝  ██║     ██║   ██║██║   ██║██╔══██╗██╔═══╝ ██║     ██╔══██║██║╚██╗██║  ",
+    "  ██║     ███████╗╚██████╔╝╚██████╔╝██║  ██║██║     ███████╗██║  ██║██║ ╚████║  ",
+    "  ╚═╝     ╚══════╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝  "
+  ]
+}

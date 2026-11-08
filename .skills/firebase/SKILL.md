@@ -1,7 +1,7 @@
 ---
 ​‌‍name: Firebase
-description: Autonomous Firebase project provisioning, clean project naming, CLI lifecycle management, Cloud Firestore multi-database operations, and client SDK integration.
-version: 7
+description: Autonomous Firebase project provisioning, clean project naming, CLI lifecycle management, Cloud Firestore multi-database operations, Cloud Functions triggers, Storage security rules, Realtime Database patterns, preview channels, rules testing, backups, Blaze cost guardrails, and client SDK integration.
+version: 8
 keywords:
   - firebase
   - firestore
@@ -19,6 +19,14 @@ keywords:
   - firebase-auth
   - cloud-storage
   - emulator-suite
+  - app-check
+  - fcm-messaging
+  - functions-triggers
+  - storage-rules
+  - preview-channels
+  - rules-testing
+  - firestore-backups
+  - blaze-budgets
 ---
 
 # Firebase Platform & Cloud Firestore Skill
@@ -285,3 +293,236 @@ When operating in an MCP-equipped agent environment, leverage the bundled `fireb
 * `firebase_deploy`: Trigger targeted service deployments directly through protocol calls.
 
 * **Architectural Compliance**: When synthesizing or scaffolding project code, align generated components with Code Scaffold architectural specification standards.
+
+---
+
+## 9. Cloud Functions Lifecycle & Triggers
+
+Default to second generation functions (Cloud Run backed: concurrency, configurable min and max instances, longer timeouts). First generation is legacy only.
+
+### 9.1 Trigger Catalog
+* **HTTPS (`onRequest`)**: Public webhooks and API endpoints. Always validate auth tokens manually; prefer callables for app clients.
+* **Callable (`onCall`)**: App invoked with decoded auth context and App Check tokens. Throws typed `HttpsError` codes the client SDK surfaces.
+* **Cloud Firestore**: `onDocumentCreated`, `onDocumentUpdated`, `onDocumentDeleted`, `onDocumentWritten` with document path patterns and named database targeting.
+* **Authentication Blocking**: `beforeUserCreated` and `beforeUserSignedIn` for custom claims, deny lists, and profile enrichment before sessions issue.
+* **Cloud Storage**: `onObjectFinalized`, `onObjectArchived`, `onObjectDeleted`, `onObjectMetadataUpdated` for media pipelines and virus scan fanout.
+* **Pub/Sub**: `onMessagePublished` for decoupled work queues; enable ordering only when strict sequence is required.
+* **Scheduled (`onSchedule`)**: Cron plus timezone for nightly rollups, TTL sweeps, and report jobs.
+* **Realtime Database**: Value and child event triggers for presence and fanout reacting to low latency writes.
+
+### 9.2 Project Wiring
+```json
+{
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "runtime": "nodejs22",
+      "predeploy": ["npm --prefix \"$RESOURCE_DIR\" run lint"]
+    }
+  ]
+}
+```
+* Store non secret config in `functions/.env`; store secrets with parameterized config (`defineSecret`, `defineString`) and grant access explicitly:
+```bash
+npx -y firebase-tools@latest functions:secrets:set STRIPE_KEY
+```
+
+### 9.3 Deploy, Observe & Scale
+```bash
+# Deploy all functions, or one function only
+npx -y firebase-tools@latest deploy --only functions
+npx -y firebase-tools@latest deploy --only functions:api
+
+# Tail logs for one function
+npx -y firebase-tools@latest functions:log --only api
+
+# Delete a retired function (confirm prompt)
+npx -y firebase-tools@latest functions:delete api
+
+# Emulate functions with Firestore and Auth
+npx -y firebase-tools@latest emulators:start --only functions,firestore,auth
+```
+* Keep `minInstances` at 0 unless cold starts are measured pain; always set `maxInstances` caps so runaway triggers cannot burn budget (see Section 13).
+
+---
+
+## 10. Storage Rules, Realtime Database, App Check & Messaging
+
+### A. Cloud Storage Security Rules & CORS
+Guard every bucket with `storage.rules` (default deny, user scoped paths, type and size guards):
+```javascript
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+    match /users/{userId}/{fileName} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.uid == userId
+        && request.resource.size < 10 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
+    }
+  }
+}
+```
+```bash
+npx -y firebase-tools@latest deploy --only storage
+```
+Browser uploads to custom domains need bucket CORS. Keep `cors.json` in the repo and apply it:
+```json
+[{ "origin": ["https://example.com"], "method": ["GET", "PUT", "POST", "DELETE", "HEAD"], "maxAgeSeconds": 3600 }]
+```
+```bash
+gcloud storage buckets update gs://<bucket-name> --cors-file=cors.json
+```
+
+### B. Realtime Database Patterns
+Reach for Realtime Database for presence, live leaderboards, and fanout sync; keep relational queries in Firestore.
+```json
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "presence": {
+      "$uid": {
+        ".read": "auth != null",
+        ".write": "auth != null && auth.uid == $uid",
+        ".validate": "newData.hasChildren(['online', 'lastSeen'])"
+      }
+    },
+    "scores": { ".indexOn": ["points", "updatedAt"] }
+  }
+}
+```
+```bash
+# Point query, write, push, and backup to file
+npx -y firebase-tools@latest database:get /presence --project <project-id>
+npx -y firebase-tools@latest database:set /scores/u1 '{"points": 42}' --project <project-id>
+npx -y firebase-tools@latest database:get / --project <project-id> -o ./rtdb-backup.json
+```
+
+### C. App Check Enforcement
+* Enforce App Check per service (Firestore, Storage, Functions, Realtime Database) only after clients ship attestation (Play Integrity, DeviceCheck, App Attest, reCAPTCHA v3 for web).
+* Use debug providers plus registered debug tokens for emulators and developer devices; never ship debug tokens in release builds.
+* Watch the App Check metrics dashboard for unverified traffic share before flipping enforcement on.
+
+### D. Cloud Messaging (FCM) Operations
+Send from trusted server code with the Admin SDK. Validate payloads with `dryRun` before fanout:
+```javascript
+import { getMessaging } from 'firebase-admin/messaging';
+await getMessaging().sendEachForMulticast({ tokens, notification: { title, body }, data }, true);
+await getMessaging().subscribeToTopic(tokens, 'match-reminders');
+```
+* Prefer topics and conditions over raw token lists for audiences; prune unregistered tokens on `messaging/registration-token-not-registered`.
+* Keep `data` payloads small and JSON string valued; use `notification` only when a system tray display is wanted.
+
+---
+
+## 11. Multi-Environment Projects, Targets & Preview Channels
+
+### 11.1 Project Aliases (.firebaserc)
+```json
+{
+  "projects": { "default": "myapp-prod", "dev": "myapp-dev", "staging": "myapp-staging" }
+}
+```
+```bash
+npx -y firebase-tools@latest use dev
+npx -y firebase-tools@latest use prod
+```
+* Mirror environments in dotenv files (`.env.development`, `.env.staging`, `.env.production`); the verifier script (Section 12 tooling) checks alias coverage.
+
+### 11.2 Hosting Multi-Site Targets
+```bash
+# Bind a site id to a deploy target once
+npx -y firebase-tools@latest target:apply hosting docs myapp-docs
+npx -y firebase-tools@latest target:apply hosting app myapp-prod
+
+# List bindings
+npx -y firebase-tools@latest target
+```
+```json
+{ "hosting": [{ "target": "app", "public": "dist", "ignore": ["firebase.json"] }] }
+```
+```bash
+npx -y firebase-tools@latest deploy --only hosting:app
+```
+
+### 11.3 Preview Channels & Release Flow
+```bash
+# Deploy an expiring preview channel for a pull request
+npx -y firebase-tools@latest hosting:channel:deploy pr-123 --expires 7d
+
+# List, open, and retire channels
+npx -y firebase-tools@latest hosting:channel:list
+npx -y firebase-tools@latest hosting:channel:delete pr-123
+
+# Promote a tested preview to live without rebuilding
+npx -y firebase-tools@latest hosting:clone myapp-prod:pr-123 myapp-prod:live
+```
+* `live` is production. Every production deploy is either a direct `hosting` deploy or a channel clone after preview QA.
+
+---
+
+## 12. Rules Unit Testing, CI Gates & Backups
+
+### 12.1 Rules Unit Tests (Offline, Emulator Backed)
+```javascript
+import { initializeTestEnvironment, assertSucceeds, assertFails } from '@firebase/rules-unit-testing';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+
+const env = await initializeTestEnvironment({ projectId: 'demo-test', firestore: { rules: './firestore.rules' } });
+const alice = env.authenticatedContext('alice');
+await assertSucceeds(setDoc(doc(alice.firestore(), 'users/alice'), { name: 'Alice' }));
+await assertFails(setDoc(doc(alice.firestore(), 'users/bob'), { name: 'Mallory' }));
+await env.cleanup();
+```
+* Seed fixtures with `withSecurityRulesDisabled`; cover positive, negative, and malformed cases per guarded collection; the same library covers `storage.rules`.
+
+### 12.2 CI Gate Snippet
+```yaml
+- run: npm install
+- run: npx -y firebase-tools@latest emulators:exec --only firestore,auth,storage "npm run test:rules"
+```
+* Rules changes must pass the emulator suite before any deploy step runs.
+
+### 12.3 Point-in-Time Recovery, Exports & Deletes
+```bash
+# Enable point-in-time recovery on a database (one time, per database)
+gcloud firestore databases update --project=<project-id> --database='(default)' --point-in-time-recovery-enablement=ENABLE
+
+# Scheduled full export to Cloud Storage (run from Cloud Scheduler)
+gcloud firestore export gs://<bucket>/backups --project=<project-id>
+
+# Destructive recursive delete (always confirm with the user first)
+npx -y firebase-tools@latest firestore:delete --project <project-id> --recursive --all-collections
+```
+
+---
+
+## 13. Blaze Budgets & Cost Guardrails
+
+### 13.1 Billing Budgets & Alerts
+```bash
+# Budget with 50/90/100 percent alert thresholds and Pub/Sub fanout
+gcloud billing budgets create --billing-account=<account-id> \
+  --display-name="firebase-monthly" --budget-amount=50USD \
+  --threshold-rule=percent=0.5 --threshold-rule=percent=0.9 --threshold-rule=percent=1.0 \
+  --all-updates-rule-pubsub-topic=projects/<project-id>/topics/billing-alerts
+```
+* Wire the alert topic to a function that pages on 100 percent and auto caps optional workloads (scheduled jobs, min instances).
+
+### 13.2 Usage Telemetry
+* Review the Firebase console Usage tab per product weekly during active development.
+* Track Cloud Monitoring metrics: Firestore document reads/writes/deletes, function invocations and active instances, hosting egress bytes, Storage egress.
+* Use `functions:log` plus region and memory attribution to find the expensive function before changing code.
+
+### 13.3 Cost Levers Checklist
+* Functions: `minInstances` 0 by default, `maxInstances` caps everywhere, smallest sufficient memory tier.
+* Firestore: TTL policies on ephemeral collections, indexed query discipline, remove unused composite indexes.
+* Storage: lifecycle rules (age based delete, noncurrent version cleanup), multipart/CORS hygiene.
+* Hosting: long `Cache-Control` on hashed assets, prune old releases and expired preview channels.
+* Realtime Database: `.indexOn` every ordered query, cap simultaneous connections, avoid chatty listeners.
+* Any projected spend above Spark boundaries needs explicit user authorization before deploy (see Section 6).

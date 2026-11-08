@@ -1,7 +1,7 @@
 ---
 name: CAD Tools
-description: Comprehensive CAD/CAM engineering skill for AI agents: orchestrating generative design, topology optimization with the Alien Meter slider, FreeCAD socket and headless automation, parametric 3D modeling, OpenSCAD CSG compilation, CadQuery and build123d Python script modeling, additive manufacturing (DMLS/SLS), and multi-format conversion. Trigger when the user requests parametric 3D CAD modeling, OpenSCAD scripts, CadQuery code, generative design, topology optimization, organic skeletal geometry, FreeCAD automation, PartDesign sketches, extrusion or pocketing, B-Rep solid generation, STEP/STL export, or CAD format conversion. Activate when interacting with FreeCAD via Streamable HTTP/SSE MCP socket or headless CLI, compiling OpenSCAD designs with parameter overrides (-D), evaluating the Alien Meter tradeoff between rigidity and bio-morphology, script-based geometry with build123d/CadQuery/OpenCASCADE, desktop CAD via COM, or 3D print/CNC manufacturing validation.
-version: 12
+description: Comprehensive CAD/CAM engineering skill for AI agents: orchestrating generative design, topology optimization with the Alien Meter slider, FreeCAD socket and headless automation, parametric 3D modeling, OpenSCAD CSG compilation, CadQuery and build123d Python script modeling, cadcraft precision 2D drafting with DXF interchange and sheet plotting, additive manufacturing (DMLS/SLS), and multi-format conversion. Trigger when the user requests parametric 3D CAD modeling, OpenSCAD scripts, CadQuery code, generative design, topology optimization, organic skeletal geometry, FreeCAD automation, PartDesign sketches, extrusion or pocketing, B-Rep solid generation, STEP/STL export, 2D drafting, DXF inspection or conversion, drawing audit, or plotted sheets. Activate when interacting with FreeCAD via Streamable HTTP/SSE MCP socket or headless CLI, compiling OpenSCAD designs with parameter overrides (-D), evaluating the Alien Meter tradeoff between rigidity and bio-morphology, script-based geometry with build123d/CadQuery/OpenCASCADE, AutoCAD/ZWCAD desktop CAD via COM, driving cadcraft headlessly via CLI/MCP/control channel, or 3D print/CNC manufacturing validation.
+version: 13
 target: .skills/cad-tools
 keywords:
   - cad-tools
@@ -17,27 +17,27 @@ keywords:
   - parametric-design
   - openscad
   - cadquery
-  - parametric-scripts
   - csg-modeling
   - freecad
   - partdesign
   - b-rep
   - opencascade
   - sketcher
-  - boolean-operations
-  - streamable-http
   - headless-cad
-  - offscreen-rendering
-  - undo-transactions
   - 3mf
   - dfam
   - engineering-drawing
   - fasteners
   - manufacturing-audit
+  - cadcraft
+  - precision-drafting
+  - dxf-interchange
+  - drawing-audit
+  - sheet-plotting
 ---
 ​‌‍# CAD Tools Skill
 
-A power-user engineering skill that equips AI agents with deep CAD/CAM capabilities across the full design-to-manufacture pipeline. Featuring generative design and topology optimization with the Alien Meter slider, native FreeCAD socket and headless automation, parametric OpenSCAD CSG compilation, CadQuery and `build123d` OpenCASCADE scripting, cloud-based generative B-Rep generation via the Zoo API, desktop COM automation for AutoCAD/ZWCAD, and a multi-format export pipeline (STEP, STL, DXF, 3MF, glTF, native FCStd), this skill is a complete engineering companion for autonomous technical workflows.
+A power-user engineering skill that equips AI agents with deep CAD/CAM capabilities across the full design-to-manufacture pipeline. Featuring generative design and topology optimization with the Alien Meter slider, native FreeCAD socket and headless automation, parametric OpenSCAD CSG compilation, CadQuery and `build123d` OpenCASCADE scripting, cloud-based generative B-Rep generation via the Zoo API, desktop COM automation for AutoCAD/ZWCAD/GstarCAD, and a multi-format export pipeline (STEP, STL, DXF, 3MF, glTF, native FCStd), this skill is a complete engineering companion for autonomous technical workflows.
 
 ---
 
@@ -69,7 +69,12 @@ User Prompt / Engineering Specification
 │                 │                                  │                   │
 │  ┌──────────────▼───────────────┐  ┌───────────────▼────────────────┐  │
 │  │   Desktop COM Automation     │  │   JSON Interoperability Engine │  │
-│  │   (AutoCAD / ZWCAD / GS)     │  │   (Parametric JSON Schemas)    │  │
+│  │   (AutoCAD/ZWCAD/GstarCAD)   │  │   (Parametric JSON Schemas)    │  │
+│  └──────────────┬───────────────┘  └───────────────┬────────────────┘  │
+│                 │                                  │                   │
+│  ┌──────────────▼───────────────┐  ┌───────────────▼────────────────┐  │
+│  │   Precision 2D Drafting      │  │   Sheet Plot & Drawing Audit   │  │
+│  │   (cadcraft CLI / MCP)       │  │   (Layouts, CTB/STB, PDF)      │  │
 │  └──────────────┬───────────────┘  └───────────────┬────────────────┘  │
 │                 │                                  │                   │
 │  ┌──────────────▼──────────────────────────────────▼────────────────┐  │
@@ -650,14 +655,137 @@ Because `build123d` is the modern next-generation successor to CadQuery created 
 
 ---
 
+## Section 16: Precision 2D Drafting Engine (cadcraft Headless CLI)
+
+For 2D drafting, DXF interchange, and sheet plotting, the skill drives cadcraft headlessly through `cadcraft-cli`. It reads, converts and exports drawings, runs scripts and commands, prints the command catalog, and serves MCP.
+
+### 16.1 Subcommand Map
+* `info FILE` : Drawing summary as JSON (counts, extents, layers, styles, blocks, layouts).
+* `convert IN OUT` : Format conversion across DXF, DWG (via DXF bridge), PDF, SVG, PNG.
+* `run FILE… --cmd 'id {json}' --save OUT --export OUT.png` : Batch jobs. Repeat `--cmd` in order; a parameter value of exactly `{last}` chains the previous handle (e.g. `viewport.set {"handle":"{last}","scale":1}` after `mview`).
+* `commands [FILTER]` : The full command catalog with ids and parameter docs.
+* `sample` : Built-in sample drawings for smoke tests.
+* `mcp` : MCP server over stdio (see Section 17).
+
+### 16.2 CLI Contract (Agent Rules)
+* **Exit codes**: 0 success, 1 command failed, 2 usage error (unknown flag, malformed value, conflicting flags). Usage errors stop before any work.
+* **Streams**: Results on stdout (`run` prints one JSON line per `--cmd`; null results print nothing). Errors, warnings, and `wrote …` lines go to stderr. `mcp` speaks pure MCP on stdout.
+* **Overwrite guard**: `convert` and `--save`/`--export` refuse an output identical to an input (any spelling); pass `--in-place` to allow it.
+* **Font fallbacks**: `CADCRAFT_FONTALT` / `CADCRAFT_FONTFALLBACK` (or `--fontalt` / `--fontfallback`) when drawings reference missing typefaces.
+* Point the bridge at any install with `--engine-path`; the skill never assumes a fixed install location.
+
+### 16.3 Drafting Bridge (`scripts/drafting_bridge.py`)
+```bash
+# Check host engine installation and version
+python scripts/drafting_bridge.py status
+
+# Summarize a drawing as JSON (counts, extents, layers, blocks)
+python scripts/drafting_bridge.py info cad/models/plate.dxf
+
+# Run a JSON command file headlessly and save
+python scripts/drafting_bridge.py run cad/models/plate.dxf --commands cad/models/annotate.json -o cad/output/plate_rev2.dxf
+
+# Convert across interchange formats
+python scripts/drafting_bridge.py convert cad/output/plate_rev2.dxf -o cad/output/plate_rev2.pdf
+
+# Render a viewport PNG inspection snapshot
+python scripts/drafting_bridge.py render cad/models/plate.dxf -o cad/output/plate.png --window=-10,-10,210,150
+
+# Audit a drawing (layers, skipped records, purge preview)
+python scripts/drafting_bridge.py audit cad/models/plate.dxf --json
+```
+
+---
+
+## Section 17: Agent Control Channel & MCP Server
+
+### 17.1 Desktop Control Channel (`--control PORT`)
+Start the desktop app with `--control PORT` (or `CADCRAFT_CONTROL_PORT=PORT`). It listens on `127.0.0.1:PORT` for JSON lines: one request per line, one reply per line.
+* **Token auth**: Every request carries the per-session token from `cadcraft-control-<port>.token` in the user runtime dir (`$XDG_RUNTIME_DIR` else `~/.cache`; `%LOCALAPPDATA%` on Windows). Missing token means `unauthorized`.
+* **Methods**: `cmdline.input {text}` (type exactly like a user; spaces act as Enter outside text prompts), `cmdline.script {text}` (multi-line `.scr` style), `cmdline.key` (enter/escape), `cmdline.state` (prompt, keywords, history tail), `engine.execute {command, params}` (any command as JSON, never a dialog), `engine.commands` (catalog), `drawing.inspect {entities?, limit?}` (summary plus honest `skipped`/`readNotes` loss reporting), `ui.inspect` (view, cursor, snap, save prompts).
+* **Timeout states**: `not-run` is safe to resend; `may-have-run` means inspect the drawing (`drawing.inspect`) before resending.
+* **Limits**: 16 connections, 256 MiB per line, 64 queued requests, 60 s app answer window.
+
+### 17.2 MCP Server Registration
+```bash
+# Headless in-process drawing session (no window)
+cadcraft-cli mcp
+
+# Bridged to the running app (watch the agent draw)
+cadcraft --control 7979 &
+cadcraft-cli mcp --connect 127.0.0.1:7979
+```
+* Client config: `{ "mcpServers": { "cadcraft": { "command": "cadcraft-cli", "args": ["mcp"] } } }`.
+* `--lazy` starts the bridge before the app opens (calls fail with open instructions until then); `--launch` opens the app on demand (macOS).
+* `--connect` without a reachable app fails closed instead of silently editing a separate headless drawing.
+
+### 17.3 MCP Tool Table
+* `command_line {text}` : Type at the command line (`line 0,0 @10,0 @0,5 c`, `circle 5,2 1`, `zoom e`). Returns prompt, keywords, output.
+* `script {text}` : Multi-line script execution.
+* `execute {command, params}` : JSON commands, never dialogs. `list_commands` shows ids and docs.
+* `inspect_drawing {entities?, limit?}` : Counts, extents, layers, styles, blocks, layouts, selection, undo history, entities.
+* `query_entities {type?, layer?, window?, crossing?, limit?, offset?}` : Filtered entities with handles and geometry; paged (`count` vs `returned`, default 500).
+* `shapes` (via `execute`): Closed shape facts (perimeter, area, centroid, winding, first self-intersection, coincident vertices), exact with arcs and bulges; non conforming matches counted under `skipped` with reasons.
+* `usage` (via `execute`): Cross-reference of layers, blocks, text styles, linetypes with what PURGE would offer (`unused` list). One scan caps at 5,000,000 objects (`incomplete: true` past the cap).
+
+---
+
+## Section 18: Precision Drafting Protocol & Parametric 2D
+
+* **Snap discipline**: Enable running object snaps plus polar/ortho for all agent-driven geometry; verify with `ui.inspect` before precision edits. Extension/parallel snaps and tracking are maturing; confirm behavior on the installed version before relying on them.
+* **State before typing**: Call `cmdline.state` before `cmdline.input` sequences so answers match the live prompt and keyword set; send Escape on unexpected states and re-plan instead of guessing.
+* **Prefer JSON execution**: Use `engine.execute` / MCP `execute` for deterministic edits; reserve typed `cmdline.input` for exploratory or prompt-driven flows.
+* **Parametric constraints**: Apply the built-in solver (12 geometric plus dimensional constraints, expressions and parameters, AutoConstrain inference) for dimension-driven 2D profiles, cross-linked with FreeCAD Sketcher practice in Section 4.
+* **Units and variables**: Set drawing units and precision up front; record system variable deviations in `cad/docs/` alongside the sheet.
+
+---
+
+## Section 19: Drawing Audit, Sheet Production & Scripting
+
+### 19.1 Audit Checklist (per drawing, before release)
+1. Run `drawing.inspect` / bridge `audit`: record counts, extents, layers, blocks, layouts.
+2. Triage `skipped` records and `readNotes`: every dropped entity class gets a disposition (acceptable loss, re-author, or block release).
+3. Run `usage`: purge `unused` layers/blocks/styles/linetypes; confirm no empty-but-referenced definitions ship.
+4. Verify units, text/dimension style coverage, and viewport scales against the sheet spec.
+5. Save at the target interchange version; keep versioned copies (`plate_revN.dxf`) since there is no autosave.
+
+### 19.2 Sheet Pipeline (Layouts to Plotted PDF)
+* Author model geometry in model space; compose sheets in paper-space layouts with scaled viewports.
+* Apply page setups plus CTB/STB plot styles; plot to PDF into `cad/output/` with the drawing name and revision.
+* Store plotter configurations in the settings folder `plotters` directory so batch jobs reproduce identical sheets.
+* Pair every plotted sheet with the Section 12 blueprint discipline: title block, revision, scale bar, projection notes.
+
+### 19.3 Batch Scripting (.scr, LISP, Aliases)
+```bash
+cadcraft-cli run drawing.dxf --script-file setup.scr --save out.dxf
+```
+* `.scr` files are literal command-line transcripts, one line per prompt answer; run headless via `run --script-file`, in-app via SCRIPT, or over MCP/control as script text.
+* AutoLISP (`.lsp`) via APPLOAD or `(load "name")`: core language, `command`, entity lists, selection sets, `get…` input, and `c:` commands work; Visual LISP ActiveX (`vlax-*`, `vla-*`), DCL dialogs, and reactors do not (rewrite those parts with `command` calls and prompts). Startup files `acad.lsp` / `acaddoc.lsp` load from the support folder.
+* `.pgp` aliases via ALIASEDIT (survive restarts in desktop apps; per-run only in headless CLI). Alias lines that shell out are skipped.
+* Compiled C++/​.NET plug-ins are not supported; external drivers use the CLI, MCP, or control channel from any language.
+
+---
+
+## Section 20: Maturity Guardrails & Interop Rules
+
+cadcraft is pre-alpha and improving fast. Agents obey these honesty rules until the engine proves otherwise:
+* **DXF first**: Use DXF as the interchange format. DWG passes through a DXF bridge that can drop custom-class entities and foreign data, and round-trips are not yet verified inside AutoCAD.
+* **Explicit saves**: No autosave or recovery exists yet. Save deliberately after every mutation batch and keep `*_revN` copies; confirm `ui.inspect` shows no pending save prompt at session end.
+* **Verify in the target app**: Open business critical sheets in AutoCAD, ZWCAD, or the receiving tool before release; attach the verification note to the deliverable.
+* **Mind the stubs**: Block in-place editing (REFEDIT), XCLIP, some prompt options, and advanced precision input are partial or missing. Check `engine.commands` docs and fail loudly with a workaround instead of silently degrading output.
+* **Report data loss**: Any `skipped`/`readNotes` item on files the skill did not author is surfaced to the user, never swallowed.
+
+---
+
 ## Directives
 
 * **Architectural Compliance**: When synthesizing or scaffolding project code, align generated components with Code Scaffold architectural specification standards.
+* **Precision Drafting Backend**: Route headless 2D drafting, DXF interchange, drawing audit, and sheet plotting through cadcraft (CLI, MCP, or control channel) per Sections 16 to 20; verify business critical sheets in AutoCAD or ZWCAD before release.
 * **Deterministic Parameter Naming**: All physical dimensions must be named constants defined at the head of the model file : magic numbers are strictly forbidden.
 * **Alien Meter Governance**: When topology optimization is requested, evaluate the Alien Meter tradeoff and output the Engineering Compromise Card. Explicitly warn the user if Factor of Safety falls below 1.5.
 * **Transactional Hygiene**: In FreeCAD scripts, always wrap feature generation in `openTransaction` and `commitTransaction`, with explicit `abortTransaction` calls in exception blocks.
 * **Format Decision Protocol**:
   * Use **STEP** for mechanical engineering exchange and CNC machining.
   * Use **STL / 3MF** for additive manufacturing and mesh slicing.
-  * Use **DXF** for laser cutting, waterjet profiling, and 2D drafting.
+  * Use **DXF** for laser cutting, waterjet profiling, and 2D drafting; DXF is the required interchange format for cadcraft round-trips until DWG is verified lossless.
   * Use **glTF/GLB** for Three.js web embedding and AR visualization.

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Floorplan Architect Brief Builder</title>
+<meta name="description" content="Sketch rooms on a grid, pick an interior style, choose shots, and export a validated Floorplan Architect brief.">
+<meta name="keywords" content="floorplan, walkthrough, interior styling, room brief, byof, home design">
+<style>
+  :root { color-scheme: dark; --bg: #0b0f14; --panel: #131a23; --ink: #e8eef5; --dim: #93a1b3; --accent: #ffb224; --line: #243044; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 14px/1.5 system-ui, sans-serif; }
+  header { padding: 14px 20px; border-bottom: 1px solid var(--line); display: flex; gap: 12px; align-items: baseline; }
+  header h1 { margin: 0; font-size: 18px; }
+  header span { color: var(--dim); font-size: 13px; }
+  main { display: grid; grid-template-columns: minmax(420px, 1fr) 340px; gap: 14px; padding: 14px 20px; }
+  section { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px; }
+  h2 { margin: 0 0 8px; font-size: 14px; text-transform: uppercase; letter-spacing: .06em; color: var(--dim); }
+  canvas { width: 100%; border: 1px solid var(--line); border-radius: 8px; background: #0d141d; cursor: crosshair; touch-action: none; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 8px; }
+  input, select, button, textarea { font: inherit; color: var(--ink); background: #0d141d; border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px; }
+  button { background: var(--accent); border-color: var(--accent); color: #201500; font-weight: 600; cursor: pointer; }
+  button.ghost { background: transparent; color: var(--ink); }
+  #rooms { list-style: none; margin: 8px 0 0; padding: 0; max-height: 180px; overflow: auto; }
+  #rooms li { display: flex; gap: 6px; align-items: center; padding: 4px 0; border-bottom: 1px dotted var(--line); }
+  #rooms input { flex: 1; min-width: 0; }
+  #rooms .meta { color: var(--dim); font-size: 12px; white-space: nowrap; }
+  #rooms button { padding: 2px 8px; font-size: 12px; }
+  .styles { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .style { border: 1px solid var(--line); border-radius: 8px; padding: 8px; cursor: pointer; }
+  .style b { display: block; font-size: 13px; }
+  .style small { color: var(--dim); }
+  .style[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+  .swatches { display: flex; gap: 4px; margin-top: 6px; }
+  .swatches i { width: 18px; height: 18px; border-radius: 4px; border: 1px solid #0006; }
+  .shots label { display: flex; gap: 6px; align-items: center; margin: 4px 0; }
+  textarea { width: 100%; min-height: 150px; font: 12px/1.45 ui-monospace, monospace; }
+  #status { min-height: 20px; font-size: 13px; }
+  #status.ok { color: #7dffa8; } #status.bad { color: #ff8d8d; }
+  footer { padding: 0 20px 16px; color: var(--dim); font-size: 12px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Floorplan Architect Brief Builder</h1>
+  <span>Sketch rooms, pick a style, export brief.json</span>
+</header>
+<main>
+  <section>
+    <h2>Plan canvas (1 grid square = 1 m)</h2>
+    <canvas id="plan" width="900" height="600"></canvas>
+    <div class="row">
+      <label>Room <input id="roomName" value="Living Room" size="16"></label>
+      <label>Floor <input id="roomFloor" value="oak" size="10"></label>
+      <button id="clearRooms" class="ghost" type="button">Clear rooms</button>
+      <label>Drop SVG plan <input id="svgFile" type="file" accept=".svg,image/svg+xml"></label>
+    </div>
+    <ul id="rooms"></ul>
+  </section>
+  <section>
+    <h2>Style</h2>
+    <div class="styles" id="styles"></div>
+    <h2 style="margin-top:12px">Lighting</h2>
+    <div class="row">
+      <select id="lighting">
+        <option value="daylight">Daylight</option>
+        <option value="golden-hour">Golden hour</option>
+        <option value="night-render">Night</option>
+      </select>
+      <label>Wall height <input id="wallHeight" value="2.7" size="4"> m</label>
+    </div>
+    <h2 style="margin-top:12px">Shots</h2>
+    <div class="shots">
+      <label><input type="checkbox" data-shot="orbit" checked> Orbit turntable</label>
+      <label><input type="checkbox" data-shot="stills" checked> Room stills</label>
+      <label><input type="checkbox" data-shot="walkthrough" checked> Walkthrough video</label>
+    </div>
+    <div class="row">
+      <button id="exportBtn" type="button">Export brief.json</button>
+      <button id="copyBtn" class="ghost" type="button">Copy</button>
+    </div>
+    <p id="status"></p>
+    <textarea id="output" readonly placeholder="Brief JSON appears here"></textarea>
+  </section>
+</main>
+<footer>SVG drop import reads rect shapes only; DXF and raster sources are handled by the agent-side importer scripts. All dimensions in metres.</footer>
+<script>
+const STYLES = [
+  { id: 'midcentury-modern', label: 'Midcentury Modern', blurb: 'Teak, mustard, tapered legs', colors: ['#EDE6D6', '#8B5A2B', '#D4A017'] },
+  { id: 'contemporary', label: 'Contemporary', blurb: 'Greys, black metal, boucle', colors: ['#F2F0EB', '#1F1F1F', '#2F5D50'] },
+  { id: 'farmhouse', label: 'Farmhouse', blurb: 'Shiplap, beams, linen', colors: ['#F7F4EE', '#A9805A', '#7A8B99'] },
+  { id: 'bachelor-pad', label: 'Bachelor Pad', blurb: 'Dark walls, leather, neon', colors: ['#2B2B2E', '#5A3A22', '#C8102E'] },
+  { id: 'flat-pack-scandi', label: 'Flat Pack Scandi', blurb: 'Birch, white, pastels', colors: ['#FFFFFF', '#D9C9A8', '#A8C3B9'] },
+  { id: 'luxury-penthouse', label: 'Luxury Penthouse', blurb: 'Marble, brass, velvet', colors: ['#ECE7DD', '#2E2A26', '#B08D57'] }
+];
+const SCALE = 40; // px per metre
+const rooms = [];
+let styleId = 'contemporary';
+const canvas = document.getElementById('plan');
+const ctx = canvas.getContext('2d');
+let drag = null;
+
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.strokeStyle = '#1a2433'; ctx.lineWidth = 1;
+  for (let x = 0; x <= canvas.width; x += SCALE) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke(); }
+  for (let y = 0; y <= canvas.height; y += SCALE) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke(); }
+  rooms.forEach((r, i) => {
+    const hue = (i * 47) % 360;
+    ctx.fillStyle = `hsla(${hue},45%,45%,.35)`;
+    ctx.strokeStyle = `hsl(${hue},60%,60%)`; ctx.lineWidth = 2;
+    ctx.fillRect(r.x * SCALE, r.y * SCALE, r.w * SCALE, r.h * SCALE);
+    ctx.strokeRect(r.x * SCALE, r.y * SCALE, r.w * SCALE, r.h * SCALE);
+    ctx.fillStyle = '#e8eef5'; ctx.font = '12px system-ui';
+    ctx.fillText(`${r.name} ${r.w.toFixed(1)}x${r.h.toFixed(1)}`, r.x * SCALE + 6, r.y * SCALE + 16);
+  });
+  if (drag) {
+    ctx.strokeStyle = '#ffb224'; ctx.lineWidth = 2; ctx.setLineDash([6, 4]);
+    ctx.strokeRect(drag.x0, drag.y0, drag.x1 - drag.x0, drag.y1 - drag.y0);
+    ctx.setLineDash([]);
+  }
+}
+
+function canvasPos(evt) {
+  const r = canvas.getBoundingClientRect();
+  return [(evt.clientX - r.left) * canvas.width / r.width, (evt.clientY - r.top) * canvas.height / r.height];
+}
+
+canvas.addEventListener('pointerdown', evt => {
+  const [x, y] = canvasPos(evt);
+  drag = { x0: x, y0: y, x1: x, y1: y };
+  canvas.setPointerCapture(evt.pointerId);
+});
+canvas.addEventListener('pointermove', evt => {
+  if (!drag) return;
+  const [x, y] = canvasPos(evt);
+  drag.x1 = x; drag.y1 = y; draw();
+});
+canvas.addEventListener('pointerup', () => {
+  if (!drag) return;
+  const x = Math.min(drag.x0, drag.x1) / SCALE, y = Math.min(drag.y0, drag.y1) / SCALE;
+  const w = Math.abs(drag.x1 - drag.x0) / SCALE, h = Math.abs(drag.y1 - drag.y0) / SCALE;
+  drag = null;
+  if (w < 0.5 || h < 0.5) { setStatus('Room too small (min 0.5 m).', false); draw(); return; }
+  const n = rooms.length + 1;
+  rooms.push({ id: `room${n}`, name: document.getElementById('roomName').value || `Room ${n}`,
+               floor: document.getElementById('roomFloor').value || 'oak',
+               x: +x.toFixed(2), y: +y.toFixed(2), w: +w.toFixed(2), h: +h.toFixed(2) });
+  renderRooms(); draw(); setStatus('', true);
+});
+
+function renderRooms() {
+  const list = document.getElementById('rooms');
+  list.innerHTML = '';
+  rooms.forEach((r, i) => {
+    const li = document.createElement('li');
+    const input = document.createElement('input');
+    input.value = r.name;
+    input.addEventListener('change', () => { r.name = input.value; draw(); });
+    const meta = document.createElement('span');
+    meta.className = 'meta';
+    meta.textContent = `${r.w.toFixed(1)} x ${r.h.toFixed(1)} m`;
+    const del = document.createElement('button');
+    del.textContent = 'Remove'; del.type = 'button';
+    del.addEventListener('click', () => { rooms.splice(i, 1); renderRooms(); draw(); });
+    li.append(input, meta, del);
+    list.append(li);
+  });
+}
+
+document.getElementById('clearRooms').addEventListener('click', () => { rooms.length = 0; renderRooms(); draw(); });
+
+document.getElementById('svgFile').addEventListener('change', evt => {
+  const file = evt.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const doc = new DOMParser().parseFromString(reader.result, 'image/svg+xml');
+      if (doc.querySelector('parsererror')) throw new Error('not SVG');
+      const rects = [...doc.querySelectorAll('rect')];
+      let added = 0;
+      rects.forEach(rc => {
+        const x = parseFloat(rc.getAttribute('x') || '0'), y = parseFloat(rc.getAttribute('y') || '0');
+        const w = parseFloat(rc.getAttribute('width') || '0'), h = parseFloat(rc.getAttribute('height') || '0');
+        if (!(w > 0 && h > 0)) return;
+        const n = rooms.length + 1;
+        rooms.push({ id: `room${n}`, name: `Room ${n}`, floor: 'oak', x, y, w, h });
+        added++;
+      });
+      renderRooms(); draw();
+      setStatus(added ? `Imported ${added} room rects from SVG (units as drawn).` : 'No usable rects in that SVG.', added > 0);
+    } catch (err) {
+      setStatus('Could not read that SVG file.', false);
+    }
+    evt.target.value = '';
+  };
+  reader.readAsText(file);
+});
+
+const styleBox = document.getElementById('styles');
+STYLES.forEach(s => {
+  const card = document.createElement('div');
+  card.className = 'style';
+  card.setAttribute('role', 'button');
+  card.setAttribute('aria-pressed', String(s.id === styleId));
+  card.tabIndex = 0;
+  card.innerHTML = `<b></b><small></small><div class="swatches"></div>`;
+  card.querySelector('b').textContent = s.label;
+  card.querySelector('small').textContent = s.blurb;
+  const sw = card.querySelector('.swatches');
+  s.colors.forEach(c => { const i = document.createElement('i'); i.style.background = c; sw.append(i); });
+  const pick = () => {
+    styleId = s.id;
+    [...styleBox.children].forEach(c => c.setAttribute('aria-pressed', String(c === card)));
+  };
+  card.addEventListener('click', pick);
+  card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } });
+  styleBox.append(card);
+});
+
+function setStatus(msg, ok) {
+  const el = document.getElementById('status');
+  el.textContent = msg;
+  el.className = msg ? (ok ? 'ok' : 'bad') : '';
+}
+
+function buildBrief() {
+  const wallHeight = parseFloat(document.getElementById('wallHeight').value);
+  const shots = [...document.querySelectorAll('[data-shot]:checked')].map(el => el.dataset.shot);
+  return {
+    version: 1, units: 'm', wallHeight,
+    style: styleId,
+    lighting: document.getElementById('lighting').value,
+    rooms: rooms.map(r => ({ id: r.id, name: r.name, rect: [r.x, r.y, r.w, r.h], floor: r.floor })),
+    openings: [], shots, estimated: false,
+    source: { app: 'brief-builder', format: 'sketch', file: 'canvas' }
+  };
+}
+
+function validateLocal(brief) {
+  if (!brief.rooms.length) return 'Add at least one room.';
+  if (!(brief.wallHeight >= 2.2 && brief.wallHeight <= 6)) return 'Wall height must be between 2.2 and 6 m.';
+  for (const r of brief.rooms) {
+    const [, , w, h] = r.rect;
+    if (!(w >= 0.5 && w <= 40 && h >= 0.5 && h <= 40)) return `Room "${r.name}" is out of range (0.5 to 40 m).`;
+  }
+  if (!brief.shots.length) return 'Pick at least one shot.';
+  return '';
+}
+
+document.getElementById('exportBtn').addEventListener('click', () => {
+  const brief = buildBrief();
+  const problem = validateLocal(brief);
+  if (problem) { setStatus(problem, false); return; }
+  const text = JSON.stringify(brief, null, 2);
+  document.getElementById('output').value = text;
+  const blob = new Blob([text], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'brief.json';
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+  setStatus(`Exported brief with ${brief.rooms.length} room(s). Run validate_brief.py on it next.`, true);
+});
+
+document.getElementById('copyBtn').addEventListener('click', async () => {
+  const text = document.getElementById('output').value;
+  if (!text) { setStatus('Export first, then copy.', false); return; }
+  try { await navigator.clipboard.writeText(text); setStatus('Brief copied.', true); }
+  catch { setStatus('Clipboard blocked; select the text manually.', false); }
+});
+
+renderRooms(); draw();
+</script>
+</body>
+</html>

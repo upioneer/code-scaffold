@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "styles": {
+    "midcentury-modern": {
+      "label": "Midcentury Modern",
+      "palette": { "wall": "#EDE6D6", "floor": "#8B5A2B", "trim": "#4A3728", "accent": "#D4A017", "fabric": "#6B7F59" },
+      "materials": { "floor": "teak-wood", "counters": "walnut-butcher", "upholstery": "boucle-ochre", "metal": "brushed-brass" },
+      "furnitureDensity": "balanced",
+      "defaultLighting": "daylight",
+      "notes": "Tapered legs, low profiles, starburst and globe lighting."
+    },
+    "contemporary": {
+      "label": "Contemporary",
+      "palette": { "wall": "#F2F0EB", "floor": "#B0A696", "trim": "#1F1F1F", "accent": "#2F5D50", "fabric": "#D9D2C5" },
+      "materials": { "floor": "white-oak", "counters": "honed-quartz", "upholstery": "boucle-cream", "metal": "matte-black" },
+      "furnitureDensity": "balanced",
+      "defaultLighting": "daylight",
+      "notes": "Neutral shells, black metal accents, soft layered light. The default style."
+    },
+    "farmhouse": {
+      "label": "Farmhouse",
+      "palette": { "wall": "#F7F4EE", "floor": "#A9805A", "trim": "#FFFFFF", "accent": "#7A8B99", "fabric": "#E8E0D0" },
+      "materials": { "floor": "reclaimed-pine", "counters": "soapstone", "upholstery": "oat-linen", "metal": "oil-bronze" },
+      "furnitureDensity": "rich",
+      "defaultLighting": "daylight",
+      "notes": "Shiplap whites, beam ceilings, apron sink cues, lantern pendants."
+    },
+    "bachelor-pad": {
+      "label": "Bachelor Pad",
+      "palette": { "wall": "#2B2B2E", "floor": "#3A3A3E", "trim": "#101012", "accent": "#C8102E", "fabric": "#5A3A22" },
+      "materials": { "floor": "dark-concrete", "counters": "black-granite", "upholstery": "cognac-leather", "metal": "chrome" },
+      "furnitureDensity": "sparse",
+      "defaultLighting": "night-render",
+      "notes": "Dark walls, leather and glass bar zone, neon accent strip, moody spots."
+    },
+    "flat-pack-scandi": {
+      "label": "Flat Pack Scandi",
+      "palette": { "wall": "#FFFFFF", "floor": "#D9C9A8", "trim": "#FFFFFF", "accent": "#A8C3B9", "fabric": "#F3E9D2" },
+      "materials": { "floor": "pale-birch", "counters": "white-laminate", "upholstery": "pastel-cotton", "metal": "powder-white" },
+      "furnitureDensity": "balanced",
+      "defaultLighting": "daylight",
+      "notes": "Compact modular modules, pastel textiles, bright even daylight."
+    },
+    "luxury-penthouse": {
+      "label": "Luxury Penthouse",
+      "palette": { "wall": "#ECE7DD", "floor": "#2E2A26", "trim": "#B08D57", "accent": "#1F3A5F", "fabric": "#5B2333" },
+      "materials": { "floor": "ebony-stained-oak", "counters": "marble", "upholstery": "velvet-wine", "metal": "polished-brass" },
+      "furnitureDensity": "rich",
+      "defaultLighting": "golden-hour",
+      "notes": "Marble and brass, velvet upholstery, chandelier focals."
+    }
+  },
+  "lighting": {
+    "daylight": { "sun": true, "sunElevation": 45, "sky": true, "windowFills": true, "practicals": false },
+    "golden-hour": { "sun": true, "sunElevation": 12, "sky": true, "windowFills": true, "practicals": true },
+    "night-render": { "sun": false, "sky": false, "windowFills": false, "practicals": true, "moon": true }
+  },
+  "shots": ["orbit", "stills", "walkthrough"]
+}

@@ -234,6 +234,13 @@
             "method": "copy"
         },
         {
+            "id": "floorplan-architect",
+            "label": "Floorplan Architect",
+            "source": ".skills/floorplan-architect",
+            "target": ".skills/floorplan-architect",
+            "method": "copy"
+        },
+        {
             "id": "ghostimprint",
             "label": "GhostImprint Engine",
             "source": ".skills/ghostimprint",

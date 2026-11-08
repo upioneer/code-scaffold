@@ -22,7 +22,8 @@ Welcome to the official **Code Scaffold Skills Library**. This curated registry 
 | Skill | Description | Search Keywords | Version | Path |
 | :--- | :--- | :--- | :--- | :--- |
 | **Braille Animations** | Create and manage unicode braille animations and spinners for CLIs and web apps. | `braille-animations`, `braille-art`, `terminal-animations`, `ascii-art`, `cli-spinners` | v5 | `.skills/braille-animations` |
-| **CAD Tools** | Comprehensive CAD/CAM engineering skill for AI agents: orchestrating generative design, topology optimization with the Alien Meter slider, OpenSCAD CSG compilation, CadQuery and build123d parametric scripting, FreeCAD socket automation, and multi-format conversion. | `cad-tools`, `cad`, `generative-design`, `topology-optimization`, `alien-meter` | v12 | `.skills/cad-tools` |
+| **CAD Tools** | Comprehensive CAD/CAM engineering skill for AI agents: orchestrating generative design, topology optimization with the Alien Meter slider, OpenSCAD CSG compilation, CadQuery and build123d parametric scripting, FreeCAD socket automation, and multi-format conversion. | `cad-tools`, `cad`, `generative-design`, `topology-optimization`, `alien-meter` | v13 | `.skills/cad-tools` |
+| **Floorplan Architect** | Turn any 2D floorplan into furnished 3D stills and walkthrough video with BYOF app imports, style templates, and headless Blender rendering. | `floorplan-architect`, `3d-walkthrough`, `byof-import`, `magicplan`, `roomsketcher` | v1 | `.skills/floorplan-architect` |
 | **Kinetic Canvas** | Ultra-fast, zero-dependency WebGL shaders and interactive HTML canvases wrapped as native React components. | `kinetic-canvas`, `canvas-api`, `physics-simulation`, `interactive-visuals`, `particles` | v8 | `.skills/kinetic-canvas` |
 | **Manim Math Animations** | Mathematical animations using the Manim library. | `manim`, `math-animation`, `python-video`, `3b1b`, `technical-animations` | v6 | `.skills/manim` |
 | **Mechanica Physical Metaphors** | Physical machine metaphor engine, kinematic cutaway illustrator, and interactive hardware explainer. | `mechanica`, `isometric-illustration`, `physical-metaphor`, `technical-diagram`, `hardware-explainer` | v2 | `.skills/mechanica` |
@@ -43,7 +44,7 @@ Welcome to the official **Code Scaffold Skills Library**. This curated registry 
 | Skill | Description | Search Keywords | Version | Path |
 | :--- | :--- | :--- | :--- | :--- |
 | **Clerk Authentication Perimeter** | Authentication perimeter and identity management using Clerk. | `clerk`, `authentication`, `user-management`, `jwt`, `oauth` | v4 | `.skills/clerk` |
-| **Firebase** | Autonomous project provisioning, clean URL naming, CLI lifecycle management, and Firestore multi-database operations. | `firebase`, `firestore`, `baas`, `authentication`, `realtime-database` | v7 | `.skills/firebase` |
+| **Firebase** | Autonomous project provisioning, clean URL naming, CLI lifecycle management, and Firestore multi-database operations. | `firebase`, `firestore`, `baas`, `authentication`, `realtime-database` | v8 | `.skills/firebase` |
 | **Resend** | Sends emails using the Resend API | `resend`, `transactional-email`, `react-email`, `smtp`, `email-api` | v3 | `.skills/resend` |
 | **Supabase** | Supabase database and authentication integration | `supabase`, `postgresql`, `row-level-security`, `database-auth`, `edge-functions` | v3 | `.skills/supabase` |
 | **Telegram** | Telegram Bot API interactions | `telegram`, `telegram-bot-api`, `messaging-bot`, `webhooks`, `bot-automation` | v3 | `.skills/telegram` |
