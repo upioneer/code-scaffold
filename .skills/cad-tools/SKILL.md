@@ -1,7 +1,7 @@
 ---
 name: CAD Tools
-description: Comprehensive CAD/CAM engineering skill for AI agents: orchestrating generative design, topology optimization with the Alien Meter slider, FreeCAD socket and headless automation, parametric 3D modeling, OpenSCAD CSG compilation, CadQuery and build123d Python script modeling, cadcraft precision 2D drafting with DXF interchange and sheet plotting, additive manufacturing (DMLS/SLS), and multi-format conversion. Trigger when the user requests parametric 3D CAD modeling, OpenSCAD scripts, CadQuery code, generative design, topology optimization, organic skeletal geometry, FreeCAD automation, PartDesign sketches, extrusion or pocketing, B-Rep solid generation, STEP/STL export, 2D drafting, DXF inspection or conversion, drawing audit, or plotted sheets. Activate when interacting with FreeCAD via Streamable HTTP/SSE MCP socket or headless CLI, compiling OpenSCAD designs with parameter overrides (-D), evaluating the Alien Meter tradeoff between rigidity and bio-morphology, script-based geometry with build123d/CadQuery/OpenCASCADE, AutoCAD/ZWCAD desktop CAD via COM, driving cadcraft headlessly via CLI/MCP/control channel, or 3D print/CNC manufacturing validation.
-version: 13
+description: Comprehensive CAD/CAM engineering skill for AI agents: orchestrating generative design, topology optimization with the Alien Meter slider, FreeCAD socket and headless automation, parametric 3D modeling, OpenSCAD CSG compilation, CadQuery and build123d Python script modeling, cadcraft precision 2D drafting with DXF interchange and sheet plotting, additive manufacturing (DMLS/SLS), and multi-format conversion. Trigger when the user requests parametric 3D CAD modeling, OpenSCAD scripts, CadQuery code, generative design, topology optimization, organic skeletal geometry, FreeCAD automation, PartDesign sketches, extrusion or pocketing, B-Rep solid generation, STEP/STL export, 2D drafting, DXF inspection or conversion, drawing audit, or plotted sheets. Activate when interacting with FreeCAD via Streamable HTTP/SSE MCP socket or headless CLI, compiling OpenSCAD designs with parameter overrides (-D), evaluating the Alien Meter tradeoff between rigidity and bio-morphology, script-based geometry with build123d/CadQuery/OpenCASCADE, AutoCAD/ZWCAD desktop CAD via COM, driving cadcraft headlessly via CLI/MCP/control channel, or 3D print/CNC manufacturing validation, Pali Ijo headless BREP modeling, or PhysCAD MCP driven CAD/CAM.
+version: 14
 target: .skills/cad-tools
 keywords:
   - cad-tools
@@ -25,15 +25,15 @@ keywords:
   - sketcher
   - headless-cad
   - 3mf
-  - dfam
-  - engineering-drawing
-  - fasteners
   - manufacturing-audit
   - cadcraft
   - precision-drafting
   - dxf-interchange
   - drawing-audit
   - sheet-plotting
+  - palicad
+  - pali-ijo
+  - physcad
 ---
 ​‌‍# CAD Tools Skill
 
@@ -75,6 +75,11 @@ User Prompt / Engineering Specification
 │  ┌──────────────▼───────────────┐  ┌───────────────▼────────────────┐  │
 │  │   Precision 2D Drafting      │  │   Sheet Plot & Drawing Audit   │  │
 │  │   (cadcraft CLI / MCP)       │  │   (Layouts, CTB/STB, PDF)      │  │
+│  └──────────────┬───────────────┘  └───────────────┬────────────────┘  │
+│                 │                                  │                   │
+│  ┌──────────────▼───────────────┐  ┌───────────────▼────────────────┐  │
+│  │   Pali Ijo BREP Kernel       │  │   PhysCAD MCP CAD/CAM          │  │
+│  │   (pali_ijo CLI / JSON)      │  │   (Model / Draw / Toolpath)    │  │
 │  └──────────────┬───────────────┘  └───────────────┬────────────────┘  │
 │                 │                                  │                   │
 │  ┌──────────────▼──────────────────────────────────▼────────────────┐  │
@@ -774,6 +779,69 @@ cadcraft is pre-alpha and improving fast. Agents obey these honesty rules until 
 * **Verify in the target app**: Open business critical sheets in AutoCAD, ZWCAD, or the receiving tool before release; attach the verification note to the deliverable.
 * **Mind the stubs**: Block in-place editing (REFEDIT), XCLIP, some prompt options, and advanced precision input are partial or missing. Check `engine.commands` docs and fail loudly with a workaround instead of silently degrading output.
 * **Report data loss**: Any `skipped`/`readNotes` item on files the skill did not author is surfaced to the user, never swallowed.
+
+---
+
+## Section 21: Pali Ijo Headless BREP Kernel
+
+Pali Ijo is the MIT licensed Dart BREP kernel behind PaliCAD. Agents drive it headlessly through the `pali_ijo` CLI: JSON documents between steps, millimetre units, degrees on the CLI. Build once with the Dart SDK (`dart pub get`, `mkdir build`, then `dart compile exe bin/pali_ijo.dart -o build/pali_ijo`), then model from any language over pipes. Verified against Dart 3.13.7 with a natively compiled engine.
+
+### 21.1 Command Map
+* **Create** (`box`, `cylinder`, `sphere`, `cone`, `torus`, `prism`, `pyramid`, `pipe`, `loft`): new BREP bodies from flags, no `--in`.
+* **Edit** (`boolean --with --op`, `fillet`, `chamfer`, `hollow`, `extrude`, `threads`, `scale`, `mirror`, `translate`, `slice`, `heal`): read JSON from `--in` or stdin, write JSON to `--out` or stdout.
+* **Query** (`measure`, `select`, `info`): human text or `--json` reports; redirect stdout for report files.
+* **Export** (`export --in --out`): extension selects JSON, STEP, 3MF, OBJ, STL, ASCII STL. Any supported file reads straight into any editing command, there is no separate import step.
+* **Contract**: exit 0 success, 64 usage, 65 malformed data, 66 file access, 70 geometry failure. Diagnostics on stderr, `-v` for operation logs.
+
+### 21.2 JSON Pipeline Discipline
+Keep the JSON document between modeling steps to retain BREP; export mesh only at the end. Chain commands with pipes or temp files; selectors (`top`, `convex`, `planar`, `of-face:top`) address faces and edges, quote compound expressions.
+
+### 21.3 Pali Bridge (`scripts/pali_bridge.py`)
+```bash
+# Check host engine installation
+python scripts/pali_bridge.py status --engine-path ./build/pali_ijo
+
+# Measure a model as JSON (volume, area, centroid, bounds)
+python scripts/pali_bridge.py measure cad/models/part.json --json
+
+# Export across interchange formats
+python scripts/pali_bridge.py export cad/models/part.json cad/output/part.step
+
+# Run a JSON op chain headlessly (box then hollow then export)
+python scripts/pali_bridge.py run --ops cad/models/tray_ops.json -o cad/output/tray.json
+```
+
+### 21.4 Limits and Pins
+Pin the Dart SDK (3.9.2 or later in Dart 3) and the kernel commit. Freeform blends, closed lofts, and general multi-surface corners can raise unsupported errors; `lathe`, `revolve`, `sweep`, `minkowski`, and `offset` return meshes in the CLI; STEP carries single bodies, assembly graphs are unsupported. Fail loudly with the engine stderr instead of shipping approximated geometry silently.
+
+---
+
+## Section 22: PhysCAD MCP Driven CAD/CAM
+
+PhysCAD is a commercial one time purchase CAD/CAM app (Windows, macOS, Linux, researched at v0.9.6) with a built-in MCP server, so agents drive modeling, drawings, and toolpaths directly. Support assumes a user owned licensed install; the skill never provisions licenses.
+
+### 22.1 MCP Control Plane
+Register the PhysCAD MCP server in the desktop AI host over loopback, mirroring the Section 3 and 17 patterns: localhost only, token when offered, no remote exposure. Model parametrically, pull one click drawings, and build CAM setups through agent tools; screenshot verification closes the loop where the server exposes views.
+
+### 22.2 Agentic Workflows
+* **Model**: timeline features plus direct push-pull edits from parameters; McMaster-Carr hardware drops into assemblies.
+* **Draw**: one click ANSI/ISO sheets with views, hole callouts, and title block to PDF booklet or SVG, then into the Section 19 sheet flow.
+* **Machine**: auto stock plus vise setup, toolpaths within machine profiles, full simulation (gouge, rapid, flute length, collision), cycle time check, then post per Section 22.3. Air cut all first articles.
+
+### 22.3 Post Advisor (`scripts/physcad_posts.py`)
+```bash
+# List every supported machine family and post
+python scripts/physcad_posts.py list
+
+# Recommend the post for a machine
+python scripts/physcad_posts.py recommend --machine tormach
+
+# Show the open and export format matrix
+python scripts/physcad_posts.py formats
+```
+
+### 22.4 Interchange and Maturity Notes
+PhysCAD opens STEP, IGES, STL, OBJ, 3MF, glTF, Blender files, and native; it exports STEP, STL, 3MF, OBJ, DXF faces and flat patterns, SVG, PDF, and posted G-code. Route STEP through the export pipeline and DXF faces through sheet production. Version drift rule: confirm MCP tool names against the in-app guide before scripting a new release, and never post for an unlisted machine without explicit owner approval.
 
 ---
 

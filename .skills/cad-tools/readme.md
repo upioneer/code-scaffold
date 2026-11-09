@@ -1,16 +1,16 @@
 # CAD Tools
 
-**Version:** 13
+**Version:** 14
 
 **Target:** `.skills/cad-tools`
 
 **Category:** Animation & Graphics
 
-**Keywords:** `cad-tools`, `cad`, `generative-design`, `topology-optimization`, `alien-meter`, `fea-stress`, `additive-manufacturing`, `3d-modeling`, `step-files`, `stl`, `parametric-design`, `openscad`, `cadquery`, `csg-modeling`, `freecad`, `partdesign`, `b-rep`, `opencascade`, `sketcher`, `headless-cad`, `3mf`, `dfam`, `engineering-drawing`, `fasteners`, `manufacturing-audit`, `cadcraft`, `precision-drafting`, `dxf-interchange`, `drawing-audit`, `sheet-plotting`
+**Keywords:** `cad-tools`, `cad`, `generative-design`, `topology-optimization`, `alien-meter`, `fea-stress`, `additive-manufacturing`, `3d-modeling`, `step-files`, `stl`, `parametric-design`, `openscad`, `cadquery`, `csg-modeling`, `freecad`, `partdesign`, `b-rep`, `opencascade`, `sketcher`, `headless-cad`, `3mf`, `manufacturing-audit`, `cadcraft`, `precision-drafting`, `dxf-interchange`, `drawing-audit`, `sheet-plotting`, `palicad`, `pali-ijo`, `physcad`
 
 ## Description
 
-A comprehensive CAD/CAM engineering skill that equips AI agents with the full design-to-manufacture pipeline: generative design and topology optimization with the Alien Meter slider, native FreeCAD socket and headless automation, parametric 3D modeling, cadcraft precision 2D drafting with DXF interchange and sheet plotting, additive manufacturing validation, and an interactive 3D WebGL Three.js visual workbench. Supported CAD programs: FreeCAD, cadcraft, AutoCAD, ZWCAD, GstarCAD (plus OpenSCAD, CadQuery, and build123d code-as-CAD runtimes).
+A comprehensive CAD/CAM engineering skill that equips AI agents with the full design-to-manufacture pipeline: generative design and topology optimization with the Alien Meter slider, native FreeCAD socket and headless automation, parametric 3D modeling, cadcraft precision 2D drafting with DXF interchange and sheet plotting, additive manufacturing validation, and an interactive 3D WebGL Three.js visual workbench. Supported CAD programs: FreeCAD, cadcraft, PhysCAD, AutoCAD, ZWCAD, GstarCAD (plus OpenSCAD, CadQuery, build123d, and Pali Ijo code-as-CAD runtimes).
 
 ## Capabilities & Use Cases
 
@@ -55,6 +55,9 @@ A comprehensive CAD/CAM engineering skill that equips AI agents with the full de
 * **Sheet Production Pipeline:** Paper-space layouts with scaled viewports, CTB/STB plot styles, and plotted PDFs into `cad/output/`, paired with title block, revision, and scale bar discipline
 * **Batch Drafting Scripts & LISP:** `.scr` transcript automation, AutoLISP routines with documented gaps (no ActiveX, DCL, or reactors), startup files, and `.pgp` alias management
 * **DXF-First Interop With Maturity Guardrails:** DXF as the required interchange format with DWG loss caveats, explicit-save discipline with versioned copies, and mandatory verification of business critical sheets in AutoCAD or ZWCAD before release
+* **Pali Ijo Headless BREP Kernel Bridge:** MIT licensed Dart solid modeling driven through the `pali_ijo` CLI with JSON pipelines, 30 creation plus editing plus query commands, STEP/STL/3MF/OBJ interchange, and a zero dependency Python bridge (`scripts/pali_bridge.py`) with an offline self-test suite
+* **PhysCAD MCP Driven CAD/CAM:** Agentic modeling, one click ANSI/ISO drawings, and 3-axis CAM with machine aware simulation through the built-in MCP server, paired with an offline post advisor (`scripts/physcad_posts.py`) covering Tormach, Haas, LinuxCNC, GRBL, plasma, and laser families
+* **Extended Interchange Matrix:** Pali Ijo JSON documents plus STEP/STL/3MF/OBJ and PhysCAD STEP/IGES/glTF/Blender round-trips feeding the multi-format export pipeline and sheet production flow
 
 ## Usage
 
@@ -74,8 +77,11 @@ Activate this skill for any task involving:
 * Maintaining structured BOM documentation and inspection renders alongside CAD models
 * Drafting, inspecting, converting, auditing, or plotting 2D CAD drawings and DXF interchanges via cadcraft
 * Driving a running CAD session from an agent over MCP or a token authenticated control channel
+* Modeling B-Rep solids headlessly with the Pali Ijo CLI and JSON pipelines
+* Driving PhysCAD modeling, drawings, and CAM toolpaths through its MCP server
 
 ## Changelog
+* **v14** : Added Pali Ijo headless BREP kernel support (CLI chapter, JSON pipeline discipline, pali_bridge.py with offline self-test) and PhysCAD MCP driven CAD/CAM support (MCP control plane docs, CAM post advisor script, interchange matrix); extended format coverage with keyword true-up
 * **v13** : Added cadcraft precision 2D drafting support: headless CLI engine chapter, drafting bridge script, agent control channel plus MCP server docs, precision drafting protocol with parametric 2D, drawing audit and sheet production pipeline, batch scripting guide, and DXF-first maturity guardrails with AutoCAD/ZWCAD verification rules
 * **v12** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v11** : Integrated OpenSCAD headless parametric compilation bridge, Customizer parameter parser, CadQuery execution runner, and automated CadQuery to build123d translation matrix.
