@@ -1,0 +1,99 @@
+{
+  "note": "Starter disable tiers for TV debloat planning. Exact entries are verified stock packages. Extend this file from your own device capture before trusting it on a new model.",
+  "tiers": ["safe", "ask", "never", "review"],
+  "platforms": {
+    "android-tv": {
+      "packages": {
+        "com.google.android.tvrecommendations": {
+          "tier": "safe",
+          "note": "Sponsored content rows on the stock home screen."
+        },
+        "com.google.android.tvlauncher": {
+          "tier": "ask",
+          "note": "Legacy stock launcher. Disable only after a replacement answers HOME."
+        },
+        "com.google.android.apps.tv.launcherx": {
+          "tier": "ask",
+          "note": "Current stock launcher. Disable only after a replacement answers HOME."
+        },
+        "com.google.android.leanbacklauncher": {
+          "tier": "ask",
+          "note": "Leanback stock launcher. Disable only after a replacement answers HOME."
+        },
+        "com.mitv.tvhome": {
+          "tier": "ask",
+          "note": "Xiaomi PatchWall launcher. Disable only after a replacement answers HOME."
+        },
+        "com.google.android.tungsten.setupwraith": {
+          "tier": "ask",
+          "note": "Setup wizard shadow. On Google TV it can steal HOME. Check wifi ownership before disabling."
+        },
+        "com.google.android.katniss": {
+          "tier": "ask",
+          "note": "Voice assistant. Disabling removes voice search and mic button behavior."
+        }
+      }
+    },
+    "fire-tv": {
+      "packages": {}
+    },
+    "webos": {
+      "packages": {}
+    },
+    "tizen": {
+      "packages": {}
+    }
+  },
+  "patterns": [
+    {
+      "match": "settings",
+      "tier": "never",
+      "note": "System settings. Required for recovery without a computer."
+    },
+    {
+      "match": "setupwizard",
+      "tier": "never",
+      "note": "Out of box setup. Disabling can boot loop a fresh TV."
+    },
+    {
+      "match": "packageinstaller",
+      "tier": "never",
+      "note": "Package installer. Required for sideloading and updates."
+    },
+    {
+      "match": "systemui",
+      "tier": "never",
+      "note": "System UI shell. Disabling blanks navigation and volume UI."
+    },
+    {
+      "match": "launcher",
+      "tier": "ask",
+      "note": "Looks like a launcher. Confirm a replacement answers HOME first."
+    },
+    {
+      "match": "assistant",
+      "tier": "ask",
+      "note": "Looks like a voice assistant. Confirm voice is expendable first."
+    },
+    {
+      "match": "recommendation",
+      "tier": "safe",
+      "note": "Content recommendation rows. Safe to silence."
+    },
+    {
+      "match": "sponsored",
+      "tier": "safe",
+      "note": "Sponsored content. Safe to silence."
+    },
+    {
+      "match": "telemetry",
+      "tier": "safe",
+      "note": "Usage telemetry. Safe to silence."
+    },
+    {
+      "match": "analytics",
+      "tier": "safe",
+      "note": "Usage analytics. Safe to silence."
+    }
+  ]
+}

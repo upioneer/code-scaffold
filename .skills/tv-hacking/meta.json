@@ -1,0 +1,15 @@
+{
+  "label": "TV Hacking Arsenal",
+  "description": "Root, debloat, and reclaim any smart TV: Samsung Tizen, LG webOS, Android TV, Google TV, and Fire TV ad removal, telemetry shutdown, custom launchers, and remote automation with one command restore.",
+  "version": "1",
+  "target": ".skills/tv-hacking",
+  "hasSandbox": false,
+  "logo": [
+    "  ████████╗██╗   ██╗██╗  ██╗ █████╗  ██████╗██╗  ██╗██╗███╗   ██╗ ██████╗   ",
+    "  ╚══██╔══╝██║   ██║██║  ██║██╔══██╗██╔════╝██║ ██╔╝██║████╗  ██║██╔════╝   ",
+    "     ██║   ██║   ██║███████║███████║██║     █████╔╝ ██║██╔██╗ ██║██║  ███╗  ",
+    "     ██║   ╚██╗ ██╔╝██╔══██║██╔══██║██║     ██╔═██╗ ██║██║╚██╗██║██║   ██║  ",
+    "     ██║    ╚████╔╝ ██║  ██║██║  ██║╚██████╗██║  ██╗██║██║ ╚████║╚██████╔╝  ",
+    "     ╚═╝     ╚═══╝  ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝ ╚═════╝   "
+  ]
+}

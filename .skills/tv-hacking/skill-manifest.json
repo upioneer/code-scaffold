@@ -1,0 +1,47 @@
+{
+  "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
+  "specification": "https://code-scaffold.com/spec/v1",
+  "name": "code_scaffold_tv_hacking_skill",
+  "version": "1",
+  "description": "Root, debloat, and reclaim any smart TV: Samsung Tizen, LG webOS, Android TV, Google TV, and Fire TV ad removal, telemetry shutdown, custom launchers, and remote automation with one command restore.",
+  "entryPoint": "./SKILL.md",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "requiredPermissions": [
+    "fs:read",
+    "fs:write",
+    "net:connect"
+  ],
+  "category": "Security & Cryptography",
+  "keywords": [
+    "tv-hacking",
+    "smart-tv-root",
+    "tv-rooting",
+    "tv-debloat",
+    "android-tv",
+    "google-tv",
+    "fire-tv",
+    "fire-os",
+    "samsung-tizen",
+    "tizen-tv",
+    "lg-webos",
+    "webos-tv",
+    "adb-debloat",
+    "tv-launcher",
+    "ad-free-tv",
+    "tv-privacy",
+    "telemetry-removal",
+    "acr-removal",
+    "tv-remote-control",
+    "tv-automation",
+    "dumb-tv",
+    "bloatware-removal",
+    "tv-sideload",
+    "tv-firmware",
+    "homebrew-tv",
+    "tv-privacy-audit"
+  ],
+  "hasSandbox": false,
+  "integrity": "cs:sha256:f2edd59f6474e57ce35c15490ccea45550f1bc4c2ae12af3c6d5b4574889ec57"
+}

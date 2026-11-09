@@ -1,6 +1,6 @@
 {
     "metadata": {
-        "version": "7.44.0",
+        "version": "7.45.0",
         "lastUpdated": "2026-09-07T01:09:00Z"
     },
     "env": {
@@ -567,6 +567,13 @@
             "label": "TUI Tools",
             "source": ".skills/tui-tools",
             "target": ".skills/tui-tools",
+            "method": "copy"
+        },
+        {
+            "id": "tv-hacking",
+            "label": "TV Hacking Arsenal",
+            "source": ".skills/tv-hacking",
+            "target": ".skills/tv-hacking",
             "method": "copy"
         },
         {
