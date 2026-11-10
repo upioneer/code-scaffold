@@ -1,6 +1,6 @@
 # CAD Tools
 
-**Version:** 14
+**Version:** 15
 
 **Target:** `.skills/cad-tools`
 
@@ -58,6 +58,8 @@ A comprehensive CAD/CAM engineering skill that equips AI agents with the full de
 * **Pali Ijo Headless BREP Kernel Bridge:** MIT licensed Dart solid modeling driven through the `pali_ijo` CLI with JSON pipelines, 30 creation plus editing plus query commands, STEP/STL/3MF/OBJ interchange, and a zero dependency Python bridge (`scripts/pali_bridge.py`) with an offline self-test suite
 * **PhysCAD MCP Driven CAD/CAM:** Agentic modeling, one click ANSI/ISO drawings, and 3-axis CAM with machine aware simulation through the built-in MCP server, paired with an offline post advisor (`scripts/physcad_posts.py`) covering Tormach, Haas, LinuxCNC, GRBL, plasma, and laser families
 * **Extended Interchange Matrix:** Pali Ijo JSON documents plus STEP/STL/3MF/OBJ and PhysCAD STEP/IGES/glTF/Blender round-trips feeding the multi-format export pipeline and sheet production flow
+* **Part Ownership and Dedicated Spatial Boundaries:** Every board, leg, rail, slat, and sheet good holds a dedicated non-overlapping volume with coincident joint faces, host-owned voids, named fit allowances, union-volume verification, and cut list reconciliation per Section 23
+* **Real-Time Watchers and Live Reload:** Native change surfaces per engine (FreeCAD document observers, OpenSCAD auto reload, CQ-editor autoreload, AutoCAD reactors) plus a zero dependency polling fallback (`scripts/file_watcher.py`) with debounce, JSON event logging, and one-shot CI mode
 
 ## Usage
 
@@ -79,8 +81,11 @@ Activate this skill for any task involving:
 * Driving a running CAD session from an agent over MCP or a token authenticated control channel
 * Modeling B-Rep solids headlessly with the Pali Ijo CLI and JSON pipelines
 * Driving PhysCAD modeling, drawings, and CAM toolpaths through its MCP server
+* Enforcing dedicated non-overlapping spatial boundaries across boards, legs, rails, slats, and sheet goods with joinery verification
+* Watching CAD sources for live rebuild, render, and audit loops across FreeCAD, OpenSCAD, CadQuery, and AutoCAD
 
 ## Changelog
+* **v15** : Added part ownership and non-overlapping spatial boundary instruction (Section 23 with joinery patterns, union-volume verification protocol, and cut list reconciliation) plus a backing Part Ownership directive, and Real-Time watcher coverage (Section 24 platform matrix plus file_watcher.py with offline self-test)
 * **v14** : Added Pali Ijo headless BREP kernel support (CLI chapter, JSON pipeline discipline, pali_bridge.py with offline self-test) and PhysCAD MCP driven CAD/CAM support (MCP control plane docs, CAM post advisor script, interchange matrix); extended format coverage with keyword true-up
 * **v13** : Added cadcraft precision 2D drafting support: headless CLI engine chapter, drafting bridge script, agent control channel plus MCP server docs, precision drafting protocol with parametric 2D, drawing audit and sheet production pipeline, batch scripting guide, and DXF-first maturity guardrails with AutoCAD/ZWCAD verification rules
 * **v12** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index

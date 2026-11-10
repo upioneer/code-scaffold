@@ -1,7 +1,7 @@
 ---
 name: CAD Tools
 description: Comprehensive CAD/CAM engineering skill for AI agents: orchestrating generative design, topology optimization with the Alien Meter slider, FreeCAD socket and headless automation, parametric 3D modeling, OpenSCAD CSG compilation, CadQuery and build123d Python script modeling, cadcraft precision 2D drafting with DXF interchange and sheet plotting, additive manufacturing (DMLS/SLS), and multi-format conversion. Trigger when the user requests parametric 3D CAD modeling, OpenSCAD scripts, CadQuery code, generative design, topology optimization, organic skeletal geometry, FreeCAD automation, PartDesign sketches, extrusion or pocketing, B-Rep solid generation, STEP/STL export, 2D drafting, DXF inspection or conversion, drawing audit, or plotted sheets. Activate when interacting with FreeCAD via Streamable HTTP/SSE MCP socket or headless CLI, compiling OpenSCAD designs with parameter overrides (-D), evaluating the Alien Meter tradeoff between rigidity and bio-morphology, script-based geometry with build123d/CadQuery/OpenCASCADE, AutoCAD/ZWCAD desktop CAD via COM, driving cadcraft headlessly via CLI/MCP/control channel, or 3D print/CNC manufacturing validation, Pali Ijo headless BREP modeling, or PhysCAD MCP driven CAD/CAM.
-version: 14
+version: 15
 target: .skills/cad-tools
 keywords:
   - cad-tools
@@ -845,6 +845,65 @@ PhysCAD opens STEP, IGES, STL, OBJ, 3MF, glTF, Blender files, and native; it exp
 
 ---
 
+## Section 23: Part Ownership & Non-Overlapping Spatial Boundaries
+
+Every board, leg, rail, slat, and sheet good owns a dedicated volume. No two parts share space; mating faces meet exactly and stop.
+
+### 23.1 The Ownership Rule
+* **One part, one volume**: model each part as a closed solid whose boundary never crosses another part's boundary. Coincident faces (touching exactly) are joints; crossing faces are defects.
+* **Voids belong to their host**: a mortise, dado, rabbet, or bore is empty space bounded by the receiving part. The tenon, shelf, or dowel that fills it is a separate solid whose faces coincide with the void walls plus an explicit fit allowance.
+* **Fit allowances are named numbers**: glue gaps, slip fits, and press fits appear as named constants (per the Deterministic Parameter Naming directive), never as eyeballed nudges. Solid wood gets cross grain expansion gaps; sheet goods get actual thickness dimensions, never nominal.
+* **Fasteners are parts too**: screws, dowels, biscuits, and dominoes each own their pilot bore or slot volume; the bore belongs to the host part, the fastener to itself.
+
+### 23.2 Joinery Patterns
+* **Carcass**: butt joints meet face to face; dadoes and rabbets cut full depth housings with matching tenon shoulders; confirm shelves cannot rack past their housings.
+* **Face frames**: stiles run full height and own their length; rails fit between stiles, never through them; pocket holes angle within the rail without breaking faces.
+* **Tables**: legs own floor to apron top; aprons meet legs in mortise and tenon or dowel joints with shoulders seated; tabletops float on buttons or figure eight fasteners with cross grain travel modeled.
+* **Slatted work**: each slat owns its slot with even reveal gaps as named constants; slats never touch each other or the frame sides.
+* **Sheet goods**: carcass panels butt or dado with edge banding modeled as separate thin solids; confirm backs and bottoms sit in their grooves without bottoming out.
+
+### 23.3 Verification Protocol
+* **Union volume check**: the boolean union of all parts must equal the sum of individual part volumes within tolerance. Any shortfall is overlap; find and fix it before release.
+* **Interference sweep**: run pairwise interference detection and disposition every hit as joint (coincident, allowed) or defect (crossing, forbidden).
+* **Travel check**: drawers, doors, lids, and leaves get open and closed positions verified against neighbors plus finger clearance.
+* **Cut list reconciliation**: every part in the model appears in the cut list with final dimensions including allowances, grain direction for solid wood, and edge banding notes for sheet goods.
+
+---
+
+## Section 24: Real-Time Watchers & Live Reload
+
+Nothing in this skill regenerates silently. Every engine either pushes change events or gets watched by `scripts/file_watcher.py`, so agent edits recompile, rerender, or reaudit within seconds.
+
+### 24.1 Platform Matrix
+| Engine | Watcher surface | How the agent uses it |
+| :--- | :--- | :--- |
+| FreeCAD | `App.addDocumentObserver` slots (created and deleted objects, property changes, recomputes) in GUI or headless sessions | Register an observer that logs changes and triggers audit plus export on recompute |
+| OpenSCAD | Design menu, Automatic Reload and Preview | Enable it, edit `.scad` externally, the viewport recompiles on save |
+| CQ-editor (CadQuery, build123d) | Autoreload checkbox plus delay (QFileSystemWatcher) | Enable autoreload, raise the delay if saves race the render |
+| AutoCAD (full, Windows) | Database, object, editor, and document reactors (ObjectARX, .NET, AutoLISP `vlr-*`) | Attach reactors that log add, modify, erase, and save events to the audit trail |
+| cadcraft | No confirmed push events; CLI plus control channel | Poll with `file_watcher.py` around `info` and `run` batches |
+| Pali Ijo, PhysCAD, Zoo | No confirmed native watcher | Poll files with `file_watcher.py`; poll sessions over MCP where offered |
+
+ZWCAD and GstarCAD reactor compatibility is unverified: probe one `vlr-acdb-reactor` callback before depending on it.
+
+### 24.2 Generic File Watcher (`scripts/file_watcher.py`)
+```bash
+# Rebuild a Pali Ijo part whenever its ops file changes
+python scripts/file_watcher.py watch cad/models/tray_ops.json -- python scripts/pali_bridge.py run --ops cad/models/tray_ops.json -o cad/output/tray.json
+
+# One-shot audit the moment a drawing lands
+python scripts/file_watcher.py watch cad/output/plate.dxf --once -- python scripts/drafting_bridge.py audit cad/output/plate.dxf --json
+```
+Polling with mtime plus size fingerprints, debounce coalescing, and per-event JSON log lines. Prefer native watchers where they exist; the generic watcher is the fallback, not the default.
+
+### 24.3 Agent Patterns
+* **Edit loop**: watch source, rebuild, render a snapshot, audit, report; stop the watcher when the task ends, never leave orphans.
+* **Debounce writes**: editors save in bursts; the default 0.5 s coalescing window absorbs them into one rebuild.
+* **Log everything**: each rebuild records trigger file, command, exit code, and duration for the audit trail.
+* **Headless parity**: the same watch command runs in CI with `--once` plus a timeout instead of blocking forever.
+
+---
+
 ## Directives
 
 * **Architectural Compliance**: When synthesizing or scaffolding project code, align generated components with Code Scaffold architectural specification standards.
@@ -857,3 +916,5 @@ PhysCAD opens STEP, IGES, STL, OBJ, 3MF, glTF, Blender files, and native; it exp
   * Use **STL / 3MF** for additive manufacturing and mesh slicing.
   * Use **DXF** for laser cutting, waterjet profiling, and 2D drafting; DXF is the required interchange format for cadcraft round-trips until DWG is verified lossless.
   * Use **glTF/GLB** for Three.js web embedding and AR visualization.
+* **Part Ownership**: Every board, leg, rail, slat, and sheet good holds a dedicated, non-overlapping spatial boundary per Section 23; mating faces coincide exactly, voids belong to their host part, and the union-volume check passes before release.
+* **Live Reload Discipline**: Prefer native watcher surfaces per Section 24 (FreeCAD observers, OpenSCAD auto reload, CQ-editor autoreload, AutoCAD reactors); use `scripts/file_watcher.py` everywhere else, and never leave a watcher running past its task.

@@ -2,7 +2,7 @@
   "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
   "specification": "https://code-scaffold.com/spec/v1",
   "name": "cad-tools",
-  "version": "14",
+  "version": "15",
   "description": "Comprehensive CAD/CAM engineering skill for AI agents: orchestrating generative design, topology optimization with the Alien Meter slider, OpenSCAD CSG compilation, CadQuery and build123d parametric scripting, FreeCAD automation, cadcraft precision 2D drafting with DXF interchange and sheet plotting, Pali Ijo headless BREP modeling, PhysCAD MCP driven CAD/CAM, and multi-format conversion.",
   "entryPoint": "./SKILL.md",
   "engines": {
