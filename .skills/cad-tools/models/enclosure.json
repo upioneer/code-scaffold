@@ -1,0 +1,530 @@
+{
+  "slug": "enclosure",
+  "title": "Vented Electronics Enclosure",
+  "description": "Slatted lid, port openings, fan, PCB on brass standoffs.",
+  "units": "mm",
+  "parts": [
+    {
+      "name": "bottom",
+      "kind": "box",
+      "material": "blackMetal",
+      "center": [
+        0,
+        1.5,
+        0
+      ],
+      "size": [
+        200,
+        3,
+        150
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "front left",
+      "kind": "box",
+      "material": "blackMetal",
+      "center": [
+        -65,
+        35,
+        73.5
+      ],
+      "size": [
+        70,
+        64,
+        3
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "front right",
+      "kind": "box",
+      "material": "blackMetal",
+      "center": [
+        65,
+        35,
+        73.5
+      ],
+      "size": [
+        70,
+        64,
+        3
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "back left",
+      "kind": "box",
+      "material": "blackMetal",
+      "center": [
+        -62.5,
+        35,
+        -73.5
+      ],
+      "size": [
+        75,
+        64,
+        3
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "back right",
+      "kind": "box",
+      "material": "blackMetal",
+      "center": [
+        62.5,
+        35,
+        -73.5
+      ],
+      "size": [
+        75,
+        64,
+        3
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "side left",
+      "kind": "box",
+      "material": "blackMetal",
+      "center": [
+        -98.5,
+        35,
+        0
+      ],
+      "size": [
+        3,
+        64,
+        144
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "side right",
+      "kind": "box",
+      "material": "blackMetal",
+      "center": [
+        98.5,
+        35,
+        0
+      ],
+      "size": [
+        3,
+        64,
+        144
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "fan grille",
+      "kind": "box",
+      "material": "blackMetal",
+      "center": [
+        0,
+        35,
+        -73.5
+      ],
+      "size": [
+        50,
+        64,
+        8
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "lid slat 1",
+      "kind": "box",
+      "material": "blackMetal",
+      "center": [
+        0,
+        68.5,
+        -63.2
+      ],
+      "size": [
+        200,
+        3,
+        23.6
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "lid slat 2",
+      "kind": "box",
+      "material": "blackMetal",
+      "center": [
+        0,
+        68.5,
+        -31.6
+      ],
+      "size": [
+        200,
+        3,
+        23.6
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "lid slat 3",
+      "kind": "box",
+      "material": "blackMetal",
+      "center": [
+        0,
+        68.5,
+        0.0
+      ],
+      "size": [
+        200,
+        3,
+        23.6
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "lid slat 4",
+      "kind": "box",
+      "material": "blackMetal",
+      "center": [
+        0,
+        68.5,
+        31.60000000000001
+      ],
+      "size": [
+        200,
+        3,
+        23.6
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "lid slat 5",
+      "kind": "box",
+      "material": "blackMetal",
+      "center": [
+        0,
+        68.5,
+        63.2
+      ],
+      "size": [
+        200,
+        3,
+        23.6
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "PCB",
+      "kind": "box",
+      "material": "pcb",
+      "center": [
+        0,
+        16,
+        0
+      ],
+      "size": [
+        160,
+        2,
+        110
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "standoff 1",
+      "kind": "cyl",
+      "material": "brass",
+      "center": [
+        70,
+        9,
+        45
+      ],
+      "r": 3,
+      "h": 12,
+      "axis": "y"
+    },
+    {
+      "name": "standoff 2",
+      "kind": "cyl",
+      "material": "brass",
+      "center": [
+        70,
+        9,
+        -45
+      ],
+      "r": 3,
+      "h": 12,
+      "axis": "y"
+    },
+    {
+      "name": "standoff 3",
+      "kind": "cyl",
+      "material": "brass",
+      "center": [
+        -70,
+        9,
+        45
+      ],
+      "r": 3,
+      "h": 12,
+      "axis": "y"
+    },
+    {
+      "name": "standoff 4",
+      "kind": "cyl",
+      "material": "brass",
+      "center": [
+        -70,
+        9,
+        -45
+      ],
+      "r": 3,
+      "h": 12,
+      "axis": "y"
+    },
+    {
+      "name": "lid screw 1",
+      "kind": "cyl",
+      "material": "steelDark",
+      "center": [
+        90,
+        71.5,
+        60
+      ],
+      "r": 3,
+      "h": 3,
+      "axis": "y"
+    },
+    {
+      "name": "lid screw 2",
+      "kind": "cyl",
+      "material": "steelDark",
+      "center": [
+        90,
+        71.5,
+        -60
+      ],
+      "r": 3,
+      "h": 3,
+      "axis": "y"
+    },
+    {
+      "name": "lid screw 3",
+      "kind": "cyl",
+      "material": "steelDark",
+      "center": [
+        -90,
+        71.5,
+        60
+      ],
+      "r": 3,
+      "h": 3,
+      "axis": "y"
+    },
+    {
+      "name": "lid screw 4",
+      "kind": "cyl",
+      "material": "steelDark",
+      "center": [
+        -90,
+        71.5,
+        -60
+      ],
+      "r": 3,
+      "h": 3,
+      "axis": "y"
+    },
+    {
+      "name": "foot 1",
+      "kind": "cyl",
+      "material": "rubber",
+      "center": [
+        85,
+        -3,
+        60
+      ],
+      "r": 8,
+      "h": 6,
+      "axis": "y"
+    },
+    {
+      "name": "foot 2",
+      "kind": "cyl",
+      "material": "rubber",
+      "center": [
+        85,
+        -3,
+        -60
+      ],
+      "r": 8,
+      "h": 6,
+      "axis": "y"
+    },
+    {
+      "name": "foot 3",
+      "kind": "cyl",
+      "material": "rubber",
+      "center": [
+        -85,
+        -3,
+        60
+      ],
+      "r": 8,
+      "h": 6,
+      "axis": "y"
+    },
+    {
+      "name": "foot 4",
+      "kind": "cyl",
+      "material": "rubber",
+      "center": [
+        -85,
+        -3,
+        -60
+      ],
+      "r": 8,
+      "h": 6,
+      "axis": "y"
+    }
+  ],
+  "cut_list": [
+    {
+      "material": "blackMetal",
+      "dims": [
+        200,
+        3,
+        150
+      ],
+      "qty": 1,
+      "names": [
+        "bottom"
+      ]
+    },
+    {
+      "material": "blackMetal",
+      "dims": [
+        200,
+        3,
+        23.6
+      ],
+      "qty": 5,
+      "names": [
+        "lid slat 1",
+        "lid slat 2",
+        "lid slat 3",
+        "lid slat 4",
+        "lid slat 5"
+      ]
+    },
+    {
+      "material": "blackMetal",
+      "dims": [
+        3,
+        64,
+        144
+      ],
+      "qty": 2,
+      "names": [
+        "side left",
+        "side right"
+      ]
+    },
+    {
+      "material": "blackMetal",
+      "dims": [
+        50,
+        64,
+        8
+      ],
+      "qty": 1,
+      "names": [
+        "fan grille"
+      ]
+    },
+    {
+      "material": "blackMetal",
+      "dims": [
+        70,
+        64,
+        3
+      ],
+      "qty": 2,
+      "names": [
+        "front left",
+        "front right"
+      ]
+    },
+    {
+      "material": "blackMetal",
+      "dims": [
+        75,
+        64,
+        3
+      ],
+      "qty": 2,
+      "names": [
+        "back left",
+        "back right"
+      ]
+    },
+    {
+      "material": "brass",
+      "dims": [
+        "cyl",
+        3,
+        12
+      ],
+      "qty": 4,
+      "names": [
+        "standoff 1",
+        "standoff 2",
+        "standoff 3",
+        "standoff 4"
+      ]
+    },
+    {
+      "material": "pcb",
+      "dims": [
+        160,
+        2,
+        110
+      ],
+      "qty": 1,
+      "names": [
+        "PCB"
+      ]
+    },
+    {
+      "material": "rubber",
+      "dims": [
+        "cyl",
+        8,
+        6
+      ],
+      "qty": 4,
+      "names": [
+        "foot 1",
+        "foot 2",
+        "foot 3",
+        "foot 4"
+      ]
+    },
+    {
+      "material": "steelDark",
+      "dims": [
+        "cyl",
+        3,
+        3
+      ],
+      "qty": 4,
+      "names": [
+        "lid screw 1",
+        "lid screw 2",
+        "lid screw 3",
+        "lid screw 4"
+      ]
+    }
+  ],
+  "stats": {
+    "part_count": 26,
+    "volume_mm3": 339097.9
+  }
+}

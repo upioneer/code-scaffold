@@ -95,7 +95,7 @@ The skill currently provides a solid foundation of modular components:
 * **Goal:** Real-time two-way communication where UI controls trigger FreeCAD parametric rebuilds and agent actions manipulate the 3D canvas live.
 * **Mechanics:**
   * A lightweight background Python WebSocket server running via `scripts/freecad_bridge.py --daemon --port 8765`.
-  * The sandbox opens a persistent socket connection (`ws://localhost:8765`).
+  * The sandbox opens a persistent socket connection (`ws://localhost:8765`) when launched with `?live=1`; standalone viewing stays silent.
   * When the user adjusts the Alien Meter slider in the browser:
     1. Browser emits `param_scrub` event with new alien percentage and target mass fraction.
     2. Daemon executes a fast parametric update in FreeCAD or runs a SIMP density pass.

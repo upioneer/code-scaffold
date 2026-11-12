@@ -1,0 +1,682 @@
+{
+  "slug": "l_desk",
+  "title": "L Corner Desk",
+  "description": "Corner workstation with drawer pedestal, cable tray, riser, and staggered hutch.",
+  "units": "mm",
+  "parts": [
+    {
+      "name": "main top",
+      "kind": "box",
+      "material": "walnut",
+      "center": [
+        0,
+        730,
+        0
+      ],
+      "size": [
+        1600,
+        40,
+        700
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "return top",
+      "kind": "box",
+      "material": "walnut",
+      "center": [
+        -550,
+        730,
+        -650
+      ],
+      "size": [
+        500,
+        40,
+        600
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "leg panel right",
+      "kind": "box",
+      "material": "birch",
+      "center": [
+        775,
+        355,
+        0
+      ],
+      "size": [
+        25,
+        710,
+        640
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "leg panel left",
+      "kind": "box",
+      "material": "birch",
+      "center": [
+        -775,
+        355,
+        0
+      ],
+      "size": [
+        25,
+        710,
+        640
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "leg panel return",
+      "kind": "box",
+      "material": "birch",
+      "center": [
+        -550,
+        355,
+        -925
+      ],
+      "size": [
+        450,
+        710,
+        25
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "modesty panel",
+      "kind": "box",
+      "material": "birch",
+      "center": [
+        -231.25,
+        535,
+        -320
+      ],
+      "size": [
+        1062.5,
+        350,
+        18
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "pedestal left",
+      "kind": "box",
+      "material": "birch",
+      "center": [
+        309,
+        355,
+        0
+      ],
+      "size": [
+        18,
+        710,
+        550
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "pedestal right",
+      "kind": "box",
+      "material": "birch",
+      "center": [
+        691,
+        355,
+        0
+      ],
+      "size": [
+        18,
+        710,
+        550
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "pedestal top",
+      "kind": "box",
+      "material": "birch",
+      "center": [
+        500,
+        701,
+        3
+      ],
+      "size": [
+        364,
+        18,
+        544
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "pedestal bottom",
+      "kind": "box",
+      "material": "birch",
+      "center": [
+        500,
+        39,
+        3
+      ],
+      "size": [
+        364,
+        18,
+        544
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "pedestal back",
+      "kind": "box",
+      "material": "birch",
+      "center": [
+        500,
+        355,
+        -272
+      ],
+      "size": [
+        364,
+        710,
+        6
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "drawer front 1",
+      "kind": "box",
+      "material": "walnut",
+      "center": [
+        500,
+        158,
+        284
+      ],
+      "size": [
+        392,
+        204,
+        18
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "drawer front 2",
+      "kind": "box",
+      "material": "walnut",
+      "center": [
+        500,
+        370,
+        284
+      ],
+      "size": [
+        392,
+        204,
+        18
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "drawer front 3",
+      "kind": "box",
+      "material": "walnut",
+      "center": [
+        500,
+        582,
+        284
+      ],
+      "size": [
+        392,
+        204,
+        18
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "cable tray bottom",
+      "kind": "box",
+      "material": "blackMetal",
+      "center": [
+        -200,
+        640,
+        -230
+      ],
+      "size": [
+        1000,
+        12,
+        138
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "cable tray back",
+      "kind": "box",
+      "material": "blackMetal",
+      "center": [
+        -200,
+        660,
+        -305
+      ],
+      "size": [
+        1000,
+        100,
+        12
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "riser shelf",
+      "kind": "box",
+      "material": "birch",
+      "center": [
+        -300,
+        810,
+        -50
+      ],
+      "size": [
+        600,
+        24,
+        280
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "riser foot left",
+      "kind": "box",
+      "material": "birch",
+      "center": [
+        -575,
+        774,
+        -50
+      ],
+      "size": [
+        24,
+        48,
+        280
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "riser foot right",
+      "kind": "box",
+      "material": "birch",
+      "center": [
+        -25,
+        774,
+        -50
+      ],
+      "size": [
+        24,
+        48,
+        280
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "hutch left",
+      "kind": "box",
+      "material": "birch",
+      "center": [
+        -775,
+        950,
+        -650
+      ],
+      "size": [
+        18,
+        400,
+        500
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "hutch right",
+      "kind": "box",
+      "material": "birch",
+      "center": [
+        -325,
+        950,
+        -650
+      ],
+      "size": [
+        18,
+        400,
+        500
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "hutch top",
+      "kind": "box",
+      "material": "birch",
+      "center": [
+        -550,
+        1159,
+        -650
+      ],
+      "size": [
+        468,
+        18,
+        500
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "hutch divider 1",
+      "kind": "box",
+      "material": "birch",
+      "center": [
+        -601,
+        950,
+        -650
+      ],
+      "size": [
+        18,
+        400,
+        480
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "hutch divider 2",
+      "kind": "box",
+      "material": "birch",
+      "center": [
+        -443,
+        950,
+        -650
+      ],
+      "size": [
+        18,
+        400,
+        480
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "hutch shelf low",
+      "kind": "box",
+      "material": "birch",
+      "center": [
+        -688,
+        900,
+        -650
+      ],
+      "size": [
+        156,
+        18,
+        480
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "hutch shelf mid",
+      "kind": "box",
+      "material": "birch",
+      "center": [
+        -522,
+        1000,
+        -650
+      ],
+      "size": [
+        140,
+        18,
+        480
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "hutch shelf high",
+      "kind": "box",
+      "material": "birch",
+      "center": [
+        -384,
+        1080,
+        -650
+      ],
+      "size": [
+        100,
+        18,
+        480
+      ],
+      "rot_y": 0.0
+    }
+  ],
+  "cut_list": [
+    {
+      "material": "birch",
+      "dims": [
+        100,
+        18,
+        480
+      ],
+      "qty": 1,
+      "names": [
+        "hutch shelf high"
+      ]
+    },
+    {
+      "material": "birch",
+      "dims": [
+        1062.5,
+        350,
+        18
+      ],
+      "qty": 1,
+      "names": [
+        "modesty panel"
+      ]
+    },
+    {
+      "material": "birch",
+      "dims": [
+        140,
+        18,
+        480
+      ],
+      "qty": 1,
+      "names": [
+        "hutch shelf mid"
+      ]
+    },
+    {
+      "material": "birch",
+      "dims": [
+        156,
+        18,
+        480
+      ],
+      "qty": 1,
+      "names": [
+        "hutch shelf low"
+      ]
+    },
+    {
+      "material": "birch",
+      "dims": [
+        18,
+        400,
+        480
+      ],
+      "qty": 2,
+      "names": [
+        "hutch divider 1",
+        "hutch divider 2"
+      ]
+    },
+    {
+      "material": "birch",
+      "dims": [
+        18,
+        400,
+        500
+      ],
+      "qty": 2,
+      "names": [
+        "hutch left",
+        "hutch right"
+      ]
+    },
+    {
+      "material": "birch",
+      "dims": [
+        18,
+        710,
+        550
+      ],
+      "qty": 2,
+      "names": [
+        "pedestal left",
+        "pedestal right"
+      ]
+    },
+    {
+      "material": "birch",
+      "dims": [
+        24,
+        48,
+        280
+      ],
+      "qty": 2,
+      "names": [
+        "riser foot left",
+        "riser foot right"
+      ]
+    },
+    {
+      "material": "birch",
+      "dims": [
+        25,
+        710,
+        640
+      ],
+      "qty": 2,
+      "names": [
+        "leg panel right",
+        "leg panel left"
+      ]
+    },
+    {
+      "material": "birch",
+      "dims": [
+        364,
+        18,
+        544
+      ],
+      "qty": 2,
+      "names": [
+        "pedestal top",
+        "pedestal bottom"
+      ]
+    },
+    {
+      "material": "birch",
+      "dims": [
+        364,
+        710,
+        6
+      ],
+      "qty": 1,
+      "names": [
+        "pedestal back"
+      ]
+    },
+    {
+      "material": "birch",
+      "dims": [
+        450,
+        710,
+        25
+      ],
+      "qty": 1,
+      "names": [
+        "leg panel return"
+      ]
+    },
+    {
+      "material": "birch",
+      "dims": [
+        468,
+        18,
+        500
+      ],
+      "qty": 1,
+      "names": [
+        "hutch top"
+      ]
+    },
+    {
+      "material": "birch",
+      "dims": [
+        600,
+        24,
+        280
+      ],
+      "qty": 1,
+      "names": [
+        "riser shelf"
+      ]
+    },
+    {
+      "material": "blackMetal",
+      "dims": [
+        1000,
+        100,
+        12
+      ],
+      "qty": 1,
+      "names": [
+        "cable tray back"
+      ]
+    },
+    {
+      "material": "blackMetal",
+      "dims": [
+        1000,
+        12,
+        138
+      ],
+      "qty": 1,
+      "names": [
+        "cable tray bottom"
+      ]
+    },
+    {
+      "material": "walnut",
+      "dims": [
+        1600,
+        40,
+        700
+      ],
+      "qty": 1,
+      "names": [
+        "main top"
+      ]
+    },
+    {
+      "material": "walnut",
+      "dims": [
+        392,
+        204,
+        18
+      ],
+      "qty": 3,
+      "names": [
+        "drawer front 1",
+        "drawer front 2",
+        "drawer front 3"
+      ]
+    },
+    {
+      "material": "walnut",
+      "dims": [
+        500,
+        40,
+        600
+      ],
+      "qty": 1,
+      "names": [
+        "return top"
+      ]
+    }
+  ],
+  "stats": {
+    "part_count": 27,
+    "volume_mm3": 150535298.0
+  }
+}

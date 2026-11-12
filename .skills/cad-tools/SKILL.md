@@ -1,7 +1,7 @@
 ---
 name: CAD Tools
 description: Comprehensive CAD/CAM engineering skill for AI agents: orchestrating generative design, topology optimization with the Alien Meter slider, FreeCAD socket and headless automation, parametric 3D modeling, OpenSCAD CSG compilation, CadQuery and build123d Python script modeling, cadcraft precision 2D drafting with DXF interchange and sheet plotting, additive manufacturing (DMLS/SLS), and multi-format conversion. Trigger when the user requests parametric 3D CAD modeling, OpenSCAD scripts, CadQuery code, generative design, topology optimization, organic skeletal geometry, FreeCAD automation, PartDesign sketches, extrusion or pocketing, B-Rep solid generation, STEP/STL export, 2D drafting, DXF inspection or conversion, drawing audit, or plotted sheets. Activate when interacting with FreeCAD via Streamable HTTP/SSE MCP socket or headless CLI, compiling OpenSCAD designs with parameter overrides (-D), evaluating the Alien Meter tradeoff between rigidity and bio-morphology, script-based geometry with build123d/CadQuery/OpenCASCADE, AutoCAD/ZWCAD desktop CAD via COM, driving cadcraft headlessly via CLI/MCP/control channel, or 3D print/CNC manufacturing validation, Pali Ijo headless BREP modeling, or PhysCAD MCP driven CAD/CAM.
-version: 15
+version: 16
 target: .skills/cad-tools
 keywords:
   - cad-tools
@@ -203,14 +203,13 @@ Organic generative geometries require specific additive manufacturing considerat
 The skill bundles an interactive browser-native 3D WebGL canvas located at `.skills/cad-tools/sandbox/index.html`. It serves as a visual showroom and real-time simulator for generative topology optimization.
 
 * **Real-Time Procedural Mesh Morphing:** Dragging the master **Alien Meter (0% to 100%)** slider dynamically re-solves and deforms the 3D geometry in real time.
-* **Four Engineering Presets:**
-  * **Aerospace Cantilever Bracket:** Transitioning from solid CNC block to dual-spar branching truss with bolt boss keep-out zones.
-  * **Drone Cantilever Arm:** Upper tension spar and lower compression spar connected by biomimetic web struts.
-  * **Carapace Heat Sink:** Straight rectangular cooling fins morphing into generative branching convective coral spines.
-  * **TPMS Gyroid Core:** Infill minimal surface lattice cell array showcasing cellular porosity.
+* **Hero Model (Wishbone Suspension Corner):** A double A-arm suspension corner on a display rig: C-channel chassis rail, upper plus lower arms with pivot bushings, knuckle with hub plus brake disc, wound coilover spring, and tie rod. The Alien Meter melts prismatic bars into tapered spars, then organic blades with chassis braces.
+* **Demo Assemblies:** Six Section 25 parametric assemblies share the unified model bar with the hero model.
 * **Render Modes:**
   * *Shaded Solid:* PBR metallic shading with material presets (Titanium Ti-6Al-4V, AlSi10Mg Aluminum, Inconel 718, PA12 Nylon).
-  * *FEA Stress Heatmap:* Jet/Rainbow gradient mapping simulated Von Mises stress (Blue = 0 MPa low stress, Green/Yellow = nominal stress, Red = peak stress concentration).
+  * *FEA Stress Heatmap:* Jet/Rainbow gradient mapping simulated Von Mises stress (Blue = 0 MPa low stress, Green/Yellow = nominal stress, Red = peak stress concentration) with an onscreen legend.
+  * *DfAM Overhangs:* Red, amber, and green printability audit by overhang angle with an onscreen legend.
+  * *Blueprint:* Flat 2D drawing sheet: third-angle front, top, and right views with dashed hidden lines, true millimeter overall dimensions, and a title block with projection symbol.
   * *X-Ray Voids:* Semitransparent transmission mode to inspect internal hollow channels and depowdering passages.
   * *Wireframe:* Visualizing underlying mesh facet density.
 * **Launch Instructions:** Open `.skills/cad-tools/sandbox/index.html` directly in any modern web browser or embed via the Code Scaffold web platform iframe.
@@ -901,6 +900,35 @@ Polling with mtime plus size fingerprints, debounce coalescing, and per-event JS
 * **Debounce writes**: editors save in bursts; the default 0.5 s coalescing window absorbs them into one rebuild.
 * **Log everything**: each rebuild records trigger file, command, exit code, and duration for the audit trail.
 * **Headless parity**: the same watch command runs in CI with `--once` plus a timeout instead of blocking forever.
+
+---
+
+## Section 25: Demo Model Gallery & Parametric Assemblies
+
+The skill ships six parametric demo assemblies that prove the full pipeline: named dimensions in, Section 23 verified parts out, rendered live in the sandbox model bar with parts plus cut lists.
+
+### 25.1 The Six Demos
+| Slug | Assembly | Parts | Domain |
+| :--- | :--- | :--- | :--- |
+| `garage_storage` | Storage wall: twin wardrobes, open bay, bridge cabinet | 39 | Casework |
+| `l_desk` | Corner desk: pedestal, tray, riser, divided hutch | 27 | Furniture |
+| `fpv_freestyle` | 5 inch true X: profiled plates, 6mm arms, 3-blade props | 58 | RC aircraft |
+| `fpv_racer` | 3 inch pod racer: profiled plates, canopy, 3-blade props | 44 | RC aircraft |
+| `cnc_gantry` | Benchtop mill: rails, beam, Z head, steppers | 27 | Machine tools |
+| `enclosure` | Vented box: slatted lid, ports, fan grille, PCB | 26 | Electronics |
+
+### 25.2 Generator Workflow (`scripts/demo_models.py`)
+```bash
+# Emit models/*.json plus the sandbox viewer bundle
+python scripts/demo_models.py build
+
+# Verify counts, materials, exact non-overlap, and gravity support
+python scripts/demo_models.py --self-test
+```
+Regeneration rule: edit the generator, rebuild, never hand-edit `models/` or `sandbox/demo_models.js`. Every build rechecks exact part counts, zero interpenetration, and per part support before writing. The generator supports boxes, Y and Z cylinders, and profiled `plate` parts (outline plus holes from `scripts/outlines.json`, traced from published open frame CAD).
+
+### 25.3 Gallery Usage
+Open the sandbox, pick a model in the unified model bar, and orbit the auto-framed assembly. Demos swap the inspector to assembly info plus a grouped cut list; render modes, export, and co-pilot shortcuts (`garage`, `desk`, `freestyle`, `racer`, `gantry`, `enclosure`) all work on demos. The wishbone hero model is one click away with full state restore.
 
 ---
 

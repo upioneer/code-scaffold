@@ -1,0 +1,624 @@
+{
+  "slug": "cnc_gantry",
+  "title": "Benchtop CNC Gantry",
+  "description": "Moving gantry mill with linear rails, ball screw steppers, and spindle.",
+  "units": "mm",
+  "parts": [
+    {
+      "name": "foot 1",
+      "kind": "box",
+      "material": "blackMetal",
+      "center": [
+        195,
+        30,
+        195
+      ],
+      "size": [
+        60,
+        60,
+        60
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "foot 2",
+      "kind": "box",
+      "material": "blackMetal",
+      "center": [
+        195,
+        30,
+        -195
+      ],
+      "size": [
+        60,
+        60,
+        60
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "foot 3",
+      "kind": "box",
+      "material": "blackMetal",
+      "center": [
+        -195,
+        30,
+        195
+      ],
+      "size": [
+        60,
+        60,
+        60
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "foot 4",
+      "kind": "box",
+      "material": "blackMetal",
+      "center": [
+        -195,
+        30,
+        -195
+      ],
+      "size": [
+        60,
+        60,
+        60
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "base rail front",
+      "kind": "box",
+      "material": "aluminum",
+      "center": [
+        0,
+        80,
+        195
+      ],
+      "size": [
+        450,
+        40,
+        40
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "base rail back",
+      "kind": "box",
+      "material": "aluminum",
+      "center": [
+        0,
+        80,
+        -195
+      ],
+      "size": [
+        450,
+        40,
+        40
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "base rail left",
+      "kind": "box",
+      "material": "aluminum",
+      "center": [
+        -195,
+        80,
+        0
+      ],
+      "size": [
+        40,
+        40,
+        350
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "base rail right",
+      "kind": "box",
+      "material": "aluminum",
+      "center": [
+        195,
+        80,
+        0
+      ],
+      "size": [
+        40,
+        40,
+        350
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "bed plate",
+      "kind": "box",
+      "material": "aluminum",
+      "center": [
+        0,
+        106,
+        0
+      ],
+      "size": [
+        370,
+        12,
+        370
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "Y rail left",
+      "kind": "box",
+      "material": "steelDark",
+      "center": [
+        -140,
+        119.5,
+        0
+      ],
+      "size": [
+        20,
+        15,
+        380
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "Y block -140 1",
+      "kind": "box",
+      "material": "blackMetal",
+      "center": [
+        -140,
+        142,
+        -120
+      ],
+      "size": [
+        50,
+        30,
+        34
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "Y block -140 2",
+      "kind": "box",
+      "material": "blackMetal",
+      "center": [
+        -140,
+        142,
+        120
+      ],
+      "size": [
+        50,
+        30,
+        34
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "Y rail right",
+      "kind": "box",
+      "material": "steelDark",
+      "center": [
+        140,
+        119.5,
+        0
+      ],
+      "size": [
+        20,
+        15,
+        380
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "Y block 140 1",
+      "kind": "box",
+      "material": "blackMetal",
+      "center": [
+        140,
+        142,
+        -120
+      ],
+      "size": [
+        50,
+        30,
+        34
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "Y block 140 2",
+      "kind": "box",
+      "material": "blackMetal",
+      "center": [
+        140,
+        142,
+        120
+      ],
+      "size": [
+        50,
+        30,
+        34
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "upright left",
+      "kind": "box",
+      "material": "aluminum",
+      "center": [
+        -140,
+        257,
+        0
+      ],
+      "size": [
+        30,
+        200,
+        290
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "upright right",
+      "kind": "box",
+      "material": "aluminum",
+      "center": [
+        140,
+        257,
+        0
+      ],
+      "size": [
+        30,
+        200,
+        290
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "X beam",
+      "kind": "box",
+      "material": "aluminum",
+      "center": [
+        0,
+        377,
+        0
+      ],
+      "size": [
+        400,
+        40,
+        40
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "X rail",
+      "kind": "box",
+      "material": "steelDark",
+      "center": [
+        0,
+        377,
+        30
+      ],
+      "size": [
+        240,
+        30,
+        20
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "X block 1",
+      "kind": "box",
+      "material": "blackMetal",
+      "center": [
+        -60,
+        372,
+        55
+      ],
+      "size": [
+        40,
+        40,
+        30
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "X block 2",
+      "kind": "box",
+      "material": "blackMetal",
+      "center": [
+        60,
+        372,
+        55
+      ],
+      "size": [
+        40,
+        40,
+        30
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "Z plate",
+      "kind": "box",
+      "material": "aluminum",
+      "center": [
+        0,
+        367,
+        77.5
+      ],
+      "size": [
+        100,
+        180,
+        15
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "spindle clamp",
+      "kind": "box",
+      "material": "blackMetal",
+      "center": [
+        0,
+        353.5,
+        105
+      ],
+      "size": [
+        80,
+        60,
+        40
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "spindle",
+      "kind": "cyl",
+      "material": "steelDark",
+      "center": [
+        0,
+        305,
+        153
+      ],
+      "r": 28,
+      "h": 150,
+      "axis": "y"
+    },
+    {
+      "name": "X stepper",
+      "kind": "box",
+      "material": "blackMetal",
+      "center": [
+        150,
+        378,
+        -41
+      ],
+      "size": [
+        42,
+        42,
+        42
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "Y stepper",
+      "kind": "box",
+      "material": "blackMetal",
+      "center": [
+        -140,
+        121,
+        -211
+      ],
+      "size": [
+        42,
+        42,
+        42
+      ],
+      "rot_y": 0.0
+    },
+    {
+      "name": "Z stepper",
+      "kind": "box",
+      "material": "blackMetal",
+      "center": [
+        0,
+        478,
+        77
+      ],
+      "size": [
+        42,
+        42,
+        42
+      ],
+      "rot_y": 0.0
+    }
+  ],
+  "cut_list": [
+    {
+      "material": "aluminum",
+      "dims": [
+        100,
+        180,
+        15
+      ],
+      "qty": 1,
+      "names": [
+        "Z plate"
+      ]
+    },
+    {
+      "material": "aluminum",
+      "dims": [
+        30,
+        200,
+        290
+      ],
+      "qty": 2,
+      "names": [
+        "upright left",
+        "upright right"
+      ]
+    },
+    {
+      "material": "aluminum",
+      "dims": [
+        370,
+        12,
+        370
+      ],
+      "qty": 1,
+      "names": [
+        "bed plate"
+      ]
+    },
+    {
+      "material": "aluminum",
+      "dims": [
+        40,
+        40,
+        350
+      ],
+      "qty": 2,
+      "names": [
+        "base rail left",
+        "base rail right"
+      ]
+    },
+    {
+      "material": "aluminum",
+      "dims": [
+        400,
+        40,
+        40
+      ],
+      "qty": 1,
+      "names": [
+        "X beam"
+      ]
+    },
+    {
+      "material": "aluminum",
+      "dims": [
+        450,
+        40,
+        40
+      ],
+      "qty": 2,
+      "names": [
+        "base rail front",
+        "base rail back"
+      ]
+    },
+    {
+      "material": "blackMetal",
+      "dims": [
+        40,
+        40,
+        30
+      ],
+      "qty": 2,
+      "names": [
+        "X block 1",
+        "X block 2"
+      ]
+    },
+    {
+      "material": "blackMetal",
+      "dims": [
+        42,
+        42,
+        42
+      ],
+      "qty": 3,
+      "names": [
+        "X stepper",
+        "Y stepper",
+        "Z stepper"
+      ]
+    },
+    {
+      "material": "blackMetal",
+      "dims": [
+        50,
+        30,
+        34
+      ],
+      "qty": 4,
+      "names": [
+        "Y block -140 1",
+        "Y block -140 2",
+        "Y block 140 1",
+        "Y block 140 2"
+      ]
+    },
+    {
+      "material": "blackMetal",
+      "dims": [
+        60,
+        60,
+        60
+      ],
+      "qty": 4,
+      "names": [
+        "foot 1",
+        "foot 2",
+        "foot 3",
+        "foot 4"
+      ]
+    },
+    {
+      "material": "blackMetal",
+      "dims": [
+        80,
+        60,
+        40
+      ],
+      "qty": 1,
+      "names": [
+        "spindle clamp"
+      ]
+    },
+    {
+      "material": "steelDark",
+      "dims": [
+        "cyl",
+        28,
+        150
+      ],
+      "qty": 1,
+      "names": [
+        "spindle"
+      ]
+    },
+    {
+      "material": "steelDark",
+      "dims": [
+        20,
+        15,
+        380
+      ],
+      "qty": 2,
+      "names": [
+        "Y rail left",
+        "Y rail right"
+      ]
+    },
+    {
+      "material": "steelDark",
+      "dims": [
+        240,
+        30,
+        20
+      ],
+      "qty": 1,
+      "names": [
+        "X rail"
+      ]
+    }
+  ],
+  "stats": {
+    "part_count": 27,
+    "volume_mm3": 10912515.3
+  }
+}

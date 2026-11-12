@@ -10,6 +10,7 @@
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
+  <script src="demo_models.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body, html {
@@ -104,6 +105,21 @@
     ::-webkit-scrollbar-track { background: #020617; }
     ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 3px; }
     ::-webkit-scrollbar-thumb:hover { background: #334155; }
+    @media (max-width: 900px) {
+      body, html { height: auto !important; min-height: 100vh; overflow-y: auto !important; overflow-x: hidden; }
+      body.flex { display: block; }
+      header.h-14 { height: auto; flex-wrap: wrap; row-gap: 0.5rem; }
+      #main-split { flex-direction: column; overflow: visible; }
+      #canvas-container { order: -1; width: 100%; height: 52vh; min-height: 320px; flex: none; }
+      #chat-drawer { width: 100%; max-height: 52vh; }
+      #inspector-panel { width: 100%; overflow: visible; }
+      #mode-bar { flex-wrap: wrap; overflow-x: visible; }
+      #fea-legend, #dfam-legend { bottom: 8rem; }
+      #viewport-hud { top: auto; bottom: 6.5rem; }
+    }
+    @media (max-width: 1500px) {
+      #compromise-badge { max-width: 210px; }
+    }
   </style>
 </head>
 <body class="grid-bg flex flex-col h-screen overflow-hidden">
@@ -123,22 +139,6 @@
       </div>
     </div>
 
-    <!-- Active Model Selector -->
-    <div class="flex items-center gap-2 text-xs font-mono">
-      <button onclick="setModel('bracket')" id="btn-model-bracket" class="px-3 py-1.5 rounded-lg font-medium transition bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
-        Aerospace Bracket
-      </button>
-      <button onclick="setModel('drone_arm')" id="btn-model-drone_arm" class="px-3 py-1.5 rounded-lg font-medium transition text-slate-400 hover:text-white border border-slate-800">
-        Drone Cantilever Arm
-      </button>
-      <button onclick="setModel('heat_sink')" id="btn-model-heat_sink" class="px-3 py-1.5 rounded-lg font-medium transition text-slate-400 hover:text-white border border-slate-800">
-        Carapace Heat Sink
-      </button>
-      <button onclick="setModel('tpms_core')" id="btn-model-tpms_core" class="px-3 py-1.5 rounded-lg font-medium transition text-slate-400 hover:text-white border border-slate-800">
-        TPMS Gyroid Core
-      </button>
-    </div>
-
     <!-- Right Controls -->
     <div class="flex items-center gap-2">
       <button onclick="toggleChat()" id="btn-toggle-chat" class="px-3 py-1.5 text-xs font-mono font-medium rounded-lg border transition flex items-center gap-1.5 bg-cyan-500/20 text-cyan-300 border-cyan-500/40 hover:bg-cyan-500/30">
@@ -155,8 +155,22 @@
     </div>
   </header>
 
+  <!-- Unified Model Bar: hero model plus generated assemblies -->
+  <div class="glass-panel px-6 py-2 flex items-center gap-2 z-10 border-b border-slate-800 text-xs font-mono overflow-x-auto whitespace-nowrap" id="demo-gallery">
+    <span class="text-[10px] text-slate-400 uppercase tracking-wider font-bold">Model</span>
+    <button onclick="setModel('wishbone')" id="btn-model-wishbone" class="px-3 py-1 rounded-lg font-medium transition bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">Wishbone Suspension</button>
+    <span class="text-slate-700 select-none">|</span>
+    <button onclick="setDemoModel('garage_storage')" id="btn-demo-garage_storage" class="px-3 py-1 rounded-lg font-medium transition text-slate-400 hover:text-white border border-slate-800">Garage Storage</button>
+    <button onclick="setDemoModel('l_desk')" id="btn-demo-l_desk" class="px-3 py-1 rounded-lg font-medium transition text-slate-400 hover:text-white border border-slate-800">L Corner Desk</button>
+    <button onclick="setDemoModel('fpv_freestyle')" id="btn-demo-fpv_freestyle" class="px-3 py-1 rounded-lg font-medium transition text-slate-400 hover:text-white border border-slate-800">FPV Freestyle</button>
+    <button onclick="setDemoModel('fpv_racer')" id="btn-demo-fpv_racer" class="px-3 py-1 rounded-lg font-medium transition text-slate-400 hover:text-white border border-slate-800">FPV Racer</button>
+    <button onclick="setDemoModel('cnc_gantry')" id="btn-demo-cnc_gantry" class="px-3 py-1 rounded-lg font-medium transition text-slate-400 hover:text-white border border-slate-800">CNC Gantry</button>
+    <button onclick="setDemoModel('enclosure')" id="btn-demo-enclosure" class="px-3 py-1 rounded-lg font-medium transition text-slate-400 hover:text-white border border-slate-800">Enclosure</button>
+    <span class="text-[10px] text-slate-500" id="demo-parts-count"></span>
+  </div>
+
   <!-- Main Viewport and Properties Inspector -->
-  <div class="flex-1 flex overflow-hidden relative">
+  <div class="flex-1 flex overflow-hidden relative" id="main-split">
 
     <!-- In-Page AI Co-Pilot Chat Drawer (Left Flank) -->
     <div id="chat-drawer" class="w-96 glass-panel border-y-0 border-l-0 border-r border-slate-800 flex flex-col z-20 transition-all duration-300 ease-in-out relative text-xs">
@@ -165,7 +179,7 @@
         <div class="flex items-center gap-2 font-mono">
           <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
           <span class="text-xs font-bold uppercase tracking-wider text-white">CAD AI Co-Pilot</span>
-          <span class="text-[9px] bg-cyan-950/80 text-cyan-300 border border-cyan-800/60 px-1.5 py-0.5 rounded" id="copilot-badge">v10 READY</span>
+          <span class="text-[9px] bg-cyan-950/80 text-cyan-300 border border-cyan-800/60 px-1.5 py-0.5 rounded" id="copilot-badge">v19 READY</span>
         </div>
         <button onclick="toggleChat()" class="text-slate-400 hover:text-white p-1 rounded hover:bg-slate-800 text-xs font-mono">
           ✕
@@ -176,7 +190,7 @@
       <div class="px-3 py-2 bg-slate-950/80 border-b border-slate-800/80 flex items-center justify-between text-[10px] font-mono text-slate-400">
         <span class="flex items-center gap-1 truncate">
           <span class="text-cyan-400 font-bold">CONTEXT:</span>
-          <span id="chat-context-part" class="text-slate-200">Aerospace Bracket</span>
+          <span id="chat-context-part" class="text-slate-200">Wishbone Suspension</span>
           <span class="text-slate-600">|</span>
           <span id="chat-context-mat" class="text-slate-200">AlSi10Mg</span>
         </span>
@@ -221,19 +235,19 @@
       </div>
 
       <!-- Viewport Mode HUD (Top Left) -->
-      <div class="absolute top-4 left-4 glass-panel px-3 py-2 rounded-xl text-xs font-mono text-slate-300 flex items-center gap-3 z-10">
+      <div class="absolute top-4 left-4 glass-panel px-3 py-2 rounded-xl text-xs font-mono text-slate-300 flex items-center gap-3 z-10" id="viewport-hud">
         <span class="flex items-center gap-1.5">
           <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
           <span>MODE: <strong class="text-cyan-400" id="hud-render-mode">SHADED SOLID</strong></span>
         </span>
         <span class="text-slate-600">|</span>
-        <span>SOLVER: <strong class="text-emerald-400">SIMP 3D Voxel FEA</strong></span>
+        <span>SOLVER: <strong class="text-emerald-400" id="solver-label">SIMP 3D Voxel FEA</strong></span>
       </div>
 
       <!-- Live Compromise Alert Banner (Top Right in Viewport) -->
       <div class="absolute top-4 right-4 glass-panel px-4 py-2.5 rounded-xl text-xs font-mono z-10 max-w-sm flex flex-col gap-1 border-l-4" id="compromise-badge">
         <div class="flex justify-between items-center">
-          <span class="text-[10px] text-slate-400 uppercase tracking-wider font-bold">Structural Safety Factor</span>
+          <span class="text-[10px] text-slate-400 uppercase tracking-wider font-bold" id="safety-label">Structural Safety Factor</span>
           <span class="font-bold text-xs" id="fs-badge-val">FS = 2.45</span>
         </div>
         <p class="text-[11px] text-slate-300 leading-tight" id="fs-badge-desc">
@@ -242,7 +256,7 @@
       </div>
 
       <!-- Viewport Display Mode Toggles (Bottom Left) -->
-      <div class="absolute bottom-4 left-4 glass-panel p-1.5 rounded-xl flex items-center gap-1 z-10 border border-slate-800 text-xs font-mono">
+      <div class="absolute bottom-4 left-4 glass-panel p-1.5 rounded-xl flex items-center gap-1 z-10 border border-slate-800 text-xs font-mono max-w-[calc(100%-2rem)] overflow-x-auto" id="mode-bar">
         <button onclick="setRenderMode('shaded')" id="btn-mode-shaded" class="px-2.5 py-1 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">Shaded Solid</button>
         <button onclick="setRenderMode('fea')" id="btn-mode-fea" class="px-2.5 py-1 rounded text-slate-400 hover:text-white">FEA Stress Map</button>
         <button onclick="setRenderMode('dfam')" id="btn-mode-dfam" class="px-2.5 py-1 rounded text-slate-400 hover:text-white">DfAM Overhangs</button>
@@ -252,7 +266,7 @@
       </div>
 
       <!-- FEA Stress Legend (Bottom Right in Viewport, visible in FEA mode) -->
-      <div class="absolute bottom-4 right-4 glass-panel p-2.5 rounded-xl text-[10px] font-mono z-10 flex flex-col gap-1 hidden" id="fea-legend">
+      <div class="absolute bottom-20 right-4 glass-panel p-2.5 rounded-xl text-[10px] font-mono z-10 flex flex-col gap-1 hidden" id="fea-legend">
         <span class="text-slate-400 font-bold uppercase tracking-wider">Von Mises Stress (MPa)</span>
         <div class="w-36 h-3 rounded flex overflow-hidden border border-slate-700">
           <div class="flex-1 bg-blue-500" title="Low Stress"></div>
@@ -267,13 +281,50 @@
           <span id="legend-max-stress">270 MPa</span>
         </div>
       </div>
+
+      <!-- DfAM Overhang Legend (Bottom Right in Viewport, visible in DfAM mode) -->
+      <div class="absolute bottom-20 right-4 glass-panel p-2.5 rounded-xl text-[10px] font-mono z-10 flex flex-col gap-1.5 hidden" id="dfam-legend">
+        <span class="text-slate-400 font-bold uppercase tracking-wider">Overhang Angle From Vertical</span>
+        <div class="flex items-center gap-2">
+          <span class="w-3 h-3 rounded-sm bg-red-500 shrink-0"></span>
+          <span class="text-slate-300">Critical below 25 deg, supports required</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="w-3 h-3 rounded-sm bg-amber-500 shrink-0"></span>
+          <span class="text-slate-300">Supported below 45 deg, anchor advised</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="w-3 h-3 rounded-sm bg-emerald-500 shrink-0"></span>
+          <span class="text-slate-300">Self-supporting above 45 deg</span>
+        </div>
+      </div>
+
+      <!-- 2D Blueprint Drawing Sheet (visible in Blueprint mode) -->
+      <div id="blueprint-sheet" class="absolute left-0 right-0 hidden overflow-auto z-10" style="background:#0b3d91;top:64px;bottom:72px;">
+        <div id="blueprint-paper" class="mx-auto my-4" style="max-width:1100px;"></div>
+      </div>
     </div>
 
     <!-- Right Properties & Generative Telemetry Inspector -->
-    <div class="w-96 glass-panel border-y-0 border-r-0 border-l border-slate-800 p-5 flex flex-col gap-5 overflow-y-auto z-10 text-xs">
+    <div class="w-96 glass-panel border-y-0 border-r-0 border-l border-slate-800 p-5 flex flex-col gap-5 overflow-y-auto z-10 text-xs" id="inspector-panel">
       
+      <!-- Demo Model Info -->
+      <div id="demo-info-card" class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-2 hidden">
+        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block font-mono">Demo Assembly</span>
+        <div id="demo-info-body" class="text-[11px] text-slate-300 leading-relaxed space-y-1"></div>
+      </div>
+
+      <!-- Demo Parts & Cut List -->
+      <div id="demo-parts-card" class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-2 hidden">
+        <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+          <span class="text-slate-400 font-bold text-[10px] uppercase tracking-wider font-mono">Parts & Cut List</span>
+          <span class="px-2 py-0.5 bg-cyan-950/60 text-cyan-400 border border-cyan-800/60 rounded text-[9px] font-mono" id="demo-parts-tag">0 parts</span>
+        </div>
+        <div id="demo-parts-list" class="text-[10px] font-mono overflow-y-auto" style="max-height: 300px;"></div>
+      </div>
+
       <!-- Alien Meter Hero Control -->
-      <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-3">
+      <div id="alien-card" class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-3">
         <div class="flex justify-between items-center">
           <div>
             <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200 flex items-center gap-1.5">
@@ -295,7 +346,7 @@
       </div>
 
       <!-- Engineering Compromise Card -->
-      <div class="bg-slate-900/90 rounded-xl p-4 border border-slate-800 space-y-3 font-mono">
+      <div id="compromise-card" class="bg-slate-900/90 rounded-xl p-4 border border-slate-800 space-y-3 font-mono">
         <div class="flex justify-between items-center border-b border-slate-800 pb-2">
           <span class="text-slate-400 font-bold text-[10px] uppercase tracking-wider">Engineering Compromise</span>
           <span class="px-2 py-0.5 bg-cyan-950/60 text-cyan-400 border border-cyan-800/60 rounded text-[9px]" id="compromise-status-tag">OPTIMAL COMPLIANCE</span>
@@ -345,7 +396,7 @@
       </div>
 
       <!-- Additive Manufacturing Guidance -->
-      <div class="bg-slate-900/90 rounded-xl p-3.5 border border-slate-800 space-y-1.5 text-[11px]">
+      <div id="additive-card" class="bg-slate-900/90 rounded-xl p-3.5 border border-slate-800 space-y-1.5 text-[11px]">
         <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block font-mono">Additive Fabrication Advice</span>
         <p class="text-slate-300 leading-relaxed text-[11px]" id="additive-notes">
           Direct Metal Laser Sintering (DMLS) recommended. Overhang angles remain under 45 degrees relative to build plate. No internal trapped powder pockets.
@@ -375,8 +426,12 @@
   <script>
     const container = document.getElementById('canvas-container');
     let scene, camera, renderer, controls;
+    let shadowCatcherMesh = null, gridHelperMesh = null, bpDepthTarget = null;
+    let demoScaleFactor = 1;
+    const BLUEPRINT_PAPER = '#0b3d91';
     let modelGroup = null;
-    let currentModel = 'bracket';
+    let currentModel = 'wishbone';
+    let demoModel = null;
     let renderMode = 'shaded';
     let alienLevel = 50; // 0 to 100
     let activeMaterial = 'al10';
@@ -393,7 +448,7 @@
       scene.background = new THREE.Color(0x020617);
 
       camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
-      camera.position.set(130, 110, 150);
+      camera.position.set(195, 150, 280);
 
       renderer = new THREE.WebGLRenderer({ antialias: true });
       renderer.setSize(container.clientWidth, container.clientHeight);
@@ -406,27 +461,52 @@
       controls.dampingFactor = 0.05;
 
       // Lighting
-      const ambientLight = new THREE.AmbientLight(0xffffff, 0.45);
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
       scene.add(ambientLight);
+
+      const hemiLight = new THREE.HemisphereLight(0xbdd3f5, 0x1c2436, 0.7);
+      scene.add(hemiLight);
 
       const dirLight1 = new THREE.DirectionalLight(0x38bdf8, 0.9);
       dirLight1.position.set(120, 180, 120);
       dirLight1.castShadow = true;
+      dirLight1.shadow.mapSize.width = 1024;
+      dirLight1.shadow.mapSize.height = 1024;
+      dirLight1.shadow.camera.left = -160;
+      dirLight1.shadow.camera.right = 160;
+      dirLight1.shadow.camera.top = 160;
+      dirLight1.shadow.camera.bottom = -160;
+      dirLight1.shadow.camera.near = 10;
+      dirLight1.shadow.camera.far = 700;
+      dirLight1.shadow.bias = -0.0005;
       scene.add(dirLight1);
 
-      const dirLight2 = new THREE.DirectionalLight(0xa855f7, 0.6);
+      const dirLight2 = new THREE.DirectionalLight(0xa855f7, 0.75);
       dirLight2.position.set(-120, 80, -100);
       scene.add(dirLight2);
 
+      const topLight = new THREE.DirectionalLight(0xffffff, 1.0);
+      topLight.position.set(30, 220, 40);
+      scene.add(topLight);
+
       // Bottom rim light for organic undercuts
-      const bottomLight = new THREE.DirectionalLight(0x10b981, 0.3);
+      const bottomLight = new THREE.DirectionalLight(0x8fa3c7, 0.35);
       bottomLight.position.set(0, -100, 0);
       scene.add(bottomLight);
 
       // Engineering Grid Floor
-      const grid = new THREE.GridHelper(260, 26, 0x1e293b, 0x0f172a);
-      grid.position.y = -35;
-      scene.add(grid);
+      gridHelperMesh = new THREE.GridHelper(260, 26, 0x1e293b, 0x0f172a);
+      gridHelperMesh.position.y = -35;
+      scene.add(gridHelperMesh);
+
+      // Invisible shadow catcher so models sit grounded on the grid
+      shadowCatcherMesh = new THREE.Mesh(
+        new THREE.PlaneGeometry(500, 500),
+        new THREE.ShadowMaterial({ opacity: 0.35 }));
+      shadowCatcherMesh.rotation.x = -Math.PI / 2;
+      shadowCatcherMesh.position.y = -34.5;
+      shadowCatcherMesh.receiveShadow = true;
+      scene.add(shadowCatcherMesh);
 
       window.addEventListener('resize', onWindowResize);
 
@@ -436,6 +516,10 @@
       renderChatMessages();
       updateChatContext();
       initLiveSync();
+      if (!window.DEMO_MODELS) {
+        const dc = document.getElementById('demo-parts-count');
+        if (dc) dc.innerText = 'demo data failed to load (serve this folder over http)';
+      }
       animate();
     }
 
@@ -447,13 +531,18 @@
 
     function setModel(type) {
       currentModel = type;
-      ['bracket', 'drone_arm', 'heat_sink', 'tpms_core'].forEach(id => {
+      demoModel = null;
+      updateDemoButtons(null);
+      const dc = document.getElementById('demo-parts-count');
+      if (dc) dc.innerText = '';
+      setInspectorMode(false);
+      ['wishbone'].forEach(id => {
         const btn = document.getElementById('btn-model-' + id);
         if (btn) {
           if (id === type) {
-            btn.className = "px-3 py-1.5 rounded-lg font-medium transition bg-cyan-500/20 text-cyan-300 border border-cyan-500/40";
+            btn.className = "px-3 py-1 rounded-lg font-medium transition bg-cyan-500/20 text-cyan-300 border border-cyan-500/40";
           } else {
-            btn.className = "px-3 py-1.5 rounded-lg font-medium transition text-slate-400 hover:text-white border border-slate-800";
+            btn.className = "px-3 py-1 rounded-lg font-medium transition text-slate-400 hover:text-white border border-slate-800";
           }
         }
       });
@@ -464,7 +553,8 @@
 
     function setRenderMode(mode) {
       renderMode = mode;
-      document.getElementById('hud-render-mode').innerText = mode.toUpperCase();
+      const modeLabels = { shaded: 'SHADED SOLID', fea: 'FEA', dfam: 'DFAM', blueprint: 'BLUEPRINT', xray: 'XRAY', wireframe: 'WIREFRAME' };
+      document.getElementById('hud-render-mode').innerText = modeLabels[mode] || mode.toUpperCase();
       ['shaded', 'fea', 'dfam', 'blueprint', 'xray', 'wireframe'].forEach(m => {
         const btn = document.getElementById('btn-mode-' + m);
         if (!btn) return;
@@ -476,13 +566,193 @@
       });
 
       const feaLegend = document.getElementById('fea-legend');
-      if (mode === 'fea') {
-        feaLegend.classList.remove('hidden');
-      } else {
-        feaLegend.classList.add('hidden');
+      if (feaLegend) feaLegend.classList.toggle('hidden', mode !== 'fea');
+      const dfamLegend = document.getElementById('dfam-legend');
+      if (dfamLegend) dfamLegend.classList.toggle('hidden', mode !== 'dfam');
+
+      // Blueprint is a 2D drawing sheet: hide the 3D canvas, show the sheet
+      const wantSheet = (mode === 'blueprint');
+      const sheet = document.getElementById('blueprint-sheet');
+      if (sheet) sheet.classList.toggle('hidden', !wantSheet);
+      const cbadge = document.getElementById('compromise-badge');
+      if (cbadge) cbadge.classList.toggle('hidden', wantSheet);
+      if (renderer && renderer.domElement) {
+        renderer.domElement.style.display = wantSheet ? 'none' : 'block';
       }
 
       applyMaterials();
+      if (wantSheet) renderBlueprintSheet();
+    }
+
+    // ── 2D Blueprint drawing sheet (third-angle front / top / right) ─────
+    function bpCollectSegments() {
+      modelGroup.updateMatrixWorld(true);
+      const segs = [];
+      const a = new THREE.Vector3(), b = new THREE.Vector3();
+      modelGroup.traverse(child => {
+        if (!child.isMesh) return;
+        const eg = new THREE.EdgesGeometry(child.geometry, 15);
+        const pos = eg.attributes.position;
+        for (let i = 0; i < pos.count; i += 2) {
+          a.fromBufferAttribute(pos, i).applyMatrix4(child.matrixWorld);
+          b.fromBufferAttribute(pos, i + 1).applyMatrix4(child.matrixWorld);
+          segs.push([a.x, a.y, a.z, b.x, b.y, b.z]);
+        }
+        eg.dispose();
+      });
+      // Split long runs so hidden classification stays local
+      const out = [];
+      segs.forEach(s => {
+        const dx = s[3] - s[0], dy = s[4] - s[1], dz = s[5] - s[2];
+        const len = Math.sqrt(dx * dx + dy * dy + dz * dz);
+        const n = Math.min(12, Math.max(1, Math.ceil(len / 10)));
+        for (let k = 0; k < n; k++) {
+          const f0 = k / n, f1 = (k + 1) / n;
+          out.push([s[0] + dx * f0, s[1] + dy * f0, s[2] + dz * f0,
+                    s[0] + dx * f1, s[1] + dy * f1, s[2] + dz * f1]);
+        }
+      });
+      return out;
+    }
+
+    function bpDepthCapture(camPos, camUp, center, halfW, halfH) {
+      const size = 512;
+      if (!bpDepthTarget) {
+        bpDepthTarget = new THREE.WebGLRenderTarget(size, size);
+      }
+      const dist = 600;
+      const cam = new THREE.OrthographicCamera(-halfW, halfW, halfH, -halfH, 1, dist * 2 + 600);
+      cam.position.set(center.x + camPos.x * dist, center.y + camPos.y * dist, center.z + camPos.z * dist);
+      cam.up.set(camUp.x, camUp.y, camUp.z);
+      cam.lookAt(center);
+      cam.updateProjectionMatrix();
+      cam.updateMatrixWorld(true);
+      const hidden = [];
+      modelGroup.traverse(child => {
+        if (child.isLine && child.visible) { child.visible = false; hidden.push(child); }
+      });
+      const gridWas = gridHelperMesh ? gridHelperMesh.visible : false;
+      const catchWas = shadowCatcherMesh ? shadowCatcherMesh.visible : false;
+      if (gridHelperMesh) gridHelperMesh.visible = false;
+      if (shadowCatcherMesh) shadowCatcherMesh.visible = false;
+      scene.overrideMaterial = new THREE.MeshDepthMaterial();
+      renderer.setRenderTarget(bpDepthTarget);
+      renderer.render(scene, cam);
+      renderer.setRenderTarget(null);
+      const px = new Uint8Array(size * size * 4);
+      renderer.readRenderTargetPixels(bpDepthTarget, 0, 0, size, size, px);
+      scene.overrideMaterial = null;
+      hidden.forEach(child => { child.visible = true; });
+      if (gridHelperMesh) gridHelperMesh.visible = gridWas;
+      if (shadowCatcherMesh) shadowCatcherMesh.visible = catchWas;
+      return { cam, px, size };
+    }
+
+    function bpProjectView(segs, dir, up) {
+      // Project segments to view plane, fit frustum, classify hidden lines
+      const d = new THREE.Vector3(dir[0], dir[1], dir[2]).normalize();
+      const u = new THREE.Vector3(up[0], up[1], up[2]).normalize();
+      const r = new THREE.Vector3().crossVectors(d, u).normalize().negate();
+      const tru = new THREE.Vector3().crossVectors(r, d).normalize().negate();
+      const center = new THREE.Vector3();
+      segs.forEach(s => {
+        center.x += (s[0] + s[3]) / 2; center.y += (s[1] + s[4]) / 2; center.z += (s[2] + s[5]) / 2;
+      });
+      center.multiplyScalar(1 / Math.max(1, segs.length));
+      const rel = (x, y, z) => {
+        const vx = x - center.x, vy = y - center.y, vz = z - center.z;
+        return [vx * r.x + vy * r.y + vz * r.z, vx * tru.x + vy * tru.y + vz * tru.z];
+      };
+      let x0 = 1e12, x1 = -1e12, y0 = 1e12, y1 = -1e12;
+      segs.forEach(s => {
+        [[s[0], s[1], s[2]], [s[3], s[4], s[5]]].forEach(p => {
+          const q = rel(p[0], p[1], p[2]);
+          if (q[0] < x0) x0 = q[0]; if (q[0] > x1) x1 = q[0];
+          if (q[1] < y0) y0 = q[1]; if (q[1] > y1) y1 = q[1];
+        });
+      });
+      const pad = Math.max(4, (x1 - x0 + y1 - y0) * 0.03);
+      const rx0 = x0, rx1 = x1, ry0 = y0, ry1 = y1;
+      x0 -= pad; x1 += pad; y0 -= pad; y1 += pad;
+      const cap = bpDepthCapture(d, u, center, (x1 - x0) / 2, (y1 - y0) / 2);
+      const v = new THREE.Vector3();
+      const lines = segs.map(s => {
+        const p0 = rel(s[0], s[1], s[2]), p1 = rel(s[3], s[4], s[5]);
+        v.set((s[0] + s[3]) / 2, (s[1] + s[4]) / 2, (s[2] + s[5]) / 2).project(cap.cam);
+        const col = Math.min(cap.size - 1, Math.max(0, Math.round((v.x * 0.5 + 0.5) * (cap.size - 1))));
+        const row = Math.min(cap.size - 1, Math.max(0, Math.round((v.y * 0.5 + 0.5) * (cap.size - 1))));
+        const bufZ = 1 - cap.px[(row * cap.size + col) * 4] / 255;
+        const z = v.z * 0.5 + 0.5;
+        return { x0: p0[0], y0: p0[1], x1: p1[0], y1: p1[1], hidden: bufZ < z - 0.004 };
+      });
+      return { lines, x0, x1, y0, y1, rx0, rx1, ry0, ry1 };
+    }
+
+    function renderBlueprintSheet() {
+      const paper = document.getElementById('blueprint-paper');
+      if (!paper || !modelGroup) return;
+      const segs = bpCollectSegments();
+      if (!segs.length) {
+        paper.innerHTML = '<div style="color:#fff;padding:40px;font:14px monospace;">No edges to draw.</div>';
+        return;
+      }
+      const views = [
+        { tag: 'FRONT', dir: [0, 0, 1], up: [0, 1, 0], box: [70, 340, 470, 270] },
+        { tag: 'TOP', dir: [0, 1, 0], up: [0, 0, -1], box: [70, 50, 470, 220] },
+        { tag: 'RIGHT', dir: [1, 0, 0], up: [0, 1, 0], box: [590, 300, 440, 240] }
+      ];
+      views.forEach(vw => { Object.assign(vw, bpProjectView(segs, vw.dir, vw.up)); });
+      // One shared scale across all views, like a real drawing
+      let scale = 1e12;
+      views.forEach(vw => {
+        scale = Math.min(scale, vw.box[2] / (vw.x1 - vw.x0), vw.box[3] / (vw.y1 - vw.y0));
+      });
+      const esc = s => s;
+      let svg = '<svg viewBox="0 0 1100 800" style="background:' + BLUEPRINT_PAPER + ';display:block;width:100%;height:auto;">';
+      svg += '<defs><marker id="bpArr" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6" fill="none" stroke="#fff" stroke-width="1"/></marker></defs>';
+      svg += '<rect x="8" y="8" width="1084" height="784" fill="none" stroke="#fff" stroke-width="2"/>';
+      svg += '<rect x="20" y="20" width="1060" height="760" fill="none" stroke="#fff" stroke-width="0.75"/>';
+      views.forEach(vw => {
+        const cw = (vw.x1 - vw.x0) * scale, ch = (vw.y1 - vw.y0) * scale;
+        const ox = vw.box[0] + (vw.box[2] - cw) / 2, oy = vw.box[1] + (vw.box[3] - ch) / 2;
+        const X = x => (ox + (x - vw.x0) * scale).toFixed(1);
+        const Y = y => (oy + (vw.y1 - y) * scale).toFixed(1);
+        let vis = '', hid = '';
+        vw.lines.forEach(l => {
+          const s = '<line x1="' + X(l.x0) + '" y1="' + Y(l.y0) + '" x2="' + X(l.x1) + '" y2="' + Y(l.y1) + '" ';
+          if (l.hidden) hid += s + 'stroke="#9ec5ff" stroke-width="0.7" stroke-dasharray="5,3"/>';
+          else vis += s + 'stroke="#ffffff" stroke-width="1.2"/>';
+        });
+        svg += '<g>' + hid + vis + '</g>';
+        // Overall dimensions with arrows (unpadded model extents)
+        const w = vw.rx1 - vw.rx0, h = vw.ry1 - vw.ry0;
+        const dy = +Y(vw.y0) + 26, dx = +X(vw.x1) + 30;
+        svg += '<line x1="' + X(vw.rx0) + '" y1="' + dy + '" x2="' + X(vw.rx1) + '" y2="' + dy + '" stroke="#fff" stroke-width="0.75" marker-start="url(#bpArr)" marker-end="url(#bpArr)"/>';
+        svg += '<text x="' + (+X(vw.rx0) + +X(vw.rx1)) / 2 + '" y="' + (dy - 5) + '" fill="#fff" font-size="12" font-family="monospace" text-anchor="middle">' + Math.round(w / demoScaleFactor) + '</text>';
+        svg += '<line x1="' + dx + '" y1="' + Y(vw.ry0) + '" x2="' + dx + '" y2="' + Y(vw.ry1) + '" stroke="#fff" stroke-width="0.75" marker-start="url(#bpArr)" marker-end="url(#bpArr)"/>';
+        svg += '<text x="' + (dx + 6) + '" y="' + (+Y(vw.ry0) + +Y(vw.ry1)) / 2 + '" fill="#fff" font-size="12" font-family="monospace">' + Math.round(h / demoScaleFactor) + '</text>';
+        svg += '<text x="' + (vw.box[0] + vw.box[2] / 2) + '" y="' + (vw.box[1] + vw.box[3] + 44) + '" fill="#fff" font-size="13" font-family="monospace" text-anchor="middle" letter-spacing="3">' + vw.tag + '</text>';
+      });
+      // Title block with third-angle projection symbol
+      const titles = { wishbone: 'WISHBONE SUSPENSION' };
+      const modelName = demoMode() ? (DEMO_MODELS.models[demoModel].title || demoModel).toUpperCase() : (titles[currentModel] || currentModel.toUpperCase());
+      let tb = '<g font-family="monospace" fill="#fff">';
+      tb += '<rect x="600" y="610" width="430" height="140" fill="none" stroke="#fff" stroke-width="1.25"/>';
+      const rows = [['MODEL', modelName], ['UNITS', 'MM'], ['SCALE', 'NTS'], ['SHEET', '1 OF 1'], ['PROJECTION', '3RD ANGLE']];
+      rows.forEach((r, i) => {
+        const y = 610 + i * 28;
+        tb += '<line x1="600" y1="' + y + '" x2="1030" y2="' + y + '" stroke="#fff" stroke-width="0.75"/>';
+        tb += '<text x="610" y="' + (y + 20) + '" font-size="12">' + r[0] + '</text>';
+        tb += '<text x="720" y="' + (y + 20) + '" font-size="12">' + esc(r[1]) + '</text>';
+      });
+      tb += '<line x1="700" y1="610" x2="700" y2="750" stroke="#fff" stroke-width="0.75"/>';
+      tb += '<line x1="905" y1="610" x2="905" y2="750" stroke="#fff" stroke-width="0.75"/>';
+      tb += '<circle cx="950" cy="680" r="15" fill="none" stroke="#fff" stroke-width="1"/>';
+      tb += '<circle cx="950" cy="680" r="6.5" fill="none" stroke="#fff" stroke-width="1"/>';
+      tb += '<path d="M975,667 L1000,693 M975,693 L1000,667 M975,667 L975,693" stroke="#fff" stroke-width="1" fill="none"/>';
+      tb += '</g>';
+      svg += tb + '</svg>';
+      paper.innerHTML = svg;
     }
 
     function updateAlienMeter(val) {
@@ -509,7 +779,7 @@
       updateChatContext();
     }
 
-    function getMaterialForSubPart(stressIntensity) {
+    function getMaterialForSubPart(stressIntensity, mesh) {
       // stressIntensity: 0.0 (near zero stress) to 1.0 (peak yield stress)
       if (renderMode === 'wireframe') {
         return new THREE.MeshBasicMaterial({ color: 0x38bdf8, wireframe: true });
@@ -544,15 +814,8 @@
           return new THREE.MeshStandardMaterial({ color: 0x10b981, roughness: 0.4, metalness: 0.2 }); // Self-supporting (>45 deg)
         }
       }
-      if (renderMode === 'blueprint') {
-        return new THREE.MeshStandardMaterial({
-          color: 0x0284c7,
-          roughness: 0.1,
-          metalness: 0.8
-        });
-      }
-
-      // Shaded Solid PBR
+      // Shaded Solid PBR (demo assemblies keep their authored materials)
+      if (mesh && mesh.userData.demoMat) return demoMaterial(mesh.userData.demoMat);
       const mData = materialsData[activeMaterial];
       return new THREE.MeshStandardMaterial({
         color: mData.baseColor,
@@ -566,7 +829,7 @@
       modelGroup.traverse(child => {
         if (child.isMesh) {
           const stress = child.userData.stress || 0.3;
-          child.material = getMaterialForSubPart(stress);
+          child.material = getMaterialForSubPart(stress, child);
         }
       });
     }
@@ -577,238 +840,416 @@
 
       const t = alienLevel / 100; // 0.0 to 1.0
 
-      if (currentModel === 'bracket') {
-        buildBracketModel(modelGroup, t);
-      } else if (currentModel === 'drone_arm') {
-        buildDroneArmModel(modelGroup, t);
-      } else if (currentModel === 'heat_sink') {
-        buildHeatSinkModel(modelGroup, t);
-      } else if (currentModel === 'tpms_core') {
-        buildTPMSModel(modelGroup, t);
+      if (demoMode()) {
+        buildDemoModel(modelGroup, demoModel);
+      } else {
+        buildWishboneModel(modelGroup, t);
       }
 
       scene.add(modelGroup);
       applyMaterials();
+      if (renderMode === 'blueprint') renderBlueprintSheet();
     }
 
-    // ── Model 1: Aerospace Cantilever Bracket ──────────────────────────────
-    function buildBracketModel(group, t) {
-      // Base Mounting Flange (Preserve Zone)
-      const baseGeo = new THREE.BoxGeometry(70, 10, 50);
-      const baseMesh = new THREE.Mesh(baseGeo);
-      baseMesh.position.set(0, -25, 0);
-      baseMesh.userData.stress = 0.2;
-      group.add(baseMesh);
+    // ── Primary Model: Double Wishbone Suspension Corner ─────────────────
+    // Tapered strut between two points; radius r1 at p1 blending to r2 at p2.
+    function tubeBetween(group, p1, p2, r1, r2, stress) {
+      const a = new THREE.Vector3(p1[0], p1[1], p1[2]);
+      const b = new THREE.Vector3(p2[0], p2[1], p2[2]);
+      const dir = new THREE.Vector3().subVectors(b, a);
+      const len = dir.length();
+      const mesh = new THREE.Mesh(new THREE.CylinderGeometry(r2, r1, len, 16));
+      mesh.position.copy(a).addScaledVector(dir, 0.5);
+      mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir.normalize());
+      mesh.userData.stress = stress;
+      group.add(mesh);
+      return mesh;
+    }
 
-      // Upright Mounting Boss (Preserve Zone)
-      const bossGeo = new THREE.CylinderGeometry(14, 14, 25, 32);
-      bossGeo.rotateZ(Math.PI / 2);
-      const bossMesh = new THREE.Mesh(bossGeo);
-      bossMesh.position.set(0, 35, -20);
-      bossMesh.userData.stress = 0.9; // High load zone
-      group.add(bossMesh);
+    function jointBall(group, p, r, stress) {
+      const mesh = new THREE.Mesh(new THREE.SphereGeometry(r, 20, 16));
+      mesh.position.set(p[0], p[1], p[2]);
+      mesh.userData.stress = stress;
+      group.add(mesh);
+      return mesh;
+    }
 
-      if (t < 0.25) {
-        // Prismatic solid web
-        const webThick = 24 - t * 16;
-        const webGeo = new THREE.BoxGeometry(webThick, 60, 45);
-        const webMesh = new THREE.Mesh(webGeo);
-        webMesh.position.set(0, 5, -10);
-        webMesh.userData.stress = 0.35;
-        group.add(webMesh);
-      } else {
-        // Topo Optimized Branching Struts
-        const strutRadius = Math.max(2.5, 9.0 * (1.0 - t * 0.7));
-        const numBranches = t > 0.65 ? 6 : 4;
+    function solidBox(group, p, s, stress) {
+      const mesh = new THREE.Mesh(new THREE.BoxGeometry(s[0], s[1], s[2]));
+      mesh.position.set(p[0], p[1], p[2]);
+      mesh.userData.stress = stress;
+      group.add(mesh);
+      return mesh;
+    }
 
-        for (let i = 0; i < numBranches; i++) {
-          const angle = (i / numBranches) * Math.PI - Math.PI / 2;
-          const curve = new THREE.CatmullRomCurve3([
-            new THREE.Vector3(Math.sin(angle) * (20 + t * 15), -20, Math.cos(angle) * 15),
-            new THREE.Vector3(Math.sin(angle) * 12 * (1.0 - t * 0.3), 5 + (i % 2 === 0 ? 8 : -8), -5),
-            new THREE.Vector3((i % 2 === 0 ? 8 : -8), 32, -20)
-          ]);
-          const tubeGeo = new THREE.TubeGeometry(curve, 20, strutRadius, 16, false);
-          const tubeMesh = new THREE.Mesh(tubeGeo);
-          tubeMesh.userData.stress = 0.5 + 0.45 * (i / numBranches);
-          group.add(tubeMesh);
-        }
+    function buildWishboneModel(group, t) {
+      // Hardpoints shared by every regime so the assembly never detaches.
+      const upY = 50, loY = -18;          // arm planes
+      const pivX = -80, pivZ = 38;        // chassis pivot line
+      const upBall = [40, upY, 0], loBall = [40, loY, 0];
+      const hubY = 16;
 
-        // Alien tendril lattice bridges at high alien levels
-        if (t > 0.7) {
-          for (let k = 0; k < 5; k++) {
-            const crossCurve = new THREE.CatmullRomCurve3([
-              new THREE.Vector3(-18 + k * 9, -5, -8),
-              new THREE.Vector3(0, 8 + Math.sin(k) * 10, -14),
-              new THREE.Vector3(18 - k * 9, 22, -18)
+      // Chassis rail backbone: open C-channel web plus flanges (preserve zone)
+      const webShape = new THREE.Shape();
+      webShape.moveTo(-75, -32);
+      webShape.lineTo(75, -32);
+      webShape.lineTo(75, 72);
+      webShape.lineTo(-75, 72);
+      webShape.lineTo(-75, -32);
+      [-40, 0, 40].forEach(hx => {
+        const hole = new THREE.Path();
+        hole.absarc(hx, 20, 14, 0, Math.PI * 2, true);
+        webShape.holes.push(hole);
+      });
+      const webGeo = new THREE.ExtrudeGeometry(webShape, { depth: 10, bevelEnabled: false });
+      webGeo.rotateY(Math.PI / 2);
+      const webMesh = new THREE.Mesh(webGeo);
+      webMesh.position.set(-98, 0, 0);
+      webMesh.userData.stress = 0.25;
+      group.add(webMesh);
+      solidBox(group, [-78, 67, 0], [40, 10, 150], 0.22);
+      solidBox(group, [-78, -27, 0], [40, 10, 150], 0.22);
+
+      // Display rig: base plate bolted under the rail, resting on the grid
+      solidBox(group, [-35, -31.5, 0], [130, 7, 170], 0.1);
+      [[-85, -70], [-85, 70], [20, -70], [20, 70]].forEach(pt => {
+        const bolt = new THREE.Mesh(new THREE.CylinderGeometry(3, 3, 12, 12));
+        bolt.position.set(pt[0], -30, pt[1]);
+        bolt.userData.stress = 0.1;
+        group.add(bolt);
+      });
+
+      // Bushing housings on the pivot line (preserve zones)
+      [[upY, 0.55], [loY, 0.6]].forEach(row => {
+        [-pivZ, pivZ].forEach(z => {
+          const geo = new THREE.CylinderGeometry(9, 9, 26, 20);
+          geo.rotateX(Math.PI / 2);
+          const bush = new THREE.Mesh(geo);
+          bush.position.set(pivX, row[0], z);
+          bush.userData.stress = row[1];
+          group.add(bush);
+        });
+      });
+
+      // A-arms: prismatic bars melt into tapered spars, then organic blades
+      const organic = t >= 0.6;
+      [[upY, upBall, 6.5, 0.5], [loY, loBall, 8, 0.6]].forEach(spec => {
+        const y = spec[0], apex = spec[1], baseR = spec[2], sBase = spec[3];
+        const rRoot = t < 0.25 ? baseR : baseR + 1 - t * 3.5;
+        const rTip = t < 0.25 ? baseR : Math.max(2.6, baseR - t * 3.2);
+        [-pivZ, pivZ].forEach(z => {
+          if (organic) {
+            const curve = new THREE.CatmullRomCurve3([
+              new THREE.Vector3(pivX, y, z),
+              new THREE.Vector3(-8, y + 7, z * 0.45),
+              new THREE.Vector3(apex[0], apex[1], apex[2])
             ]);
-            const tendrilGeo = new THREE.TubeGeometry(crossCurve, 16, 1.8, 12, false);
-            const tendrilMesh = new THREE.Mesh(tendrilGeo);
-            tendrilMesh.userData.stress = 0.85;
-            group.add(tendrilMesh);
-          }
-        }
-      }
-    }
-
-    // ── Model 2: Drone Cantilever Arm ──────────────────────────────────────
-    function buildDroneArmModel(group, t) {
-      // Motor mount ring (Preserve zone)
-      const ringGeo = new THREE.CylinderGeometry(18, 18, 8, 32);
-      const ringMesh = new THREE.Mesh(ringGeo);
-      ringMesh.position.set(65, 0, 0);
-      ringMesh.userData.stress = 0.85;
-      group.add(ringMesh);
-
-      // Chassis root root block
-      const rootGeo = new THREE.BoxGeometry(20, 18, 25);
-      const rootMesh = new THREE.Mesh(rootGeo);
-      rootMesh.position.set(-60, 0, 0);
-      rootMesh.userData.stress = 0.95;
-      group.add(rootMesh);
-
-      if (t < 0.25) {
-        // Solid rectangular beam
-        const beamGeo = new THREE.BoxGeometry(110, 14, 18);
-        const beamMesh = new THREE.Mesh(beamGeo);
-        beamMesh.position.set(2, 0, 0);
-        beamMesh.userData.stress = 0.4;
-        group.add(beamMesh);
-      } else {
-        // Dual organic spar topology
-        const sparThick = Math.max(2.0, 7.0 * (1.0 - t * 0.65));
-        
-        // Upper tension spar
-        const upperCurve = new THREE.CatmullRomCurve3([
-          new THREE.Vector3(-50, 6, 8),
-          new THREE.Vector3(0, 14 * (1.0 - t * 0.4) + Math.sin(t * 5) * 4, 10 * (1.0 - t * 0.2)),
-          new THREE.Vector3(50, 3, 4)
-        ]);
-        const upperMesh = new THREE.Mesh(new THREE.TubeGeometry(upperCurve, 24, sparThick, 16, false));
-        upperMesh.userData.stress = 0.9;
-        group.add(upperMesh);
-
-        // Lower compression spar
-        const lowerCurve = new THREE.CatmullRomCurve3([
-          new THREE.Vector3(-50, -6, -8),
-          new THREE.Vector3(0, -14 * (1.0 - t * 0.4), -10 * (1.0 - t * 0.2)),
-          new THREE.Vector3(50, -3, -4)
-        ]);
-        const lowerMesh = new THREE.Mesh(new THREE.TubeGeometry(lowerCurve, 24, sparThick, 16, false));
-        lowerMesh.userData.stress = 0.75;
-        group.add(lowerMesh);
-
-        // Biomimetic truss web connections
-        const numWebs = t > 0.6 ? 8 : 4;
-        for (let w = 0; w < numWebs; w++) {
-          const ratio = (w + 1) / (numWebs + 1);
-          const xPos = -45 + ratio * 90;
-          const strutCurve = new THREE.CatmullRomCurve3([
-            new THREE.Vector3(xPos, 7, (w % 2 === 0 ? 6 : -6)),
-            new THREE.Vector3(xPos + (w % 2 === 0 ? 5 : -5), 0, 0),
-            new THREE.Vector3(xPos + 8, -7, (w % 2 === 0 ? -6 : 6))
-          ]);
-          const strutMesh = new THREE.Mesh(new THREE.TubeGeometry(strutCurve, 12, Math.max(1.5, sparThick * 0.6), 12, false));
-          strutMesh.userData.stress = 0.45 + 0.3 * Math.sin(w);
-          group.add(strutMesh);
-        }
-      }
-    }
-
-    // ── Model 3: Carapace Heat Sink ────────────────────────────────────────
-    function buildHeatSinkModel(group, t) {
-      // Thermal base plate (preserve zone)
-      const baseGeo = new THREE.BoxGeometry(80, 8, 80);
-      const baseMesh = new THREE.Mesh(baseGeo);
-      baseMesh.position.set(0, -20, 0);
-      baseMesh.userData.stress = 0.3;
-      group.add(baseMesh);
-
-      // CPU Die contact puck
-      const puckGeo = new THREE.CylinderGeometry(20, 20, 4, 32);
-      const puckMesh = new THREE.Mesh(puckGeo);
-      puckMesh.position.set(0, -25, 0);
-      puckMesh.userData.stress = 0.95;
-      group.add(puckMesh);
-
-      if (t < 0.25) {
-        // Standard straight fins
-        for (let f = -30; f <= 30; f += 10) {
-          const finGeo = new THREE.BoxGeometry(70, 35, 3);
-          const finMesh = new THREE.Mesh(finGeo);
-          finMesh.position.set(0, 0, f);
-          finMesh.userData.stress = 0.4;
-          group.add(finMesh);
-        }
-      } else {
-        // Generative branching convective coral spines
-        const numSpines = t > 0.65 ? 24 : 14;
-        for (let s = 0; s < numSpines; s++) {
-          const angle = (s / numSpines) * Math.PI * 2;
-          const dist = 12 + (s % 3) * 12;
-          const x0 = Math.cos(angle) * dist;
-          const z0 = Math.sin(angle) * dist;
-
-          const spineCurve = new THREE.CatmullRomCurve3([
-            new THREE.Vector3(x0, -16, z0),
-            new THREE.Vector3(x0 * 1.3, 0, z0 * 1.3),
-            new THREE.Vector3(x0 * (1.6 + t * 0.8) + Math.sin(s + t * 5) * 8, 25 + Math.cos(s) * 8, z0 * (1.6 + t * 0.8))
-          ]);
-          const spineMesh = new THREE.Mesh(new THREE.TubeGeometry(spineCurve, 16, Math.max(1.8, 4.5 * (1.0 - t * 0.5)), 12, false));
-          spineMesh.userData.stress = 0.3 + 0.5 * (1.0 - s / numSpines);
-          group.add(spineMesh);
-        }
-      }
-    }
-
-    // ── Model 4: TPMS Gyroid Lattice Core ──────────────────────────────────
-    function buildTPMSModel(group, t) {
-      if (t < 0.2) {
-        // Solid cube
-        const cubeGeo = new THREE.BoxGeometry(60, 60, 60);
-        const cubeMesh = new THREE.Mesh(cubeGeo);
-        cubeMesh.userData.stress = 0.25;
-        group.add(cubeMesh);
-      } else {
-        // Gyroid lattice cell array simulation
-        const gridSize = 4;
-        const spacing = 14;
-        const cellRadius = Math.max(1.4, 5.0 * (1.0 - t * 0.65));
-
-        for (let x = -gridSize / 2; x < gridSize / 2; x++) {
-          for (let y = -gridSize / 2; y < gridSize / 2; y++) {
-            for (let z = -gridSize / 2; z < gridSize / 2; z++) {
-              // Mathematical Gyroid approximation: sin(x)cos(y) + sin(y)cos(z) + sin(z)cos(x)
-              const val = Math.sin(x) * Math.cos(y) + Math.sin(y) * Math.cos(z) + Math.sin(z) * Math.cos(x);
-              if (Math.abs(val) < (1.2 - t * 0.8)) {
-                const nodeGeo = new THREE.SphereGeometry(cellRadius, 10, 10);
-                const nodeMesh = new THREE.Mesh(nodeGeo);
-                nodeMesh.position.set(x * spacing + spacing / 2, y * spacing + spacing / 2, z * spacing + spacing / 2);
-                nodeMesh.userData.stress = 0.4 + 0.55 * Math.abs(val);
-                group.add(nodeMesh);
-
-                // Strut connections to neighboring nodes
-                const strutGeo = new THREE.CylinderGeometry(cellRadius * 0.6, cellRadius * 0.6, spacing, 8);
-                const strutMesh = new THREE.Mesh(strutGeo);
-                strutMesh.position.set(x * spacing + spacing / 2, y * spacing, z * spacing + spacing / 2);
-                strutMesh.userData.stress = 0.6;
-                group.add(strutMesh);
-              }
+            const leg = new THREE.Mesh(new THREE.TubeGeometry(curve, 24, (rRoot + rTip) / 2, 14, false));
+            leg.userData.stress = sBase;
+            group.add(leg);
+            // Chassis brace lands exactly on the leg midspan point
+            if (t > 0.75) {
+              const mid = curve.getPoint(0.5);
+              tubeBetween(group, [-88, y - 12, z * 0.8], [mid.x, mid.y, mid.z], 2.6, 2.2, 0.7);
+              jointBall(group, [mid.x, mid.y, mid.z], 2.8, 0.7);
             }
+          } else {
+            tubeBetween(group, [pivX, y, z], apex, rRoot, rTip, sBase);
           }
+          // Pivot gussets shrink as the alien level rises
+          const g = t < 0.25 ? 16 : Math.max(6, 16 - t * 14);
+          solidBox(group, [pivX + 6, y, z], [14, g, g], 0.55);
+        });
+        // Cross tube between the legs
+        tubeBetween(group, [-14, y, -26], [-14, y, 26], rTip, rTip, sBase - 0.1);
+      });
+      jointBall(group, upBall, 7, 0.9);
+      jointBall(group, loBall, 7.5, 0.9);
+      // Ball pins reaching into the upright
+      tubeBetween(group, upBall, [40, upY - 12, 0], 3.5, 3.5, 0.85);
+      tubeBetween(group, loBall, [40, loY + 12, 0], 4, 4, 0.85);
+
+      // Upright / knuckle between the ball joints
+      if (t < 0.25) {
+        solidBox(group, [40, hubY, 0], [18, 80, 22], 0.65);
+      } else {
+        tubeBetween(group, loBall, upBall, 11 - t * 3, 8 - t * 2, 0.65);
+        const carrierGeo = new THREE.CylinderGeometry(12 - t * 2, 12 - t * 2, 30, 20);
+        carrierGeo.rotateZ(Math.PI / 2);
+        const carrier = new THREE.Mesh(carrierGeo);
+        carrier.position.set(48, hubY, 0);
+        carrier.userData.stress = 0.7;
+        group.add(carrier);
+      }
+      // Hub barrel, brake disc with hat, and caliper
+      const hubGeo = new THREE.CylinderGeometry(8, 8, 44, 20);
+      hubGeo.rotateZ(Math.PI / 2);
+      const hub = new THREE.Mesh(hubGeo);
+      hub.position.set(56, hubY, 0);
+      hub.userData.stress = 0.8;
+      group.add(hub);
+      const discGeo = new THREE.CylinderGeometry(27, 27, 6, 36);
+      discGeo.rotateZ(Math.PI / 2);
+      const disc = new THREE.Mesh(discGeo);
+      disc.position.set(44, hubY, 0);
+      disc.userData.stress = 0.4;
+      group.add(disc);
+      const hatGeo = new THREE.CylinderGeometry(12, 12, 10, 20);
+      hatGeo.rotateZ(Math.PI / 2);
+      const hat = new THREE.Mesh(hatGeo);
+      hat.position.set(44, hubY, 0);
+      hat.userData.stress = 0.5;
+      group.add(hat);
+      solidBox(group, [44, 38, -14], [12, 20, 14], 0.45);
+
+      // Coilover: damper body, shaft, wound spring, tower mount
+      const springBase = [-8, loY + 2, 0], springTop = [-58, 88, 0];
+      solidBox(group, [-60, 78, 0], [12, 44, 34], 0.3);
+      jointBall(group, springTop, 5, 0.7);
+      const springAxis = new THREE.Vector3().subVectors(
+        new THREE.Vector3(springTop[0], springTop[1], springTop[2]),
+        new THREE.Vector3(springBase[0], springBase[1], springBase[2]));
+      const springLen = springAxis.length();
+      springAxis.normalize();
+      const springMid = [springBase[0] + springAxis.x * springLen * 0.45,
+                         springBase[1] + springAxis.y * springLen * 0.45,
+                         springBase[2] + springAxis.z * springLen * 0.45];
+      tubeBetween(group, springBase, springMid, 7 - t * 2, 7 - t * 2, 0.5);
+      tubeBetween(group, springMid, springTop, 3, 3, 0.6);
+      const up = Math.abs(springAxis.y) > 0.9 ? new THREE.Vector3(1, 0, 0) : new THREE.Vector3(0, 1, 0);
+      const n1 = new THREE.Vector3().crossVectors(springAxis, up).normalize();
+      const n2 = new THREE.Vector3().crossVectors(springAxis, n1).normalize();
+      const coils = 6, wireR = 2.4 - t * 0.6, coilR = 13;
+      const helixPts = [];
+      for (let i = 0; i <= coils * 24; i++) {
+        const f = i / (coils * 24), a = f * coils * Math.PI * 2;
+        helixPts.push(new THREE.Vector3(
+          springBase[0] + springAxis.x * springLen * f + (Math.cos(a) * n1.x + Math.sin(a) * n2.x) * coilR,
+          springBase[1] + springAxis.y * springLen * f + (Math.cos(a) * n1.y + Math.sin(a) * n2.y) * coilR,
+          springBase[2] + springAxis.z * springLen * f + (Math.cos(a) * n1.z + Math.sin(a) * n2.z) * coilR));
+      }
+      const spring = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(helixPts), 220, wireR, 8, false));
+      spring.userData.stress = 0.75;
+      group.add(spring);
+      [springBase, springTop].forEach(p => {
+        const seat = new THREE.Mesh(new THREE.CylinderGeometry(14.5, 14.5, 4, 20));
+        seat.position.set(p[0], p[1], p[2]);
+        seat.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), springAxis);
+        seat.userData.stress = 0.55;
+        group.add(seat);
+      });
+      solidBox(group, [-8, loY - 4, 0], [16, 10, 16], 0.6);
+
+      // Tie rod with chassis tab and upright steering arm
+      solidBox(group, [-88, hubY, 62], [14, 14, 14], 0.4);
+      solidBox(group, [38, hubY, 14], [10, 10, 18], 0.55);
+      tubeBetween(group, [-84, hubY, 62], [38, hubY, 22], 3.5, 3.5, 0.6);
+      jointBall(group, [-84, hubY, 62], 5, 0.75);
+      jointBall(group, [38, hubY, 22], 5, 0.75);
+
+      demoScaleFactor = 1;
+      // Hero framing for the assembled corner
+      camera.position.set(195, 150, 280);
+      controls.target.set(-10, 20, 0);
+      controls.update();
+    }
+
+    // ── Retired concept models (bracket, arm, sink, lattice) ─────────────
+    // Removed in favor of the single wishbone hero model above.
+    // ── Demo Model Gallery (generated assemblies) ──────────────────────────
+    const DEMO_ORDER = ['garage_storage', 'l_desk', 'fpv_freestyle', 'fpv_racer', 'cnc_gantry', 'enclosure'];
+
+    function demoMode() {
+      return !!(demoModel && window.DEMO_MODELS && DEMO_MODELS.models[demoModel]);
+    }
+
+    function setDemoModel(slug) {
+      if (!window.DEMO_MODELS || !DEMO_MODELS.models[slug]) {
+        alert('Demo model data missing: rebuild with scripts/demo_models.py build');
+        return;
+      }
+      demoModel = slug;
+      ['wishbone'].forEach(id => {
+        const btn = document.getElementById('btn-model-' + id);
+        if (btn) btn.className = "px-3 py-1 rounded-lg font-medium transition text-slate-400 hover:text-white border border-slate-800";
+      });
+      updateDemoButtons(slug);
+      rebuildGeometry();
+      updateDemoParts();
+      setInspectorMode(true);
+      updateChatContext();
+    }
+
+    function updateDemoButtons(active) {
+      DEMO_ORDER.forEach(id => {
+        const btn = document.getElementById('btn-demo-' + id);
+        if (!btn) return;
+        btn.className = (id === active)
+          ? "px-3 py-1 rounded-lg font-medium transition bg-cyan-500/20 text-cyan-300 border border-cyan-500/40"
+          : "px-3 py-1 rounded-lg font-medium transition text-slate-400 hover:text-white border border-slate-800";
+      });
+    }
+
+    function demoPartBounds(p) {
+      const c = p.center;
+      if (p.kind === 'cyl' && p.axis === 'z') {
+        return { min: [c[0] - p.r, c[1] - p.r, c[2] - p.h / 2], max: [c[0] + p.r, c[1] + p.r, c[2] + p.h / 2] };
+      }
+      if (p.kind === 'cyl') {
+        return { min: [c[0] - p.r, c[1] - p.h / 2, c[2] - p.r], max: [c[0] + p.r, c[1] + p.h / 2, c[2] + p.r] };
+      }
+      if (p.kind === 'plate') {
+        const rot = (p.rot_y || 0) * Math.PI / 180;
+        const co = Math.cos(rot), si = Math.sin(rot);
+        let x0 = 1e12, x1 = -1e12, z0 = 1e12, z1 = -1e12;
+        p.outline.forEach(pt => {
+          const x = c[0] + pt[0] * co + pt[1] * si, z = c[2] - pt[0] * si + pt[1] * co;
+          if (x < x0) x0 = x; if (x > x1) x1 = x;
+          if (z < z0) z0 = z; if (z > z1) z1 = z;
+        });
+        return { min: [x0, c[1] - p.t / 2, z0], max: [x1, c[1] + p.t / 2, z1] };
+      }
+      const rot = (p.rot_y || 0) * Math.PI / 180;
+      const ex = Math.abs(p.size[0] * Math.cos(rot)) + Math.abs(p.size[2] * Math.sin(rot));
+      const ez = Math.abs(p.size[0] * Math.sin(rot)) + Math.abs(p.size[2] * Math.cos(rot));
+      return { min: [c[0] - ex / 2, c[1] - p.size[1] / 2, c[2] - ez / 2],
+               max: [c[0] + ex / 2, c[1] + p.size[1] / 2, c[2] + ez / 2] };
+    }
+
+    function demoMaterial(key) {
+      const roles = (window.DEMO_MODELS && DEMO_MODELS.materials) || {};
+      const m = roles[key] || { color: 0x94a3b8, roughness: 0.6, metalness: 0.2 };
+      // No environment map in this viewer, so high metalness renders near black.
+      // Clamp it to keep dark metals readable from every orbit angle.
+      return new THREE.MeshStandardMaterial({ color: m.color, roughness: m.roughness, metalness: Math.min(m.metalness, 0.35) });
+    }
+
+    function buildDemoModel(group, slug) {
+      const data = DEMO_MODELS.models[slug];
+      const lo = [1e12, 1e12, 1e12], hi = [-1e12, -1e12, -1e12];
+      data.parts.forEach(p => {
+        const b = demoPartBounds(p);
+        for (let i = 0; i < 3; i++) { lo[i] = Math.min(lo[i], b.min[i]); hi[i] = Math.max(hi[i], b.max[i]); }
+      });
+      const span = Math.max(hi[0] - lo[0], hi[1] - lo[1], hi[2] - lo[2]);
+      const scale = 200 / span;
+      demoScaleFactor = scale;
+      const cx = (lo[0] + hi[0]) / 2, cy = (lo[1] + hi[1]) / 2, cz = (lo[2] + hi[2]) / 2;
+      // Rest the assembly on the grid floor instead of floating centered at origin
+      const lift = -35 - (lo[1] - cy) * scale + 1;
+      data.parts.forEach((p, i) => {
+        let geo, yOff = 0;
+        if (p.kind === 'plate') {
+          const sh = new THREE.Shape();
+          p.outline.forEach((pt, k) => {
+            if (k === 0) sh.moveTo(pt[0] * scale, -pt[1] * scale);
+            else sh.lineTo(pt[0] * scale, -pt[1] * scale);
+          });
+          (p.holes || []).forEach(h => {
+            const hp = new THREE.Path();
+            h.forEach((pt, k) => {
+              if (k === 0) hp.moveTo(pt[0] * scale, -pt[1] * scale);
+              else hp.lineTo(pt[0] * scale, -pt[1] * scale);
+            });
+            sh.holes.push(hp);
+          });
+          geo = new THREE.ExtrudeGeometry(sh, { depth: p.t * scale, bevelEnabled: false });
+          geo.rotateX(-Math.PI / 2);
+          yOff = -p.t / 2;
+        } else if (p.kind === 'cyl' && p.axis === 'z') {
+          geo = new THREE.CylinderGeometry(p.r * scale, p.r * scale, p.h * scale, 24);
+          geo.rotateX(Math.PI / 2);
+        } else if (p.kind === 'cyl') {
+          geo = new THREE.CylinderGeometry(p.r * scale, p.r * scale, p.h * scale, 24);
+        } else {
+          geo = new THREE.BoxGeometry(p.size[0] * scale, p.size[1] * scale, p.size[2] * scale);
         }
+        const mesh = new THREE.Mesh(geo, demoMaterial(p.material));
+        mesh.position.set((p.center[0] - cx) * scale, (p.center[1] + yOff - cy) * scale + lift, (p.center[2] - cz) * scale);
+        if (p.rot_y) mesh.rotation.y = p.rot_y * Math.PI / 180;
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+        mesh.userData.stress = 0.2 + 0.6 * (((i * 37) % 100) / 100);
+        mesh.userData.partName = p.name;
+        mesh.userData.demoMat = p.material;
+        group.add(mesh);
+        const edge = new THREE.LineSegments(
+          new THREE.EdgesGeometry(geo),
+          new THREE.LineBasicMaterial({ color: 0x0b1220, transparent: true, opacity: 0.5 }));
+        edge.position.copy(mesh.position);
+        edge.rotation.copy(mesh.rotation);
+        group.add(edge);
+      });
+      const dist = (200 / 2) / Math.tan(camera.fov * Math.PI / 360) * 1.45;
+      camera.position.set(dist * 0.62, lift + dist * 0.52, dist * 0.72);
+      controls.target.set(0, lift, 0);
+      controls.update();
+    }
+
+    function updateDemoParts() {
+      if (!demoMode()) return;
+      const data = DEMO_MODELS.models[demoModel];
+      const tag = document.getElementById('demo-parts-tag');
+      const list = document.getElementById('demo-parts-list');
+      const count = document.getElementById('demo-parts-count');
+      const info = document.getElementById('demo-info-body');
+      if (tag) tag.innerText = data.parts.length + ' parts';
+      if (count) count.innerText = data.parts.length + ' parts, ' + Math.round(data.stats.volume_mm3).toLocaleString() + ' mm3';
+      if (info) info.innerHTML = '<div class="text-white font-bold text-xs">' + data.title + '</div>' +
+        '<div>' + data.description + '</div>' +
+        '<div class="text-slate-500">Units: ' + data.units + ' | Union volume: ' + Math.round(data.stats.volume_mm3).toLocaleString() + ' mm3</div>';
+      if (!list) return;
+      list.innerHTML = '';
+      data.cut_list.forEach(row => {
+        const dims = (row.dims[0] === 'cyl')
+          ? 'dia ' + (row.dims[1] * 2) + ' x ' + row.dims[2]
+          : (row.dims[0] === 'plate')
+            ? 'plate ' + row.dims[1] + ' x ' + row.dims[2] + ' x ' + row.dims[3]
+            : row.dims.join(' x ');
+        const div = document.createElement('div');
+        div.className = 'flex justify-between gap-2 border-b border-slate-800/60 py-1';
+        div.innerHTML = '<span class="text-slate-300">' + row.material + ' ' + dims + '</span>' +
+          '<span class="text-cyan-300 font-bold">x' + row.qty + '</span>';
+        list.appendChild(div);
+      });
+    }
+
+    function setInspectorMode(isDemo) {
+      ['alien-card', 'compromise-card', 'additive-card'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.toggle('hidden', isDemo);
+      });
+      ['demo-info-card', 'demo-parts-card'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.toggle('hidden', !isDemo);
+      });
+      const sfLabel = document.getElementById('safety-label');
+      const sfVal = document.getElementById('fs-badge-val');
+      const mNotes = document.getElementById('fs-badge-desc');
+      const solver = document.getElementById('solver-label');
+      if (isDemo && demoMode()) {
+        const data = DEMO_MODELS.models[demoModel];
+        if (sfLabel) sfLabel.innerText = 'Demo Assembly';
+        if (sfVal) sfVal.innerText = data.parts.length + ' parts';
+        if (mNotes) mNotes.innerText = data.title + ': ' + data.description;
+        if (solver) solver.innerText = 'PARAMETRIC PARTS';
+      } else {
+        if (sfLabel) sfLabel.innerText = 'Structural Safety Factor';
+        if (solver) solver.innerText = 'SIMP 3D Voxel FEA';
+        updateTelemetry();
       }
     }
 
     // ── Live Telemetry & Engineering Compromise Calculation ───────────────
     function updateTelemetry() {
+      if (demoModel) return;
       const t = alienLevel / 100;
       const mData = materialsData[activeMaterial];
 
       // Physical modeling calculations:
       // Mass reduction correlates directly with alien topology level
       const massReductionPct = (t * 74.0).toFixed(1); // 0% up to 74%
-      const initialMass = (currentModel === 'bracket' ? 420 : currentModel === 'drone_arm' ? 280 : 380) * (mData.density / 2.70);
+      const initialMass = 8400 * (mData.density / 2.70); // wishbone corner assembly, grams
       const activeMass = (initialMass * (1.0 - t * 0.74)).toFixed(1);
 
       // Factor of Safety curve: drops non-linearly as material evacuates
@@ -861,13 +1302,14 @@
     }
 
     function resetCamera() {
-      camera.position.set(130, 110, 150);
-      controls.target.set(0, 0, 0);
+      if (demoMode()) { rebuildGeometry(); return; }
+      camera.position.set(195, 150, 280);
+      controls.target.set(-10, 20, 0);
       controls.update();
     }
 
     function simulateExport(format) {
-      alert(`Exporting ${currentModel.toUpperCase()} at Alien Level ${alienLevel}% as .${format.toUpperCase()} with ${materialsData[activeMaterial].name} material telemetry included.`);
+      alert(`Exporting ${(demoModel || currentModel).toUpperCase()} at Alien Level ${alienLevel}% as .${format.toUpperCase()} with ${materialsData[activeMaterial].name} material telemetry included.`);
     }
 
     function animate() {
@@ -913,16 +1355,25 @@
       const alienEl = document.getElementById('chat-context-alien');
       if (partEl) {
         const titles = {
-          bracket: 'Aerospace Bracket',
-          drone_arm: 'Drone Cantilever Arm',
-          heat_sink: 'Carapace Heat Sink',
-          tpms_core: 'TPMS Gyroid Core',
+          wishbone: 'Wishbone Suspension',
+          garage_storage: 'Garage Storage Wall',
+          l_desk: 'L Corner Desk',
+          fpv_freestyle: 'FPV Freestyle 5in',
+          fpv_racer: 'FPV Racer 3in',
+          cnc_gantry: 'Benchtop CNC Gantry',
+          enclosure: 'Vented Electronics Enclosure',
           custom: 'Imported Mesh'
         };
-        partEl.innerText = titles[currentModel] || 'Active Model';
+        partEl.innerText = titles[demoModel || currentModel] || 'Active Model';
       }
-      if (matEl) matEl.innerText = materialsData[activeMaterial].name.split(' ')[0];
-      if (alienEl) alienEl.innerText = alienLevel + '% Topo';
+      if (demoModel && demoMode()) {
+        const data = DEMO_MODELS.models[demoModel];
+        if (matEl) matEl.innerText = 'multi-role';
+        if (alienEl) alienEl.innerText = data.parts.length + ' parts';
+      } else {
+        if (matEl) matEl.innerText = materialsData[activeMaterial].name.split(' ')[0];
+        if (alienEl) alienEl.innerText = alienLevel + '% Topo';
+      }
     }
 
     function renderChatMessages() {
@@ -1021,22 +1472,34 @@
         }
 
         // Check Model Preset Change
-        if (lower.includes('bracket')) {
-          setModel('bracket');
-          actions.push('Loaded Aerospace Bracket');
-          reply += `Loaded **Aerospace Cantilever Bracket** geometry with baseline mounting boss and structural ribs.\n\n`;
-        } else if (lower.includes('drone') || lower.includes('arm')) {
-          setModel('drone_arm');
-          actions.push('Loaded Drone Arm');
-          reply += `Loaded **Drone Cantilever Arm** geometry with tubular motor mount and hollowed structural trussing.\n\n`;
-        } else if (lower.includes('heat') || lower.includes('sink') || lower.includes('carapace')) {
-          setModel('heat_sink');
-          actions.push('Loaded Carapace Heat Sink');
-          reply += `Loaded **Carapace Heat Sink** bio-morphology model with optimized convective surface cooling fins.\n\n`;
-        } else if (lower.includes('tpms') || lower.includes('gyroid') || lower.includes('core')) {
-          setModel('tpms_core');
-          actions.push('Loaded TPMS Gyroid Core');
-          reply += `Loaded **TPMS Gyroid Core** minimal surface lattice for high energy absorption and lightweighting.\n\n`;
+        if (lower.includes('wishbone') || lower.includes('suspension') || lower.includes('corner')) {
+          setModel('wishbone');
+          actions.push('Loaded Wishbone Suspension');
+          reply += `Loaded **Wishbone Suspension** corner: double A-arms, knuckle, coilover, and tie rod on the display rig. Dial the Alien Meter to morph it.\n\n`;
+        } else if (lower.includes('garage') || lower.includes('storage wall') || lower.includes('wardrobe')) {
+          setDemoModel('garage_storage');
+          actions.push('Loaded Garage Storage Wall');
+          reply += `Loaded **Garage Storage Wall** demo: twin wardrobes, open shelving bay, and a full width bridge cabinet with cut list.\n\n`;
+        } else if (lower.includes('desk') || lower.includes('workstation') || lower.includes('hutch')) {
+          setDemoModel('l_desk');
+          actions.push('Loaded L Corner Desk');
+          reply += `Loaded **L Corner Desk** demo: drawer pedestal, cable tray, monitor riser, and a staggered storage hutch.\n\n`;
+        } else if (lower.includes('racer') || lower.includes('race') || lower.includes('pod') || lower.includes('3 inch')) {
+          setDemoModel('fpv_racer');
+          actions.push('Loaded FPV Racer 3in');
+          reply += `Loaded **FPV Racer 3in** demo: squashed X pod racer with slam stack, TPU canopy, and dual RX whips.\n\n`;
+        } else if (lower.includes('fpv') || lower.includes('freestyle') || lower.includes('quad') || lower.includes('5 inch')) {
+          setDemoModel('fpv_freestyle');
+          actions.push('Loaded FPV Freestyle 5in');
+          reply += `Loaded **FPV Freestyle 5in** demo: true X frame, triple stack, camera cage, and action cam tray.\n\n`;
+        } else if (lower.includes('gantry') || lower.includes('cnc') || lower.includes('mill')) {
+          setDemoModel('cnc_gantry');
+          actions.push('Loaded Benchtop CNC Gantry');
+          reply += `Loaded **Benchtop CNC Gantry** demo: extrusion base, linear rails, gantry beam, Z head, and steppers.\n\n`;
+        } else if (lower.includes('enclosure') || lower.includes('electronics')) {
+          setDemoModel('enclosure');
+          actions.push('Loaded Vented Electronics Enclosure');
+          reply += `Loaded **Vented Electronics Enclosure** demo: slatted lid, port openings, fan, and PCB on brass standoffs.\n\n`;
         }
 
         // Check Render Mode
@@ -1056,8 +1519,8 @@
         } else if (lower.includes('blueprint') || lower.includes('drawing') || lower.includes('orthographic') || lower.includes('iso')) {
           setRenderMode('blueprint');
           actions.push('Generated Orthographic Blueprint');
-          reply += `Switched to **Architectural Blueprint View**.\n\n` +
-            `Orthographic 3rd angle projection views (Front, Top, Right, Isometric) generated with ISO 2768-m tolerances. Run \`python scripts/drawing_generator.py\` to export vector SVG blueprints.\n\n`;
+          reply += `Switched to **2D Blueprint Drawing**.\n\n` +
+            `Flat orthographic sheet: front, top, and right views with hidden lines, overall dimensions, and a title block. Pick another mode to return to 3D.\n\n`;
         } else if (lower.includes('xray') || lower.includes('void') || lower.includes('transparent')) {
           setRenderMode('xray');
           actions.push('Switched to X-Ray Voids view');
@@ -1202,6 +1665,7 @@
       geometry.boundingBox.getSize(size);
       const maxDim = Math.max(size.x, size.y, size.z);
       const scale = maxDim > 0 ? 80 / maxDim : 1;
+      demoScaleFactor = scale;
 
       if (modelGroup) scene.remove(modelGroup);
       modelGroup = new THREE.Group();
@@ -1255,6 +1719,10 @@
     // ==========================================
     let socket = null;
     function initLiveSync() {
+      // Optional companion sync: connect only with ?live=1
+      // (companion: scripts/freecad_bridge.py daemon --port 8765).
+      // Standalone viewing stays silent with zero console errors.
+      if (!window.location.search.includes('live=1')) return;
       try {
         socket = new WebSocket("ws://127.0.0.1:8765");
         socket.onopen = function() {
