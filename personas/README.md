@@ -14,6 +14,7 @@ pack with auto selected skills and an honest gap list. Format spec lives in
 | **Fitness Coach** | Adaptive training persona for programs, progression, and check-ins. | `quarto`, `telegram`, `mobile-pwa` | 4 | `personas/fitness-coach` |
 | **Gardener Homesteader** | Growing persona for seasonal plans, beds, and harvest logs. | `quarto`, `firecrawl` | 4 | `personas/gardener-homesteader` |
 | **Genealogist** | Family history persona for trees, records, and ancestor stories. | `mermaid`, `firecrawl` | 4 | `personas/genealogist` |
+| **Music Producer** | Studio persona for beats, songs, and generative audio pipelines. | `manim`, `mermaid`, `officecli`, `quarto` | 6 | `personas/music-producer` |
 | **Network Infra Engineer** | Infrastructure persona for IaC, containers, CI/CD, and hardening. | `ansible`, `terraform`, `docker`, `proxmox`, `github`, `cybersecurity-toolkit`, `sentinel-strike` | 3 | `personas/network-infra-engineer` |
 | **Personal Finance** | Money systems persona for budgets, debt payoff, and net worth. | `officecli`, `quarto` | 4 | `personas/personal-finance` |
 | **Political Analyst** | Neutral briefing persona for policy, elections, and governance. | `firecrawl`, `quarto` | 3 | `personas/political-analyst` |

@@ -1,6 +1,6 @@
 # Skill Gap Build Queue
 
-Consolidated from persona frontmatter: 54 uncovered needs grouped into
+Consolidated from persona frontmatter: 60 uncovered needs grouped into
 suggested future bundles. Shared needs are marked so one skill can serve
 multiple personas.
 
@@ -76,3 +76,12 @@ multiple personas.
 * Observability bundle: metrics, logs, traces, alerts (network-infra-engineer)
 * Network scanner with asset inventory (network-infra-engineer)
 * Backup and disaster recovery runbooks (network-infra-engineer)
+
+## Bundle H: Music Production
+
+* ComfyUI audio runner with ACE-Step, Stable Audio, and AudioLDM profiles (music-producer)
+* DAW session and stem template builder for major workstations (music-producer)
+* Stem separator and cleanup for vocals, drums, bass, and harmony (music-producer)
+* Loudness metering with LUFS, LRA, and true peak reports (music-producer)
+* Sample and preset library manager with key and BPM tagging (music-producer)
+* Lyric writing assistant with rhyme schemes, meter locking, and AI vocal tags (music-producer)
