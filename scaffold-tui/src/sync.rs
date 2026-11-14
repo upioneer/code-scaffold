@@ -68,7 +68,8 @@ pub async fn sync_payload() -> Result<std::path::PathBuf> {
                 let payloads_present = cache_dir.join(".templates").is_dir()
                     && cache_dir.join(".skills").is_dir()
                     && cache_dir.join(".licenses").is_dir()
-                    && cache_dir.join(".contributions").is_dir();
+                    && cache_dir.join(".contributions").is_dir()
+                    && cache_dir.join("personas").is_dir();
                 if remote_version != local_version || !payloads_present || !manifest_path.exists() {
                     println!("Syncing remote payload library v{}...", remote_version);
                     if let Err(e) =
@@ -96,6 +97,7 @@ pub async fn sync_payload() -> Result<std::path::PathBuf> {
                                         || rel_path.starts_with(".skills")
                                         || rel_path.starts_with(".licenses")
                                         || rel_path.starts_with(".contributions")
+                                        || rel_path.starts_with("personas")
                                     {
                                         let target = cache_dir.join(&rel_path);
                                         if file.name().ends_with('/') {

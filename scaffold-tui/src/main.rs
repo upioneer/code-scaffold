@@ -7,6 +7,7 @@ mod components;
 mod headless;
 mod manifest_engine;
 mod models;
+mod personas;
 mod prefs;
 mod quick_update;
 mod scaffold_connect;

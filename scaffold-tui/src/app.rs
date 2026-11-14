@@ -2751,6 +2751,67 @@ mod visual_artifacts_tests {
     }
 
     #[tokio::test]
+    async fn test_library_persona_music_producer_loads_and_selects_companions() {
+        let payload_dir = std::path::PathBuf::from("..");
+        let mut app = App::new(payload_dir);
+
+        app.workspace.set_category(Category::AgentPersona);
+        let visible = app.workspace.visible_indices();
+        let idx = visible
+            .iter()
+            .position(|&actual| app.workspace.items[actual].label == "Music Producer")
+            .expect("Music Producer persona not found");
+
+        app.workspace.selected_idx = idx;
+        let _ = app.workspace.update(Action::Char(' '));
+
+        let item = app
+            .workspace
+            .items
+            .iter()
+            .find(|i| i.label == "Music Producer" && i.category == Category::AgentPersona)
+            .unwrap();
+        assert!(item.selected);
+
+        for skill in &["manim", "mermaid", "officecli", "quarto"] {
+            let skill_item = app
+                .workspace
+                .items
+                .iter()
+                .find(|i| i.label == *skill && i.category == Category::AgentSkills)
+                .unwrap();
+            assert!(
+                skill_item.selected,
+                "{} should be auto-selected when Music Producer is selected",
+                skill
+            );
+        }
+    }
+
+    #[tokio::test]
+    async fn test_library_persona_names_do_not_collide_with_builtin_rows() {
+        let builtin = crate::components::workspace::Workspace::new(std::path::PathBuf::from(
+            "nonexistent-payload-dir-xyz",
+        ));
+        let builtin_labels: Vec<String> = builtin
+            .items
+            .iter()
+            .filter(|i| i.category == Category::AgentPersona)
+            .map(|i| i.label.clone())
+            .collect();
+        assert!(!builtin_labels.is_empty());
+        let library = crate::personas::load_library(&std::path::PathBuf::from(".."));
+        assert!(!library.is_empty());
+        for persona in &library {
+            assert!(
+                !builtin_labels.contains(&persona.name),
+                "library persona '{}' collides with a built-in row; rename one",
+                persona.name
+            );
+        }
+    }
+
+    #[tokio::test]
     async fn test_simulation_fea_cfd_persona_auto_selects_companions() {
         let payload_dir = std::path::PathBuf::from("../.skills");
         let mut app = App::new(payload_dir);

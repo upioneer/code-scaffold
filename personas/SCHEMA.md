@@ -24,6 +24,13 @@ machine routing plus a markdown body for behavior.
 * `## Workflow`: numbered default engagement flow, five to eight steps.
 * `## Guardrails`: hard limits: safety, honesty, privacy, and escalation rules.
 
+## App consumption
+
+`scaffold-tui` syncs `personas/` to field caches and appends one picker row
+per pack after the built in rows. It parses `name`, `description`,
+`version`, and the `auto_skills` keys from frontmatter; a pack whose name
+collides with a built in row is skipped. Keep those keys stable.
+
 ## Registry and gap log
 
 * `personas/README.md` holds the registry table: Persona, Description,

@@ -7,6 +7,7 @@ use ratatui::prelude::{Constraint, Direction, Layout, Rect};
 use ratatui::style::{Modifier, Style};
 use ratatui::text::{Line, Span};
 use ratatui::widgets::{Block, Borders, List, ListItem, ListState, Paragraph};
+use std::collections::HashMap;
 
 pub struct WorkspaceItem {
     pub label: String,
@@ -41,6 +42,7 @@ pub struct Workspace {
     pub current_category: Category,
     pub state: ListState,
     pub target_folder: String,
+    pub persona_companions: HashMap<String, Vec<String>>,
 }
 
 impl Workspace {
@@ -49,6 +51,7 @@ impl Workspace {
         // renders a static target confirmation and all actions run through
         // hotkeys ([Enter] continue, [F] browse, [R] reset, [W] welcome).
         let mut items = vec![];
+        let mut persona_companions: HashMap<String, Vec<String>> = HashMap::new();
 
         items.extend(vec![
             WorkspaceItem {
@@ -262,6 +265,35 @@ impl Workspace {
                 logo: None,
             },
         ]);
+
+        // Append personas from the synced `personas/` role pack library.
+        // Built in rows stay first so existing selections never shift; a
+        // library pack whose name collides with a built in row is skipped.
+        {
+            let existing: Vec<String> = items.iter().map(|i| i.label.clone()).collect();
+            for persona in crate::personas::load_library(&payload_dir) {
+                if existing.contains(&persona.name) {
+                    continue;
+                }
+                if !persona.auto_skills.is_empty() {
+                    persona_companions.insert(persona.name.clone(), persona.auto_skills.clone());
+                }
+                items.push(WorkspaceItem {
+                    label: persona.name,
+                    selected: false,
+                    category: Category::AgentPersona,
+                    description: Some(persona.description),
+                    version: if persona.version.is_empty() {
+                        None
+                    } else {
+                        Some(persona.version)
+                    },
+                    exists_in_target: false,
+                    target_version: None,
+                    logo: None,
+                });
+            }
+        }
 
         let templates_dir = payload_dir.join(".templates");
         if templates_dir.exists() {
@@ -599,6 +631,7 @@ impl Workspace {
             current_category: Category::DeploymentTarget,
             state: ListState::default(),
             target_folder: String::new(),
+            persona_companions,
         }
     }
 
@@ -1954,6 +1987,19 @@ impl Component for Workspace {
                                 i.label == *companion_name && i.category == Category::AgentSkills
                             }) {
                                 companion.selected = true;
+                            }
+                        }
+                    }
+                    // Library personas from `personas/` route companions
+                    // through frontmatter instead of per label branches.
+                    if new_state {
+                        if let Some(slugs) = self.persona_companions.get(&label).cloned() {
+                            for slug in &slugs {
+                                if let Some(companion) = self.items.iter_mut().find(|i| {
+                                    i.label == *slug && i.category == Category::AgentSkills
+                                }) {
+                                    companion.selected = true;
+                                }
                             }
                         }
                     }
