@@ -1,6 +1,6 @@
 {
     "metadata": {
-        "version": "7.50.0",
+        "version": "7.51.0",
         "lastUpdated": "2026-09-07T01:09:00Z"
     },
     "env": {
@@ -189,6 +189,13 @@
             "label": "Codebase Memory MCP",
             "source": ".skills/codebase-memory-mcp",
             "target": ".skills/codebase-memory-mcp",
+            "method": "copy"
+        },
+        {
+            "id": "comfyui",
+            "label": "ComfyUI",
+            "source": ".skills/comfyui",
+            "target": ".skills/comfyui",
             "method": "copy"
         },
         {

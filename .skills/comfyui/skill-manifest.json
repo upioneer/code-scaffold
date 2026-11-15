@@ -1,0 +1,37 @@
+{
+  "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
+  "specification": "https://code-scaffold.com/spec/v1",
+  "name": "code_scaffold_comfyui_skill",
+  "version": "1",
+  "description": "Operate ComfyUI node graph pipelines end to end: author API format workflows, queue prompts, manage models and custom nodes, and fetch image, video, and audio outputs across local and hosted servers.",
+  "entryPoint": "./SKILL.md",
+  "engines": {
+    "python": ">=3.10",
+    "node": ">=18"
+  },
+  "requiredPermissions": [
+    "fs:read",
+    "fs:write",
+    "net:connect"
+  ],
+  "category": "AI, MCP & Developer Tools",
+  "keywords": [
+    "comfyui",
+    "comfy",
+    "txt2img",
+    "img2img",
+    "inpainting",
+    "upscale",
+    "text-to-video",
+    "stable-diffusion",
+    "flux",
+    "ksampler",
+    "controlnet",
+    "lora",
+    "workflow-api",
+    "custom-nodes",
+    "queue-prompt"
+  ],
+  "hasSandbox": true,
+  "integrity": "cs:sha256:62cfe73e76bb316c6a9eaae4d5a155451db4a7669a8228b63da2ddb0c8f5f533"
+}

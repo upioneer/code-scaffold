@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Code Scaffold Specification Schema: https://code-scaffold.com/spec/v1 -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ComfyUI Graph Visualizer</title>
+<style>
+  :root { color-scheme: dark; --bg: #0b1020; --panel: #131a30; --line: #2a3458; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: Consolas, monospace; background: var(--bg); color: #dbe4ff; }
+  header { padding: 12px 16px; border-bottom: 1px solid #2a3458; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  header h1 { font-size: 16px; margin: 0; color: #7dd3fc; }
+  button, select { background: #1c2547; color: #dbe4ff; border: 1px solid #2a3458; border-radius: 6px; padding: 6px 10px; cursor: pointer; font: inherit; font-size: 12px; }
+  button:hover { border-color: #7dd3fc; }
+  main { display: grid; grid-template-columns: 1fr 340px; gap: 0; height: calc(100vh - 53px); }
+  #stage { overflow: auto; position: relative; }
+  svg { display: block; }
+  aside { border-left: 1px solid #2a3458; background: var(--panel); overflow-y: auto; padding: 12px; font-size: 12px; }
+  aside h2 { font-size: 12px; color: #7dd3fc; margin: 0 0 8px; text-transform: uppercase; }
+  aside pre { white-space: pre-wrap; word-break: break-word; background: #0b1020; padding: 8px; border-radius: 6px; }
+  .warn { color: #fbbf24; } .err { color: #f87171; } .ok { color: #34d399; }
+  #drop { position: fixed; inset: 0; background: rgba(125,211,252,.12); border: 3px dashed #7dd3fc; display: none; align-items: center; justify-content: center; font-size: 20px; z-index: 10; }
+  textarea { width: 100%; height: 90px; background: #0b1020; color: #dbe4ff; border: 1px solid #2a3458; border-radius: 6px; font: inherit; font-size: 11px; }
+  .node { cursor: pointer; }
+  .node rect { stroke-width: 1.5; }
+  .node text { fill: #e5e9f5; font-size: 11px; }
+  .node .cls { fill: #9fb0d8; font-size: 9px; }
+  .link { fill: none; stroke: #4a5a8a; stroke-width: 1.5; }
+  #legend { display: flex; gap: 8px; flex-wrap: wrap; font-size: 11px; padding: 8px 16px; border-bottom: 1px solid #2a3458; }
+  #legend span i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 4px; }
+</style>
+</head>
+<body>
+<div id="drop">Drop workflow JSON</div>
+<header>
+  <h1>ComfyUI Graph Visualizer</h1>
+  <button id="btn-sample">Load sample</button>
+  <button id="btn-paste">Render pasted JSON</button>
+  <button id="btn-zoom-in">Zoom +</button>
+  <button id="btn-zoom-out">Zoom -</button>
+  <span id="status"></span>
+</header>
+<div id="legend"></div>
+<main>
+  <div id="stage"><svg id="graph" width="1200" height="700"></svg></div>
+  <aside>
+    <h2>Input JSON</h2>
+    <textarea id="src" placeholder="Paste API format workflow JSON here"></textarea>
+    <h2>Validation</h2>
+    <div id="report"><span class="ok">No graph loaded.</span></div>
+    <h2>Node detail</h2>
+    <div id="detail">Click a node.</div>
+  </aside>
+</main>
+<script>
+"use strict";
+const SAVE = new Set(["SaveImage","SaveVideo","SaveAudio","SaveWEBM","SaveAnimatedWEBP","SaveAnimatedPNG","CombineVideo"]);
+const COLORS = { loader: "#7c5cff", conditioning: "#f472b6", sampling: "#fb923c", latent: "#38bdf8", image: "#34d399", mask: "#facc15", video: "#c084fc", audio: "#4ade80", util: "#64748b", save: "#22d3ee" };
+function catOf(cls) {
+  if (SAVE.has(cls)) return "save";
+  if (/Loader|LoadImage|LoadVideo|LoadAudio|Checkpoint|UNet|CLIP|VAE|LoRA|ControlNet|Upscale|GLIGEN/i.test(cls) && !/Encode|Decode/.test(cls)) return "loader";
+  if (/CLIPTextEncode|Conditioning|ControlNetApply|GLIGENText/i.test(cls)) return "conditioning";
+  if (/Sampler|KSampler/i.test(cls)) return "sampling";
+  if (/Latent|VAEEncode|VAEDecode|NoiseMask/i.test(cls)) return "latent";
+  if (/^Image|Composite|Batch|Crop|Blur|Invert/.test(cls)) return "image";
+  if (/Mask/.test(cls)) return "mask";
+  if (/Video/.test(cls)) return "video";
+  if (/Audio/.test(cls)) return "audio";
+  return "util";
+}
+let zoom = 1, graph = null, positions = {};
+const svg = document.getElementById("graph");
+const NS = "http://www.w3.org/2000/svg";
+function el(tag, attrs, text) {
+  const n = document.createElementNS(NS, tag);
+  for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, v);
+  if (text !== undefined) n.textContent = text;
+  return n;
+}
+function validate(g) {
+  const errs = [], warns = [];
+  if (!g || typeof g !== "object" || Array.isArray(g)) return { errs: ["Top level must be an object keyed by node id."], warns };
+  if ("nodes" in g && "links" in g) return { errs: ["UI format detected. Re-export via Dev mode Output in API Format."], warns };
+  let hasSave = false;
+  for (const [id, n] of Object.entries(g)) {
+    if (!n || typeof n !== "object" || !n.class_type || !n.inputs) { errs.push(`Node ${id}: missing class_type or inputs.`); continue; }
+    if (SAVE.has(n.class_type)) hasSave = true;
+    const title = ((n._meta || {}).title || "").trim();
+    if (!title) warns.push(`Node ${id}: missing plain word _meta.title.`);
+    for (const [k, v] of Object.entries(n.inputs)) {
+      if (Array.isArray(v) && v.length === 2 && typeof v[0] === "string" && typeof v[1] === "number" && !(v[0] in g))
+        errs.push(`Node ${id}: input ${k} links missing node ${v[0]}.`);
+    }
+  }
+  if (!hasSave) errs.push("No save node found. Graph returns nothing.");
+  return { errs, warns };
+}
+function layout(g) {
+  const depth = {}, visiting = new Set();
+  function dep(id) {
+    if (depth[id] !== undefined) return depth[id];
+    if (visiting.has(id)) return 0;
+    visiting.add(id);
+    let d = 0;
+    const n = g[id];
+    if (n && n.inputs) for (const v of Object.values(n.inputs))
+      if (Array.isArray(v) && v.length === 2 && typeof v[0] === "string" && v[0] in g) d = Math.max(d, dep(v[0]) + 1);
+    visiting.delete(id);
+    depth[id] = d;
+    return d;
+  }
+  Object.keys(g).forEach(dep);
+  const layers = {};
+  for (const [id, d] of Object.entries(depth)) { (layers[d] = layers[d] || []).push(id); }
+  Object.values(layers).forEach(l => l.sort((a, b) => +a - +b));
+  const pos = {}, W = 230, H = 96, GX = 90, GY = 40;
+  const maxLayer = Math.max(...Object.keys(layers).map(Number));
+  let maxH = 0;
+  for (const [d, ids] of Object.entries(layers)) {
+    ids.forEach((id, i) => { pos[id] = { x: 30 + (+d) * (W + GX), y: 30 + i * (H + GY) }; });
+    maxH = Math.max(maxH, 30 + ids.length * (H + GY));
+  }
+  return { pos, w: 60 + (maxLayer + 1) * (W + GX), h: Math.max(maxH, 300), W, H };
+}
+function render() {
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
+  if (!graph) return;
+  const { pos, w, h, W, H } = layout(graph);
+  positions = pos;
+  svg.setAttribute("width", w * zoom);
+  svg.setAttribute("height", h * zoom);
+  const g = el("g", { transform: `scale(${zoom})` });
+  svg.appendChild(g);
+  for (const [id, n] of Object.entries(graph)) {
+    if (!n.inputs) continue;
+    for (const v of Object.values(n.inputs)) {
+      if (!(Array.isArray(v) && v.length === 2 && typeof v[0] === "string" && pos[v[0]] && pos[id])) continue;
+      const a = pos[v[0]], b = pos[id];
+      const x1 = a.x + W, y1 = a.y + H / 2, x2 = b.x, y2 = b.y + H / 2, mx = (x1 + x2) / 2;
+      g.appendChild(el("path", { d: `M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}`, class: "link" }));
+    }
+  }
+  for (const [id, n] of Object.entries(graph)) {
+    const p = pos[id];
+    if (!p) continue;
+    const c = COLORS[catOf(n.class_type || "")] || COLORS.util;
+    const grp = el("g", { class: "node", transform: `translate(${p.x},${p.y})` });
+    grp.appendChild(el("rect", { width: W, height: H, rx: 8, fill: "#131a30", stroke: c }));
+    grp.appendChild(el("rect", { width: 6, height: H, rx: 3, fill: c }));
+    grp.appendChild(el("text", { x: 16, y: 24 }, `#${id} ` + (((n._meta || {}).title) || "(untitled)").slice(0, 26)));
+    grp.appendChild(el("text", { x: 16, y: 42, class: "cls" }, (n.class_type || "?").slice(0, 34)));
+    const keys = n.inputs ? Object.keys(n.inputs).slice(0, 3).join(", ") : "";
+    grp.appendChild(el("text", { x: 16, y: 60, class: "cls" }, keys.slice(0, 38)));
+    grp.appendChild(el("text", { x: 16, y: 76, class: "cls" }, n.inputs ? `${Object.keys(n.inputs).length} inputs` : ""));
+    grp.addEventListener("click", () => showDetail(id));
+    g.appendChild(grp);
+  }
+  document.getElementById("status").textContent = `${Object.keys(graph).length} nodes`;
+}
+function showDetail(id) {
+  const n = graph[id];
+  document.getElementById("detail").innerHTML = "";
+  const pre = document.createElement("pre");
+  pre.textContent = `#${id} ${n.class_type}\n` + JSON.stringify(n.inputs, null, 2);
+  document.getElementById("detail").appendChild(pre);
+}
+function showReport(r) {
+  const box = document.getElementById("report");
+  box.innerHTML = "";
+  if (!r.errs.length && !r.warns.length) { box.innerHTML = '<span class="ok">VALID: graph passed all checks.</span>'; return; }
+  const ul = document.createElement("div");
+  r.errs.forEach(e => { const d = document.createElement("div"); d.className = "err"; d.textContent = "ERROR: " + e; ul.appendChild(d); });
+  r.warns.forEach(w => { const d = document.createElement("div"); d.className = "warn"; d.textContent = "WARNING: " + w; ul.appendChild(d); });
+  box.appendChild(ul);
+}
+function loadText(text) {
+  try {
+    graph = JSON.parse(text);
+  } catch (e) {
+    showReport({ errs: ["Invalid JSON: " + e.message], warns: [] });
+    graph = null; render();
+    return;
+  }
+  showReport(validate(graph));
+  render();
+}
+const SAMPLE = {"1":{"class_type":"CheckpointLoaderSimple","inputs":{"ckpt_name":"MODEL.safetensors"},"_meta":{"title":"Checkpoint Loader"}},"2":{"class_type":"CLIPTextEncode","inputs":{"text":"a lighthouse at dawn","clip":["1",1]},"_meta":{"title":"Positive Prompt"}},"3":{"class_type":"CLIPTextEncode","inputs":{"text":"blurry, watermark","clip":["1",1]},"_meta":{"title":"Negative Prompt"}},"4":{"class_type":"EmptyLatentImage","inputs":{"width":1024,"height":1024,"batch_size":1},"_meta":{"title":"Empty Latent"}},"5":{"class_type":"KSampler","inputs":{"model":["1",0],"positive":["2",0],"negative":["3",0],"latent_image":["4",0],"seed":1,"steps":25,"cfg":7.0,"sampler_name":"euler","scheduler":"normal","denoise":1.0},"_meta":{"title":"Sampler"}},"6":{"class_type":"VAEDecode","inputs":{"samples":["5",0],"vae":["1",2]},"_meta":{"title":"VAE Decode"}},"7":{"class_type":"SaveImage","inputs":{"filename_prefix":"txt2img/run","images":["6",0]},"_meta":{"title":"Save Image"}}};
+document.getElementById("btn-sample").onclick = () => {
+  document.getElementById("src").value = JSON.stringify(SAMPLE, null, 2);
+  loadText(JSON.stringify(SAMPLE));
+};
+document.getElementById("btn-paste").onclick = () => loadText(document.getElementById("src").value);
+document.getElementById("btn-zoom-in").onclick = () => { zoom = Math.min(3, zoom + 0.25); render(); };
+document.getElementById("btn-zoom-out").onclick = () => { zoom = Math.max(0.4, zoom - 0.25); render(); };
+const drop = document.getElementById("drop");
+window.addEventListener("dragover", e => { e.preventDefault(); drop.style.display = "flex"; });
+window.addEventListener("dragleave", e => { if (e.target === drop) drop.style.display = "none"; });
+window.addEventListener("drop", e => {
+  e.preventDefault(); drop.style.display = "none";
+  const f = e.dataTransfer.files && e.dataTransfer.files[0];
+  if (!f) return;
+  const r = new FileReader();
+  r.onload = () => { document.getElementById("src").value = r.result; loadText(r.result); };
+  r.readAsText(f);
+});
+(function legend() {
+  const box = document.getElementById("legend");
+  for (const [k, c] of Object.entries(COLORS)) {
+    const s = document.createElement("span");
+    s.innerHTML = `<i style="background:${c}"></i>${k}`;
+    box.appendChild(s);
+  }
+})();
+loadText(JSON.stringify(SAMPLE));
+</script>
+</body>
+</html>

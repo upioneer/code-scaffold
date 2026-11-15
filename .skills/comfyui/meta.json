@@ -1,0 +1,15 @@
+{
+  "label": "ComfyUI",
+  "description": "Operate ComfyUI node graph pipelines end to end: author API format workflows, queue prompts, manage models and custom nodes, and fetch image, video, and audio outputs across local and hosted servers.",
+  "version": "1",
+  "target": ".skills/comfyui",
+  "hasSandbox": true,
+  "logo": [
+    "   ██████╗ ██████╗ ███╗   ███╗███████╗██╗   ██╗██╗   ██╗██╗  ",
+    "  ██╔════╝██╔═══██╗████╗ ████║██╔════╝╚██╗ ██╔╝██║   ██║██║  ",
+    "  ██║     ██║   ██║██╔████╔██║█████╗   ╚████╔╝ ██║   ██║██║  ",
+    "  ██║     ██║   ██║██║╚██╔╝██║██╔══╝    ╚██╔╝  ██║   ██║██║  ",
+    "  ╚██████╗╚██████╔╝██║ ╚═╝ ██║██║        ██║   ╚██████╔╝██║  ",
+    "   ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚═╝        ╚═╝    ╚═════╝ ╚═╝  "
+  ]
+}

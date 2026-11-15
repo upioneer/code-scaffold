@@ -267,8 +267,8 @@ impl Workspace {
         ]);
 
         // Append personas from the synced `personas/` role pack library.
-        // Built in rows stay first so existing selections never shift; a
-        // library pack whose name collides with a built in row is skipped.
+        // A library pack whose name collides with a built in row is
+        // skipped. All persona rows are sorted alphabetically below.
         {
             let existing: Vec<String> = items.iter().map(|i| i.label.clone()).collect();
             for persona in crate::personas::load_library(&payload_dir) {
@@ -294,6 +294,12 @@ impl Workspace {
                 });
             }
         }
+
+        // Keep the persona picker alphabetized across versions so newly
+        // synced library packs land in sorted position instead of drifting.
+        // At this point `items` holds persona rows only; later sections
+        // append their own categories after it.
+        items.sort_by(|a, b| a.label.to_lowercase().cmp(&b.label.to_lowercase()));
 
         let templates_dir = payload_dir.join(".templates");
         if templates_dir.exists() {

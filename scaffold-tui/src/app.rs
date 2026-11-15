@@ -2812,6 +2812,29 @@ mod visual_artifacts_tests {
     }
 
     #[tokio::test]
+    async fn test_persona_picker_rows_stay_alphabetized() {
+        let app = App::new(std::path::PathBuf::from(".."));
+        let labels: Vec<String> = app
+            .workspace
+            .items
+            .iter()
+            .filter(|i| i.category == Category::AgentPersona)
+            .map(|i| i.label.clone())
+            .collect();
+        assert!(
+            labels.len() >= 37,
+            "expected built-in plus library rows, got {}",
+            labels.len()
+        );
+        let mut sorted = labels.clone();
+        sorted.sort_by(|a, b| a.to_lowercase().cmp(&b.to_lowercase()));
+        assert_eq!(
+            labels, sorted,
+            "persona picker rows must stay alphabetized across versions"
+        );
+    }
+
+    #[tokio::test]
     async fn test_simulation_fea_cfd_persona_auto_selects_companions() {
         let payload_dir = std::path::PathBuf::from("../.skills");
         let mut app = App::new(payload_dir);
