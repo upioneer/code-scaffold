@@ -1,0 +1,37 @@
+{
+  "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
+  "specification": "https://code-scaffold.com/spec/v1",
+  "name": "code_scaffold_tailcat_skill",
+  "version": "1",
+  "description": "Share apps, ports, files, shells, and networks over Tailcat peer to peer tunnels with recipes, diagnostics, and key management.",
+  "entryPoint": "./SKILL.md",
+  "engines": {
+    "python": ">=3.10",
+    "node": ">=18"
+  },
+  "requiredPermissions": [
+    "fs:read",
+    "fs:write",
+    "net:connect"
+  ],
+  "category": "DevOps & Infrastructure",
+  "keywords": [
+    "tailcat",
+    "tailscale",
+    "port-forward",
+    "reverse-tunnel",
+    "ngrok-alternative",
+    "wireguard-tunnel",
+    "sftp-share",
+    "remote-ssh",
+    "socks-proxy",
+    "exit-node",
+    "derp-relay",
+    "p2p-tunnel",
+    "file-dropbox",
+    "zero-trust-share",
+    "secure-share"
+  ],
+  "hasSandbox": true,
+  "integrity": "cs:sha256:920ec849983f251ceaca4d9a71670112f63cff6ad619fbefaf3181bebe37924f"
+}

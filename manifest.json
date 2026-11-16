@@ -1,6 +1,6 @@
 {
     "metadata": {
-        "version": "7.51.0",
+        "version": "7.52.0",
         "lastUpdated": "2026-09-07T01:09:00Z"
     },
     "env": {
@@ -196,6 +196,13 @@
             "label": "ComfyUI",
             "source": ".skills/comfyui",
             "target": ".skills/comfyui",
+            "method": "copy"
+        },
+        {
+            "id": "comfyui-identity-engine",
+            "label": "ComfyUI Identity Engine",
+            "source": ".skills/comfyui-identity-engine",
+            "target": ".skills/comfyui-identity-engine",
             "method": "copy"
         },
         {
@@ -532,6 +539,13 @@
             "label": "Supabase",
             "source": ".skills/supabase",
             "target": ".skills/supabase",
+            "method": "copy"
+        },
+        {
+            "id": "tailcat",
+            "label": "Tailcat",
+            "source": ".skills/tailcat",
+            "target": ".skills/tailcat",
             "method": "copy"
         },
         {

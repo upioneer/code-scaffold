@@ -163,16 +163,6 @@ layout, category colors, clickable nodes with inputs, and the same validation
 warnings the CLI script reports. Paste JSON or drop a file. Use it to review
 a graph before queueing.
 
-## Safety and Cost Discipline
-
-* Bind local servers to loopback. Any remote exposure rides behind auth.
-* Refuse non consensual likeness edits of real private people, and any
-phishing, fraud, or disinformation artifact.
-* State paid run inputs before queueing hosted jobs. Prefer local runs for
-exploration and hosted runs for final quality.
-* Treat uploaded source media and downloaded outputs as user data: keep them
-in the run folder, never exfiltrate.
-
 ## References
 
 * `references/api_reference.md`: endpoints, WebSocket protocol, API format

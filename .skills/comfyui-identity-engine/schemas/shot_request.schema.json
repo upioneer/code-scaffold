@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ShotRequest",
+  "description": "Downstream generation call against a validated character manifest.",
+  "type": "object",
+  "required": ["shot_id", "character_id", "mode"],
+  "properties": {
+    "shot_id": { "type": "string" },
+    "character_id": { "type": "string", "pattern": "^char_[a-z0-9_]+$" },
+    "mode": {
+      "type": "string",
+      "enum": ["comic_panel", "music_video", "podcast", "animation", "still", "key_art"]
+    },
+    "camera": {
+      "type": "object",
+      "properties": {
+        "target_yaw": { "type": "number", "minimum": -180, "maximum": 180 },
+        "target_pitch": { "type": "number", "minimum": -90, "maximum": 90 },
+        "framing": {
+          "type": "string",
+          "enum": ["closeup", "portrait", "half_body", "full_body", "wide", "establishing"]
+        }
+      }
+    },
+    "wardrobe_preset": { "type": "string" },
+    "style_preset": { "type": "string" },
+    "emotion_state": {
+      "type": "string",
+      "enum": ["neutral", "projected", "whisper", "urgent", "melodic"]
+    },
+    "dialogue": {
+      "type": "object",
+      "properties": {
+        "text": { "type": "string" },
+        "pace": { "type": "string", "enum": ["slow", "natural", "brisk"] },
+        "pitch_bias": { "type": "number" }
+      }
+    },
+    "seed": { "type": "integer", "minimum": 0 },
+    "identity_weight_boost": { "type": "number", "default": 0.0 },
+    "characters": {
+      "type": "array",
+      "description": "Extra characters for multi-character frames, each with a mask label.",
+      "items": {
+        "type": "object",
+        "required": ["character_id", "mask"],
+        "properties": {
+          "character_id": { "type": "string" },
+          "mask": { "type": "string" },
+          "wardrobe_preset": { "type": "string" }
+        }
+      }
+    }
+  }
+}

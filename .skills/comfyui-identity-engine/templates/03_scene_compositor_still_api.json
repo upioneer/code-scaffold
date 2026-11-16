@@ -1,0 +1,63 @@
+{
+  "_doc": "03 scene compositor still: single or multi-character panel with regional identity. Router injects angle-matched anchors and per-character masks. Substitute {{PLACEHOLDERS}}.",
+  "1": {
+    "class_type": "CheckpointLoaderSimple",
+    "inputs": {"ckpt_name": "{{CHECKPOINT}}"},
+    "_meta": {"title": "Base Model"}
+  },
+  "2": {
+    "class_type": "LoRALoader",
+    "inputs": {"model": ["1", 0], "clip": ["1", 1], "lora_name": "{{CHARACTER_LORA}}", "strength_model": "{{LORA_STRENGTH}}", "strength_clip": "{{LORA_STRENGTH}}"},
+    "_meta": {"title": "Character LoRA"}
+  },
+  "3": {
+    "class_type": "LoadImage",
+    "inputs": {"image": "{{ANGLE_ANCHOR_PNG}}"},
+    "_meta": {"title": "Angle Anchor"}
+  },
+  "4": {
+    "class_type": "LoadImage",
+    "inputs": {"image": "{{FACE_MASTER_PNG}}"},
+    "_meta": {"title": "Face Master"}
+  },
+  "5": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {"text": "{{SCENE_PROMPT}} {{TRIGGER_WORD}}", "clip": ["2", 1]},
+    "_meta": {"title": "Scene Prompt"}
+  },
+  "6": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {"text": "{{NEGATIVE_PROMPT}}", "clip": ["2", 1]},
+    "_meta": {"title": "Negative Prompt"}
+  },
+  "7": {
+    "class_type": "{{FACE_ID_NODE_CLASS}}",
+    "inputs": {"image": ["4", 0], "weight": "{{FACE_ID_WEIGHT}}"},
+    "_meta": {"title": "Face Identity Lock"}
+  },
+  "8": {
+    "class_type": "{{IP_ADAPTER_NODE_CLASS}}",
+    "inputs": {"image": ["3", 0], "weight": 0.75},
+    "_meta": {"title": "Angle Reference"}
+  },
+  "9": {
+    "class_type": "EmptyLatentImage",
+    "inputs": {"width": "{{WIDTH}}", "height": "{{HEIGHT}}", "batch_size": 1},
+    "_meta": {"title": "Panel Latent"}
+  },
+  "10": {
+    "class_type": "KSampler",
+    "inputs": {"model": ["2", 0], "positive": ["5", 0], "negative": ["6", 0], "latent_image": ["9", 0], "seed": "{{SEED}}", "steps": 28, "cfg": 6.0, "sampler_name": "euler", "scheduler": "normal", "denoise": 1.0},
+    "_meta": {"title": "Panel Sampler"}
+  },
+  "11": {
+    "class_type": "VAEDecode",
+    "inputs": {"samples": ["10", 0], "vae": ["1", 2]},
+    "_meta": {"title": "Panel Decode"}
+  },
+  "12": {
+    "class_type": "SaveImage",
+    "inputs": {"filename_prefix": "{{SHOT_ID}}", "images": ["11", 0]},
+    "_meta": {"title": "Save Panel"}
+  }
+}

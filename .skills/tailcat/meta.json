@@ -1,0 +1,15 @@
+{
+  "label": "Tailcat",
+  "description": "Share apps, ports, files, shells, and networks over Tailcat peer to peer tunnels with recipes, diagnostics, and key management.",
+  "version": "1",
+  "target": ".skills/tailcat",
+  "hasSandbox": true,
+  "logo": [
+    "  ████████╗ █████╗ ██╗██╗      ██████╗ █████╗ ████████╗  ",
+    "  ╚══██╔══╝██╔══██╗██║██║     ██╔════╝██╔══██╗╚══██╔══╝  ",
+    "     ██║   ███████║██║██║     ██║     ███████║   ██║     ",
+    "     ██║   ██╔══██║██║██║     ██║     ██╔══██║   ██║     ",
+    "     ██║   ██║  ██║██║███████╗╚██████╗██║  ██║   ██║     ",
+    "     ╚═╝   ╚═╝  ╚═╝╚═╝╚══════╝ ╚═════╝╚═╝  ╚═╝   ╚═╝     "
+  ]
+}

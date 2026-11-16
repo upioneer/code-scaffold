@@ -1,6 +1,6 @@
 # GhostImprint Engine
 
-**Version:** 6
+**Version:** 7
 
 **Target:** `.skills/ghostimprint`
 
@@ -47,6 +47,7 @@ GhostImprint Engine is an industrial grade cryptographic code provenance and ste
 * **Zero External Dependencies**: Operates 100% offline across Windows, macOS, and Linux using the native Node.js standard runtime and built-in crypto module with zero npm package requirements.
 * **Application Receipt Ground Truth**: Every applied decision is logged per release and layer (`record`), oracle probe triggers are bound per release (`record-plan`), and releases are sealed to git commits and trees (`anchor`). The auditor compares suspect code against the receipt. Layers without recordings report UNMEASURED with the command that would make them measurable.
 * **Durable Selftest**: Ships `scripts/ghostimprint-selftest.js`, a zero-dependency suite covering fail-closed identity, planted-fixture verdicts, receipt round-trips, anchor verification, and oracle verdict logic.
+* **SkillForge Distribution Provenance**: Owns the library watermark protocol (manifest integrity tokens, SKILL.md zero-width fingerprints, sandbox spec comments) with scoped hand application, byte discipline rules, and gate verification.
 
 ## Roadmap (In Development)
 Planned items are not claimed as capabilities until delivered:
@@ -76,6 +77,7 @@ AI agents and developers invoke the GhostImprint Engine via conversational natur
 * Sealed Legal Dossier Generation: `node .skills/ghostimprint/scripts/ghostimprint.js export --target /path/to/suspect-repo --format all`
 
 ## Changelog
+* **v7** : Documented the SkillForge Distribution Provenance protocol (integrity token algorithm, zero-width fingerprint, sandbox spec comment) with a scoped hand application policy replacing repo-wide watermarking passes
 * **v6** : Applied the SkillForge Keyword Contract: discovery keywords standardized to the 15 to 30 term lexicon with the skill slug first, mirrored identically across the manifest, readme badge, SKILL frontmatter, and registry index
 * **v5** : Renamed GhostPrint to GhostImprint. Audit and oracle report only measured evidence with explicit UNMEASURED labels. Audit fails closed without a vault. Added one way street warning to the key ceremony. Added application receipt workflow (record, record-plan, anchor, receipt commands), real Layer 4 stylometry matching against a bundled 24-condition lexicon, Layer 5 construct-choice agreement, Layer 8 git-tree anchor verification, receipt-driven oracle probe plans, tiered temporal anchors (local git plus notarized RFC 3161 and Rekor witnesses), and a durable zero-dependency selftest suite.
 * **v4** : Added automatic GhostImprint README badge generation on project protection with dedicated CLI inspection and manual opt-out support.

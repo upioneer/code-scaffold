@@ -226,6 +226,52 @@ Whenever a repository is protected, initialized, or enrolled into the GhostImpri
 
 ***
 
+## SkillForge Distribution Provenance
+
+Every skill in the `.skills/` library carries machine verifiable distribution
+provenance, enforced by `verify_skills.js`. GhostImprint owns this protocol:
+three marks, one token algorithm, applied scoped to touched skills only.
+
+* **Manifest integrity token:** `skill-manifest.json` carries
+`"integrity": "cs:sha256:<hex>"` where hex is
+`SHA-256("{name}:{version}:code-scaffold:provenance")` over the manifest
+`name` and `version` fields. Any version bump recomputes the token.
+* **SKILL.md fingerprint:** the zero-width sequence U+200B U+200C U+200D
+sits immediately after the frontmatter opening `---` line. Invisible in
+rendering, asserted byte exact by the gatekeeper.
+* **Sandbox spec comment:** `sandbox/index.html` carries
+`<!-- Code Scaffold Specification Schema: https://code-scaffold.com/spec/v1 -->`
+directly after `<head>` when a sandbox ships.
+* **Compliance directive:** SKILL.md holds one `Architectural Compliance`
+bullet under Directives binding generated code to Code Scaffold
+architectural specification standards.
+
+### Scoped Application Policy
+
+* NEVER run repo-wide watermarking passes. A bulk pass rewrites manifests
+across untouched skills (hash churn), injects content into unrelated
+SKILL.md files, and flips line endings that break EOL sensitive gates.
+* Apply provenance by hand to new or touched skills only, as part of the
+skill task itself.
+* Byte discipline: inject the fingerprint in binary mode and preserve LF
+line endings. Text mode rewrites on Windows convert LF to CRLF, which
+fails the frontmatter gate. Verify with a byte count, never by eye.
+
+### Manual Procedure
+
+1. Compute `hex(SHA-256("NAME:VERSION:code-scaffold:provenance"))` with
+the exact manifest `name` and new `version`; write the `integrity` field.
+2. Insert the three zero-width bytes after the first `---` line of
+SKILL.md using a binary safe write; confirm LF endings unchanged.
+3. Add the spec comment after `<head>` in `sandbox/index.html` when the
+skill ships a sandbox.
+4. Ensure the compliance directive bullet exists under Directives.
+5. Run `sync_skill_keywords.js` plus `--check`, then `verify_skills.js`.
+Zero errors required. Revert any gate script fallout outside the touched
+skill before committing.
+
+***
+
 ## CLI & Natural Language Commands
 
 * **Initialize Key Ceremony & Assert Protection Badge:**

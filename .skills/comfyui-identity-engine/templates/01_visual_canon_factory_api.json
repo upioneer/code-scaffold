@@ -1,0 +1,48 @@
+{
+  "_doc": "01 visual canon factory: seed image to 14-angle sheet. Substitute {{PLACEHOLDERS}}, queue, then slice the sheet into single views with canon_builder.py. Never pass the composite sheet downstream.",
+  "1": {
+    "class_type": "LoadImage",
+    "inputs": {"image": "{{SEED_IMAGE}}"},
+    "_meta": {"title": "Seed Image"}
+  },
+  "2": {
+    "class_type": "CheckpointLoaderSimple",
+    "inputs": {"ckpt_name": "{{CHECKPOINT}}"},
+    "_meta": {"title": "Base Model"}
+  },
+  "3": {
+    "class_type": "LoRALoader",
+    "inputs": {"model": ["2", 0], "clip": ["2", 1], "lora_name": "{{MULTI_ANGLE_LORA}}", "strength_model": 0.85, "strength_clip": 0.85},
+    "_meta": {"title": "Multi Angle LoRA"}
+  },
+  "4": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {"text": "{{A_POSE_SHEET_PROMPT}}", "clip": ["3", 1]},
+    "_meta": {"title": "Canon Prompt"}
+  },
+  "5": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {"text": "{{NEGATIVE_PROMPT}}", "clip": ["3", 1]},
+    "_meta": {"title": "Negative Prompt"}
+  },
+  "6": {
+    "class_type": "EmptyLatentImage",
+    "inputs": {"width": 2048, "height": 2048, "batch_size": 1},
+    "_meta": {"title": "Sheet Latent"}
+  },
+  "7": {
+    "class_type": "KSampler",
+    "inputs": {"model": ["3", 0], "positive": ["4", 0], "negative": ["5", 0], "latent_image": ["6", 0], "seed": "{{SEED}}", "steps": 30, "cfg": 6.5, "sampler_name": "euler", "scheduler": "normal", "denoise": 1.0},
+    "_meta": {"title": "Sheet Sampler"}
+  },
+  "8": {
+    "class_type": "VAEDecode",
+    "inputs": {"samples": ["7", 0], "vae": ["2", 2]},
+    "_meta": {"title": "Sheet Decode"}
+  },
+  "9": {
+    "class_type": "SaveImage",
+    "inputs": {"filename_prefix": "{{CHARACTER_ID}}/canon_sheet", "images": ["8", 0]},
+    "_meta": {"title": "Save Canon Sheet"}
+  }
+}

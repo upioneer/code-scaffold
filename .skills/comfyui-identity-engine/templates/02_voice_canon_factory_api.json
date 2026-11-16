@@ -1,0 +1,23 @@
+{
+  "_doc": "02 voice canon factory: seed sample to emotional matrix plus RVC lock. Substitute {{PLACEHOLDERS}}. Node classes vary by TTS pack; confirm against /object_info before queueing.",
+  "1": {
+    "class_type": "LoadAudio",
+    "inputs": {"audio": "{{SEED_WAV}}"},
+    "_meta": {"title": "Seed Voice Sample"}
+  },
+  "2": {
+    "class_type": "{{TTS_NODE_CLASS}}",
+    "inputs": {"ref_audio": ["1", 0], "ref_text": "{{SEED_TRANSCRIPT}}", "gen_text": "{{EMOTION_TRANSCRIPT}}", "seed": "{{SEED}}"},
+    "_meta": {"title": "Emotion TTS"}
+  },
+  "3": {
+    "class_type": "{{RVC_NODE_CLASS}}",
+    "inputs": {"audio": ["2", 0], "model": "{{RVC_PTH}}", "index": "{{RVC_INDEX}}", "f0_method": "rmvpe", "index_rate": 0.75, "protect": 0.33, "f0_up_key": 0},
+    "_meta": {"title": "RVC Timbre Clamp"}
+  },
+  "4": {
+    "class_type": "SaveAudio",
+    "inputs": {"filename_prefix": "{{CHARACTER_ID}}/voice_{{EMOTION}}", "audio": ["3", 0]},
+    "_meta": {"title": "Save Emotion WAV"}
+  }
+}

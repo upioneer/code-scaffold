@@ -1,6 +1,6 @@
 # ComfyUI
 
-**Version:** 1
+**Version:** 2
 
 **Target:** `.skills/comfyui`
 
@@ -23,10 +23,10 @@ Agent operator for ComfyUI node graph pipelines: authors validated API format wo
 * **Queue and VRAM Discipline** : Job inspection, selective clears, interrupts, model unloads, and ordered out of memory recovery
 * **Offline and Live Validation** : Dependency free checker for structure, links, save coverage, titles, plus live class and model verification against the server
 * **Multi Server Routing** : Fleet profiles by VRAM and queue depth with fit based job placement
-* **Safety and Cost Controls** : Loopback binds, authed remote access, secrets hygiene, paid run consent, and likeness refusal rules
 
 ## Usage
 This skill is built for the Code Scaffold engine. Please refer to the `SKILL.md` file inside this directory for the deep integration guidelines and agentic methodologies.
 
 ## Changelog
+* **v2** : Removed the Safety and Cost Discipline guardrails per owner direction
 * **v1** : Initial release with API reference, node catalog, workflow patterns, model guide, operations manual, validator plus queue scripts, sample graph, and graph visualizer sandbox

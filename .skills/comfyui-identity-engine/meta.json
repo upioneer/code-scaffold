@@ -1,0 +1,15 @@
+{
+  "label": "ComfyUI Identity Engine",
+  "description": "Lock consistent character visuals and voices across ComfyUI pipelines with canon packs, angle routing, RVC voice clamping, and measured anti-drift QA gates.",
+  "version": "2",
+  "target": ".skills/comfyui-identity-engine",
+  "hasSandbox": true,
+  "logo": [
+    "  ██╗██████╗ ███████╗███╗   ██╗████████╗██╗████████╗██╗   ██╗  ",
+    "  ██║██╔══██╗██╔════╝████╗  ██║╚══██╔══╝██║╚══██╔══╝╚██╗ ██╔╝  ",
+    "  ██║██║  ██║█████╗  ██╔██╗ ██║   ██║   ██║   ██║    ╚████╔╝   ",
+    "  ██║██║  ██║██╔══╝  ██║╚██╗██║   ██║   ██║   ██║     ╚██╔╝    ",
+    "  ██║██████╔╝███████╗██║ ╚████║   ██║   ██║   ██║      ██║     ",
+    "  ╚═╝╚═════╝ ╚══════╝╚═╝  ╚═══╝   ╚═╝   ╚═╝   ╚═╝      ╚═╝     "
+  ]
+}

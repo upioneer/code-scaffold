@@ -1,0 +1,104 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CharacterIdentityManifest",
+  "type": "object",
+  "required": ["character_id", "version", "identity_anchors", "visual_canon", "voice_canon", "qa_thresholds"],
+  "properties": {
+    "character_id": { "type": "string", "pattern": "^char_[a-z0-9_]+$" },
+    "version": { "type": "string" },
+    "identity_anchors": {
+      "type": "object",
+      "required": ["trigger_word", "immutable_physical_prompt", "negative_prompt"],
+      "properties": {
+        "trigger_word": { "type": "string" },
+        "immutable_physical_prompt": {
+          "type": "string",
+          "description": "Bone structure, eye shape/color, skin tone/texture, hairline, scars, height/build. NO clothing or scene descriptions."
+        },
+        "negative_prompt": { "type": "string" }
+      }
+    },
+    "wardrobe_presets": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["prompt", "hex_palette", "reference_crop_path"],
+        "properties": {
+          "prompt": { "type": "string" },
+          "hex_palette": { "type": "array", "items": { "type": "string" } },
+          "reference_crop_path": { "type": "string" }
+        }
+      }
+    },
+    "visual_canon": {
+      "type": "object",
+      "required": ["face_master", "rig_poses", "azimuth_views", "elevation_views"],
+      "properties": {
+        "face_master": { "type": "string" },
+        "lora_path": { "type": "string" },
+        "mesh_3d_glb_path": { "type": "string" },
+        "rig_poses": {
+          "type": "object",
+          "required": ["a_pose_front", "t_pose_front"],
+          "properties": {
+            "a_pose_front": { "type": "string" },
+            "t_pose_front": { "type": "string" }
+          }
+        },
+        "azimuth_views": {
+          "type": "object",
+          "required": ["deg_000", "deg_045", "deg_090", "deg_135", "deg_180", "deg_225", "deg_270", "deg_315"],
+          "properties": {
+            "deg_000": { "type": "string" },
+            "deg_045": { "type": "string" },
+            "deg_090": { "type": "string" },
+            "deg_135": { "type": "string" },
+            "deg_180": { "type": "string" },
+            "deg_225": { "type": "string" },
+            "deg_270": { "type": "string" },
+            "deg_315": { "type": "string" }
+          }
+        },
+        "elevation_views": {
+          "type": "object",
+          "required": ["upper_quarter_plus35", "lower_quarter_minus35", "top_down_plus80", "worms_eye_minus70"],
+          "properties": {
+            "upper_quarter_plus35": { "type": "string" },
+            "lower_quarter_minus35": { "type": "string" },
+            "top_down_plus80": { "type": "string" },
+            "worms_eye_minus70": { "type": "string" }
+          }
+        }
+      }
+    },
+    "voice_canon": {
+      "type": "object",
+      "required": ["engine", "rvc_model_path", "rvc_index_path", "emotional_matrix"],
+      "properties": {
+        "engine": { "type": "string", "enum": ["F5-TTS", "CosyVoice2", "FishSpeech1.5", "ChatterboxTTS"] },
+        "rvc_model_path": { "type": "string" },
+        "rvc_index_path": { "type": "string" },
+        "f0_up_key": { "type": "integer", "default": 0 },
+        "emotional_matrix": {
+          "type": "object",
+          "required": ["neutral", "projected", "whisper", "urgent", "melodic"],
+          "properties": {
+            "neutral": { "type": "object", "properties": { "wav": { "type": "string" }, "ref_text": { "type": "string" } } },
+            "projected": { "type": "object", "properties": { "wav": { "type": "string" }, "ref_text": { "type": "string" } } },
+            "whisper": { "type": "object", "properties": { "wav": { "type": "string" }, "ref_text": { "type": "string" } } },
+            "urgent": { "type": "object", "properties": { "wav": { "type": "string" }, "ref_text": { "type": "string" } } },
+            "melodic": { "type": "object", "properties": { "wav": { "type": "string" }, "ref_text": { "type": "string" } } }
+          }
+        }
+      }
+    },
+    "qa_thresholds": {
+      "type": "object",
+      "properties": {
+        "min_arcface_cosine": { "type": "number", "default": 0.72 },
+        "min_clip_wardrobe_cosine": { "type": "number", "default": 0.78 },
+        "min_voice_dvector_cosine": { "type": "number", "default": 0.82 }
+      }
+    }
+  }
+}

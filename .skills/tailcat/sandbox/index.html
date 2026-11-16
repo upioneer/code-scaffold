@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Code Scaffold Specification Schema: https://code-scaffold.com/spec/v1 -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tailcat Recipe Builder</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: Consolas, monospace; background: #0b1020; color: #dbe4ff; }
+  header { padding: 12px 16px; border-bottom: 1px solid #2a3458; }
+  header h1 { font-size: 16px; margin: 0; color: #7dd3fc; }
+  header p { font-size: 12px; color: #fbbf24; margin: 6px 0 0; }
+  main { display: grid; grid-template-columns: 300px 1fr; min-height: calc(100vh - 90px); }
+  nav { border-right: 1px solid #2a3458; padding: 12px; }
+  nav button { display: block; width: 100%; text-align: left; margin-bottom: 6px; background: #131a30; color: #dbe4ff; border: 1px solid #2a3458; border-radius: 6px; padding: 8px 10px; cursor: pointer; font: inherit; font-size: 12px; }
+  nav button.active, nav button:hover { border-color: #7dd3fc; }
+  section { padding: 16px; }
+  label { display: block; font-size: 12px; margin: 10px 0 4px; color: #9fb0d8; }
+  input { width: 100%; max-width: 420px; background: #0b1020; color: #dbe4ff; border: 1px solid #2a3458; border-radius: 6px; padding: 7px 9px; font: inherit; font-size: 12px; }
+  pre { background: #131a30; border: 1px solid #2a3458; border-radius: 8px; padding: 12px; font-size: 13px; white-space: pre-wrap; word-break: break-all; }
+  .trust { color: #fbbf24; font-size: 12px; margin-top: 4px; }
+  .row { display: flex; gap: 8px; align-items: center; }
+  .row h2 { font-size: 12px; color: #7dd3fc; text-transform: uppercase; margin: 14px 0 4px; }
+  .copy { margin-left: auto; background: #1c2547; color: #dbe4ff; border: 1px solid #2a3458; border-radius: 6px; padding: 4px 10px; cursor: pointer; font: inherit; font-size: 11px; }
+  #toast { position: fixed; bottom: 16px; right: 16px; background: #134e4a; padding: 8px 14px; border-radius: 6px; display: none; font-size: 12px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Tailcat Recipe Builder</h1>
+  <p>TRADE SECRET DISCIPLINE: tokens are passwords. Share privately, prefer ephemeral keys, never publish trusting servers.</p>
+</header>
+<main>
+  <nav id="goals"></nav>
+  <section>
+    <h2 id="title" style="margin:0 0 4px;color:#7dd3fc;font-size:14px;"></h2>
+    <div id="trust" class="trust"></div>
+    <div id="fields"></div>
+    <div class="row"><h2>Server</h2><button class="copy" data-for="server">Copy</button></div>
+    <pre id="server"></pre>
+    <div class="row"><h2>Client</h2><button class="copy" data-for="client">Copy</button></div>
+    <pre id="client"></pre>
+  </section>
+</main>
+<div id="toast">Copied</div>
+<script>
+"use strict";
+const GOALS = {
+  "share-app": { trust: "Anyone with the token reaches the served HTTP app.", server: "tailcat serve --key=new {port}", client: "tailcat forward --open-browser TOKEN 0:{port}", options: { port: "3000" } },
+  "multi-service": { trust: "Token holders reach every listed port.", server: "tailcat serve --key=new {ports}", client: "tailcat forward TOKEN {maps}", options: { ports: "8080,3306", maps: "18080:8080 3306" } },
+  "send-bytes": { trust: "First connector takes the single stream.", server: "tailcat", client: "printf 'hello\\n' | tailcat TOKEN", options: {} },
+  "dropbox": { trust: "Senders can only add files, never list or read back.", server: "tailcat recv {dir}", client: "tailcat cp {file} TOKEN:", options: { dir: "~/inbox", file: "report.pdf" } },
+  "share-dir-readonly": { trust: "Token holders can list and download the tree.", server: "tailcat serve files", client: "tailcat ls -l TOKEN && tailcat cp TOKEN:{file} .", options: { file: "report.pdf" } },
+  "share-dir-readwrite": { trust: "Token holders can upload, download, and modify.", server: "tailcat serve --files={path}:rw files", client: "tailcat cp -r {local} TOKEN:{remote}", options: { path: "/srv/share", local: "photos", remote: "photos" } },
+  "ssh-shell": { trust: "SSH daemon auth stays in charge through the tunnel.", server: "tailcat serve 22", client: "tailcat ssh TOKEN", options: {} },
+  "ssh-builtin": { trust: "Only listed keys get a shell plus SFTP.", server: "tailcat serve --ssh-authorized-keys={keys} ssh", client: "tailcat ssh TOKEN", options: { keys: "~/.ssh/authorized_keys" } },
+  "forced-command": { trust: "Every session runs the forced program, no shell.", server: "tailcat serve --ssh-authorized-keys={keys} ssh -- {cmd}", client: "tailcat ssh TOKEN", options: { keys: "alice@github", cmd: "./deploy.sh" } },
+  "socks-proxy": { trust: "Proxy user reaches the served port as localhost there.", server: "tailcat serve --key=new {port}", client: "tailcat socks TOKEN curl http://server.tailcat:{port}/", options: { port: "8081" } },
+  "exit-node": { trust: "Token holders reach the far network. Broad by design.", server: "tailcat serve exit-node", client: "tailcat forward TOKEN 0:{host}:{port}", options: { host: "192.168.1.10", port: "3000" } },
+  "stable-address": { trust: "Only allowlisted client keys connect, across restarts.", server: "tailcat genkey --key=default --fixed-region && tailcat serve --allow=Nodekey:{client} {port}", client: "tailcat forward TOKEN 0:{port}", options: { client: "CLIENT_PUBLIC_KEY", port: "3000" } },
+  "ping-path": { trust: "Read only connectivity probe.", server: "tailcat serve --key=new {port}", client: "tailcat ping --until-direct --timeout={timeout}s TOKEN", options: { port: "3000", timeout: "30" } },
+  "perf-test": { trust: "Load test between consenting peers over a direct path.", server: "tailcat serve perf", client: "tailcat perf TOKEN", options: {} },
+  "raw-tcp": { trust: "Byte pipe with no local listener.", server: "tailcat", client: "tailcat TOKEN {port} < input.bin > output.bin", options: { port: "8080" } }
+};
+let current = "share-app";
+const nav = document.getElementById("goals");
+function fill(tpl, vals) { return tpl.replace(/\{(\w+)\}/g, (_, k) => vals[k] !== undefined ? vals[k] : `{${k}}`); }
+function values() {
+  const out = {};
+  document.querySelectorAll("#fields input").forEach(i => { out[i.dataset.key] = i.value; });
+  return out;
+}
+function draw() {
+  const g = GOALS[current];
+  document.getElementById("title").textContent = current;
+  document.getElementById("trust").textContent = "Trust: " + g.trust;
+  const box = document.getElementById("fields");
+  box.innerHTML = "";
+  for (const [k, v] of Object.entries(g.options)) {
+    const lab = document.createElement("label");
+    lab.textContent = k;
+    const inp = document.createElement("input");
+    inp.dataset.key = k;
+    inp.value = v;
+    inp.addEventListener("input", drawCommands);
+    box.appendChild(lab);
+    box.appendChild(inp);
+  }
+  nav.querySelectorAll("button").forEach(b => b.classList.toggle("active", b.dataset.goal === current));
+  drawCommands();
+}
+function drawCommands() {
+  const g = GOALS[current], v = values();
+  document.getElementById("server").textContent = fill(g.server, v);
+  document.getElementById("client").textContent = fill(g.client, v);
+}
+for (const name of Object.keys(GOALS)) {
+  const b = document.createElement("button");
+  b.dataset.goal = name;
+  b.textContent = name;
+  b.onclick = () => { current = name; draw(); };
+  nav.appendChild(b);
+}
+document.querySelectorAll(".copy").forEach(b => b.onclick = () => {
+  const text = document.getElementById(b.dataset.for).textContent;
+  (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject())
+    .catch(() => {})
+    .finally(() => {
+      const t = document.getElementById("toast");
+      t.style.display = "block";
+      setTimeout(() => { t.style.display = "none"; }, 1200);
+    });
+});
+draw();
+</script>
+</body>
+</html>

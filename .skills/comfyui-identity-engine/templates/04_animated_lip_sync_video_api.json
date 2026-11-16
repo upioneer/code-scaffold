@@ -1,0 +1,33 @@
+{
+  "_doc": "04 animated lip sync video: verified keyframes plus vocal track to synced clip. Router injects start/end keyframes; validator gates boundary frames. Substitute {{PLACEHOLDERS}}. Video node classes vary by pack; confirm against /object_info.",
+  "1": {
+    "class_type": "LoadImage",
+    "inputs": {"image": "{{START_KEYFRAME_PNG}}"},
+    "_meta": {"title": "Start Keyframe"}
+  },
+  "2": {
+    "class_type": "LoadImage",
+    "inputs": {"image": "{{END_KEYFRAME_PNG}}"},
+    "_meta": {"title": "End Keyframe"}
+  },
+  "3": {
+    "class_type": "LoadAudio",
+    "inputs": {"audio": "{{VOCAL_TRACK_WAV}}"},
+    "_meta": {"title": "Vocal Track"}
+  },
+  "4": {
+    "class_type": "{{VIDEO_R2V_NODE_CLASS}}",
+    "inputs": {"start_image": ["1", 0], "end_image": ["2", 0], "audio": ["3", 0], "frames": "{{FRAMES}}", "fps": 24, "seed": "{{SEED}}"},
+    "_meta": {"title": "Reference Video"}
+  },
+  "5": {
+    "class_type": "{{LIPSYNC_NODE_CLASS}}",
+    "inputs": {"video": ["4", 0], "audio": ["3", 0]},
+    "_meta": {"title": "Lip Sync Pass"}
+  },
+  "6": {
+    "class_type": "SaveVideo",
+    "inputs": {"video": ["5", 0], "filename_prefix": "{{SHOT_ID}}", "format": "auto", "codec": "auto"},
+    "_meta": {"title": "Save Clip"}
+  }
+}
