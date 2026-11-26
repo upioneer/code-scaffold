@@ -1,0 +1,79 @@
+{
+  "$schema": "https://code-scaffold.com/schemas/v1/skill-manifest.json",
+  "specification": "https://code-scaffold.com/spec/v1",
+  "name": "code_scaffold_agentwire_skill",
+  "version": "1",
+  "description": "Extensible multi-surface wiring engine that projects any new or existing app onto MCP (2026 Streamable HTTP, OAuth 2.1, Elicitation, Sampling, Async Tasks), ACP (JSON-RPC 2.0 sessions, permissions, MCP-in-ACP), and Telegram (both Zero-AI deterministic bots with commands, FSM wizards, paginated inline menus, inline queries, deep-link 2FA, files, payments, and Mini Apps, plus AI agentic sendMessageDraft streaming, Forum Topics, and Pocket Approvals) from a single typed capability core.",
+  "entryPoint": "./SKILL.md",
+  "engines": {
+    "node": ">=18.0.0",
+    "python": ">=3.10"
+  },
+  "requiredPermissions": [
+    "fs:read",
+    "fs:write",
+    "net:connect",
+    "exec:process"
+  ],
+  "peerSkills": [
+    {
+      "name": "mcp-generator",
+      "package": "upioneer/mcp-generator",
+      "installCommand": "npx @code-scaffold/skills-cli add upioneer/mcp-generator",
+      "registry": "https://code-scaffold.com/skills/mcp-generator",
+      "optional": true,
+      "purpose": "Dedicated single-surface MCP server/client scaffolding primitives"
+    },
+    {
+      "name": "a2a",
+      "package": "upioneer/a2a",
+      "installCommand": "npx @code-scaffold/skills-cli add upioneer/a2a",
+      "registry": "https://code-scaffold.com/skills/a2a",
+      "optional": true,
+      "purpose": "Optional Agent2Agent mesh extension surface adapter"
+    },
+    {
+      "name": "telegram",
+      "package": "upioneer/telegram",
+      "installCommand": "npx @code-scaffold/skills-cli add upioneer/telegram",
+      "registry": "https://code-scaffold.com/skills/telegram",
+      "optional": true,
+      "purpose": "Lightweight one-shot Telegram deployment notification alerts"
+    }
+  ],
+  "category": "AI, MCP & Developer Tools",
+  "keywords": [
+    "agentwire",
+    "multi-surface-agent",
+    "mcp-server",
+    "acp-protocol",
+    "agent-client-protocol",
+    "telegram-bot",
+    "zero-ai-bot",
+    "fsm-wizards",
+    "inline-keyboards",
+    "telegram-payments",
+    "streamable-http",
+    "model-context-protocol",
+    "pocket-approvals",
+    "send-message-draft",
+    "telegram-mini-apps",
+    "oauth-2-1",
+    "elicitation",
+    "capability-core",
+    "surface-adapter",
+    "json-rpc",
+    "human-in-the-loop",
+    "session-permissions",
+    "agent-control-plane",
+    "mcp-in-acp",
+    "forum-topics",
+    "voice-to-action",
+    "app-retrofitting",
+    "polyglot-sdk",
+    "agent-bridge",
+    "live-streaming"
+  ],
+  "hasSandbox": true,
+  "integrity": "cs:sha256:4efacf47c7c2c484714c8221c0966b320311327032eb97f4a517f4cc8627561d"
+}

@@ -1910,6 +1910,13 @@ impl Component for Workspace {
                         if let Some(companion) = self
                             .items
                             .iter_mut()
+                            .find(|i| i.label == "agentwire" && i.category == Category::AgentSkills)
+                        {
+                            companion.selected = true;
+                        }
+                        if let Some(companion) = self
+                            .items
+                            .iter_mut()
                             .find(|i| i.label == "trackio" && i.category == Category::AgentSkills)
                         {
                             companion.selected = true;

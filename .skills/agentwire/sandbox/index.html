@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Code Scaffold Specification Schema: https://code-scaffold.com/spec/v1 -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AgentWire Multi-Surface Engine - Interactive Protocol & Wiring Studio</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #080d18;
+      --panel: #0f172a;
+      --panel-alt: #0b1222;
+      --border: #1e293b;
+      --border-hi: #334155;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --cyan: #22d3ee;
+      --emerald: #34d399;
+      --amber: #fbbf24;
+      --violet: #a78bfa;
+      --rose: #fb7185;
+      --mono: ui-monospace, "Cascadia Code", "JetBrains Mono", Consolas, monospace;
+      --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 15% 10%, rgba(34, 211, 238, 0.08), transparent 40%),
+        radial-gradient(circle at 85% 90%, rgba(167, 139, 250, 0.08), transparent 40%),
+        linear-gradient(to right, rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,0.025) 1px, transparent 1px),
+        var(--bg);
+      background-size: 100% 100%, 100% 100%, 28px 28px, 28px 28px, 100% 100%;
+      color: var(--text);
+      font-family: var(--sans);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .wrap { max-width: 1360px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+    header {
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px;
+      padding-bottom: 14px; border-bottom: 1px solid var(--border);
+    }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .badge-icon {
+      width: 44px; height: 44px; border-radius: 10px;
+      background: rgba(34, 211, 238, 0.1); border: 1px solid rgba(34, 211, 238, 0.45);
+      display: grid; place-items: center; font-family: var(--mono); font-weight: 800; color: var(--cyan);
+      box-shadow: 0 0 24px rgba(34, 211, 238, 0.18);
+    }
+    h1 { margin: 0; font-size: 18px; letter-spacing: 0.02em; display: flex; align-items: center; gap: 8px; }
+    .pill {
+      font-family: var(--mono); font-size: 11px; padding: 3px 8px; border-radius: 999px;
+      background: rgba(52, 211, 153, 0.12); border: 1px solid rgba(52, 211, 153, 0.45); color: var(--emerald);
+    }
+    .pill.cyan { background: rgba(34, 211, 238, 0.12); border-color: rgba(34, 211, 238, 0.4); color: var(--cyan); }
+    .pill.amber { background: rgba(251, 191, 36, 0.12); border-color: rgba(251, 191, 36, 0.4); color: var(--amber); }
+    .pill.rose { background: rgba(251, 113, 133, 0.12); border-color: rgba(251, 113, 133, 0.45); color: var(--rose); }
+    .pill.violet { background: rgba(167, 139, 250, 0.12); border-color: rgba(167, 139, 250, 0.45); color: var(--violet); }
+    .sub { margin: 3px 0 0; font-size: 12px; color: var(--muted); }
+    .status-strip { display: flex; flex-wrap: wrap; gap: 8px; font-family: var(--mono); font-size: 11px; }
+    .tabs { display: flex; flex-wrap: wrap; gap: 8px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+    .tab-btn {
+      font-family: var(--mono); font-size: 12px; padding: 8px 14px; border-radius: 8px; cursor: pointer;
+      background: var(--panel); border: 1px solid var(--border); color: var(--muted); transition: 0.15s ease;
+    }
+    .tab-btn:hover { color: var(--text); border-color: var(--border-hi); }
+    .tab-btn.active { background: rgba(34, 211, 238, 0.12); border-color: rgba(34, 211, 238, 0.55); color: var(--cyan); font-weight: 700; }
+    .tab-pane { display: none; gap: 16px; }
+    .tab-pane.active { display: grid; grid-template-columns: 370px 1fr; }
+    .tab-pane.single.active { display: grid; grid-template-columns: 1fr; }
+    @media (max-width: 960px) { .tab-pane.active { grid-template-columns: 1fr; } }
+    .card {
+      background: rgba(15, 23, 42, 0.92); border: 1px solid var(--border); border-radius: 12px; padding: 16px;
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .card h2, .card h3 { margin: 0; font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--cyan); font-family: var(--mono); }
+    label { display: block; font-family: var(--mono); font-size: 11px; color: var(--muted); margin-bottom: 5px; }
+    select, input[type="text"] {
+      width: 100%; background: var(--panel-alt); color: var(--text); border: 1px solid var(--border-hi);
+      border-radius: 7px; padding: 8px 10px; font-family: var(--mono); font-size: 12px;
+    }
+    .btn-row { display: flex; flex-wrap: wrap; gap: 6px; }
+    .chip {
+      font-family: var(--mono); font-size: 11px; padding: 6px 10px; border-radius: 6px; cursor: pointer;
+      background: var(--panel-alt); border: 1px solid var(--border-hi); color: var(--muted);
+    }
+    .chip.on { background: rgba(34, 211, 238, 0.14); border-color: var(--cyan); color: var(--text); font-weight: 700; }
+    .chip.em.on { background: rgba(52, 211, 153, 0.14); border-color: var(--emerald); color: var(--emerald); }
+    .chip.am.on { background: rgba(251, 191, 36, 0.14); border-color: var(--amber); color: var(--amber); }
+    .chip.ro.on { background: rgba(251, 113, 133, 0.14); border-color: var(--rose); color: var(--rose); }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    @media (max-width: 1080px) { .grid-2 { grid-template-columns: 1fr; } }
+    pre {
+      margin: 0; background: #050912; border: 1px solid var(--border); border-radius: 8px; padding: 12px;
+      font-family: var(--mono); font-size: 11.5px; line-height: 1.5; color: #cbd5e1;
+      overflow-x: auto; max-height: 290px; white-space: pre-wrap; word-break: break-word;
+    }
+    .action-btn {
+      font-family: var(--mono); font-size: 12px; font-weight: 700; padding: 9px 14px; border-radius: 8px; cursor: pointer;
+      border: 1px solid rgba(34, 211, 238, 0.55); background: rgba(34, 211, 238, 0.16); color: var(--cyan);
+    }
+    .action-btn:hover { background: rgba(34, 211, 238, 0.26); }
+    .action-btn.em { border-color: rgba(52, 211, 153, 0.55); background: rgba(52, 211, 153, 0.16); color: var(--emerald); }
+    .action-btn.am { border-color: rgba(251, 191, 36, 0.55); background: rgba(251, 191, 36, 0.16); color: var(--amber); }
+    .action-btn.ro { border-color: rgba(251, 113, 133, 0.55); background: rgba(251, 113, 133, 0.16); color: var(--rose); }
+    .copy-hdr { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .mini-btn {
+      font-family: var(--mono); font-size: 10px; padding: 3px 8px; border-radius: 5px; cursor: pointer;
+      background: #172033; border: 1px solid var(--border-hi); color: var(--muted);
+    }
+    .mini-btn:hover { color: var(--text); }
+    .phone {
+      border: 2px solid #2a3954; border-radius: 24px; background: #070c17; padding: 14px;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .phone-top {
+      display: flex; justify-content: space-between; font-family: var(--mono); font-size: 11px; color: var(--muted);
+      border-bottom: 1px solid var(--border); padding-bottom: 8px;
+    }
+    .tg-msg {
+      background: #132038; border: 1px solid #26395e; border-radius: 10px; padding: 10px; font-size: 12px;
+      line-height: 1.45; font-family: var(--mono);
+    }
+    .tg-draft {
+      background: #0d1a2e; border: 1px dashed rgba(34, 211, 238, 0.45); border-radius: 10px; padding: 10px;
+      font-size: 11.5px; font-family: var(--mono); color: var(--cyan); min-height: 54px;
+    }
+    .tg-kb { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 8px; }
+    .tg-kb .wide { grid-column: span 2; }
+    .checklist-item {
+      display: flex; align-items: flex-start; gap: 10px; padding: 10px; border-radius: 8px;
+      background: var(--panel-alt); border: 1px solid var(--border); font-size: 12px;
+    }
+    .checklist-item input { margin-top: 3px; accent-color: var(--emerald); }
+    .pitch-box {
+      background: var(--panel-alt); border-left: 3px solid var(--cyan); padding: 10px 12px; border-radius: 6px;
+      font-size: 12.5px; line-height: 1.5;
+    }
+    #toast {
+      position: fixed; right: 20px; bottom: 20px; background: #0f2933; border: 1px solid var(--cyan);
+      color: var(--cyan); font-family: var(--mono); font-size: 12px; padding: 8px 14px; border-radius: 8px;
+      display: none; z-index: 50;
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="badge-icon">AW</div>
+      <div>
+        <h1>
+          <span>AgentWire Multi-Surface Engine</span>
+          <span class="pill">v1 ACTIVE</span>
+        </h1>
+        <p class="sub">Single Domain Capability Core -> MCP (2026) + ACP (JSON-RPC) + Telegram (Zero-AI & Agentic) + Extensible Adapters</p>
+      </div>
+    </div>
+    <div class="status-strip">
+      <span class="pill cyan">MCP: Streamable HTTP</span>
+      <span class="pill cyan">ACP: Self-Mount mcpServers[]</span>
+      <span class="pill">Telegram: Zero-AI ($0) + Agentic</span>
+    </div>
+  </header>
+
+  <nav class="tabs" id="tabNav">
+    <button class="tab-btn active" data-tab="studio">1. Capability & Surface Studio</button>
+    <button class="tab-btn" data-tab="gatekeeper">2. Pocket Gatekeeper & Zero-AI Simulator</button>
+    <button class="tab-btn" data-tab="scrutiny">3. Scrutiny Dial & Opportunity Grill</button>
+    <button class="tab-btn" data-tab="security">4. Security & Smoke-Test Harness</button>
+  </nav>
+
+  <!-- TAB 1: CAPABILITY & SURFACE WIRING STUDIO -->
+  <section class="tab-pane active" id="tab-studio">
+    <div class="card">
+      <h2>Domain Capability Config</h2>
+      <div>
+        <label for="presetSelect">Application Preset</label>
+        <select id="presetSelect">
+          <option value="billing">SaaS Billing App (issue_stripe_refund)</option>
+          <option value="deploy">DevOps Deploy Engine (promote_release)</option>
+          <option value="codebase">Codebase Assistant (run_db_migration)</option>
+          <option value="status">Telemetry Reader (get_service_health)</option>
+        </select>
+      </div>
+      <div>
+        <label>Telegram Operating Mode (AI vs Zero-AI)</label>
+        <div class="btn-row" id="tgModeBtns">
+          <button class="chip em on" data-tgmode="zero-ai">Zero-AI ($0 Keyless)</button>
+          <button class="chip" data-tgmode="hybrid">Hybrid</button>
+          <button class="chip" data-tgmode="agentic">Agentic (LLM)</button>
+        </div>
+      </div>
+      <div>
+        <label>Risk Tier (Unified Policy Engine)</label>
+        <div class="btn-row" id="riskBtns">
+          <button class="chip em" data-risk="auto-allow">auto-allow</button>
+          <button class="chip am on" data-risk="pocket-approve">pocket-approve</button>
+          <button class="chip ro" data-risk="deny">deny</button>
+        </div>
+      </div>
+      <div>
+        <label>Active Surface Adapters (Extensible Contract)</label>
+        <div class="btn-row" id="surfaceBtns">
+          <button class="chip on" data-surf="mcp">MCP (2026)</button>
+          <button class="chip on" data-surf="acp">ACP (JSON-RPC)</button>
+          <button class="chip on" data-surf="telegram">Telegram</button>
+          <button class="chip" data-surf="a2a">+ A2A Slot</button>
+          <button class="chip" data-surf="slack">+ Slack Slot</button>
+        </div>
+      </div>
+      <div>
+        <label>Target Stack Blueprint</label>
+        <div class="btn-row" id="stackBtns">
+          <button class="chip on" data-stack="ts">TypeScript</button>
+          <button class="chip" data-stack="py">Python</button>
+          <button class="chip" data-stack="rs">Rust</button>
+          <button class="chip" data-stack="go">Go</button>
+        </div>
+      </div>
+      <div class="pitch-box" id="coreSummary"></div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="copy-hdr"><h3>Surface A : MCP Tool + Streamable HTTP</h3><button class="mini-btn" data-copy="outMcp">Copy</button></div>
+        <pre id="outMcp"></pre>
+      </div>
+      <div class="card">
+        <div class="copy-hdr"><h3>Surface B : ACP Session + Permission</h3><button class="mini-btn" data-copy="outAcp">Copy</button></div>
+        <pre id="outAcp"></pre>
+      </div>
+      <div class="card">
+        <div class="copy-hdr"><h3 id="tgHdr">Surface C : Telegram (Zero-AI Deterministic)</h3><button class="mini-btn" data-copy="outTg">Copy</button></div>
+        <pre id="outTg"></pre>
+      </div>
+      <div class="card">
+        <div class="copy-hdr"><h3 id="stackHdr">Polyglot Adapter Starter (TypeScript)</h3><button class="mini-btn" data-copy="outCode">Copy</button></div>
+        <pre id="outCode"></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 2: POCKET GATEKEEPER & ZERO-AI SIMULATOR -->
+  <section class="tab-pane single" id="tab-gatekeeper">
+    <div class="card">
+      <div class="copy-hdr" style="flex-wrap:wrap;">
+        <div>
+          <h2>Pocket Gatekeeper & Zero-AI Deterministic Simulator</h2>
+          <p class="sub">Switch between Agentic ACP Pocket Approvals, a Zero-AI Multi-Step FSM Wizard (no LLM key), or a Deterministic CI/CD 2FA Gate.</p>
+        </div>
+        <div class="btn-row">
+          <select id="simMode" style="width:auto;">
+            <option value="zero_fsm">Zero-AI : /refund FSM Wizard ($0 LLM)</option>
+            <option value="zero_ci">Zero-AI : CI/CD Deploy 2FA Gate ($0 LLM)</option>
+            <option value="acp_gk">Agentic : ACP IDE -> Telegram Pocket Gatekeeper</option>
+          </select>
+          <select id="gkAction" style="width:auto;">
+            <option value="run_db_migration">run_db_migration (DROP COLUMN legacy_role)</option>
+            <option value="issue_stripe_refund">issue_stripe_refund ($480.00 -> inv_981)</option>
+            <option value="deploy_prod_release">deploy_prod_release (v2.14.0 -> us-east)</option>
+          </select>
+          <button class="action-btn" id="gkStartBtn">Run Simulation</button>
+          <button class="mini-btn" id="gkResetBtn" style="padding:8px 12px;font-size:11px;">Reset</button>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card" style="background:var(--panel-alt);">
+          <div class="copy-hdr">
+            <h3 id="leftSimHdr">Runtime State / Backend Trace</h3>
+            <span class="pill cyan" id="acpStatePill">IDLE</span>
+          </div>
+          <pre id="acpLog" style="min-height:280px;">Select a simulation mode above and click "Run Simulation"...</pre>
+        </div>
+
+        <div class="phone">
+          <div class="phone-top">
+            <span id="phoneTitle">Telegram Ops Bot (@AppWireBot)</span>
+            <span id="tgTtl" style="color:var(--amber);">STATE: IDLE</span>
+          </div>
+          <div class="tg-draft" id="tgDraft">No active message stream...</div>
+          <div class="tg-msg" id="tgCard">
+            <div style="color:var(--muted);">Click "Run Simulation" to step through either Zero-AI deterministic flows (FSM Wizard / CI 2FA) or Agentic ACP Pocket Gatekeeper.</div>
+          </div>
+          <div class="tg-kb" id="tgButtons" style="display:none;"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 3: RUNTIME SCRUTINY DIAL & OPPORTUNITY GRILL -->
+  <section class="tab-pane" id="tab-scrutiny">
+    <div class="card">
+      <h2>Phase 0 : Scrutiny Dial</h2>
+      <div class="btn-row" id="tierBtns">
+        <button class="chip" data-tier="1">Tier 1 : Fast-Track</button>
+        <button class="chip on" data-tier="2">Tier 2 : Adaptive Scan</button>
+        <button class="chip am" data-tier="3">Tier 3 : Deep Adversarial</button>
+      </div>
+      <label style="margin-top:8px;">AI Operating Mode Filter</label>
+      <div class="btn-row" id="grillModeBtns">
+        <button class="chip em on" data-gmode="zero-ai">Zero-AI Only ($0 / No LLM Key)</button>
+        <button class="chip" data-gmode="hybrid">Hybrid + Full Multi-Surface</button>
+      </div>
+      <label style="margin-top:8px;">Detected Codebase Signals (Click to toggle)</label>
+      <div class="btn-row" id="signalBtns">
+        <button class="chip on" data-sig="stripe">Stripe Webhooks</button>
+        <button class="chip on" data-sig="migrations">Postgres Migrations</button>
+        <button class="chip on" data-sig="cron">Cron / Job Queue</button>
+        <button class="chip" data-sig="admin">Admin Endpoints</button>
+        <button class="chip" data-sig="cli">CLI Subcommands</button>
+        <button class="chip" data-sig="charts">Analytics Dashboard</button>
+      </div>
+      <div class="pitch-box" id="tierDesc"></div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>Synthesized Unasked-For Capability Pitches</h3>
+        <pre id="pitchOut" style="max-height:420px;"></pre>
+      </div>
+      <div class="card">
+        <h3>Targeted Engineer Grill Script</h3>
+        <pre id="grillOut" style="max-height:420px;"></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 4: SECURITY PERIMETER & SMOKE-TEST HARNESS -->
+  <section class="tab-pane single" id="tab-security">
+    <div class="grid-2">
+      <div class="card">
+        <div class="copy-hdr">
+          <h2>Multi-Surface Security Hardening Checklist</h2>
+          <span class="pill" id="secScore">0 / 7 VERIFIED</span>
+        </div>
+        <div id="secList" style="display:flex;flex-direction:column;gap:8px;"></div>
+      </div>
+      <div class="card">
+        <div class="copy-hdr"><h3>Verification Smoke-Test Commands</h3><button class="mini-btn" data-copy="smokeCmds">Copy</button></div>
+        <pre id="smokeCmds" style="max-height:420px;"># 1. Zero-AI Telegram Sanity (Verify full operation with NO LLM API Key)
+env -u LLM_API_KEY -u OPENAI_API_KEY -u ANTHROPIC_API_KEY npm start
+# Test in Telegram: /start -> /help -> /refund FSM wizard -> /orders pagination -> @AppWireBot inline query
+
+# 2. MCP Surface : Inspector & Protected Resource Metadata
+npx @modelcontextprotocol/inspector http://127.0.0.1:8080/mcp
+curl -i http://127.0.0.1:8080/.well-known/oauth-protected-resource
+
+# 3. ACP Surface : Stdio JSON-RPC Handshake & Self-Mount Probe
+printf '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":1}}\n' | node dist/acp.js
+
+# 4. Telegram Surface : Verify Webhook Secret Rejection & Allowlist
+curl -i -X POST http://127.0.0.1:8080/telegram/webhook \
+  -H "X-Telegram-Bot-Api-Secret-Token: wrong-secret" \
+  -H "Content-Type: application/json" -d '{"update_id":1}'
+# Expected: HTTP 403 Forbidden (fail-closed)</pre>
+      </div>
+    </div>
+  </section>
+</div>
+<div id="toast">Copied to clipboard</div>
+
+<script>
+(function () {
+  "use strict";
+
+  const PRESETS = {
+    billing: {
+      id: "issue_stripe_refund",
+      title: "Issue Customer Refund",
+      desc: "Refunds a settled Stripe invoice with idempotency key and pocket approval.",
+      schema: { invoiceId: { type: "string" }, amountCents: { type: "integer", min: 100 }, reason: { type: "string" } },
+      sample: { invoiceId: "in_1Q9x2Z", amountCents: 48000, reason: "Duplicate charge" },
+      streaming: false,
+      wizardSteps: ["1/3 Invoice ID (string)", "2/3 Amount Cents (int)", "3/3 Reason -> [Confirm]"],
+      duration: 1800
+    },
+    deploy: {
+      id: "promote_release",
+      title: "Promote Release to Production",
+      desc: "Promotes verified build artifact across regions and streams rollout logs.",
+      schema: { version: { type: "string" }, region: { type: "string", enum: ["us-east", "eu-west"] } },
+      sample: { version: "v2.14.0", region: "us-east" },
+      streaming: true,
+      wizardSteps: ["1/2 Release Tag (string)", "2/2 Region ([us-east] | [eu-west]) -> [Confirm]"],
+      duration: 18000
+    },
+    codebase: {
+      id: "run_db_migration",
+      title: "Execute Schema Migration",
+      desc: "Applies reviewed SQL migration against target database inside transaction.",
+      schema: { migrationId: { type: "string" }, dryRun: { type: "boolean" } },
+      sample: { migrationId: "20261126_drop_legacy_role", dryRun: false },
+      streaming: true,
+      wizardSteps: ["1/2 Migration ID", "2/2 Dry Run ([true] | [false]) -> [Confirm]"],
+      duration: 9500
+    },
+    status: {
+      id: "get_service_health",
+      title: "Inspect Service Health",
+      desc: "Read-only diagnostics returning queue depth, error rate, and DB latency.",
+      schema: { windowMinutes: { type: "integer", default: 15 } },
+      sample: { windowMinutes: 15 },
+      streaming: false,
+      wizardSteps: ["Direct execution: /getservicehealth 15 (no wizard needed)"],
+      duration: 320
+    }
+  };
+
+  const STACKS = {
+    ts: {
+      label: "TypeScript",
+      code: (p, r, s, tgMode) => tgMode === "zero-ai"
+        ? `// Zero-AI Deterministic Telegram + Core (grammY + zod, ZERO LLM keys)\nconst bot = new Bot(process.env.TELEGRAM_BOT_TOKEN!);\nbot.api.setMyCommands([{ command: "${p.id.replace(/_/g, "")}", description: "${p.title}" }]);\nbot.command("${p.id.replace(/_/g, "")}", (ctx) => fsm.start(ctx, "${p.id}"));\nbot.on("inline_query", (ctx) => answerSearch(ctx));\nbot.callbackQuery(/^aw:/, (ctx) => handleSignedOrPaginatedAction(ctx));`
+        : `// Multi-Surface Capability (@modelcontextprotocol/sdk + @agentclientprotocol/sdk + grammy)\nregistry.register({\n  id: "${p.id}",\n  riskTier: "${r}",\n  supportsStreaming: ${p.streaming},\n  inputSchema: z.object(${JSON.stringify(p.schema)}),\n  execute: async (input, ctx) => appService.${p.id}(input)\n});\n// Surfaces: ${s.join(", ")} | Telegram: ${tgMode}`
+    },
+    py: {
+      label: "Python",
+      code: (p, r, s, tgMode) => tgMode === "zero-ai"
+        ? `# Zero-AI Deterministic Telegram + Core (aiogram v3 StatesGroup + CallbackData)\n@router.message(Command("${p.id.replace(/_/g, "")}"))\nasync def start_wizard(msg: types.Message, state: FSMContext):\n    await state.set_state(CapWizard.step_1)\n    await msg.answer("${p.wizardSteps[0]}")\n# Inline search + pre_checkout_query + deep links work with $0 LLM spend`
+        : `# Multi-Surface Capability (mcp + agent-client-protocol + aiogram v3 + pydantic)\n@registry.capability(id="${p.id}", risk_tier="${r}", streaming=${p.streaming ? "True" : "False"})\nasync def handle(params: InputModel, ctx: CapabilityContext):\n    return await app_service.${p.id}(params)\n# Surfaces: ${s.join(", ")} | Telegram: ${tgMode}`
+    },
+    rs: {
+      label: "Rust",
+      code: (p, r, s, tgMode) => tgMode === "zero-ai"
+        ? `// Zero-AI Deterministic Telegram (teloxide BotCommands + Dialogue FSM)\n#[derive(BotCommands, Clone)]\nenum Cmd { #[command(description = "${p.title}")] Run }\n// Route via dptree::entry() with InMemStorage dialogue + no LLM dependency`
+        : `// Multi-Surface Capability (rmcp + agent-client-protocol-rmcp + teloxide + schemars)\nregistry.register_fn("${p.id}", RiskTier::${r === "auto-allow" ? "AutoAllow" : r === "pocket-approve" ? "PocketApprove" : "Deny"}, |input: Input, ctx| async move {\n    app_service::${p.id}(input).await\n});\n// Surfaces: ${s.join(", ")}`
+    },
+    go: {
+      label: "Go",
+      code: (p, r, s, tgMode) => tgMode === "zero-ai"
+        ? `// Zero-AI Deterministic Telegram (telego command router + retry_after queue)\nbh.Handle(handleCmd, th.CommandEqual("${p.id.replace(/_/g, "")}"))\nbh.HandleCallbackQuery(handleSignedCb, th.CallbackDataPrefix("aw:"))\n// $0 LLM cost, sub-100ms response, strict allowlist middleware`
+        : `// Multi-Surface Capability (mcp-go + acp-go-sdk + telego)\nregistry.Register(agentwire.Capability{\n    ID: "${p.id}", RiskTier: "${r}", Streaming: ${p.streaming},\n    Execute: func(ctx context.Context, in Input) (any, error) { return appService.${p.id}(ctx, in) },\n})`
+    }
+  };
+
+  const state = { preset: "billing", tgMode: "zero-ai", risk: "pocket-approve", surfaces: ["mcp", "acp", "telegram"], stack: "ts" };
+
+  function renderStudio() {
+    const p = PRESETS[state.preset];
+    const extra = state.surfaces.filter(x => !["mcp", "acp", "telegram"].includes(x));
+    const costNote = state.tgMode === "zero-ai" ? "LLM Key: NONE ($0 token spend)" : state.tgMode === "hybrid" ? "Deterministic base + Optional LLM" : "Full LLM + Streaming";
+    document.getElementById("coreSummary").innerHTML =
+      `<strong>${p.title}</strong> (<code>${p.id}</code>)<br>` +
+      `Mode: <strong>${state.tgMode.toUpperCase()}</strong> (${costNote})<br>` +
+      `Risk: <strong>${state.risk}</strong> | Sync/Stream: <strong>${p.streaming ? "Async Task" : "Fast Sync"}</strong>` +
+      (extra.length ? `<br>Extension Slots Active: <strong>${extra.join(", ").toUpperCase()}</strong>` : "");
+
+    document.getElementById("outMcp").textContent = state.surfaces.includes("mcp") ? JSON.stringify({
+      transport: "streamable-http",
+      headers: { "Mcp-Method": "tools/call", "Mcp-Name": p.id },
+      tool: { name: p.id, description: p.desc, inputSchema: { type: "object", properties: p.schema } },
+      execution: p.streaming ? "async_task (tasks/get)" : "direct_result",
+      gate: state.risk === "pocket-approve" ? "elicitation_or_approval_broker" : state.risk
+    }, null, 2) : "// MCP adapter disabled";
+
+    document.getElementById("outAcp").textContent = state.surfaces.includes("acp") ? JSON.stringify({
+      sessionNew: { cwd: "/workspace/app", mcpServers: [{ name: "app-core", url: "http://127.0.0.1:8080/mcp" }] },
+      turnBehavior: state.risk === "pocket-approve"
+        ? { method: "session/request_permission", params: { title: p.title, toolCall: p.id, input: p.sample } }
+        : state.risk === "deny"
+          ? { error: "CAPABILITY_BLOCKED_BY_POLICY" }
+          : { method: "session/update", params: { stage: "complete", tool: p.id } }
+    }, null, 2) : "// ACP adapter disabled";
+
+    document.getElementById("tgHdr").textContent = `Surface C : Telegram (${state.tgMode === "zero-ai" ? "Zero-AI Deterministic" : state.tgMode === "hybrid" ? "Hybrid" : "Agentic"})`;
+    if (!state.surfaces.includes("telegram")) {
+      document.getElementById("outTg").textContent = "// Telegram adapter disabled";
+    } else if (state.tgMode === "zero-ai") {
+      document.getElementById("outTg").textContent =
+        `LLM API Key  : NOT REQUIRED ($0 token spend, <100ms)\n` +
+        `Slash Menu   : /${p.id.replace(/_/g, "")} (setMyCommands scoped)\n` +
+        `FSM Wizard   : ${p.wizardSteps.join(" -> ")}\n` +
+        `Inline UI    : Paginated list (< Prev | Next >) + signed confirm\n` +
+        `Inline Query : @AppWireBot <query> search results\n` +
+        `Deep Link 2FA: t.me/AppWireBot?start=link_<nonce>\n` +
+        `Gate Action  : ${state.risk === "pocket-approve" ? "[Confirm (HMAC)] [Cancel]" : state.risk}`;
+    } else {
+      document.getElementById("outTg").textContent =
+        `Mode         : ${state.tgMode.toUpperCase()} (Draft streaming + ${state.tgMode === "hybrid" ? "Zero-AI FSM fallback" : "NL intent"})\n` +
+        `Slash Menu   : /${p.id.replace(/_/g, "")}\n` +
+        `Stream       : ${p.streaming ? "sendMessageDraft (300ms debounce)" : "sendMessage (Markdown)"}\n` +
+        `Buttons      : ${state.risk === "pocket-approve" ? "[Approve Once (HMAC)] [Approve Session] [Deny]" : state.risk}\n` +
+        `Multiplex    : Forum Topic per session + Guest Mode (@bot)`;
+    }
+
+    document.getElementById("stackHdr").textContent = `Polyglot Adapter Starter (${STACKS[state.stack].label})`;
+    document.getElementById("outCode").textContent = STACKS[state.stack].code(p, state.risk, state.surfaces, state.tgMode);
+  }
+
+  document.getElementById("tabNav").addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-tab]");
+    if (!btn) return;
+    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active"));
+    btn.classList.add("active");
+    document.getElementById("tab-" + btn.dataset.tab).classList.add("active");
+  });
+
+  document.getElementById("presetSelect").addEventListener("change", (e) => { state.preset = e.target.value; renderStudio(); });
+  document.getElementById("tgModeBtns").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-tgmode]"); if (!b) return;
+    state.tgMode = b.dataset.tgmode;
+    document.querySelectorAll("#tgModeBtns .chip").forEach(c => c.classList.remove("on"));
+    b.classList.add("on");
+    renderStudio();
+  });
+  document.getElementById("riskBtns").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-risk]"); if (!b) return;
+    state.risk = b.dataset.risk;
+    document.querySelectorAll("#riskBtns .chip").forEach(c => c.classList.remove("on"));
+    b.classList.add("on");
+    renderStudio();
+  });
+  document.getElementById("surfaceBtns").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-surf]"); if (!b) return;
+    const s = b.dataset.surf;
+    if (state.surfaces.includes(s)) {
+      if (state.surfaces.length === 1) return;
+      state.surfaces = state.surfaces.filter(x => x !== s);
+      b.classList.remove("on");
+    } else {
+      state.surfaces.push(s);
+      b.classList.add("on");
+    }
+    renderStudio();
+  });
+  document.getElementById("stackBtns").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-stack]"); if (!b) return;
+    state.stack = b.dataset.stack;
+    document.querySelectorAll("#stackBtns .chip").forEach(c => c.classList.remove("on"));
+    b.classList.add("on");
+    renderStudio();
+  });
+
+  // TAB 2: Multi-Mode Simulator (Zero-AI FSM, Zero-AI CI 2FA, Agentic ACP Gatekeeper)
+  let simTimer = null;
+  let simRemaining = 0;
+  let simActive = false;
+
+  function setPhoneButtons(buttons) {
+    const box = document.getElementById("tgButtons");
+    box.innerHTML = "";
+    if (!buttons || buttons.length === 0) { box.style.display = "none"; return; }
+    buttons.forEach(cfg => {
+      const btn = document.createElement("button");
+      btn.className = `action-btn ${cfg.cls || ""} ${cfg.wide ? "wide" : ""}`;
+      btn.textContent = cfg.label;
+      btn.onclick = cfg.onClick;
+      box.appendChild(btn);
+    });
+    box.style.display = "grid";
+  }
+
+  function resetSim() {
+    clearInterval(simTimer);
+    simActive = false;
+    document.getElementById("acpStatePill").textContent = "IDLE";
+    document.getElementById("acpStatePill").className = "pill cyan";
+    document.getElementById("acpLog").textContent = "Select a simulation mode above and click \"Run Simulation\"...";
+    document.getElementById("tgDraft").textContent = "No active message stream...";
+    document.getElementById("tgCard").innerHTML = '<div style="color:var(--muted);">Click "Run Simulation" to step through Zero-AI deterministic flows or Agentic ACP Pocket Gatekeeper.</div>';
+    document.getElementById("tgTtl").textContent = "STATE: IDLE";
+    setPhoneButtons([]);
+  }
+
+  document.getElementById("gkResetBtn").addEventListener("click", resetSim);
+  document.getElementById("simMode").addEventListener("change", (e) => {
+    document.getElementById("gkAction").style.display = e.target.value === "acp_gk" ? "inline-block" : "none";
+    resetSim();
+  });
+  document.getElementById("gkAction").style.display = "none";
+
+  document.getElementById("gkStartBtn").addEventListener("click", () => {
+    resetSim();
+    const mode = document.getElementById("simMode").value;
+    const log = document.getElementById("acpLog");
+    const pill = document.getElementById("acpStatePill");
+
+    if (mode === "zero_fsm") {
+      document.getElementById("leftSimHdr").textContent = "Deterministic FSM Session State (0 LLM Calls)";
+      pill.textContent = "FSM: STEP 1/3";
+      pill.className = "pill";
+      document.getElementById("tgTtl").textContent = "ZERO-AI FSM ($0)";
+      document.getElementById("tgDraft").textContent = "[User] /refund  (routed deterministically in 4ms)";
+      log.textContent = `[Router] Matched command "/refund"\n[FSM] state = "await_invoice" | llm_calls = 0`;
+      const showStep1 = () => {
+        document.getElementById("tgCard").innerHTML = `<strong>[Refund Wizard : Step 1/3]</strong><br>Select target invoice from recent settled charges:`;
+        setPhoneButtons([
+          { label: "in_981 ($480)", cls: "em", onClick: () => showStep2("in_981", 48000) },
+          { label: "in_977 ($120)", cls: "em", onClick: () => showStep2("in_977", 12000) },
+          { label: "Cancel Wizard", cls: "ro wide", onClick: resetSim }
+        ]);
+      };
+      const showStep2 = (inv, maxCents) => {
+        pill.textContent = "FSM: STEP 2/3";
+        log.textContent += `\n[FSM] invoiceId="${inv}" validated via Zod; state = "await_reason"`;
+        document.getElementById("tgCard").innerHTML = `<strong>[Refund Wizard : Step 2/3]</strong><br>Invoice: <code>${inv}</code> ($${(maxCents/100).toFixed(2)})<br>Pick reason (enum rendered as buttons):`;
+        setPhoneButtons([
+          { label: "Duplicate charge", cls: "em", onClick: () => showConfirm(inv, maxCents, "Duplicate charge") },
+          { label: "Service outage", cls: "em", onClick: () => showConfirm(inv, maxCents, "Service outage") },
+          { label: "< Back", cls: "", onClick: showStep1 },
+          { label: "Cancel", cls: "ro", onClick: resetSim }
+        ]);
+      };
+      const showConfirm = (inv, cents, reason) => {
+        pill.textContent = "FSM: CONFIRM";
+        pill.className = "pill amber";
+        log.textContent += `\n[FSM] reason="${reason}" -> Ready for signed confirmation.`;
+        document.getElementById("tgCard").innerHTML =
+          `<strong>[Review Refund : Step 3/3]</strong><br>Invoice: <code>${inv}</code><br>Amount: <code>$${(cents/100).toFixed(2)}</code><br>Reason: <code>${reason}</code><br>HMAC: <code>aw:ref:${inv}:${cents}:a8f2</code>`;
+        setPhoneButtons([
+          { label: "Confirm Refund", cls: "em", onClick: () => {
+            pill.textContent = "EXECUTED (0 LLM)";
+            pill.className = "pill";
+            log.textContent += `\n[Core] Executed issue_stripe_refund("${inv}", ${cents}) directly.\n[Audit] Total AI tokens used: 0 ($0.0000)`;
+            document.getElementById("tgCard").innerHTML += `<div style="margin-top:8px;color:#34d399;font-weight:700;">Refund submitted! State cleared.</div>`;
+            setPhoneButtons([]);
+          }},
+          { label: "Cancel", cls: "ro", onClick: resetSim }
+        ]);
+      };
+      showStep1();
+      return;
+    }
+
+    if (mode === "zero_ci") {
+      simActive = true;
+      document.getElementById("leftSimHdr").textContent = "GitHub Action / CI Webhook Gate (0 LLM Calls)";
+      pill.textContent = "AWAITING_2FA_GATE";
+      pill.className = "pill amber";
+      document.getElementById("tgDraft").textContent = "[Webhook POST] deploy_prod_release v2.14.0 triggered by tag push";
+      log.textContent = `[CI Webhook] Received deploy gate request req_ci_402\n[Allowlist] Checked TELEGRAM_ALLOWED_USER_IDS -> valid\n[Broker] Waiting for HMAC-signed tap (TTL: 30s, llm_calls: 0)`;
+      document.getElementById("tgCard").innerHTML =
+        `<strong style="color:#fbbf24;">[ZERO-AI DEPLOY GATE]</strong><br>Pipeline: <code>release.yml #402</code><br>Target: <code>us-east production</code><br>Artifact: <code>v2.14.0 (sha256 verified)</code>`;
+      const doneCi = (allow, who) => {
+        if (!simActive) return;
+        simActive = false; clearInterval(simTimer);
+        setPhoneButtons([]);
+        document.getElementById("tgTtl").textContent = "RESOLVED";
+        if (allow) {
+          pill.textContent = "DEPLOY APPROVED"; pill.className = "pill";
+          log.textContent += `\n[Broker] HTTP 200 OK -> Released v2.14.0 to us-east (${who}).`;
+          document.getElementById("tgCard").innerHTML += `<div style="margin-top:8px;color:#34d399;font-weight:700;">Approved by ${who}. Pipeline resumed!</div>`;
+        } else {
+          pill.textContent = "BLOCKED (FAIL-CLOSED)"; pill.className = "pill rose";
+          log.textContent += `\n[Broker] HTTP 403 -> Rollout halted cleanly (${who}).`;
+          document.getElementById("tgCard").innerHTML += `<div style="margin-top:8px;color:#fb7185;font-weight:700;">Blocked (${who}). Production untouched.</div>`;
+        }
+      };
+      setPhoneButtons([
+        { label: "Approve Release", cls: "em", onClick: () => doneCi(true, "telegram:@release_mgr") },
+        { label: "Deny Rollout", cls: "ro", onClick: () => doneCi(false, "telegram:@release_mgr") }
+      ]);
+      simRemaining = 30;
+      document.getElementById("tgTtl").textContent = `TTL: 00:30`;
+      simTimer = setInterval(() => {
+        simRemaining--;
+        document.getElementById("tgTtl").textContent = `TTL: 00:${String(simRemaining).padStart(2, "0")}`;
+        if (simRemaining <= 0) doneCi(false, "system:ttl-expired");
+      }, 1000);
+      return;
+    }
+
+    // Agentic ACP Pocket Gatekeeper
+    simActive = true;
+    document.getElementById("leftSimHdr").textContent = "IDE Host / ACP JSON-RPC Trace";
+    const action = document.getElementById("gkAction").value;
+    const p = Object.values(PRESETS).find(x => x.id === action) || PRESETS.codebase;
+    pill.textContent = "AWAITING_APPROVAL";
+    pill.className = "pill amber";
+    log.textContent =
+      `-> session/prompt: "Execute ${p.id} carefully"\n` +
+      `<- session/update [plan]: Validating arguments against core schema...\n` +
+      `<- session/request_permission (id: req_7f2a) [tool: ${p.id}, tier: pocket-approve]\n` +
+      `   payload: ${JSON.stringify(p.sample)}\n` +
+      `[ApprovalBroker] Paused execution promise; relayed signed card to Telegram.`;
+
+    const chunks = ["Preparing ", "diff preview ", "and forwarding ", "pocket approval ", "for " + p.id + "..."];
+    let i = 0;
+    const draftEl = document.getElementById("tgDraft");
+    draftEl.textContent = "[sendMessageDraft] ";
+    const stepDraft = setInterval(() => {
+      if (!simActive || i >= chunks.length) { clearInterval(stepDraft); return; }
+      draftEl.textContent += chunks[i++];
+    }, 180);
+
+    document.getElementById("tgCard").innerHTML =
+      `<strong style="color:#fbbf24;">[POCKET GATEKEEPER]</strong><br>` +
+      `Origin: <code>ACP Session #sess_91a</code><br>` +
+      `Capability: <code>${p.id}</code><br>` +
+      `Params: <code>${JSON.stringify(p.sample)}</code><br>` +
+      `Sig: <code>hmac_sha256:9d4a...c81e</code>`;
+
+    const finishAcp = (decision, actor) => {
+      if (!simActive) return;
+      clearInterval(simTimer); simActive = false;
+      setPhoneButtons([]);
+      document.getElementById("tgTtl").textContent = "RESOLVED";
+      if (decision === "deny") {
+        pill.textContent = "DENIED (FAIL-CLOSED)"; pill.className = "pill rose";
+        log.textContent += `\n-> Broker resolved: DENY by ${actor}\n<- session/update: Aborted safely without touching state.`;
+        document.getElementById("tgCard").innerHTML += `<div style="margin-top:8px;color:#fb7185;font-weight:700;">Denied by ${actor}. Turn aborted safely.</div>`;
+      } else {
+        pill.textContent = "COMPLETED"; pill.className = "pill";
+        log.textContent += `\n-> Broker resolved: ${decision.toUpperCase()} by ${actor}\n<- session/update [chunk]: Running capability via Domain Core...\n<- session/update [complete]: Execution succeeded cleanly.`;
+        document.getElementById("tgCard").innerHTML += `<div style="margin-top:8px;color:#34d399;font-weight:700;">${decision} signed via ${actor}. IDE turn completed!</div>`;
+        draftEl.textContent = "[sendMessage committed] Completed cleanly via Domain Core.";
+      }
+    };
+    setPhoneButtons([
+      { label: "Approve Once", cls: "em", onClick: () => finishAcp("allow-once", "telegram:@lead_eng") },
+      { label: "Approve Session (15m)", cls: "am", onClick: () => finishAcp("allow-session", "telegram:@lead_eng") },
+      { label: "Deny + Abort Turn", cls: "ro", wide: true, onClick: () => finishAcp("deny", "telegram:@lead_eng") }
+    ]);
+    simRemaining = 45;
+    document.getElementById("tgTtl").textContent = `TTL: 00:45`;
+    simTimer = setInterval(() => {
+      simRemaining--;
+      document.getElementById("tgTtl").textContent = `TTL: 00:${String(simRemaining).padStart(2, "0")}`;
+      if (simRemaining <= 0) finishAcp("deny", "system:ttl-expired");
+    }, 1000);
+  });
+
+  // TAB 3: Scrutiny Dial & Opportunity Grill (with Zero-AI Mode filter)
+  const SCRUTINY = {
+    1: "Tier 1 (Surgical Fast-Track) : Skips deep scan. Locks Operating Mode (Zero-AI / Hybrid / Agentic), stack, and target surfaces.",
+    2: "Tier 2 (Adaptive Repo Scan & Grill) : Maps concrete repo signals, pitches 3 to 5 tailored workflows, and grills on risk tier + auth.",
+    3: "Tier 3 (Deep Adversarial Architect) : Exhaustive audit challenging idempotency, flood limits, offline fail-closed TTLs, and prompt-injection boundaries."
+  };
+  const PITCHES = {
+    "zero-ai": {
+      stripe: ["src/billing/refund.ts -> /refund FSM Wizard + Stars/Invoice Webhook ($0 AI)", "Step-by-step Zod wizard with enum buttons + HMAC confirm card, plus failed-payment webhook alert with [Retry Charge]."],
+      migrations: ["prisma/migrations -> Deploy 2FA Gate + Schema Summary ($0 AI)", "CI/CD deploy webhook pushes SQL diff to Telegram [Approve Migration] [Abort]; zero AI tokens required."],
+      cron: ["src/jobs/worker.ts -> Daily 08:00 Digest + Paginated /jobs Browser ($0 AI)", "In-place editMessageText pagination (< Prev | Page 1/5 | Next >) + [Retry Job] buttons inside a retry_after-safe queue."],
+      admin: ["src/auth/users.ts -> t.me/AppBot?start=link_<nonce> 2FA Linking ($0 AI)", "One-tap web account binding for passwordless login alerts, scoped BotCommandScopeChat admin menu, and CSV sendDocument exports."],
+      cli: ["bin/cli.ts -> Deterministic Command Router + @AppBot Inline Search ($0 AI)", "Parse CLI flags directly from Telegram /commands and answer inline_query catalog lookups from any chat."],
+      charts: ["src/web/analytics -> Pure-Frontend Telegram Mini App ($0 AI)", "Render existing web tables and charts inside Telegram authenticated with HMAC-SHA256 initData (no LLM needed)."]
+    },
+    "hybrid": {
+      stripe: ["src/webhooks/stripe.ts -> MCP Tool + FSM /refund + Telegram Pocket Gatekeeper", "Expose read-only lookup as auto-allow MCP + @bot search; gate issue_refund across IDE ACP and Telegram HMAC cards."],
+      migrations: ["prisma/migrations -> Self-Mounted MCP + ACP session/request_permission", "Auto-mount schema reader in ACP session/new and pause DDL mutations for IDE or Telegram approval."],
+      cron: ["src/jobs/worker.ts -> Async MCP Task + Forum Topic sendMessageDraft Feed", "Stream background job output cleanly via native drafts inside dedicated Ops Forum Topics with fallback buttons."],
+      admin: ["src/admin/users.ts -> OAuth 2.1 RFC 9728 / RFC 8707 + Telegram 2FA", "Enforce strict audience-bound OAuth 2.1 on remote HTTP MCP and keep local ops runnable without LLM keys."],
+      cli: ["bin/cli.ts -> Dual stdio MCP Server + ACP Workspace Agent", "Ship existing CLI subcommands as both stdio MCP tools and an ACP-installable editor agent."],
+      charts: ["src/web/analytics -> TMA Mission Control + Voice-to-Action Digests", "Reuse existing frontend components in a Mini App while streaming summarized digests over voice/text."]
+    }
+  };
+
+  let curTier = "2";
+  let curGrillMode = "zero-ai";
+  const activeSigs = new Set(["stripe", "migrations", "cron"]);
+
+  function renderScrutiny() {
+    document.getElementById("tierDesc").textContent = SCRUTINY[curTier] + ` | Active Filter: ${curGrillMode.toUpperCase()}`;
+    const sigs = [...activeSigs];
+    if (curTier === "1") {
+      document.getElementById("pitchOut").textContent = `[Tier 1 Fast-Track : ${curGrillMode.toUpperCase()}]\nRepo scan bypassed.\nScaffolding deterministic core + ${curGrillMode === "zero-ai" ? "zero-LLM Telegram adapters" : "MCP + ACP + Telegram adapters"}.`;
+      document.getElementById("grillOut").textContent =
+        "Q1: Operating Mode? (Zero-AI Deterministic [$0 Keyless] vs Hybrid vs Agentic)\n" +
+        "Q2: Integration Mode & Stack? (New Core vs Strangler Sidecar | TS/Py/Rust/Go)\n" +
+        "Q3: Transports? (Polling vs Webhook | stdio vs Streamable HTTP)";
+      return;
+    }
+    const dict = PITCHES[curGrillMode];
+    document.getElementById("pitchOut").textContent = sigs.length
+      ? sigs.map((s, i) => `${i + 1}. [${dict[s][0]}]\n   -> ${dict[s][1]}`).join("\n\n")
+      : "Select at least one codebase signal.";
+
+    const grill = curGrillMode === "zero-ai"
+      ? [
+          "1. Zero-AI Scope: Which multi-field flows should become step-by-step FSM wizards vs single /commands with flags?",
+          "2. Auth & Deep Linking: Enforce strict TELEGRAM_ALLOWED_USER_IDS allowlist or web-app nonce linking (start=link_)?",
+          "3. Alerts & Documents: Which cron jobs or webhooks should push reports/CSVs with [Retry] / [Acknowledge] buttons?"
+        ]
+      : [
+          "1. Zero-LLM Fallback: Should /commands, FSM wizards, and 2FA approvals work identically when LLM_API_KEY is unset?",
+          "2. Blast Radius: Should " + (sigs[0] || "mutations") + " default to pocket-approve (TTL 300s fail-closed) across ACP & Telegram?",
+          "3. Auth Perimeter: List exact TELEGRAM_ALLOWED_USER_IDS and OAuth 2.1 RFC 8707 resource URI."
+        ];
+    if (curTier === "3") {
+      grill.push(
+        "4. Adversarial Idempotency: What idempotencyKey stops double-execution across concurrent taps or webhooks?",
+        "5. Flood Control: Confirm retry_after outbound queue backoff and strict MIME/byte limits on inbound getFile uploads."
+      );
+    }
+    document.getElementById("grillOut").textContent = grill.join("\n\n");
+  }
+
+  document.getElementById("tierBtns").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-tier]"); if (!b) return;
+    curTier = b.dataset.tier;
+    document.querySelectorAll("#tierBtns .chip").forEach(c => c.classList.remove("on"));
+    b.classList.add("on");
+    renderScrutiny();
+  });
+  document.getElementById("grillModeBtns").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-gmode]"); if (!b) return;
+    curGrillMode = b.dataset.gmode;
+    document.querySelectorAll("#grillModeBtns .chip").forEach(c => c.classList.remove("on"));
+    b.classList.add("on");
+    renderScrutiny();
+  });
+  document.getElementById("signalBtns").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-sig]"); if (!b) return;
+    const s = b.dataset.sig;
+    if (activeSigs.has(s)) { activeSigs.delete(s); b.classList.remove("on"); }
+    else { activeSigs.add(s); b.classList.add("on"); }
+    renderScrutiny();
+  });
+
+  // TAB 4: Security Checklist
+  const SEC_ITEMS = [
+    "Zero-AI / Hybrid apps verified booting cleanly with LLM_API_KEY, OPENAI_API_KEY, and ANTHROPIC_API_KEY unset",
+    "MCP OAuth 2.1 exposes RFC 9728 metadata, mandates PKCE S256 & RFC 8707 aud binding, and bans token passthrough",
+    "Sensitive secrets/credentials use MCP URL-Mode Elicitation exclusively (never Form Mode)",
+    "ACP pocket-approve tools pause cleanly on session/request_permission instead of auto-executing",
+    "Telegram middleware drops non-allowlisted user/chat IDs and validates X-Telegram-Bot-Api-Secret-Token",
+    "Telegram inline approval & pagination callbacks verify HMAC-SHA256 signatures, TTL, and single-use deletion",
+    "Telegram Mini App initData verified server-side via HMAC-SHA256('WebAppData', BOT_TOKEN) + auth_date check"
+  ];
+  const secList = document.getElementById("secList");
+  SEC_ITEMS.forEach((text, idx) => {
+    const row = document.createElement("label");
+    row.className = "checklist-item";
+    row.innerHTML = `<input type="checkbox" ${idx < 4 ? "checked" : ""}><span>${text}</span>`;
+    row.querySelector("input").addEventListener("change", updateSecScore);
+    secList.appendChild(row);
+  });
+  function updateSecScore() {
+    const total = SEC_ITEMS.length;
+    const done = secList.querySelectorAll("input:checked").length;
+    document.getElementById("secScore").textContent = `${done} / ${total} VERIFIED`;
+  }
+
+  document.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-copy]");
+    if (!btn) return;
+    const target = document.getElementById(btn.dataset.copy);
+    if (!target) return;
+    navigator.clipboard.writeText(target.textContent).then(() => {
+      const t = document.getElementById("toast");
+      t.style.display = "block";
+      setTimeout(() => { t.style.display = "none"; }, 1600);
+    });
+  });
+
+  renderStudio();
+  renderScrutiny();
+  updateSecScore();
+})();
+</script>
+</body>
+</html>

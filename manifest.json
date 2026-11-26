@@ -1,6 +1,6 @@
 {
     "metadata": {
-        "version": "7.52.0",
+        "version": "7.53.0",
         "lastUpdated": "2026-09-07T01:09:00Z"
     },
     "env": {
@@ -126,6 +126,13 @@
             "label": "A2UI",
             "source": ".skills/a2ui",
             "target": ".skills/a2ui",
+            "method": "copy"
+        },
+        {
+            "id": "agentwire",
+            "label": "AgentWire Multi-Surface Engine",
+            "source": ".skills/agentwire",
+            "target": ".skills/agentwire",
             "method": "copy"
         },
         {

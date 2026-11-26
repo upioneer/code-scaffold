@@ -1,0 +1,15 @@
+{
+  "label": "AgentWire Multi-Surface Engine",
+  "description": "Extensible multi-surface agent wiring engine that projects any new or existing app onto MCP, ACP, Telegram, and future channels from a single capability core.",
+  "version": "1",
+  "target": ".skills/agentwire",
+  "hasSandbox": true,
+  "logo": [
+    "   █████╗  ██████╗ ███████╗███╗   ██╗████████╗██╗    ██╗██╗██████╗ ███████╗  ",
+    "  ██╔══██╗██╔════╝ ██╔════╝████╗  ██║╚══██╔══╝██║    ██║██║██╔══██╗██╔════╝  ",
+    "  ███████║██║  ███╗█████╗  ██╔██╗ ██║   ██║   ██║ █╗ ██║██║██████╔╝█████╗    ",
+    "  ██╔══██║██║   ██║██╔══╝  ██║╚██╗██║   ██║   ██║███╗██║██║██╔══██╗██╔══╝    ",
+    "  ██║  ██║╚██████╔╝███████╗██║ ╚████║   ██║   ╚███╔███╔╝██║██║  ██║███████╗  ",
+    "  ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═══╝   ╚═╝    ╚══╝╚══╝ ╚═╝╚═╝  ╚═╝╚══════╝  "
+  ]
+}
